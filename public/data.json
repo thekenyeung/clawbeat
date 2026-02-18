@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 22:15:58",
+    "last_updated": "2026-02-18 22:35:35",
     "items": [
         {
             "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
@@ -569,15 +569,6 @@
             "isPriority": false
         },
         {
-            "title": "🦞🤖MOAR CLAWDBOT CRAP🦞🤖",
-            "url": "https://www.youtube.com/watch?v=HmMxGUMO3_Q",
-            "thumbnail": "https://i.ytimg.com/vi/HmMxGUMO3_Q/hqdefault.jpg",
-            "channel": "John Hammond",
-            "description": "Learn Cybersecurity and more with Just Hacking Training: https://jh.live/training\nSee what else I'm up to with: https://jh.live/newsletter\n\nℹ️ Affilia...",
-            "publishedAt": "2026-01-26T23:16:32Z",
-            "isPriority": false
-        },
-        {
             "title": "OpenAI Just “Absorbed” OpenClaw and the AI World Exploded",
             "url": "https://www.youtube.com/watch?v=ubVLeoglBYE",
             "thumbnail": "https://i.ytimg.com/vi/ubVLeoglBYE/hqdefault.jpg",
@@ -782,7 +773,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208539,
+            "stars": 208576,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -806,7 +797,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21399,
+            "stars": 21403,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -822,7 +813,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16615,
+            "stars": 16618,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -830,7 +821,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16461,
+            "stars": 16464,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
