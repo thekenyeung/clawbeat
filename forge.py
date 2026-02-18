@@ -213,11 +213,35 @@ def fetch_github_projects():
 if __name__ == "__main__":
     print("🛠️ Forging Intel Feed...")
     
-    # 1. News
-    articles = scan_rss()
-    clustered_news = cluster_articles_semantic(articles)
+    # 1. News - Scrape the latest
+    new_articles = scan_rss()
 
-    # 2. YouTube
+    # 2. Load Existing History for the "River"
+    existing_news = []
+    if os.path.exists(OUTPUT_PATH):
+        try:
+            with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
+                old_data = json.load(f)
+                existing_news = old_data.get('items', [])
+        except Exception as e:
+            print(f"⚠️ Could not load history: {e}")
+
+    # 3. Merge & Deduplicate (URLs must be unique)
+    # Combine lists, prioritizing new articles at the top
+    combined_news = new_articles + existing_news
+    
+    seen_urls = set()
+    unique_news = []
+    for art in combined_news:
+        if art['url'] not in seen_urls:
+            unique_news.append(art)
+            seen_urls.add(art['url'])
+
+    # 4. Clustering (Run on the unique combined list)
+    # We re-cluster everything to ensure "More Coverage" includes old and new links
+    clustered_news = cluster_articles_semantic(unique_news[:200]) # Keep a rolling 200 items
+
+    # 5. YouTube & GitHub (Keep these fresh/overwritten)
     all_videos = []
     try:
         with open(WHITELIST_PATH, 'r') as f:
@@ -225,16 +249,13 @@ if __name__ == "__main__":
         for entry in whitelist_data:
             yt_id = entry.get("YouTube Channel ID")
             if yt_id:
-                print(f"📺 Fetching Media: {entry.get('Source Name')}")
                 all_videos.extend(fetch_youtube_videos(yt_id))
     except Exception as e:
         print(f"⚠️ YouTube Logic Failed: {e}")
 
-    # 3. GitHub
-    print("🐙 Fetching GitHub Projects...")
     github_projects = fetch_github_projects()
 
-    # 4. Save Final Package
+    # 6. Save Final Package
     final_data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "items": clustered_news,
@@ -246,4 +267,4 @@ if __name__ == "__main__":
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(final_data, f, indent=4, ensure_ascii=False)
         
-    print(f"✅ Success: {len(clustered_news)} topics, {len(all_videos)} videos, {len(github_projects)} repos.")
+    print(f"✅ Success: River updated. Total articles in history: {len(clustered_news)}")

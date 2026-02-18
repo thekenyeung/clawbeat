@@ -73,6 +73,10 @@ const App: React.FC = () => {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
 
+  // --- PAGINATION STATE ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+
   // --- GA4 TRACKING LOGIC ---
   const trackEvent = (action: string, params: object) => {
     if (typeof window.gtag === 'function') {
@@ -94,6 +98,8 @@ const App: React.FC = () => {
       page_location: window.location.href,
       page_path: `/${activePage}`
     });
+    // Reset to page 1 when switching tabs
+    setCurrentPage(1);
   }, [activePage]);
 
   // --- FETCHING LOGIC ---
@@ -102,17 +108,13 @@ const App: React.FC = () => {
     setError(null);
     try {
       const response = await fetch('/data.json');
-      if (!response.ok) throw new Error("Could not find data.json. Run forge.py first.");
-      
+      if (!response.ok) throw new Error("Could not find data.json.");
       const allData = await response.json();
-      
       if (page === 'news') setNews(allData.items || []);
       if (page === 'videos') setVideos(allData.videos || []);
       if (page === 'projects') setProjects(allData.githubProjects || []);
-
     } catch (err: any) {
-      console.error("Local Intel Fetch failed:", err);
-      setError(err.message || "Failed to load local intel.");
+      setError(err.message || "Failed to load intel.");
     } finally {
       setLoading(false);
     }
@@ -122,7 +124,12 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- SORTING LOGIC ---
+  // --- RIVER OF NEWS / PAGINATION LOGIC ---
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentNewsItems = news.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(news.length / itemsPerPage);
+
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -163,7 +170,7 @@ const App: React.FC = () => {
               {activePage === 'projects' && 'The Forge'}
             </h2>
             <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em] mt-2">
-              {activePage === 'projects' ? 'Community Repositories & Agent Modules' : 'Autonomous Intelligence Curation'}
+              {activePage === 'projects' ? 'Community Repositories' : 'Autonomous Intelligence Curation'}
             </p>
           </div>
           
@@ -186,7 +193,40 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="min-h-[50vh]">
-            {activePage === 'news' && <NewsList items={news} onTrackClick={handleLinkClick} />}
+            {activePage === 'news' && (
+              <>
+                <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} />
+                
+                {/* PAGINATION CONTROLS */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
+                    <button 
+                      disabled={currentPage === 1}
+                      onClick={() => {
+                        setCurrentPage(prev => prev - 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+                    >
+                      Prev
+                    </button>
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+                      Page {currentPage} <span className="text-orange-500/50">/</span> {totalPages}
+                    </span>
+                    <button 
+                      disabled={currentPage === totalPages}
+                      onClick={() => {
+                        setCurrentPage(prev => prev + 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
             {activePage === 'videos' && <VideoGrid items={sortedVideos} onTrackClick={handleLinkClick} />}
             {activePage === 'projects' && <ProjectGrid items={sortedProjects} onTrackClick={handleLinkClick} />}
           </div>
