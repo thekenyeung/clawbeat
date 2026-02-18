@@ -12,6 +12,7 @@ from datetime import datetime
 from collections import defaultdict
 from dotenv import load_dotenv, find_dotenv
 from googleapiclient.discovery import build
+from urllib.parse import urlparse
 
 # 1. SETUP & KEY LOADING
 load_dotenv(find_dotenv(), override=True)
@@ -79,6 +80,38 @@ def get_embeddings_batch(texts):
 def cosine_similarity(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
+def extract_real_source(entry, default_source):
+    # If the whitelist name doesn't mention Flipboard, trust the whitelist
+    if "flipboard" not in default_source.lower():
+        return default_source
+
+    # Strategy 1: Look at the URL domain (The most reliable way)
+    link = entry.get('link', '')
+    if link:
+        domain = urlparse(link).netloc.replace('www.', '')
+        domain_map = {
+            "theverge.com": "The Verge",
+            "techcrunch.com": "TechCrunch",
+            "venturebeat.com": "VentureBeat",
+            "wired.com": "Wired",
+            "nytimes.com": "NY Times",
+            "arstechnica.com": "Ars Technica",
+            "bloomberg.com": "Bloomberg",
+            "wsj.com": "WSJ",
+            "reuters.com": "Reuters"
+        }
+        if domain in domain_map:
+            return domain_map[domain]
+        # Fallback: turn "engadget.com" into "Engadget"
+        return domain.split('.')[0].capitalize()
+
+    # Strategy 2: Check the Title for a colon (e.g., "The Verge: Story Title")
+    title = entry.get('title', '')
+    if ":" in title:
+        return title.split(":")[0].strip()
+
+    return default_source
+
 def scan_rss():
     if not os.path.exists(WHITELIST_PATH): return []
     with open(WHITELIST_PATH, 'r') as f:
@@ -86,26 +119,42 @@ def scan_rss():
     
     headers = {'User-Agent': 'Mozilla/5.0'}
     found_articles = []
+    
     for site in whitelist:
         rss_url = site.get("Website RSS")
         if not rss_url or rss_url == "N/A": continue
+        
         try:
             resp = requests.get(rss_url, headers=headers, timeout=10)
             feed = feedparser.parse(resp.content)
+            
             for entry in feed.entries[:20]:
-                title = entry.get('title', '')
+                raw_title = entry.get('title', '')
+                
+                # Determine real source and clean the title
+                source = extract_real_source(entry, site["Source Name"])
+                
+                # If title is "Source: Headline", remove the "Source:" part
+                if ":" in raw_title and "flipboard" in site["Source Name"].lower():
+                    display_title = raw_title.split(":", 1)[1].strip()
+                else:
+                    display_title = raw_title
+
                 summary = entry.get('summary', '') or entry.get('description', '')
                 clean_summary = BeautifulSoup(summary, "html.parser").get_text(strip=True)
 
-                if any(kw in (title + clean_summary).lower() for kw in KEYWORDS):
+                if any(kw in (display_title + clean_summary).lower() for kw in KEYWORDS):
                     found_articles.append({
-                        "title": title,
+                        "title": display_title,
                         "url": entry.link,
-                        "source": site["Source Name"], 
+                        "source": source, # Uses the cleaned source name
                         "date": datetime.now().strftime("%m-%d-%Y"),
                         "summary": clean_summary[:200] + "..."
                     })
-        except: continue
+        except Exception as e:
+            print(f"Error scanning {rss_url}: {e}")
+            continue
+            
     return found_articles
 
 def cluster_articles_semantic(all_articles):
