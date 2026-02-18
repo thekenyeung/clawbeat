@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 21:36:39",
+    "last_updated": "2026-02-18 22:15:58",
     "items": [
         {
             "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
@@ -35,6 +35,10 @@
                 {
                     "source": "The Deep View",
                     "url": "https://www.thedeepview.com/articles/openai-bets-big-on-personal-ai-agents-with-openclaw"
+                },
+                {
+                    "source": "Medium",
+                    "url": "https://skillaxisbynabeelkhan.medium.com/openclaw-from-zero-to-openai-acquisition-in-90-days-aea6c40c5449?source=rss------openclaw-5"
                 },
                 {
                     "source": "Medium",
@@ -203,14 +207,6 @@
             "moreCoverage": []
         },
         {
-            "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
-            "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "How agents are mimicking human social dynamics — including the bad parts.Continue reading on Level Up Coding »...",
-            "moreCoverage": []
-        },
-        {
             "title": "Mac mini shortages are starting to happen — and the OpenClaw AI boom is a key reason",
             "url": "https://www.techradar.com/computing/macs/mac-mini-shortages-are-starting-to-happen-and-the-openclaw-ai-boom-is-a-key-reason?utm_source=flipboard&utm_content=topic/technology",
             "source": "Techradar",
@@ -227,11 +223,27 @@
             "moreCoverage": []
         },
         {
+            "title": "OpenClaw marks the shift to agentic AI, security risks of system-level access, and the need for AI in customer service | Lex Fridman Podcast",
+            "url": "https://cryptobriefing.com/peter-steinberger-openclaw-marks-the-shift-to-agentic-ai-security-risks-of-system-level-access-and-the-need-for-ai-in-customer-service-lex-fridman-podcast/?utm_source=flipboard&utm_content=topic%2Fopenclaw",
+            "source": "Cryptobriefing",
+            "date": "02-18-2026",
+            "summary": "OpenClaw is a major advancement in AI, shifting from language processing to agency. AI agents with system-level access pose security risks but have …...",
+            "moreCoverage": []
+        },
+        {
             "title": "Rapid price increase of Raspberry Pi",
             "url": "https://www.heise.de/en/news/Speculation-about-AI-application-Rapid-price-increase-of-Raspberry-Pi-11180336.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag",
             "source": "Heise",
             "date": "02-18-2026",
             "summary": "Raspberry Pi with gains on Tuesday – driven by speculation about single-board computers as a cost-effective alternative for running OpenClaw. Rally in …...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
+            "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "How agents are mimicking human social dynamics — including the bad parts.Continue reading on Level Up Coding »...",
             "moreCoverage": []
         },
         {
@@ -296,6 +308,15 @@
             "isPriority": false
         },
         {
+            "title": "I used OpenClaw to replace my brain",
+            "url": "https://www.youtube.com/watch?v=E0lD7Oy_JDo",
+            "thumbnail": "https://i.ytimg.com/vi/E0lD7Oy_JDo/hqdefault.jpg",
+            "channel": "Matthew Berman",
+            "description": "Follow me ► x.com/matthewberman\nInstagram ► https://www.instagram.com/matthewberman_ai\n\nMedia/Sponsorship Inquiries ► https://bit.ly/44TC45V...",
+            "publishedAt": "2026-02-18T21:14:49Z",
+            "isPriority": false
+        },
+        {
             "title": "OpenClaw tracks my entire life",
             "url": "https://www.youtube.com/watch?v=sMjdOtabOuM",
             "thumbnail": "https://i.ytimg.com/vi/sMjdOtabOuM/hqdefault.jpg",
@@ -311,15 +332,6 @@
             "channel": "Matthew Berman",
             "description": "Learn how to supercharge your workflow with Claude! https://clickhubspot.com/e29ec7\n\n25 HUGE OpenClaw Use Cases! (eBook) 👇🏼\nhttps://bit.ly/4aBQwo1\n\nDo...",
             "publishedAt": "2026-02-17T23:00:44Z",
-            "isPriority": false
-        },
-        {
-            "title": "21 INSANE Use Cases For OpenClaw...",
-            "url": "https://www.youtube.com/watch?v=8kNv3rjQaVA",
-            "thumbnail": "https://i.ytimg.com/vi/8kNv3rjQaVA/hqdefault.jpg",
-            "channel": "Matthew Berman",
-            "description": "Use My Prompts👇🏼\nhttps://gist.github.com/mberman84/63163d6839053fbf15091238e5ada5c2\n\nMy Files:\nSOUL.md: https://gist.github.com/mberman84/cd6924c7058b...",
-            "publishedAt": "2026-02-17T18:39:11Z",
             "isPriority": false
         },
         {
@@ -770,7 +782,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208451,
+            "stars": 208539,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -794,7 +806,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21392,
+            "stars": 21399,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -802,7 +814,7 @@
             "owner": "AstrBotDevs",
             "description": "Agentic IM Chatbot infrastructure that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨",
             "url": "https://github.com/AstrBotDevs/AstrBot",
-            "stars": 16671,
+            "stars": 16675,
             "created_at": "2022-12-08T13:27:46Z"
         },
         {
@@ -810,7 +822,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16607,
+            "stars": 16615,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -818,7 +830,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16459,
+            "stars": 16461,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
@@ -842,7 +854,7 @@
             "owner": "kepano",
             "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
             "url": "https://github.com/kepano/obsidian-skills",
-            "stars": 10065,
+            "stars": 10068,
             "created_at": "2026-01-02T21:45:11Z"
         }
     ]
