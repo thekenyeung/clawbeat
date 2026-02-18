@@ -3,18 +3,18 @@ name: OpenClaw Intel Forge
 on:
   schedule:
     - cron: '0 * * * *' # Runs every hour on the hour
-  workflow_dispatch: # Allows you to run it manually from the GitHub UI
+  workflow_dispatch: # Allows manual runs from the GitHub UI
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # This allows the bot to push the data.json back to your repo
+      contents: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }} # Uses your new token to authenticate
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,10 +32,10 @@ jobs:
         run: python forge.py
 
       - name: Commit and Push Data
-  run: |
-    git config --global user.name "Moltbot Forge"
-    git config --global user.email "actions@github.com"
-    git add public/data.json
-    git commit -m "Forge: Update Intel Feed [automated]" || exit 0
-    git pull --rebase origin main
-    git push
+        run: |
+          git config --global user.name "Moltbot Forge"
+          git config --global user.email "actions@github.com"
+          git add public/data.json
+          git commit -m "Forge: Update Intel Feed [automated]" || exit 0
+          git pull --rebase origin main
+          git push
