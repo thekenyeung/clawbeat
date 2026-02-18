@@ -1,0 +1,938 @@
+[
+  {
+    "ID": "1",
+    "Source Name": "TechCrunch",
+    "Category": "Publisher",
+    "Website URL": "techcrunch.com",
+    "Website RSS": "https://techcrunch.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "2",
+    "Source Name": "VentureBeat",
+    "Category": "Publisher",
+    "Website URL": "venturebeat.com",
+    "Website RSS": "https://venturebeat.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "3",
+    "Source Name": "The Verge",
+    "Category": "Publisher",
+    "Website URL": "theverge.com",
+    "Website RSS": "https://www.theverge.com/rss/index.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "4",
+    "Source Name": "Axios",
+    "Category": "Publisher",
+    "Website URL": "axios.com",
+    "Website RSS": "https://api.axios.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "5",
+    "Source Name": "Engadget",
+    "Category": "Publisher",
+    "Website URL": "engadget.com",
+    "Website RSS": "https://www.engadget.com/rss.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "6",
+    "Source Name": "WIRED",
+    "Category": "Publisher",
+    "Website URL": "wired.com",
+    "Website RSS": "https://www.wired.com/feed/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "7",
+    "Source Name": "The New York Times",
+    "Category": "Publisher",
+    "Website URL": "nytimes.com",
+    "Website RSS": "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "8",
+    "Source Name": "The Wall Street Journal",
+    "Category": "Publisher",
+    "Website URL": "wsj.com",
+    "Website RSS": "https://feeds.a.dj.com/rss/RSSTechnology.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "9",
+    "Source Name": "The Economist",
+    "Category": "Publisher",
+    "Website URL": "economist.com",
+    "Website RSS": "https://www.economist.com/technology/rss.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "10",
+    "Source Name": "The Financial Times",
+    "Category": "Publisher",
+    "Website URL": "ft.com",
+    "Website RSS": "https://www.ft.com/technology?format=rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "11",
+    "Source Name": "404 Media",
+    "Category": "Publisher",
+    "Website URL": "404media.co",
+    "Website RSS": "https://www.404media.co/rss/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "12",
+    "Source Name": "Silicon Angle",
+    "Category": "Publisher",
+    "Website URL": "siliconangle.com",
+    "Website RSS": "https://siliconangle.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "13",
+    "Source Name": "NBC News",
+    "Category": "Publisher",
+    "Website URL": "nbcnews.com",
+    "Website RSS": "https://feeds.nbcnews.com/nbcnews/public/tech",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "14",
+    "Source Name": "CNBC",
+    "Category": "Publisher",
+    "Website URL": "cnbc.com",
+    "Website RSS": "https://www.cnbc.com/id/19854910/device/rss/rss.html",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "15",
+    "Source Name": "CNET",
+    "Category": "Publisher",
+    "Website URL": "cnet.com",
+    "Website RSS": "https://www.cnet.com/rss/news/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "16",
+    "Source Name": "Mashable",
+    "Category": "Publisher",
+    "Website URL": "mashable.com",
+    "Website RSS": "https://mashable.com/feeds/rss/all",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "17",
+    "Source Name": "Dark Reading",
+    "Category": "Publisher",
+    "Website URL": "darkreading.com",
+    "Website RSS": "https://www.darkreading.com/rss.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "18",
+    "Source Name": "MacStories",
+    "Category": "Publisher",
+    "Website URL": "macstories.com",
+    "Website RSS": "https://www.macstories.net/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "19",
+    "Source Name": "ZDNet",
+    "Category": "Publisher",
+    "Website URL": "zdnet.com",
+    "Website RSS": "https://www.zdnet.com/news/rss.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "20",
+    "Source Name": "Ars Technica",
+    "Category": "Publisher",
+    "Website URL": "arstechnica.com",
+    "Website RSS": "https://feeds.arstechnica.com/arstechnica/index",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "21",
+    "Source Name": "Fortune",
+    "Category": "Publisher",
+    "Website URL": "fortune.com",
+    "Website RSS": "https://fortune.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "22",
+    "Source Name": "The Information",
+    "Category": "Publisher",
+    "Website URL": "theinformation.com",
+    "Website RSS": "https://www.theinformation.com/feed",
+    "YouTube Channel ID": "UCoKqUtcUtf8QPb0GWxe5e7Q",
+    "Priority": "1"
+  },
+  {
+    "ID": "23",
+    "Source Name": "MIT Technology Review",
+    "Category": "Publisher",
+    "Website URL": "technologyreview.com",
+    "Website RSS": "https://www.technologyreview.com/topnews.rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "24",
+    "Source Name": "Tom's Hardware",
+    "Category": "Publisher",
+    "Website URL": "tomshardware.com",
+    "Website RSS": "https://www.tomshardware.com/feeds/all",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "25",
+    "Source Name": "TechRadar",
+    "Category": "Publisher",
+    "Website URL": "techradar.com",
+    "Website RSS": "https://www.techradar.com/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "26",
+    "Source Name": "Implicator",
+    "Category": "Publisher",
+    "Website URL": "implicator.ai",
+    "Website RSS": "https://www.implicator.ai/latest/rss/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "27",
+    "Source Name": "Reuters",
+    "Category": "Publisher",
+    "Website URL": "reuters.com",
+    "Website RSS": "https://www.reutersagency.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "28",
+    "Source Name": "TL;DR Tech Newsletter",
+    "Category": "Publisher",
+    "Website URL": "https://tldr.tech/",
+    "Website RSS": "https://tldr.tech/tech/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "29",
+    "Source Name": "Fast Company",
+    "Category": "Publisher",
+    "Website URL": "https://www.fastcompany.com",
+    "Website RSS": "https://www.fastcompany.com/technology/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "30",
+    "Source Name": "Forbes",
+    "Category": "Publisher",
+    "Website URL": "https://www.forbes.com",
+    "Website RSS": "https://www.forbes.com/technology/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "31",
+    "Source Name": "Nate's Newsletter",
+    "Category": "Creator",
+    "Website URL": "https://natesnewsletter.substack.com/",
+    "Website RSS": "https://natesnewsletter.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "32",
+    "Source Name": "Autonomous AI Architect",
+    "Category": "Creator",
+    "Website URL": "https://sumantthakur.substack.com/",
+    "Website RSS": "https://sumantthakur.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "33",
+    "Source Name": "AI Supremacy",
+    "Category": "Creator",
+    "Website URL": "https://www.ai-supremacy.com/",
+    "Website RSS": "https://www.ai-supremacy.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "34",
+    "Source Name": "Learn Agentic AI",
+    "Category": "Creator",
+    "Website URL": "https://kanishkpatel.substack.com/",
+    "Website RSS": "https://kanishkpatel.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "35",
+    "Source Name": "OpenClaw",
+    "Category": "Creator",
+    "Website URL": "https://openclaw.substack.com/",
+    "Website RSS": "https://openclaw.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "36",
+    "Source Name": "Upstarts Media",
+    "Category": "Creator",
+    "Website URL": "https://www.upstartsmedia.com/",
+    "Website RSS": "",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "37",
+    "Source Name": "Alex McFarland",
+    "Category": "Creator",
+    "Website URL": "https://alexmcfarland.substack.com/",
+    "Website RSS": "https://alexmcfarland.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "38",
+    "Source Name": "Sources",
+    "Category": "Creator",
+    "Website URL": "https://sources.news/",
+    "Website RSS": "https://sources.news/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "39",
+    "Source Name": "Interconnects",
+    "Category": "Creator",
+    "Website URL": "https://www.interconnects.ai/",
+    "Website RSS": "https://www.interconnects.ai/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "40",
+    "Source Name": "Big Technology",
+    "Category": "Creator",
+    "Website URL": "https://www.bigtechnology.com/",
+    "Website RSS": "https://www.bigtechnology.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "41",
+    "Source Name": "Tech Talks",
+    "Category": "Creator",
+    "Website URL": "https://bdtechtalks.substack.com/",
+    "Website RSS": "https://bdtechtalks.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "42",
+    "Source Name": "AI Side Notes with Sharon Goldman",
+    "Category": "Creator",
+    "Website URL": "https://sharongoldman.substack.com/",
+    "Website RSS": "https://sharongoldman.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "43",
+    "Source Name": "Marcus on AI",
+    "Category": "Creator",
+    "Website URL": "https://garymarcus.substack.com/",
+    "Website RSS": "https://garymarcus.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "44",
+    "Source Name": "One Useful Thing",
+    "Category": "Creator",
+    "Website URL": "https://www.oneusefulthing.org/",
+    "Website RSS": "https://www.oneusefulthing.org/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "45",
+    "Source Name": "Simon Willison's Weblog",
+    "Category": "Creator",
+    "Website URL": "https://simonwillison.net/",
+    "Website RSS": "https://simonwillison.net/atom/entries/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "46",
+    "Source Name": "AI Blog",
+    "Category": "Creator",
+    "Website URL": "https://www.artificial-intelligence.blog/",
+    "Website RSS": "https://www.artificial-intelligence.blog/ai-news?format=rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "47",
+    "Source Name": "The Rundown",
+    "Category": "Creator",
+    "Website URL": "https://www.therundown.ai/",
+    "Website RSS": "https://www.therundown.ai/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "48",
+    "Source Name": "Platformer",
+    "Category": "Creator",
+    "Website URL": "https://www.platformer.news/",
+    "Website RSS": "https://www.platformer.news/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "49",
+    "Source Name": "Stratechery",
+    "Category": "Creator",
+    "Website URL": "stratechery.com",
+    "Website RSS": "https://stratechery.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "50",
+    "Source Name": "The AI Economy",
+    "Category": "Creator",
+    "Website URL": "https://www.theaieconomy.news",
+    "Website RSS": "https://theaieconomy.substack.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "51",
+    "Source Name": "Flipboard: Artificial Intelligence",
+    "Category": "Publisher",
+    "Website URL": "https://flipboard.com/topic/artificialintelligence",
+    "Website RSS": "https://flipboard.com/topic/artificialintelligence.rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "52",
+    "Source Name": "Android Authority",
+    "Category": "Publisher",
+    "Website URL": "https://www.androidauthority.com/",
+    "Website RSS": "https://www.androidauthority.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "53",
+    "Source Name": "The Deep View",
+    "Category": "Publisher",
+    "Website URL": "https://www.thedeepview.com/",
+    "Website RSS": "https://www.thedeepview.com/feed.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "54",
+    "Source Name": "The Register",
+    "Category": "Publisher",
+    "Website URL": "https://www.theregister.com/",
+    "Website RSS": "https://www.theregister.com/software/ai_ml/headlines.atom",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "55",
+    "Source Name": "The AI Corner",
+    "Category": "Creator",
+    "Website URL": "https://www.the-ai-corner.com/",
+    "Website RSS": "https://www.the-ai-corner.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "56",
+    "Source Name": "Ben's Bites",
+    "Category": "Creator",
+    "Website URL": "https://www.bensbites.com/",
+    "Website RSS": "https://www.bensbites.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "57",
+    "Source Name": "Constellation Research",
+    "Category": "Publisher",
+    "Website URL": "https://www.constellationr.com/insights",
+    "Website RSS": "https://www.constellationr.com/insights/news/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "58",
+    "Source Name": "Human in the Loop",
+    "Category": "Creator",
+    "Website URL": "https://www.humanintheloop.online/",
+    "Website RSS": "https://www.humanintheloop.online/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "59",
+    "Source Name": "Artificial Intelligence Made Simple",
+    "Category": "Creator",
+    "Website URL": "https://www.artificialintelligencemadesimple.com/",
+    "Website RSS": "https://www.artificialintelligencemadesimple.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "60",
+    "Source Name": "PCMag",
+    "Category": "Publisher",
+    "Website URL": "https://www.pcmag.com/",
+    "Website RSS": "https://www.pcmag.com/feeds/rss/latest",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "61",
+    "Source Name": "Computerworld",
+    "Category": "Publisher",
+    "Website URL": "https://www.computerworld.com/",
+    "Website RSS": "https://www.computerworld.com/index.rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "62",
+    "Source Name": "SemiAnalysis",
+    "Category": "Creator",
+    "Website URL": "https://semianalysis.com/",
+    "Website RSS": "https://newsletter.semianalysis.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "63",
+    "Source Name": "Sherwood News",
+    "Category": "Publisher",
+    "Website URL": "https://sherwood.news/",
+    "Website RSS": "https://sherwood.news/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "64",
+    "Source Name": "Mashable",
+    "Category": "Publisher",
+    "Website URL": "https://mashable.com/",
+    "Website RSS": "https://mashable.com/feeds/rss/all",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "65",
+    "Source Name": "Gizmodo",
+    "Category": "Publisher",
+    "Website URL": "https://gizmodo.com/",
+    "Website RSS": "https://gizmodo.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "66",
+    "Source Name": "Business Insider",
+    "Category": "Publisher",
+    "Website URL": "https://www.businessinsider.com/",
+    "Website RSS": "https://www.businessinsider.com/tech/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "67",
+    "Source Name": "The New Stack",
+    "Category": "Publisher",
+    "Website URL": "https://thenewstack.io/",
+    "Website RSS": "https://thenewstack.io/blog/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "68",
+    "Source Name": "IEEE Spectrum",
+    "Category": "Publisher",
+    "Website URL": "https://spectrum.ieee.org/",
+    "Website RSS": "https://spectrum.ieee.org/customfeeds/feed/all-topics/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "69",
+    "Source Name": "The Decoder",
+    "Category": "Publisher",
+    "Website URL": "https://the-decoder.com/",
+    "Website RSS": "https://the-decoder.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "70",
+    "Source Name": "Lenny's Newsletter",
+    "Category": "Creator",
+    "Website URL": "https://www.lennysnewsletter.com/",
+    "Website RSS": "https://www.lennysnewsletter.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "71",
+    "Source Name": "The Hacker News",
+    "Category": "Publisher",
+    "Website URL": "https://thehackernews.com/",
+    "Website RSS": "https://feeds.feedburner.com/TheHackersNews",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "72",
+    "Source Name": "CreativeBloq",
+    "Category": "Publisher",
+    "Website URL": "https://www.creativebloq.com/",
+    "Website RSS": "https://www.creativebloq.com/feed",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "73",
+    "Source Name": "Tom's Guide",
+    "Category": "Publisher",
+    "Website URL": "https://www.tomsguide.com/",
+    "Website RSS": "https://www.tomsguide.com/feeds.xml",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "74",
+    "Source Name": "CSO",
+    "Category": "Publisher",
+    "Website URL": "https://www.csoonline.com/",
+    "Website RSS": "https://www.csoonline.com/feed/",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "75",
+    "Source Name": "Medium",
+    "Category": "Creator",
+    "Website URL": "",
+    "Website RSS": "https://medium.com/feed/tag/openclaw",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "76",
+    "Source Name": "The Guardian",
+    "Category": "Publisher",
+    "Website URL": "https://www.theguardian.com/",
+    "Website RSS": "https://www.theguardian.com/technology/rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "77",
+    "Source Name": "Matthew Berman",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@matthew_berman",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCawZsQWqfGSbCI5yjkdVkTA",
+    "Priority": "1"
+  },
+  {
+    "ID": "78",
+    "Source Name": "Alex Finn",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@AlexFinnOfficial",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCfQNB91qRP_5ILeu_S_bSkg",
+    "Priority": "1"
+  },
+  {
+    "ID": "79",
+    "Source Name": "Corbin",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@Corbin_Brown",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCJFMlSxcvlZg5yZUYJT0Pug",
+    "Priority": "1"
+  },
+  {
+    "ID": "80",
+    "Source Name": "Y Combinator",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@ycombinator",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCcefcZRL2oaA_uBNeo5UOWg",
+    "Priority": "1"
+  },
+  {
+    "ID": "81",
+    "Source Name": "Samin Yasar",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@SaminYasar_",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCzGcYErpBX4ldvv0l7MWLfw",
+    "Priority": "1"
+  },
+  {
+    "ID": "82",
+    "Source Name": "Lex Fridman",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@lexfridman",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCSHZKyawb77ixDdsGog4iWA",
+    "Priority": "1"
+  },
+  {
+    "ID": "83",
+    "Source Name": "Brock Mesarich",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@BrockMesarich",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCjc1vfduI7BhVMXBLJLDjmA",
+    "Priority": "1"
+  },
+  {
+    "ID": "84",
+    "Source Name": "Nate B Jones",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@NateBJones",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC0C-17n9iuUQPylguM1d-lQ",
+    "Priority": "1"
+  },
+  {
+    "ID": "85",
+    "Source Name": "Peter Yang",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@PeterYangYT",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCnpBg7yqNauHtlNSpOl5-cg",
+    "Priority": "1"
+  },
+  {
+    "ID": "86",
+    "Source Name": "Across the Rubicon",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@CrossTheRubicon",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC3oVxxmsURlq_UDIjrFckdg",
+    "Priority": "1"
+  },
+  {
+    "ID": "87",
+    "Source Name": "TBPN",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@TBPNLive",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC-DRzaGnL_vtBUpCFH5M0tg",
+    "Priority": "1"
+  },
+  {
+    "ID": "88",
+    "Source Name": "The AI Daily Brief: Artificial Intelligence News",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@AIDailyBrief",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCKelCK4ZaO6HeEI1KQjqzWA",
+    "Priority": "1"
+  },
+  {
+    "ID": "89",
+    "Source Name": "Universe of AI",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@UniverseofAIz",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCYwLV1gDwzGbg7jXQ52bVnQ",
+    "Priority": "1"
+  },
+  {
+    "ID": "90",
+    "Source Name": "Mark Kashef",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@Mark_Kashef",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCHkzp52CldSPZqU5T49mOnA",
+    "Priority": "1"
+  },
+  {
+    "ID": "91",
+    "Source Name": "John Hammond",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@_JohnHammond",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCVeW9qkBjo3zosnqUbG7CFw",
+    "Priority": "1"
+  },
+  {
+    "ID": "92",
+    "Source Name": "The AI Grid",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@TheAiGrid",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCbY9xX3_jW5c2fjlZVBI4cg",
+    "Priority": "1"
+  },
+  {
+    "ID": "93",
+    "Source Name": "AI Revolution",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@airevolutionx",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC5l7RouTQ60oUjLjt1Nh-UQ",
+    "Priority": "1"
+  },
+  {
+    "ID": "94",
+    "Source Name": "Limitless Podcast",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@Limitless-FT",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCCRxYlYOmLE2l5wxs3ckJtg",
+    "Priority": "1"
+  },
+  {
+    "ID": "95",
+    "Source Name": "Chris Verzwyvelt",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@RawContentDaily",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCZJ-iSBR2fyyKiH-VqnrORw",
+    "Priority": "1"
+  },
+  {
+    "ID": "96",
+    "Source Name": "The Neuro Futurist with Prof Joel Pearson",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@profjoelpearson",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCFTqnfc4PN2bYpahOT5ezCA",
+    "Priority": "1"
+  },
+  {
+    "ID": "97",
+    "Source Name": "Greg Isenberg",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@GregIsenberg",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCPjNBjflYl0-HQtUvOx0Ibw",
+    "Priority": "1"
+  },
+  {
+    "ID": "98",
+    "Source Name": "Samuel Gregory",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@0x5am5",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCzeFD1by4aT8RxBwSR7IzDA",
+    "Priority": "1"
+  },
+  {
+    "ID": "99",
+    "Source Name": "Walter Pasquarelli",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@WalterPasquarelli",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC8V6vgKZryKoAMd5hEIVPSA",
+    "Priority": "1"
+  },
+  {
+    "ID": "100",
+    "Source Name": "Flipboard OpenClaw Topic",
+    "Category": "Publisher",
+    "Website URL": "https://flipboard.com/topic/openclaw",
+    "Website RSS": "https://flipboard.com/topic/openclaw.rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "101",
+    "Source Name": "Latent Spaces",
+    "Category": "Creator",
+    "Website URL": "https://www.latent.space/",
+    "Website RSS": "https://api.substack.com/feed/podcast/1084089.rss",
+    "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "102",
+    "Source Name": "Brian Casel",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@briancasel",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCSxPE9PHHxQUEt6ajGmQyMA",
+    "Priority": "1"
+  },
+  {
+    "ID": "103",
+    "Source Name": "Duncan Rogoff | AI Automation",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@duncanrogoff",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC37JpWP5PxLSma2lh79HU9A",
+    "Priority": "1"
+  },
+  {
+    "ID": "104",
+    "Source Name": "AI Master",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@iamAImaster",
+    "Website RSS": "",
+    "YouTube Channel ID": "UC0yHbz4OxdQFwmVX2BBQqLg",
+    "Priority": "1"
+  }
+]

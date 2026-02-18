@@ -1,0 +1,27 @@
+{
+  "name": "moltbot-news-project",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^1.41.0",
+    "lucide-react": "^0.564.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "google-auth-library": "^10.5.0",
+    "google-spreadsheet": "^5.2.0",
+    "googleapis": "^171.4.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.1.0"
+  }
+}

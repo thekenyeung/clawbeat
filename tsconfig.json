@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "types": ["node", "vite/client"],
+    "moduleResolution": "bundler", // Ensure this is explicitly set
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "strict": true,
+    
+    /* ADD THESE TWO LINES */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* EXISTING SETTINGS */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force"
+  }
+}
