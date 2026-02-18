@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 09:19:57",
+    "last_updated": "2026-02-18 18:52:51",
     "items": [
         {
             "title": "OpenAI's acquisition of OpenClaw signals the beginning of the end of the ChatGPT era",
@@ -21,8 +21,8 @@
                     "url": "https://www.tomshardware.com/tech-industry/openai-hires-genius-openclaw-creator-but-popular-ai-assistant-will-remain-open-source-sam-altman-says-creator-will-work-on-smart-agents-in-new-role"
                 },
                 {
-                    "source": "OpenClaw",
-                    "url": "https://openclaw.substack.com/p/openclaw-joined-openai-translation"
+                    "source": "Sources",
+                    "url": "https://sources.news/p/openais-4o-valentines-breakup"
                 },
                 {
                     "source": "Flipboard: Artificial Intelligence",
@@ -33,16 +33,41 @@
                     "url": "https://www.thedeepview.com/articles/openai-bets-big-on-personal-ai-agents-with-openclaw"
                 },
                 {
+                    "source": "Medium",
+                    "url": "https://medium.com/@carlcarrie/openclaws-skills-agentic-ai-risks-aae897564d13?source=rss------openclaw-5"
+                },
+                {
                     "source": "Flipboard OpenClaw Topic",
                     "url": "https://venturebeat.com/technology/openais-acquisition-of-openclaw-signals-the-beginning-of-the-end-of-the?utm_source=flipboard&utm_content=user/venturebeat"
                 },
                 {
                     "source": "Flipboard OpenClaw Topic",
                     "url": "https://www.cnet.com/tech/services-and-software/openai-strikes-deal-with-openclaw-founder/?utm_source=flipboard&utm_content=user/cnet"
+                }
+            ]
+        },
+        {
+            "title": "What Do A.I. Chatbots Discuss Among Themselves? We Sent One to Find Out.",
+            "url": "https://www.nytimes.com/2026/02/18/upshot/moltbook-artificial-intelligence-ai.html",
+            "source": "The New York Times",
+            "date": "02-18-2026",
+            "summary": "We interviewed our bot about what it learned on Moltbook, the A.I.-only social network....",
+            "moreCoverage": [
+                {
+                    "source": "IEEE Spectrum",
+                    "url": "https://spectrum.ieee.org/moltbook-agentic-ai-agents-openclaw"
                 },
                 {
                     "source": "Flipboard OpenClaw Topic",
-                    "url": "https://fortune.com/2026/02/17/what-openais-openclaw-hire-says-about-the-future-of-ai-agents/?utm_source=flipboard&utm_content=fortune/magazine/Personal+finance"
+                    "url": "https://www.entrepreneur.com/business-news/coders-weekend-ai-project-sparks-a-bidding-war/502786?utm_source=flipboard&utm_content=topic%2Fopenclaw"
+                },
+                {
+                    "source": "Flipboard OpenClaw Topic",
+                    "url": "https://www.wsj.com/tech/ai/this-viral-ai-project-went-from-side-hustle-to-coveted-prize-in-three-months-8daae057"
+                },
+                {
+                    "source": "Flipboard OpenClaw Topic",
+                    "url": "https://www.nytimes.com/2026/02/18/upshot/moltbook-artificial-intelligence-ai.html?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 }
             ]
         },
@@ -52,7 +77,12 @@
             "source": "Fast Company",
             "date": "02-18-2026",
             "summary": "TheAIboom began with ChatGPT and chatbots. Now chatbots are starting to “grow arms and legs,” as developers say, meaning they can use digital tools and work independently on a human’s behalf. Theopen-...",
-            "moreCoverage": []
+            "moreCoverage": [
+                {
+                    "source": "Flipboard OpenClaw Topic",
+                    "url": "https://www.fastcompany.com/91494326/openclaw-peter-steinberger-openai-meta-lex-fridman?utm_source=flipboard&utm_content=topic%2Fopenclaw"
+                }
+            ]
         },
         {
             "title": "The ‘zombie internet’ has arrived—and it has devastating consequences for advertising, social media, and the human web",
@@ -63,124 +93,28 @@
             "moreCoverage": []
         },
         {
-            "title": "My honest breakdown of the OpenClaw hire + what 21,639 exposed instances tell you about agent security",
-            "url": "https://natesnewsletter.substack.com/p/the-20kmonth-lobster-that-zuckerberg",
-            "source": "Nate's Newsletter",
+            "title": "What is OpenClaw? 🦀",
+            "url": "https://www.ai-supremacy.com/p/what-is-openclaw-moltbot-2026",
+            "source": "AI Supremacy",
             "date": "02-18-2026",
-            "summary": "Watch now | The OpenClaw saga continues......",
-            "moreCoverage": [
-                {
-                    "source": "Alex McFarland",
-                    "url": "https://alexmcfarland.substack.com/p/the-perfect-openclaw-setup-how-i"
-                },
-                {
-                    "source": "Medium",
-                    "url": "https://geraldkohjiale.medium.com/your-private-agent-openclaw-hetzner-vps-tailscale-979d2aabf97c?source=rss------openclaw-5"
-                }
-            ]
-        },
-        {
-            "title": "160,000 developers are building digital employees, not chatbots + the 4 prompts I use to deploy agents safely",
-            "url": "https://natesnewsletter.substack.com/p/what-3-weeks-inside-the-moltbot-openclaw",
-            "source": "Nate's Newsletter",
-            "date": "02-18-2026",
-            "summary": "Watch now | So it seems that Moltbot (OpenClaw) drives a hard bargain and can be pretty chatty on text....",
-            "moreCoverage": []
-        },
-        {
-            "title": "OpenClaw Part 2: 150,000 AI agents now have their own economy—here's what they're building while you sleep",
-            "url": "https://natesnewsletter.substack.com/p/openclaw-part-2-150000-ai-agents",
-            "source": "Nate's Newsletter",
-            "date": "02-18-2026",
-            "summary": "Watch now | The AI lobsters are talking to each other, and all of us should pay attention....",
-            "moreCoverage": []
-        },
-        {
-            "title": "The Lobster That Broke the Internet (And What It Tells Us About the Future of Computing) + my harm reduction guide if you're planning to run it",
-            "url": "https://natesnewsletter.substack.com/p/the-moltbot-origin-story-a-16-million",
-            "source": "Nate's Newsletter",
-            "date": "02-18-2026",
-            "summary": "Watch now | Clawdbot. Moltbot. OpenClaw. No matter how many times it rebrands, the signal is the same: we want AI that actually DOES things and we may not be ready for what that really means....",
-            "moreCoverage": []
-        },
-        {
-            "title": "Don’t Give OpenClaw Your Keys: Secure Deployment and Demo Guide",
-            "url": "https://sumantthakur.substack.com/p/dont-give-openclaw-your-keys-secure",
-            "source": "Autonomous AI Architect",
-            "date": "02-18-2026",
-            "summary": "How to run OpenClaw in a locked down Docker sandbox, allow safe model access, and avoid common credential and supply chain traps....",
-            "moreCoverage": [
-                {
-                    "source": "AI Supremacy",
-                    "url": "https://www.ai-supremacy.com/p/what-is-openclaw-moltbot-2026"
-                },
-                {
-                    "source": "OpenClaw",
-                    "url": "https://openclaw.substack.com/p/the-free-model-stack-that-actually"
-                },
-                {
-                    "source": "The New Stack",
-                    "url": "https://thenewstack.io/deno-sandbox-security-secrets/"
-                },
-                {
-                    "source": "Medium",
-                    "url": "https://medium.com/@andrejkurocenko/from-yolo-to-best-effort-my-openclaw-experiment-in-search-of-the-next-dev-setup-97e7d7b3c037?source=rss------openclaw-5"
-                }
-            ]
-        },
-        {
-            "title": "What is Moltbook — the Social Network Where AI Agents Chat?",
-            "url": "https://kanishkpatel.substack.com/p/what-is-moltbook-the-social-network",
-            "source": "Learn Agentic AI",
-            "date": "02-18-2026",
-            "summary": "Moltbook—a radically new social network where only AI agents can create, share, comment, and upvote....",
-            "moreCoverage": [
-                {
-                    "source": "Simon Willison's Weblog",
-                    "url": "https://simonwillison.net/2026/Jan/30/moltbook/#atom-entries"
-                },
-                {
-                    "source": "IEEE Spectrum",
-                    "url": "https://spectrum.ieee.org/moltbook-agentic-ai-agents-openclaw"
-                }
-            ]
-        },
-        {
-            "title": "What is OpenClaw (formerly Clawdbot / Moltbot)?",
-            "url": "https://kanishkpatel.substack.com/p/what-is-openclaw-formerly-clawdbot",
-            "source": "Learn Agentic AI",
-            "date": "02-18-2026",
-            "summary": "Age of Personal AI Assistants...",
-            "moreCoverage": [
-                {
-                    "source": "Alex McFarland",
-                    "url": "https://alexmcfarland.substack.com/p/how-to-set-up-moltbot-clawdbot-in"
-                },
-                {
-                    "source": "Marcus on AI",
-                    "url": "https://garymarcus.substack.com/p/openclaw-aka-moltbot-is-everywhere"
-                }
-            ]
-        },
-        {
-            "title": "The Only OpenClaw Setup That Matters: A Daily Executive Assistant Loop",
-            "url": "https://openclaw.substack.com/p/the-only-openclaw-setup-that-matters",
-            "source": "OpenClaw",
-            "date": "02-18-2026",
-            "summary": "Most people don’t need 50 automations. They need one boring outcome that works every day....",
+            "summary": "A viral open-source project in early 2026....",
             "moreCoverage": [
                 {
                     "source": "The Deep View",
                     "url": "https://www.thedeepview.com/articles/ready-to-install-openclaw-do-it-smart-or-wait"
+                },
+                {
+                    "source": "The New Stack",
+                    "url": "https://thenewstack.io/deno-sandbox-security-secrets/"
                 }
             ]
         },
         {
-            "title": "Clawdbot, risk, and personal responsibility",
-            "url": "https://alexmcfarland.substack.com/p/clawdbot-risk-and-personal-responsibility",
-            "source": "Alex McFarland",
+            "title": "How did Meta lose the ClawFather?",
+            "url": "https://sources.news/p/how-did-meta-lose-the-clawfather",
+            "source": "Sources",
             "date": "02-18-2026",
-            "summary": "If you're freaking out about AI security, read this...",
+            "summary": "After Zuckerberg reached out, Altman ultimately won over OpenClaw creator Peter Steinberger. Also: India's AI Summit kicks off, a new consumer AI agent platform, and Roblox is the gaming market....",
             "moreCoverage": []
         },
         {
@@ -190,6 +124,10 @@
             "date": "02-18-2026",
             "summary": "The AI social network was mostly roleplaying this time. What happens when it's not?...",
             "moreCoverage": [
+                {
+                    "source": "Simon Willison's Weblog",
+                    "url": "https://simonwillison.net/2026/Jan/30/moltbook/#atom-entries"
+                },
                 {
                     "source": "Platformer",
                     "url": "https://www.platformer.news/moltbook-ai-agents-security-content-moderation/"
@@ -225,14 +163,6 @@
             "moreCoverage": []
         },
         {
-            "title": "Salesforce Spots Parallels with OpenClaw in Enterprise AI",
-            "url": "https://theaieconomy.substack.com/p/salesforce-parallels-openclaw-enterprise-ai",
-            "source": "The AI Economy",
-            "date": "02-18-2026",
-            "summary": "The OpenClaw-style agents are on Salesforce's radar—but require guardrails. Plus, the four key pillars to help move agentic pilots into production...",
-            "moreCoverage": []
-        },
-        {
             "title": "Dreaming up personal agents",
             "url": "https://www.bensbites.com/p/dreaming-up-personal-agents",
             "source": "Ben's Bites",
@@ -265,41 +195,36 @@
             "moreCoverage": []
         },
         {
+            "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
+            "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "How agents are mimicking human social dynamics — including the bad parts.Continue reading on Level Up Coding »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Cut OpenClaw Token Costs by 77% | Guide",
+            "url": "https://medium.com/@daniel_62194/cut-openclaw-token-costs-by-77-guide-f70bcd3a4096?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Your first OpenClaw API bill probably hurt. Mine definitely did. $187 for a month I thought I was “just playing around.” The framework is…Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Your Private Agent: OpenClaw + Hetzner VPS + Tailscale",
+            "url": "https://geraldkohjiale.medium.com/your-private-agent-openclaw-hetzner-vps-tailscale-979d2aabf97c?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "This article is a quick guide to setting up private agents with OpenClaw, using a cheap VPS from Hetzner, secured with Tailscale.Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
             "title": "OpenClaw : peut-on sécuriser les assistants IA autonomes ?",
             "url": "https://marcbarbezat.medium.com/openclaw-peut-on-s%C3%A9curiser-les-assistants-ia-autonomes-46bce4973000?source=rss------openclaw-5",
             "source": "Medium",
             "date": "02-18-2026",
             "summary": "Continue reading on Medium »...",
             "moreCoverage": []
-        },
-        {
-            "title": "Me armé un “editor” con IA que revisa mi día y me obliga a publicar (OpenClaw + Heartbeat)",
-            "url": "https://medium.com/@PabloAlaniz/me-arm%C3%A9-un-editor-con-ia-que-revisa-mi-d%C3%ADa-y-me-obliga-a-publicar-openclaw-heartbeat-290bd4d02d81?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "Configuré un agente para que revise mi día y me sugiera qué publicar. Así funciona.Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
-            "title": "How to Build and Publish OpenClaw Skills — A Visual Guide with a Real Mindmap Example",
-            "url": "https://medium.com/@insight_23577/how-to-build-and-publish-openclaw-skills-a-visual-guide-with-a-real-mindmap-example-81ab3cf9a005?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "TL;DR: OpenClaw skills are pluggable capability modules that teach your AI agent new abilities.Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
-            "title": "He Built a Viral AI Assistant As a Weekend Side Project. Three Months Later, Three AI Giants Were Fighting Over Him.",
-            "url": "https://www.entrepreneur.com/business-news/coders-weekend-ai-project-sparks-a-bidding-war/502786?utm_source=flipboard&utm_content=topic%2Fopenclaw",
-            "source": "Flipboard OpenClaw Topic",
-            "date": "02-18-2026",
-            "summary": "It started as a weekend hobby in November. By February, the biggest AI labs in the world were battling to make him a full-time employee. Peter Steinberger, an Austrian coder who sold his last startup ...",
-            "moreCoverage": [
-                {
-                    "source": "Flipboard OpenClaw Topic",
-                    "url": "https://www.wsj.com/tech/ai/this-viral-ai-project-went-from-side-hustle-to-coveted-prize-in-three-months-8daae057"
-                }
-            ]
         },
         {
             "title": "Mac mini shortages are starting to happen — and the OpenClaw AI boom is a key reason",
@@ -329,17 +254,36 @@
             "date": "02-18-2026",
             "summary": "Raspberry Pi with gains on Tuesday – driven by speculation about single-board computers as a cost-effective alternative for running OpenClaw. Rally in …...",
             "moreCoverage": []
-        },
-        {
-            "title": "AI Agents Meet Blockchain At ETHDenver 2026: What Leaders Must Know",
-            "url": "https://www.forbes.com/sites/digital-assets/2026/02/18/ai-agents-meet-blockchain-at-ethdenver-2026-what-leaders-must-know/?utm_source=flipboard&utm_content=topic%2Fopenclaw",
-            "source": "Flipboard OpenClaw Topic",
-            "date": "02-18-2026",
-            "summary": "If there was a doubt that AI agents are moving from concept to infrastructure, the combination of OpenClaw and ETH Denver is putting that debate to rest. Across the main stages, side events, and demo ...",
-            "moreCoverage": []
         }
     ],
     "videos": [
+        {
+            "title": "OpenAI Snaps Up OpenClaw, Yahoo’s AI Search Engine ‘Scout,’ Inside Anduril’s $60B+ Valuation Talks",
+            "url": "https://www.youtube.com/watch?v=yHrN_vdnFpg",
+            "thumbnail": "https://i.ytimg.com/vi/yHrN_vdnFpg/hqdefault.jpg",
+            "channel": "The Information",
+            "description": "The Information’s Rocket Drew discusses OpenAI hiring the OpenClaw founder and the intensifying race for personal AI agents. We also talk with our e-c...",
+            "publishedAt": "2026-02-18T07:01:15Z",
+            "isPriority": false
+        },
+        {
+            "title": "Why OpenAI Hired the OpenClaw Founder",
+            "url": "https://www.youtube.com/watch?v=4gYQzSyBDgU",
+            "thumbnail": "https://i.ytimg.com/vi/4gYQzSyBDgU/hqdefault.jpg",
+            "channel": "The Information",
+            "description": "AI Reporter Rocket Drew explains why OpenAI’s hire of Peter Steinberger is a direct response to Anthropic’s Claude Cowork. He breaks down how the Open...",
+            "publishedAt": "2026-02-18T01:30:04Z",
+            "isPriority": false
+        },
+        {
+            "title": "OpenAI Hires OpenClaw Founder",
+            "url": "https://www.youtube.com/watch?v=BRUOna1kOHg",
+            "thumbnail": "https://i.ytimg.com/vi/BRUOna1kOHg/hqdefault.jpg",
+            "channel": "The Information",
+            "description": "OpenAI has officially hired the founder of the open-source project OpenClaw, Peter Steinberger. The Information’s Rocket Drew breaks down what this me...",
+            "publishedAt": "2026-02-17T23:30:05Z",
+            "isPriority": false
+        },
         {
             "title": "Anthropic just dropped Sonnet 4.6...",
             "url": "https://www.youtube.com/watch?v=BYxF-svDl8Q",
@@ -368,6 +312,15 @@
             "isPriority": false
         },
         {
+            "title": "LIVE: Anthropic BANS OpenClaw. It's OVER!",
+            "url": "https://www.youtube.com/watch?v=OEOiERQKKEQ",
+            "thumbnail": "https://i.ytimg.com/vi/OEOiERQKKEQ/hqdefault_live.jpg",
+            "channel": "Alex Finn",
+            "description": "Join the Vibe Coding Academy: https://vibecodingacademy.dev...",
+            "publishedAt": "2026-02-18T17:57:37Z",
+            "isPriority": false
+        },
+        {
             "title": "Claude Sonnet 4.6 just released. Greatest model for OpenClaw ever?",
             "url": "https://www.youtube.com/watch?v=HjQ5ty3_X_0",
             "thumbnail": "https://i.ytimg.com/vi/HjQ5ty3_X_0/hqdefault.jpg",
@@ -383,15 +336,6 @@
             "channel": "Alex Finn",
             "description": "Join the Vibe Coding Academy: https://www.vibecodingacademy.dev...",
             "publishedAt": "2026-02-16T21:08:41Z",
-            "isPriority": false
-        },
-        {
-            "title": "100 hours of OpenClaw lessons in 35 minutes",
-            "url": "https://www.youtube.com/watch?v=_kZCoW-Qxnc",
-            "thumbnail": "https://i.ytimg.com/vi/_kZCoW-Qxnc/hqdefault.jpg",
-            "channel": "Alex Finn",
-            "description": "I've spent 100 hours with OpenClaw. Here is EVERYTHING I know about it. Feel free to skip around to relevant chapters.\n\nFULL OpenClaw bootcamp in the ...",
-            "publishedAt": "2026-02-15T17:24:39Z",
             "isPriority": false
         },
         {
@@ -440,7 +384,7 @@
             "isPriority": false
         },
         {
-            "title": "NEW Claude Sonnet 4.6 Levels Up OpenClaw (INSTANTLY)",
+            "title": "OpenClaw Just Got a Massive Upgrade... (Claude Sonnet 4.6)",
             "url": "https://www.youtube.com/watch?v=p86xxkzwRTs",
             "thumbnail": "https://i.ytimg.com/vi/p86xxkzwRTs/hqdefault.jpg",
             "channel": "Brock Mesarich | AI for Non Techies",
@@ -554,15 +498,6 @@
             "channel": "The AI Daily Brief: Artificial Intelligence News",
             "description": "A 10-agent OpenClaw mission control built to test digital employees, persistent memory, heartbeats, and scheduled CR jobs. Agent roster includes a mob...",
             "publishedAt": "2026-02-15T19:00:46Z",
-            "isPriority": false
-        },
-        {
-            "title": "The SaaSpocalypse Continues",
-            "url": "https://www.youtube.com/watch?v=kd6UpFirnxQ",
-            "thumbnail": "https://i.ytimg.com/vi/kd6UpFirnxQ/hqdefault.jpg",
-            "channel": "The AI Daily Brief: Artificial Intelligence News",
-            "description": "SaaS-apocalypse narrative triggered a dramatic software selloff, erasing roughly $400 billion in market value. The debate centers on whether AI agents...",
-            "publishedAt": "2026-02-10T16:57:06Z",
             "isPriority": false
         },
         {
@@ -833,7 +768,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 207913,
+            "stars": 208109,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -841,7 +776,7 @@
             "owner": "CherryHQ",
             "description": "AI productivity studio with smart chat, autonomous agents, and 300+ assistants. Unified access to frontier LLMs",
             "url": "https://github.com/CherryHQ/cherry-studio",
-            "stars": 39918,
+            "stars": 39920,
             "created_at": "2024-05-24T01:56:26Z"
         },
         {
@@ -857,7 +792,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21307,
+            "stars": 21339,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -865,7 +800,7 @@
             "owner": "AstrBotDevs",
             "description": "Agentic IM Chatbot infrastructure that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨",
             "url": "https://github.com/AstrBotDevs/AstrBot",
-            "stars": 16655,
+            "stars": 16661,
             "created_at": "2022-12-08T13:27:46Z"
         },
         {
@@ -873,7 +808,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16556,
+            "stars": 16581,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -881,7 +816,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16433,
+            "stars": 16446,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
@@ -889,7 +824,7 @@
             "owner": "langbot-app",
             "description": "Production-grade platform for building agentic IM bots - 生产级多平台智能机器人开发平台. 提供 Agent、知识库编排、插件系统 / Bots for Discord / Slack / LINE / Telegram / WeChat(企业微信, 企微智能机器人, 公众号) / 飞书 / 钉钉 / QQ e.g. Integrated with ChatGPT(GPT), DeepSeek, Dify, n8n, Langflow, Coze, Claude, Gemini, MiniMax, Ollama, SiliconFlow, Moonshot, GLM, clawdbot / moltbot / openclaw",
             "url": "https://github.com/langbot-app/LangBot",
-            "stars": 15301,
+            "stars": 15302,
             "created_at": "2022-12-07T08:48:02Z"
         },
         {
@@ -897,15 +832,15 @@
             "owner": "getumbrel",
             "description": "An elegant home server OS. Run OpenClaw, store your files and photos, run a Bitcoin node, and do more with over 300 apps in the Umbrel App Store.",
             "url": "https://github.com/getumbrel/umbrel",
-            "stars": 10522,
+            "stars": 10521,
             "created_at": "2020-07-06T18:40:02Z"
         },
         {
             "name": "obsidian-skills",
             "owner": "kepano",
-            "description": "Agent skills for Obsidian",
+            "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
             "url": "https://github.com/kepano/obsidian-skills",
-            "stars": 10053,
+            "stars": 10057,
             "created_at": "2026-01-02T21:45:11Z"
         }
     ]
