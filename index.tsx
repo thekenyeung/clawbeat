@@ -45,8 +45,8 @@ interface ProjectItem {
   description: string;
   url: string;
   stars: number;
-  owner: string;      // Matches GitHub 'owner' field
-  created_at: string; // Matches GitHub 'created_at' field
+  owner: string;
+  created_at: string;
 }
 
 // --- HELPERS ---
@@ -73,6 +73,30 @@ const App: React.FC = () => {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
 
+  // --- GA4 TRACKING LOGIC ---
+  const trackEvent = (action: string, params: object) => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', action, params);
+    }
+  };
+
+  const handleLinkClick = (title: string, source: string, type: string = 'news_article') => {
+    trackEvent('select_content', {
+      content_type: type,
+      item_id: title,
+      content_source: source
+    });
+  };
+
+  useEffect(() => {
+    trackEvent('page_view', {
+      page_title: activePage.charAt(0).toUpperCase() + activePage.slice(1),
+      page_location: window.location.href,
+      page_path: `/${activePage}`
+    });
+  }, [activePage]);
+
+  // --- FETCHING LOGIC ---
   const fetchContent = async (page: Page) => {
     setLoading(true);
     setError(null);
@@ -97,17 +121,6 @@ const App: React.FC = () => {
   useEffect(() => {
     fetchContent(activePage);
   }, [activePage]);
-
-  // Inside the App component
-  useEffect(() => {
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'page_view', {
-        page_title: activePage.charAt(0).toUpperCase() + activePage.slice(1),
-        page_location: window.location.href,
-        page_path: `/${activePage}`
-      });
-  }
-}, [activePage]);
 
   // --- SORTING LOGIC ---
   const sortedProjects = [...projects].sort((a, b) => 
@@ -173,9 +186,9 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div className="min-h-[50vh]">
-            {activePage === 'news' && <NewsList items={news} />}
-            {activePage === 'videos' && <VideoGrid items={sortedVideos} />}
-            {activePage === 'projects' && <ProjectGrid items={sortedProjects} />}
+            {activePage === 'news' && <NewsList items={news} onTrackClick={handleLinkClick} />}
+            {activePage === 'videos' && <VideoGrid items={sortedVideos} onTrackClick={handleLinkClick} />}
+            {activePage === 'projects' && <ProjectGrid items={sortedProjects} onTrackClick={handleLinkClick} />}
           </div>
         )}
       </main>
@@ -197,7 +210,7 @@ const SortButton = ({ active, onClick, label }: any) => (
   </button>
 );
 
-const NewsList = ({ items }: { items: NewsItem[] }) => (
+const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => (
   <div className="flex flex-col">
     {items.map((item, idx) => {
       const isVerified = (whitelist as any[]).some(w =>
@@ -212,7 +225,13 @@ const NewsList = ({ items }: { items: NewsItem[] }) => (
           </span>
 
           <div className="flex flex-col gap-3">
-            <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2">
+            <a 
+              href={item.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => onTrackClick(item.title, item.source)}
+              className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2"
+            >
               <span className="flex-1">{item.title}</span>
               <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
             </a>
@@ -235,7 +254,12 @@ const NewsList = ({ items }: { items: NewsItem[] }) => (
                 <span className="text-[12px] font-black text-orange-500/30 uppercase italic mr-1">More Coverage:</span>
                 {item.moreCoverage.map((cov, cIdx) => (
                   <React.Fragment key={cIdx}>
-                    <a href={cov.url} target="_blank" className="text-[12px] text-slate-500 hover:text-orange-500 font-bold transition-colors">
+                    <a 
+                      href={cov.url} 
+                      target="_blank" 
+                      onClick={() => onTrackClick(item.title, cov.source)}
+                      className="text-[12px] text-slate-500 hover:text-orange-500 font-bold transition-colors"
+                    >
                       {cov.source.includes('.') ? cov.source.split('.').slice(0, -1).join('.') : cov.source}
                     </a>
                     {cIdx < (item.moreCoverage?.length ?? 0) - 1 && <span className="text-slate-800 text-[10px] mx-1">|</span>}
@@ -250,7 +274,7 @@ const NewsList = ({ items }: { items: NewsItem[] }) => (
   </div>
 );
 
-const VideoGrid = ({ items }: { items: VideoItem[] }) => (
+const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
     {items.map((video, idx) => (
       <div key={idx} className="group relative flex flex-col">
@@ -267,13 +291,19 @@ const VideoGrid = ({ items }: { items: VideoItem[] }) => (
         <h4 className="font-bold text-white text-lg group-hover:text-orange-500 line-clamp-2 leading-tight">{video.title}</h4>
         <p className="text-[10px] text-orange-500 mt-2 uppercase font-black tracking-widest">{video.channel} • {formatDate(video.publishedAt)}</p>
         {video.description && <p className="text-slate-400 text-xs mt-3 line-clamp-2 leading-relaxed italic">{video.description}</p>}
-        <a href={video.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
+        <a 
+          href={video.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          onClick={() => onTrackClick(video.title, video.channel, 'video')}
+          className="absolute inset-0 z-10" 
+        />
       </div>
     ))}
   </div>
 );
 
-const ProjectGrid = ({ items }: { items: ProjectItem[] }) => (
+const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     {items.map((p, idx) => (
       <div key={idx} className="group relative p-6 rounded-xl bg-white/[0.03] border border-white/5 hover:border-orange-500/40 transition-all flex flex-col justify-between">
@@ -301,7 +331,14 @@ const ProjectGrid = ({ items }: { items: ProjectItem[] }) => (
           </div>
         </div>
 
-        <a href={p.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" aria-label={`View ${p.name}`} />
+        <a 
+          href={p.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          onClick={() => onTrackClick(p.name, p.owner, 'github_repo')}
+          className="absolute inset-0 z-10" 
+          aria-label={`View ${p.name}`} 
+        />
       </div>
     ))}
   </div>
