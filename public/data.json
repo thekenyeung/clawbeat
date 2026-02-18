@@ -1,6 +1,14 @@
 {
-    "last_updated": "2026-02-18 18:52:51",
+    "last_updated": "2026-02-18 19:37:01",
     "items": [
+        {
+            "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
+            "url": "https://venturebeat.com/technology/alibabas-qwen-3-5-397b-a17-beats-its-larger-trillion-parameter-model-at-a",
+            "source": "VentureBeat",
+            "date": "02-18-2026",
+            "summary": "Alibaba dropped Qwen3.5earlier this week, timed to coincide with the Lunar New Year, and the headline numbers alone are enough to make enterprise AI buyers stop and pay attention.The new flagship open...",
+            "moreCoverage": []
+        },
         {
             "title": "OpenAI's acquisition of OpenClaw signals the beginning of the end of the ChatGPT era",
             "url": "https://venturebeat.com/technology/openais-acquisition-of-openclaw-signals-the-beginning-of-the-end-of-the",
@@ -25,7 +33,7 @@
                     "url": "https://sources.news/p/openais-4o-valentines-breakup"
                 },
                 {
-                    "source": "Flipboard: Artificial Intelligence",
+                    "source": "VentureBeat",
                     "url": "https://venturebeat.com/technology/openais-acquisition-of-openclaw-signals-the-beginning-of-the-end-of-the?utm_source=flipboard&utm_content=user/venturebeat"
                 },
                 {
@@ -33,15 +41,11 @@
                     "url": "https://www.thedeepview.com/articles/openai-bets-big-on-personal-ai-agents-with-openclaw"
                 },
                 {
-                    "source": "Medium",
-                    "url": "https://medium.com/@carlcarrie/openclaws-skills-agentic-ai-risks-aae897564d13?source=rss------openclaw-5"
-                },
-                {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "VentureBeat",
                     "url": "https://venturebeat.com/technology/openais-acquisition-of-openclaw-signals-the-beginning-of-the-end-of-the?utm_source=flipboard&utm_content=user/venturebeat"
                 },
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "Cnet",
                     "url": "https://www.cnet.com/tech/services-and-software/openai-strikes-deal-with-openclaw-founder/?utm_source=flipboard&utm_content=user/cnet"
                 }
             ]
@@ -58,15 +62,15 @@
                     "url": "https://spectrum.ieee.org/moltbook-agentic-ai-agents-openclaw"
                 },
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "Entrepreneur",
                     "url": "https://www.entrepreneur.com/business-news/coders-weekend-ai-project-sparks-a-bidding-war/502786?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 },
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "WSJ",
                     "url": "https://www.wsj.com/tech/ai/this-viral-ai-project-went-from-side-hustle-to-coveted-prize-in-three-months-8daae057"
                 },
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "NY Times",
                     "url": "https://www.nytimes.com/2026/02/18/upshot/moltbook-artificial-intelligence-ai.html?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 }
             ]
@@ -79,7 +83,7 @@
             "summary": "TheAIboom began with ChatGPT and chatbots. Now chatbots are starting to “grow arms and legs,” as developers say, meaning they can use digital tools and work independently on a human’s behalf. Theopen-...",
             "moreCoverage": [
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "Fastcompany",
                     "url": "https://www.fastcompany.com/91494326/openclaw-peter-steinberger-openai-meta-lex-fridman?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 }
             ]
@@ -131,10 +135,6 @@
                 {
                     "source": "Platformer",
                     "url": "https://www.platformer.news/moltbook-ai-agents-security-content-moderation/"
-                },
-                {
-                    "source": "Medium",
-                    "url": "https://medium.com/@promptiversestudios/snapshot-58-in-memoriam-moltbook-2fb87298613d?source=rss------openclaw-5"
                 }
             ]
         },
@@ -195,41 +195,9 @@
             "moreCoverage": []
         },
         {
-            "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
-            "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "How agents are mimicking human social dynamics — including the bad parts.Continue reading on Level Up Coding »...",
-            "moreCoverage": []
-        },
-        {
-            "title": "Cut OpenClaw Token Costs by 77% | Guide",
-            "url": "https://medium.com/@daniel_62194/cut-openclaw-token-costs-by-77-guide-f70bcd3a4096?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "Your first OpenClaw API bill probably hurt. Mine definitely did. $187 for a month I thought I was “just playing around.” The framework is…Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
-            "title": "Your Private Agent: OpenClaw + Hetzner VPS + Tailscale",
-            "url": "https://geraldkohjiale.medium.com/your-private-agent-openclaw-hetzner-vps-tailscale-979d2aabf97c?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "This article is a quick guide to setting up private agents with OpenClaw, using a cheap VPS from Hetzner, secured with Tailscale.Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
-            "title": "OpenClaw : peut-on sécuriser les assistants IA autonomes ?",
-            "url": "https://marcbarbezat.medium.com/openclaw-peut-on-s%C3%A9curiser-les-assistants-ia-autonomes-46bce4973000?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
             "title": "Mac mini shortages are starting to happen — and the OpenClaw AI boom is a key reason",
             "url": "https://www.techradar.com/computing/macs/mac-mini-shortages-are-starting-to-happen-and-the-openclaw-ai-boom-is-a-key-reason?utm_source=flipboard&utm_content=topic/technology",
-            "source": "Flipboard OpenClaw Topic",
+            "source": "Techradar",
             "date": "02-18-2026",
             "summary": "If you were thinking of ordering a Mac mini with lots of RAM from Apple, then you could be in for something of a wait – and that's even more true for …...",
             "moreCoverage": []
@@ -237,20 +205,20 @@
         {
             "title": "Meta restricts use of OpenClaw over security fears",
             "url": "https://link.wired.com/view/5cc9e28e2ddf9c1a7adf9043qb3vr.573k/44817443?utm_source=flipboard&utm_content=topic%2Fopenclaw",
-            "source": "Flipboard OpenClaw Topic",
+            "source": "Link",
             "date": "02-18-2026",
             "summary": "BY DANIELE POLIDORO | 2-MINUTE READ BY MARTIN CIZMAR | 4-MINUTE READ DEAL OF THE DAY BY BRAD BOURQUE | 1-MINUTE READ You’re receiving this email because …...",
             "moreCoverage": [
                 {
-                    "source": "Flipboard OpenClaw Topic",
+                    "source": "Businessinsider",
                     "url": "https://www.businessinsider.com/openclaw-creator-slams-europe-regulations-move-us-openai-2026-2?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 }
             ]
         },
         {
-            "title": "Speculation about AI application: Rapid price increase of Raspberry Pi",
+            "title": "Rapid price increase of Raspberry Pi",
             "url": "https://www.heise.de/en/news/Speculation-about-AI-application-Rapid-price-increase-of-Raspberry-Pi-11180336.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag",
-            "source": "Flipboard OpenClaw Topic",
+            "source": "Heise",
             "date": "02-18-2026",
             "summary": "Raspberry Pi with gains on Tuesday – driven by speculation about single-board computers as a cost-effective alternative for running OpenClaw. Rally in …...",
             "moreCoverage": []
@@ -317,7 +285,7 @@
             "thumbnail": "https://i.ytimg.com/vi/OEOiERQKKEQ/hqdefault_live.jpg",
             "channel": "Alex Finn",
             "description": "Join the Vibe Coding Academy: https://vibecodingacademy.dev...",
-            "publishedAt": "2026-02-18T17:57:37Z",
+            "publishedAt": "2026-02-18T19:01:43Z",
             "isPriority": false
         },
         {
@@ -768,7 +736,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208109,
+            "stars": 208195,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -784,7 +752,7 @@
             "owner": "1Panel-dev",
             "description": "🔥 1Panel offers an intuitive web interface for a Linux server / VPS, making it easy to manage OpenClaw agents, local LLMs, websites, databases, containers, files, and scheduled tasks.",
             "url": "https://github.com/1Panel-dev/1Panel",
-            "stars": 33464,
+            "stars": 33463,
             "created_at": "2022-07-19T15:44:52Z"
         },
         {
@@ -792,7 +760,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21339,
+            "stars": 21351,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -800,7 +768,7 @@
             "owner": "AstrBotDevs",
             "description": "Agentic IM Chatbot infrastructure that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨",
             "url": "https://github.com/AstrBotDevs/AstrBot",
-            "stars": 16661,
+            "stars": 16665,
             "created_at": "2022-12-08T13:27:46Z"
         },
         {
@@ -808,7 +776,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16581,
+            "stars": 16588,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -816,7 +784,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16446,
+            "stars": 16450,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
@@ -840,7 +808,7 @@
             "owner": "kepano",
             "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
             "url": "https://github.com/kepano/obsidian-skills",
-            "stars": 10057,
+            "stars": 10059,
             "created_at": "2026-01-02T21:45:11Z"
         }
     ]
