@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 19:39:36",
+    "last_updated": "2026-02-18 20:11:34",
     "items": [
         {
             "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
@@ -31,10 +31,6 @@
                 {
                     "source": "Sources",
                     "url": "https://sources.news/p/openais-4o-valentines-breakup"
-                },
-                {
-                    "source": "VentureBeat",
-                    "url": "https://venturebeat.com/technology/openais-acquisition-of-openclaw-signals-the-beginning-of-the-end-of-the?utm_source=flipboard&utm_content=user/venturebeat"
                 },
                 {
                     "source": "The Deep View",
@@ -207,6 +203,22 @@
             "moreCoverage": []
         },
         {
+            "title": "KimiClaw: Cloud-Hosted OpenClaw + Kimi K2.5",
+            "url": "https://medium.com/@dailycoderhour/kimiclaw-cloud-hosted-openclaw-kimi-k2-5-80ed4d9a8e3e?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Building a Free WhatsApp AI Chatbot with OpenClaw 2026 — My Real Experience",
+            "url": "https://medium.com/@seoanalyst47/building-a-free-whatsapp-ai-chatbot-with-openclaw-2026-my-real-experience-002a7abee37b?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Creating your own AI assistant that replies on WhatsApp sounds expensive and complicated. Most people assume you need paid APIs, servers…Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
             "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
             "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
             "source": "Medium",
@@ -231,14 +243,6 @@
             "moreCoverage": []
         },
         {
-            "title": "OpenClaw : peut-on sécuriser les assistants IA autonomes ?",
-            "url": "https://marcbarbezat.medium.com/openclaw-peut-on-s%C3%A9curiser-les-assistants-ia-autonomes-46bce4973000?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
             "title": "Mac mini shortages are starting to happen — and the OpenClaw AI boom is a key reason",
             "url": "https://www.techradar.com/computing/macs/mac-mini-shortages-are-starting-to-happen-and-the-openclaw-ai-boom-is-a-key-reason?utm_source=flipboard&utm_content=topic/technology",
             "source": "Techradar",
@@ -247,15 +251,15 @@
             "moreCoverage": []
         },
         {
-            "title": "Meta restricts use of OpenClaw over security fears",
-            "url": "https://link.wired.com/view/5cc9e28e2ddf9c1a7adf9043qb3vr.573k/44817443?utm_source=flipboard&utm_content=topic%2Fopenclaw",
-            "source": "Link",
+            "title": "OpenClaw creator slams Europe's regulations as he moves to the US",
+            "url": "https://www.businessinsider.com/openclaw-creator-slams-europe-regulations-move-us-openai-2026-2?utm_source=flipboard&utm_content=topic%2Fopenclaw",
+            "source": "Businessinsider",
             "date": "02-18-2026",
-            "summary": "BY DANIELE POLIDORO | 2-MINUTE READ BY MARTIN CIZMAR | 4-MINUTE READ DEAL OF THE DAY BY BRAD BOURQUE | 1-MINUTE READ You’re receiving this email because …...",
+            "summary": "In Europe, there's been a lot of handwringing over why there are very few large, successful tech companies in the region. Peter Steinberger, the creator of the agentic AI hit OpenClaw, has an answer. ...",
             "moreCoverage": [
                 {
-                    "source": "Businessinsider",
-                    "url": "https://www.businessinsider.com/openclaw-creator-slams-europe-regulations-move-us-openai-2026-2?utm_source=flipboard&utm_content=topic%2Fopenclaw"
+                    "source": "Link",
+                    "url": "https://link.wired.com/view/5cc9e28e2ddf9c1a7adf9043qb3vr.573k/44817443?utm_source=flipboard&utm_content=topic%2Fopenclaw"
                 }
             ]
         },
@@ -265,6 +269,14 @@
             "source": "Heise",
             "date": "02-18-2026",
             "summary": "Raspberry Pi with gains on Tuesday – driven by speculation about single-board computers as a cost-effective alternative for running OpenClaw. Rally in …...",
+            "moreCoverage": []
+        },
+        {
+            "title": "OpenClaw : peut-on sécuriser les assistants IA autonomes ?",
+            "url": "https://marcbarbezat.medium.com/openclaw-peut-on-s%C3%A9curiser-les-assistants-ia-autonomes-46bce4973000?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Continue reading on Medium »...",
             "moreCoverage": []
         }
     ],
@@ -297,6 +309,15 @@
             "isPriority": false
         },
         {
+            "title": "OpenClaw tracks my entire life",
+            "url": "https://www.youtube.com/watch?v=sMjdOtabOuM",
+            "thumbnail": "https://i.ytimg.com/vi/sMjdOtabOuM/hqdefault.jpg",
+            "channel": "Matthew Berman",
+            "description": "Follow me ► x.com/matthewberman\nInstagram ► https://www.instagram.com/matthewberman_ai\n\nMedia/Sponsorship Inquiries ► https://bit.ly/44TC45V...",
+            "publishedAt": "2026-02-18T19:20:00Z",
+            "isPriority": false
+        },
+        {
             "title": "Anthropic just dropped Sonnet 4.6...",
             "url": "https://www.youtube.com/watch?v=BYxF-svDl8Q",
             "thumbnail": "https://i.ytimg.com/vi/BYxF-svDl8Q/hqdefault.jpg",
@@ -312,15 +333,6 @@
             "channel": "Matthew Berman",
             "description": "Use My Prompts👇🏼\nhttps://gist.github.com/mberman84/63163d6839053fbf15091238e5ada5c2\n\nMy Files:\nSOUL.md: https://gist.github.com/mberman84/cd6924c7058b...",
             "publishedAt": "2026-02-17T18:39:11Z",
-            "isPriority": false
-        },
-        {
-            "title": "So, OpenClaw",
-            "url": "https://www.youtube.com/watch?v=eW7HMTkGhzc",
-            "thumbnail": "https://i.ytimg.com/vi/eW7HMTkGhzc/hqdefault.jpg",
-            "channel": "Matthew Berman",
-            "description": "Follow me ► x.com/matthewberman\nInstagram ► https://www.instagram.com/matthewberman_ai\n\nMedia/Sponsorship Inquiries ► https://bit.ly/44TC45V...",
-            "publishedAt": "2026-02-16T21:08:29Z",
             "isPriority": false
         },
         {
@@ -585,6 +597,15 @@
             "isPriority": false
         },
         {
+            "title": "This AI Agent Made $41K in a Week!",
+            "url": "https://www.youtube.com/watch?v=lt2LDHA9zqk",
+            "thumbnail": "https://i.ytimg.com/vi/lt2LDHA9zqk/hqdefault.jpg",
+            "channel": "Limitless Podcast",
+            "description": "An OpenClaw agent called Felix Craft reportedly generated $41,000 in a week. \r\n\r\nIt did it by creating and marketing a book, then tapping Claw Mart—a ...",
+            "publishedAt": "2026-02-18T20:02:28Z",
+            "isPriority": false
+        },
+        {
             "title": "We Used OpenClaw for a Week. This is the Harsh Truth.",
             "url": "https://www.youtube.com/watch?v=4xDc00EF_eY",
             "thumbnail": "https://i.ytimg.com/vi/4xDc00EF_eY/hqdefault.jpg",
@@ -600,15 +621,6 @@
             "channel": "Limitless Podcast",
             "description": "OpenClaw didn’t exist 82 days ago—now it’s reportedly been acquired by OpenAI.\r\n\r\nThe fast-rising AI agent startup sparked a bidding war, with even Me...",
             "publishedAt": "2026-02-17T20:17:48Z",
-            "isPriority": false
-        },
-        {
-            "title": "OpenAI Just Acquired OpenClaw: Why This Is A Huge Deal",
-            "url": "https://www.youtube.com/watch?v=L_fxYObC0qM",
-            "thumbnail": "https://i.ytimg.com/vi/L_fxYObC0qM/hqdefault.jpg",
-            "channel": "Limitless Podcast",
-            "description": "🌌 LIMITLESS HQ ⬇️\n\nNEWSLETTER:    https://limitlessft.substack.com/\nFOLLOW ON X:   https://x.com/LimitlessFT\nSPOTIFY:             https://open.spotify...",
-            "publishedAt": "2026-02-16T17:32:33Z",
             "isPriority": false
         },
         {
@@ -780,7 +792,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208199,
+            "stars": 208271,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -804,7 +816,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21351,
+            "stars": 21366,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -820,7 +832,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16588,
+            "stars": 16595,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -828,7 +840,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16450,
+            "stars": 16454,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
@@ -852,7 +864,7 @@
             "owner": "kepano",
             "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
             "url": "https://github.com/kepano/obsidian-skills",
-            "stars": 10059,
+            "stars": 10062,
             "created_at": "2026-01-02T21:45:11Z"
         }
     ]
