@@ -210,23 +210,24 @@ def fetch_github_projects():
     if token:
         headers["Authorization"] = f"token {token}"
 
+    # Change per_page from 10 to 100
     query = "OpenClaw"
-    url = f"https://api.github.com/search/repositories?q={query}&sort=stars&order=desc"
+    url = f"https://api.github.com/search/repositories?q={query}&sort=updated&order=desc&per_page=100"
 
     try:
         resp = requests.get(url, headers=headers, timeout=10)
-        print(f"DEBUG: GitHub Status {resp.status_code}")
         data = resp.json()
         
         projects = []
-        for repo in data.get('items', [])[:10]:
+        for repo in data.get('items', []):
             projects.append({
                 "name": repo['name'],
                 "owner": repo['owner']['login'],
                 "description": repo['description'] or "No description provided.",
                 "url": repo['html_url'],
                 "stars": repo['stargazers_count'],
-                "created_at": repo['created_at']
+                "created_at": repo['created_at'],
+                "updated_at": repo['updated_at'] # Added this for better sorting
             })
         return projects
     except Exception as e:

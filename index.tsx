@@ -67,7 +67,9 @@ const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('news');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortCriteria>('stars');
+  
+  // STEP 2 implementation: Default sorting to 'date'
+  const [sortBy, setSortBy] = useState<SortCriteria>('date');
 
   const [news, setNews] = useState<NewsItem[]>([]);
   const [videos, setVideos] = useState<VideoItem[]>([]);
@@ -124,12 +126,7 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- RIVER OF NEWS / PAGINATION LOGIC ---
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentNewsItems = news.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(news.length / itemsPerPage);
-
+  // --- SORTING & RIVER LOGIC ---
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -140,6 +137,18 @@ const App: React.FC = () => {
     if (a.isPriority !== b.isPriority) return a.isPriority ? -1 : 1;
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
+
+  // Calculate slice based on active page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  
+  const currentNewsItems = news.slice(indexOfFirstItem, indexOfLastItem);
+  const currentProjectItems = sortedProjects.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Dynamic total pages based on context
+  const totalPages = activePage === 'news' 
+    ? Math.ceil(news.length / itemsPerPage) 
+    : Math.ceil(projects.length / itemsPerPage);
 
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
@@ -196,39 +205,24 @@ const App: React.FC = () => {
             {activePage === 'news' && (
               <>
                 <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} />
-                
-                {/* PAGINATION CONTROLS */}
-                {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
-                    <button 
-                      disabled={currentPage === 1}
-                      onClick={() => {
-                        setCurrentPage(prev => prev - 1);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-                    >
-                      Prev
-                    </button>
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
-                      Page {currentPage} <span className="text-orange-500/50">/</span> {totalPages}
-                    </span>
-                    <button 
-                      disabled={currentPage === totalPages}
-                      onClick={() => {
-                        setCurrentPage(prev => prev + 1);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
+                <Pagination 
+                  current={currentPage} 
+                  total={totalPages} 
+                  onChange={setCurrentPage} 
+                />
               </>
             )}
             {activePage === 'videos' && <VideoGrid items={sortedVideos} onTrackClick={handleLinkClick} />}
-            {activePage === 'projects' && <ProjectGrid items={sortedProjects} onTrackClick={handleLinkClick} />}
+            {activePage === 'projects' && (
+              <>
+                <ProjectGrid items={currentProjectItems} onTrackClick={handleLinkClick} />
+                <Pagination 
+                  current={currentPage} 
+                  total={totalPages} 
+                  onChange={setCurrentPage} 
+                />
+              </>
+            )}
           </div>
         )}
       </main>
@@ -237,6 +231,38 @@ const App: React.FC = () => {
 };
 
 // --- COMPONENTS ---
+
+// New Pagination Component for cleaner main return
+const Pagination = ({ current, total, onChange }: any) => {
+  if (total <= 1) return null;
+  return (
+    <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
+      <button 
+        disabled={current === 1}
+        onClick={() => {
+          onChange((prev: number) => prev - 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+      >
+        Prev
+      </button>
+      <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+        Page {current} <span className="text-orange-500/50">/</span> {total}
+      </span>
+      <button 
+        disabled={current === total}
+        onClick={() => {
+          onChange((prev: number) => prev + 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+      >
+        Next
+      </button>
+    </div>
+  );
+};
 
 const NavButton = ({ active, onClick, icon, label }: any) => (
   <button onClick={onClick} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${active ? 'bg-white/10 text-orange-500' : 'text-slate-500 hover:text-slate-300'}`}>
