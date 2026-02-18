@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 19:37:01",
+    "last_updated": "2026-02-18 19:39:36",
     "items": [
         {
             "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
@@ -39,6 +39,10 @@
                 {
                     "source": "The Deep View",
                     "url": "https://www.thedeepview.com/articles/openai-bets-big-on-personal-ai-agents-with-openclaw"
+                },
+                {
+                    "source": "Medium",
+                    "url": "https://medium.com/@carlcarrie/openclaws-skills-agentic-ai-risks-aae897564d13?source=rss------openclaw-5"
                 },
                 {
                     "source": "VentureBeat",
@@ -110,6 +114,10 @@
                 {
                     "source": "The New Stack",
                     "url": "https://thenewstack.io/deno-sandbox-security-secrets/"
+                },
+                {
+                    "source": "Medium",
+                    "url": "https://medium.com/mlworks/openclaw-why-everyone-is-talking-about-it-4d9df7bab90d?source=rss------openclaw-5"
                 }
             ]
         },
@@ -135,6 +143,10 @@
                 {
                     "source": "Platformer",
                     "url": "https://www.platformer.news/moltbook-ai-agents-security-content-moderation/"
+                },
+                {
+                    "source": "Medium",
+                    "url": "https://medium.com/@promptiversestudios/snapshot-58-in-memoriam-moltbook-2fb87298613d?source=rss------openclaw-5"
                 }
             ]
         },
@@ -192,6 +204,38 @@
             "source": "CSO",
             "date": "02-18-2026",
             "summary": "AI agents able to submit huge numbers of pull requests (PRs) to open-source project maintainers risk creating the conditions for future supply chain attacks targeting important software projects, deve...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Gossip, Trading, and Malware: A Day in the Life of a Moltbook (OpenClaw)Agent",
+            "url": "https://levelup.gitconnected.com/moltbook-openclaw-agent-943e2d533f40?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "How agents are mimicking human social dynamics — including the bad parts.Continue reading on Level Up Coding »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Cut OpenClaw Token Costs by 77% | Guide",
+            "url": "https://medium.com/@daniel_62194/cut-openclaw-token-costs-by-77-guide-f70bcd3a4096?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Your first OpenClaw API bill probably hurt. Mine definitely did. $187 for a month I thought I was “just playing around.” The framework is…Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Your Private Agent: OpenClaw + Hetzner VPS + Tailscale",
+            "url": "https://geraldkohjiale.medium.com/your-private-agent-openclaw-hetzner-vps-tailscale-979d2aabf97c?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "This article is a quick guide to setting up private agents with OpenClaw, using a cheap VPS from Hetzner, secured with Tailscale.Continue reading on Medium »...",
+            "moreCoverage": []
+        },
+        {
+            "title": "OpenClaw : peut-on sécuriser les assistants IA autonomes ?",
+            "url": "https://marcbarbezat.medium.com/openclaw-peut-on-s%C3%A9curiser-les-assistants-ia-autonomes-46bce4973000?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Continue reading on Medium »...",
             "moreCoverage": []
         },
         {
@@ -736,7 +780,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208195,
+            "stars": 208199,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
