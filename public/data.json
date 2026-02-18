@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-18 20:41:42",
+    "last_updated": "2026-02-18 21:36:39",
     "items": [
         {
             "title": "Alibaba's Qwen 3.5 397B-A17 beats its larger trillion-parameter model — at a fraction of the cost",
@@ -38,7 +38,7 @@
                 },
                 {
                     "source": "Medium",
-                    "url": "https://medium.com/@carlcarrie/openclaws-skills-agentic-ai-risks-aae897564d13?source=rss------openclaw-5"
+                    "url": "https://medium.com/@WanderingNutBlog/openclaw-moltbot-clawdbot-the-ai-butler-that-rebranded-three-times-and-still-left-the-back-door-de63e2b39d90?source=rss------openclaw-5"
                 },
                 {
                     "source": "Cnet",
@@ -59,7 +59,7 @@
                 },
                 {
                     "source": "Entrepreneur",
-                    "url": "https://www.entrepreneur.com/business-news/coders-weekend-ai-project-sparks-a-bidding-war/502786?utm_source=flipboard&utm_content=topic%2Fopenclaw"
+                    "url": "https://www.entrepreneur.com/business-news/coders-weekend-ai-project-sparks-a-bidding-war/502786?utm_source=flipboard&utm_content=user/entrepreneur"
                 },
                 {
                     "source": "WSJ",
@@ -211,14 +211,6 @@
             "moreCoverage": []
         },
         {
-            "title": "Cut OpenClaw Token Costs by 77% | Guide",
-            "url": "https://medium.com/@daniel_62194/cut-openclaw-token-costs-by-77-guide-f70bcd3a4096?source=rss------openclaw-5",
-            "source": "Medium",
-            "date": "02-18-2026",
-            "summary": "Your first OpenClaw API bill probably hurt. Mine definitely did. $187 for a month I thought I was “just playing around.” The framework is…Continue reading on Medium »...",
-            "moreCoverage": []
-        },
-        {
             "title": "Mac mini shortages are starting to happen — and the OpenClaw AI boom is a key reason",
             "url": "https://www.techradar.com/computing/macs/mac-mini-shortages-are-starting-to-happen-and-the-openclaw-ai-boom-is-a-key-reason?utm_source=flipboard&utm_content=topic/technology",
             "source": "Techradar",
@@ -240,6 +232,14 @@
             "source": "Heise",
             "date": "02-18-2026",
             "summary": "Raspberry Pi with gains on Tuesday – driven by speculation about single-board computers as a cost-effective alternative for running OpenClaw. Rally in …...",
+            "moreCoverage": []
+        },
+        {
+            "title": "Cut OpenClaw Token Costs by 77% | Guide",
+            "url": "https://medium.com/@daniel_62194/cut-openclaw-token-costs-by-77-guide-f70bcd3a4096?source=rss------openclaw-5",
+            "source": "Medium",
+            "date": "02-18-2026",
+            "summary": "Your first OpenClaw API bill probably hurt. Mine definitely did. $187 for a month I thought I was “just playing around.” The framework is…Continue reading on Medium »...",
             "moreCoverage": []
         },
         {
@@ -325,10 +325,10 @@
         {
             "title": "LIVE: Anthropic BANS OpenClaw. It's OVER!",
             "url": "https://www.youtube.com/watch?v=OEOiERQKKEQ",
-            "thumbnail": "https://i.ytimg.com/vi/OEOiERQKKEQ/hqdefault_live.jpg",
+            "thumbnail": "https://i.ytimg.com/vi/OEOiERQKKEQ/hqdefault.jpg",
             "channel": "Alex Finn",
             "description": "Join the Vibe Coding Academy: https://vibecodingacademy.dev...",
-            "publishedAt": "2026-02-18T19:01:43Z",
+            "publishedAt": "2026-02-18T21:23:47Z",
             "isPriority": false
         },
         {
@@ -392,15 +392,6 @@
             "channel": "Lex Fridman",
             "description": "Peter Steinberger is the creator of OpenClaw, an open-source AI agent framework that's the fastest-growing project in GitHub history.\nThank you for li...",
             "publishedAt": "2026-02-12T03:07:03Z",
-            "isPriority": false
-        },
-        {
-            "title": "OpenClaw Just Got a Massive Upgrade... (Claude Sonnet 4.6)",
-            "url": "https://www.youtube.com/watch?v=p86xxkzwRTs",
-            "thumbnail": "https://i.ytimg.com/vi/p86xxkzwRTs/hqdefault.jpg",
-            "channel": "Brock Mesarich | AI for Non Techies",
-            "description": "Claude Sonnet 4.6 just released and this will instantly level up your OpenClaw experience. In this video I break down what is new, 5 new upgrades this...",
-            "publishedAt": "2026-02-17T23:36:50Z",
             "isPriority": false
         },
         {
@@ -779,7 +770,7 @@
             "owner": "openclaw",
             "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
             "url": "https://github.com/openclaw/openclaw",
-            "stars": 208330,
+            "stars": 208451,
             "created_at": "2025-11-24T10:16:47Z"
         },
         {
@@ -803,7 +794,7 @@
             "owner": "HKUDS",
             "description": "\"🐈 nanobot: The Ultra-Lightweight OpenClaw\"",
             "url": "https://github.com/HKUDS/nanobot",
-            "stars": 21373,
+            "stars": 21392,
             "created_at": "2026-02-01T07:16:15Z"
         },
         {
@@ -811,7 +802,7 @@
             "owner": "AstrBotDevs",
             "description": "Agentic IM Chatbot infrastructure that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨",
             "url": "https://github.com/AstrBotDevs/AstrBot",
-            "stars": 16666,
+            "stars": 16671,
             "created_at": "2022-12-08T13:27:46Z"
         },
         {
@@ -819,7 +810,7 @@
             "owner": "VoltAgent",
             "description": "The awesome collection of OpenClaw Skills. Formerly known as Moltbot, originally Clawdbot.",
             "url": "https://github.com/VoltAgent/awesome-openclaw-skills",
-            "stars": 16599,
+            "stars": 16607,
             "created_at": "2026-01-25T09:22:32Z"
         },
         {
@@ -827,7 +818,7 @@
             "owner": "iOfficeAI",
             "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
             "url": "https://github.com/iOfficeAI/AionUi",
-            "stars": 16455,
+            "stars": 16459,
             "created_at": "2025-08-07T10:29:51Z"
         },
         {
@@ -843,7 +834,7 @@
             "owner": "getumbrel",
             "description": "An elegant home server OS. Run OpenClaw, store your files and photos, run a Bitcoin node, and do more with over 300 apps in the Umbrel App Store.",
             "url": "https://github.com/getumbrel/umbrel",
-            "stars": 10522,
+            "stars": 10523,
             "created_at": "2020-07-06T18:40:02Z"
         },
         {
@@ -851,7 +842,7 @@
             "owner": "kepano",
             "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
             "url": "https://github.com/kepano/obsidian-skills",
-            "stars": 10064,
+            "stars": 10065,
             "created_at": "2026-01-02T21:45:11Z"
         }
     ]
