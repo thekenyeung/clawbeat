@@ -223,27 +223,38 @@ def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR
         wild_articles = []
         
         for entry in feed.entries[:15]:
-            # 1. Fix Headline (Remove trailing " - Source")
+            # 1. REMOVE PUBLICATION FROM HEADLINE
+            # Google News usually ends headlines with " - Source Name"
             raw_title = entry.title
             if " - " in raw_title:
+                # We split at the last " - " to remove the source suffix
                 clean_title = " - ".join(raw_title.split(" - ")[:-1])
             else:
                 clean_title = raw_title
 
-            # 2. Extract real summary from Google News description (HTML cleaning)
+            # 2. EXTRACT REAL SUMMARY
+            # Google News hides the text snippet inside an HTML table in the 'summary' field
             raw_summary = entry.get('summary', '')
             soup = BeautifulSoup(raw_summary, "html.parser")
-            # Google News RSS usually hides the snippet in the first few lines of text
-            clean_summary = soup.get_text(strip=True)
-            if len(clean_summary) < 20: # Fallback if snippet is too short
-                clean_summary = "ecosystem news update."
+            
+            # The actual snippet is usually the first few sentences in the HTML description
+            # We strip the "all coverage" and "source" text that Google adds
+            text_blocks = soup.find_all('li')
+            if text_blocks:
+                # Often the first <li> contains the snippet
+                snippet = text_blocks[0].get_text(strip=True)
+            else:
+                snippet = soup.get_text(strip=True)
+            
+            # Clean up the snippet (remove 'view full coverage', etc)
+            clean_summary = snippet.split("View Full Coverage")[0].strip()
 
             wild_articles.append({
                 "title": clean_title,
                 "url": entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link,
-                "source": entry.source.get('title', 'web search'),
-                "summary": clean_summary[:200] + "...",
-                "date": datetime.now().strftime("%m-%d-%Y") # Still needed for sorting logic, but hidden in UI
+                "source": entry.source.get('title', 'web search').lower(),
+                "summary": clean_summary[:200] + "..." if clean_summary else "ecosystem update.",
+                "date": datetime.now().strftime("%m-%d-%Y")
             })
         return wild_articles
     except Exception as e:
