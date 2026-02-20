@@ -72,22 +72,41 @@ const formatDate = (dateString: string) => {
 
 const formatSourceName = (name: string) => {
   if (!name) return "";
-  let cleanName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+  
+  const rawName = name.trim();
+  // key must match how we define manualFixes keys (no spaces, no dots, lowercase)
+  const key = rawName.toLowerCase().replace(/[\s\.]/g, '');
+
   const manualFixes: Record<string, string> = {
-    "businessinsider": "Business Insider",
+    "npr": "NPR",
+    "cnbc": "CNBC",
+    "wbur": "WBUR",
+    "techcrunch": "TechCrunch",
     "venturebeat": "VentureBeat",
+    "businessinsider": "Business Insider",
     "thenewstack": "The New Stack",
-    "csoonline": "CSO Online",
-    "americanbanker": "American Banker",
-    "institutionalinvestor": "Institutional Investor",
-    "fastcompany": "Fast Company",
-    "Npr": "NPR",
-    "Wbur": "WBUR",
-    "Cnbc": "CNBC",
-    "Tech Crunch": "TechCrunch"
+    "nytimes": "The New York Times",
+    "newyorktimes": "The New York Times",
+    "thehill": "The Hill",
+    "wsj": "WSJ",
+    "wallstreetjournal": "Wall Street Journal",
+    "mittechnologyreview": "MIT Tech Review"
   };
-  const key = cleanName.toLowerCase().replace(/\s+/g, '');
-  return manualFixes[key] || cleanName;
+
+  if (manualFixes[key]) {
+    return manualFixes[key];
+  }
+
+  if (rawName === rawName.toUpperCase() && rawName.length <= 4) {
+    return rawName;
+  }
+
+  let cleanName = rawName.replace(/([a-z])([A-Z])/g, '$1 $2');
+  if (cleanName === cleanName.toLowerCase()) {
+    return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+  }
+
+  return cleanName;
 };
 
 const checkIfVerified = (item: NewsItem) => {
@@ -102,7 +121,6 @@ const checkIfVerified = (item: NewsItem) => {
 };
 
 const App: React.FC = () => {
-  // State initialization with Session Persistence
   const [activePage, setActivePage] = useState<Page>(
     (sessionStorage.getItem('activePage') as Page) || 'news'
   );
@@ -112,11 +130,13 @@ const App: React.FC = () => {
   const [currentVideoPage, setCurrentVideoPage] = useState(
     Number(sessionStorage.getItem('videoPage')) || 1
   );
+  const [currentProjectPage, setCurrentProjectPage] = useState(
+    Number(sessionStorage.getItem('projectPage')) || 1
+  );
   const [sortBy, setSortBy] = useState<SortCriteria>(
     (sessionStorage.getItem('projectSort') as SortCriteria) || 'date'
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -148,13 +168,13 @@ const App: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Sync state to sessionStorage whenever it changes
   useEffect(() => {
     sessionStorage.setItem('activePage', activePage);
     sessionStorage.setItem('newsPage', currentPage.toString());
     sessionStorage.setItem('videoPage', currentVideoPage.toString());
+    sessionStorage.setItem('projectPage', currentProjectPage.toString());
     sessionStorage.setItem('projectSort', sortBy);
-  }, [activePage, currentPage, currentVideoPage, sortBy]);
+  }, [activePage, currentPage, currentVideoPage, currentProjectPage, sortBy]);
 
   useEffect(() => {
     trackEvent('page_view', {
@@ -188,7 +208,6 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // Data Processing Logic
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -206,7 +225,7 @@ const App: React.FC = () => {
   const currentVideoItems = sortedVideos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
   const totalVideoPages = Math.ceil(sortedVideos.length / videosPerPage);
 
-  const currentProjectItems = sortedProjects.slice((currentPage - 1) * projectsPerPage, currentPage * projectsPerPage);
+  const currentProjectItems = sortedProjects.slice((currentProjectPage - 1) * projectsPerPage, currentProjectPage * projectsPerPage);
   const totalProjectPages = Math.ceil(sortedProjects.length / projectsPerPage);
 
   return (
@@ -215,28 +234,19 @@ const App: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => handleNavClick('news')}>
             <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 group-hover:border-orange-500/50 transition-all shadow-2xl">
-              <img 
-                src="/images/moltbot-news-robot-orange-box-512x512.jpg" 
-                alt="Moltbot Logo"
-                className="w-full h-full object-cover"
-              />
+              <img src="/images/moltbot-news-robot-orange-box-512x512.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-xl font-black text-white uppercase italic tracking-tighter">
-              Moltbot <span className="text-orange-500">News</span>
-            </h1>
+            <h1 className="text-xl font-black text-white uppercase italic tracking-tighter">Moltbot <span className="text-orange-500">News</span></h1>
           </div>
-
           <nav className="hidden md:flex items-center gap-1">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel Feed" />
             <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media Lab" />
             <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="The Forge" />
           </nav>
-
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-slate-400 hover:text-white">
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
-
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 w-full bg-[#0a0a0c]/95 backdrop-blur-lg border-b border-white/10 py-4 px-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200 shadow-2xl z-[60]">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel Feed" />
@@ -265,7 +275,6 @@ const App: React.FC = () => {
               )}
             </div>
           </div>
-          
           {activePage === 'projects' && (
             <div className="flex gap-2 bg-white/5 p-1 rounded-lg">
               <SortButton active={sortBy === 'stars'} onClick={() => setSortBy('stars')} label="Top Rated" />
@@ -300,7 +309,7 @@ const App: React.FC = () => {
             {activePage === 'projects' && (
               <>
                 <ProjectGrid items={currentProjectItems} onTrackClick={handleLinkClick} />
-                <Pagination current={currentPage} total={totalProjectPages} onChange={setCurrentPage} />
+                <Pagination current={currentProjectPage} total={totalProjectPages} onChange={setCurrentProjectPage} />
               </>
             )}
           </div>
@@ -310,11 +319,8 @@ const App: React.FC = () => {
   );
 };
 
-// --- COMPONENTS ---
-
 const Pagination = ({ current, total, onChange }: { current: number; total: number; onChange: (p: number) => void }) => {
   if (total <= 1) return null;
-
   const handlePageChange = (newPage: number) => {
     onChange(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -322,16 +328,10 @@ const Pagination = ({ current, total, onChange }: { current: number; total: numb
 
   return (
     <div className="flex justify-center items-center gap-6 mt-16 pt-12 border-t border-white/5">
-      <button 
-        disabled={current === 1}
-        onClick={() => handlePageChange(current - 1)}
-        className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 disabled:hover:bg-white/5 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-orange-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+      <button disabled={current === 1} onClick={() => handlePageChange(current - 1)} className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden">
         <ChevronLeft className="w-4 h-4 text-orange-500 relative z-10" />
         <span className="relative z-10">Prev</span>
       </button>
-
       <div className="flex flex-col items-center">
         <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] mb-1">Stream</span>
         <div className="flex items-center gap-2">
@@ -340,13 +340,7 @@ const Pagination = ({ current, total, onChange }: { current: number; total: numb
           <span className="text-xs font-bold text-slate-500">{total}</span>
         </div>
       </div>
-
-      <button 
-        disabled={current === total}
-        onClick={() => handlePageChange(current + 1)}
-        className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 disabled:hover:bg-white/5 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0.1)]"
-      >
-        <div className="absolute inset-0 bg-orange-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+      <button disabled={current === total} onClick={() => handlePageChange(current + 1)} className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0.1)]">
         <span className="relative z-10">Next</span>
         <ChevronRight className="w-4 h-4 text-orange-500 relative z-10" />
       </button>
@@ -355,14 +349,7 @@ const Pagination = ({ current, total, onChange }: { current: number; total: numb
 };
 
 const NavButton = ({ active, onClick, icon, label }: any) => (
-  <button 
-    onClick={onClick} 
-    className={`flex items-center gap-3 px-4 py-3 md:py-1.5 rounded-md text-xs md:text-[10px] font-black uppercase tracking-widest transition-all w-full md:w-auto ${
-      active 
-        ? 'bg-white/10 text-orange-500 shadow-[inset_0_0_10px_rgba(249,115,22,0.1)]' 
-        : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
-    }`}
-  >
+  <button onClick={onClick} className={`flex items-center gap-3 px-4 py-3 md:py-1.5 rounded-md text-xs md:text-[10px] font-black uppercase tracking-widest transition-all w-full md:w-auto ${active ? 'bg-white/10 text-orange-500 shadow-[inset_0_0_10px_rgba(249,115,22,0.1)]' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}>
     {icon} {label}
   </button>
 );
@@ -397,75 +384,37 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
       {Object.keys(grouped).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).map((date) => (
         <React.Fragment key={date}>
           <div className="flex items-center gap-4 my-8 first:mt-0">
-            <h3 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] whitespace-nowrap">
-              Dispatch: {date}
-            </h3>
+            <h3 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] whitespace-nowrap">Dispatch: {date}</h3>
             <div className="h-[1px] w-full bg-orange-500/10" />
           </div>
-
           {grouped[date]?.map((item, idx) => {
             const isVerified = checkIfVerified(item);
             const isPriority = item.source_type === 'priority';
-
             return (
               <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
-                <a 
-                  href={item.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={() => onTrackClick(item.title, item.source)}
-                  className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2"
-                >
+                <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)} className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2">
                   <span className="flex-1">{item.title}</span>
                   <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
                 </a>
-                
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                    {formatSourceName(item.source)}
-                  </span>
-                  
-                  {isVerified && (
-                    <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
-                      <Bot className="w-2.5 h-2.5" /> verified
-                    </span>
-                  )}
-
-                  {isPriority && !isVerified && (
-                    <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
-                      <Award className="w-2.5 h-2.5" /> priority feed
-                    </span>
-                  )}
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{formatSourceName(item.source)}</span>
+                  {isVerified && <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Bot className="w-2.5 h-2.5" /> verified</span>}
+                  {isPriority && !isVerified && <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Award className="w-2.5 h-2.5" /> priority feed</span>}
                 </div>
-
-                {item.summary && (
-                  <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
-                    {item.summary}
-                  </p>
-                )}
-
+                {item.summary && <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">{item.summary}</p>}
                 {item.moreCoverage && item.moreCoverage.length > 0 && (
                   <div className="mt-2 flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <Layers className="w-3 h-3 text-slate-600" />
-                      <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">
-                        More Coverage
-                      </span>
+                      <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">More Coverage</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {item.moreCoverage
                         .filter(link => !link.source.toLowerCase().includes('facebook'))
                         .map((link, lIdx) => (
-                        <a
-                          key={lIdx}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => onTrackClick(item.title, link.source)}
-                          className="text-[10px] font-bold text-orange-500/80 bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/10 px-2 py-1 rounded transition-all"
-                        >
-                          {formatSourceName(link.source)}
-                        </a>
+                          <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, link.source)} className="text-[10px] font-bold text-orange-500/80 bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/10 px-2 py-1 rounded transition-all">
+                            {formatSourceName(link.source)}
+                          </a>
                       ))}
                     </div>
                   </div>
@@ -487,11 +436,8 @@ const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: 
           {video.thumbnail ? (
             <img src={video.thumbnail} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={video.title} />
           ) : (
-            <div className="w-full h-full bg-white/5 flex items-center justify-center">
-              <span className="text-white/20 text-xs uppercase tracking-widest font-black">No Preview</span>
-            </div>
+            <div className="w-full h-full bg-white/5 flex items-center justify-center"><span className="text-white/20 text-xs uppercase tracking-widest font-black">No Preview</span></div>
           )}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
         </div>
         <h4 className="font-bold text-white text-lg group-hover:text-orange-500 line-clamp-2 leading-tight">{video.title}</h4>
         <p className="text-[10px] text-orange-500 mt-2 uppercase font-black tracking-widest">{video.channel} • {formatDate(video.publishedAt)}</p>
@@ -523,9 +469,7 @@ const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackCli
           </div>
           <div className="flex flex-col text-right">
             <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Created</span>
-            <span className="text-xs text-white font-bold flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-orange-500/50" /> {formatDate(p.created_at)}
-            </span>
+            <span className="text-xs text-white font-bold flex items-center gap-1"><Calendar className="w-3 h-3 text-orange-500/50" /> {formatDate(p.created_at)}</span>
           </div>
         </div>
         <a href={p.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(p.name, p.owner, 'github_repo')} className="absolute inset-0 z-10" />
