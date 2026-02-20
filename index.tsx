@@ -126,7 +126,7 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- SORTING & PAGINATION CALCULATIONS ---
+  // --- SORTING & PAGINATION ---
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -152,9 +152,13 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActivePage('news')}>
-            <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActivePage('news')}>
+            <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 group-hover:border-orange-500/50 transition-all shadow-2xl">
+              <img 
+                src="/images/moltbot-news-robot-orange-box-512x512.jpg" 
+                alt="Moltbot Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <h1 className="text-xl font-black text-white uppercase italic tracking-tighter">
               Moltbot <span className="text-orange-500">News</span>
@@ -183,7 +187,7 @@ const App: React.FC = () => {
               {lastUpdated && activePage === 'news' && (
                 <>
                   <span className="text-slate-800">•</span>
-                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest">
+                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest whitespace-nowrap">
                     Last Sync: {lastUpdated}
                   </span>
                 </>
@@ -284,7 +288,6 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
       .replace("americanbanker", "american banker")
       .replace("institutionalinvestor", "institutional investor")
       .replace("fastcompany", "fast company")
-      .replace("venture beat", "venturebeat")
       .toLowerCase();
   };
 
@@ -301,19 +304,13 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
 
           {grouped[date]?.map((item, idx) => {
             const isVerified = (whitelist as any[]).some(w => {
-  const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
-  const articleSource = String(item.source || "").toLowerCase().trim();
-  
-  // 1. Check for exact name match
-  if (whitelistName === articleSource) return true;
-
-  // 2. Check if the whitelist URL is contained within the article URL
-  // (This handles cases where the source name differs but the domain is identical)
-  const whitelistUrl = String(w["Website URL"] || "").toLowerCase().replace('https://', '').replace('http://', '').replace('www.', '');
-  if (whitelistUrl && item.url?.toLowerCase().includes(whitelistUrl)) return true;
-
-  return false;
-});
+              const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
+              const articleSource = String(item.source || "").toLowerCase().trim();
+              if (whitelistName === articleSource) return true;
+              const whitelistUrl = String(w["Website URL"] || "").toLowerCase().replace('https://', '').replace('http://', '').replace('www.', '');
+              if (whitelistUrl && item.url?.toLowerCase().includes(whitelistUrl)) return true;
+              return false;
+            });
 
             return (
               <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
