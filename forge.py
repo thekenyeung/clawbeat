@@ -44,10 +44,9 @@ PRIORITY_SITES = [
     'theverge.com', 'wired.com', 'techcrunch.com', 'venturebeat.com', 
     'arstechnica.com', 'engadget.com', 'gizmodo.com', 'thenextweb.com',
     'mashable.com', 'recode.net', 'zdnet.com', 'cnet.com', 'pcmag.com',
-    'technologyreview.com', 'spectrum.ieee.org', 'theintercept.com', 
-    'restofworld.org', 'theregister.com', 'quantamagazine.org',
+    'technologyreview.com', 'spectrum.ieee.org', 'restofworld.org', 'theregister.com', 'quantamagazine.org',
     'wsj.com', 'nytimes.com', 'bloomberg.com', 'ft.com', 'forbes.com', 
-    'fastcompany.com', 'businessinsider.com', 'economist.com'
+    'fastcompany.com', 'businessinsider.com', 'economist.com', 'siliconangle.com', 
 ]
 
 DELIST_SITES = [

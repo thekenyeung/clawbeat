@@ -934,5 +934,23 @@
     "Website RSS": "",
     "YouTube Channel ID": "UC0yHbz4OxdQFwmVX2BBQqLg",
     "Priority": "1"
+  },
+  {
+    "ID": "105",
+    "Source Name": "Rest of World",
+    "Category": "Publisher",
+    "Website URL": "https://restofworld.org/",
+    "Website RSS": "https://restofworld.org/feed/latest",
+    "YouTube Channel ID": null,
+    "Priority": ""
+  },
+  {
+    "ID": "106",
+    "Source Name": "Futurism",
+    "Category": "Publisher",
+    "Website URL": "https://futurism.com/",
+    "Website RSS": "https://futurism.com/feed",
+    "YouTube Channel ID": null,
+    "Priority": ""
   }
 ]
