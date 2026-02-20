@@ -219,17 +219,15 @@ const App: React.FC = () => {
               {activePage === 'videos' && 'Visual Stream'}
               {activePage === 'projects' && 'The Forge'}
             </h2>
-            <div className="flex items-center gap-3 mt-2">
+            {/* STACKED HEADER SUBTEXT FOR MOBILE CLARITY */}
+            <div className="flex flex-col gap-1 mt-2">
               <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
                 {activePage === 'projects' ? 'Community Repositories' : 'Autonomous Intelligence Curation'}
               </p>
               {lastUpdated && activePage === 'news' && (
-                <>
-                  <span className="text-slate-800">•</span>
-                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest whitespace-nowrap">
-                    Last Sync: {lastUpdated}
-                  </span>
-                </>
+                <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest whitespace-nowrap">
+                  Last Sync: {lastUpdated}
+                </span>
               )}
             </div>
           </div>
