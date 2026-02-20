@@ -67,19 +67,17 @@ const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('news');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // STEP 2 implementation: Default sorting to 'date'
+  const [lastUpdated, setLastUpdated] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortCriteria>('date');
 
   const [news, setNews] = useState<NewsItem[]>([]);
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
 
-  // --- PAGINATION STATE ---
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  // --- GA4 TRACKING LOGIC ---
+  // --- GA4 TRACKING ---
   const trackEvent = (action: string, params: object) => {
     if (typeof window.gtag === 'function') {
       window.gtag('event', action, params);
@@ -100,29 +98,25 @@ const App: React.FC = () => {
       page_location: window.location.href,
       page_path: `/${activePage}`
     });
-    // Reset to page 1 when switching tabs
     setCurrentPage(1);
   }, [activePage]);
 
   // --- FETCHING LOGIC ---
   const fetchContent = async (page: Page) => {
     setLoading(true);
-    setError(null);
     try {
-      // Point this to your RAW GitHub URL so it bypasses Vercel's stale cache
       const GITHUB_RAW_URL = "https://raw.githubusercontent.com/thekenyeung/moltbot-news/main/public/data.json";
-      
-      // We add a timestamp to the URL to force the browser to skip its own cache
       const response = await fetch(`${GITHUB_RAW_URL}?t=${new Date().getTime()}`);
-      
       if (!response.ok) throw new Error("Could not find data.json.");
+      
       const allData = await response.json();
+      setLastUpdated(allData.last_updated || "");
       
       if (page === 'news') setNews(allData.items || []);
       if (page === 'videos') setVideos(allData.videos || []);
       if (page === 'projects') setProjects(allData.githubProjects || []);
     } catch (err: any) {
-      setError(err.message || "Failed to load intel.");
+      setError("Intelligence feed is currently updating...");
     } finally {
       setLoading(false);
     }
@@ -132,7 +126,7 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- SORTING & RIVER LOGIC ---
+  // --- SORTING & PAGINATION CALCULATIONS ---
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -144,14 +138,12 @@ const App: React.FC = () => {
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
-  // Calculate slice based on active page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   
   const currentNewsItems = news.slice(indexOfFirstItem, indexOfLastItem);
   const currentProjectItems = sortedProjects.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Dynamic total pages based on context
   const totalPages = activePage === 'news' 
     ? Math.ceil(news.length / itemsPerPage) 
     : Math.ceil(projects.length / itemsPerPage);
@@ -184,9 +176,19 @@ const App: React.FC = () => {
               {activePage === 'videos' && 'Visual Stream'}
               {activePage === 'projects' && 'The Forge'}
             </h2>
-            <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em] mt-2">
-              {activePage === 'projects' ? 'Community Repositories' : 'Autonomous Intelligence Curation'}
-            </p>
+            <div className="flex items-center gap-3 mt-2">
+              <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
+                {activePage === 'projects' ? 'Community Repositories' : 'Autonomous Intelligence Curation'}
+              </p>
+              {lastUpdated && activePage === 'news' && (
+                <>
+                  <span className="text-slate-800">•</span>
+                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest">
+                    Last Sync: {lastUpdated}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
           
           {activePage === 'projects' && (
@@ -211,22 +213,14 @@ const App: React.FC = () => {
             {activePage === 'news' && (
               <>
                 <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} />
-                <Pagination 
-                  current={currentPage} 
-                  total={totalPages} 
-                  onChange={setCurrentPage} 
-                />
+                <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} />
               </>
             )}
             {activePage === 'videos' && <VideoGrid items={sortedVideos} onTrackClick={handleLinkClick} />}
             {activePage === 'projects' && (
               <>
                 <ProjectGrid items={currentProjectItems} onTrackClick={handleLinkClick} />
-                <Pagination 
-                  current={currentPage} 
-                  total={totalPages} 
-                  onChange={setCurrentPage} 
-                />
+                <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} />
               </>
             )}
           </div>
@@ -238,17 +232,13 @@ const App: React.FC = () => {
 
 // --- COMPONENTS ---
 
-// New Pagination Component for cleaner main return
 const Pagination = ({ current, total, onChange }: any) => {
   if (total <= 1) return null;
   return (
     <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
       <button 
         disabled={current === 1}
-        onClick={() => {
-          onChange((prev: number) => prev - 1);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onClick={() => { onChange((prev: number) => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
       >
         Prev
@@ -258,10 +248,7 @@ const Pagination = ({ current, total, onChange }: any) => {
       </span>
       <button 
         disabled={current === total}
-        onClick={() => {
-          onChange((prev: number) => prev + 1);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onClick={() => { onChange((prev: number) => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
       >
         Next
@@ -282,77 +269,73 @@ const SortButton = ({ active, onClick, label }: any) => (
   </button>
 );
 
-const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => (
-  <div className="flex flex-col">
-    {items.map((item, idx) => {
-      // Logic for the Verified Tag
-      const isVerified = (whitelist as any[]).some(w =>
-        item.source?.toLowerCase().includes(String(w["Source Name"] || "").toLowerCase()) ||
-        item.url?.toLowerCase().includes(String(w["Website URL"] || "").toLowerCase())
-      );
+const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
+  const grouped = items.reduce((acc: Record<string, NewsItem[]>, item) => {
+    const date = item.date || "recent";
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(item);
+    return acc;
+  }, {});
 
-      // Helper to clean and lowercase source names (e.g., "BusinessInsider" -> "business insider")
-      const formatSourceName = (name: string) => {
-        return name
-          .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between CamelCase
-          .replace("csoonline", "cso online")
-          .replace("americanbanker", "american banker")
-          .replace("institutionalinvestor", "institutional investor")
-          .toLowerCase();
-      };
+  const formatSourceName = (name: string) => {
+    return name
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace("csoonline", "cso online")
+      .replace("americanbanker", "american banker")
+      .replace("institutionalinvestor", "institutional investor")
+      .replace("fastcompany", "fast company")
+      .toLowerCase();
+  };
 
-      return (
-        // Removed the grid-cols-[100px_1fr] to get rid of the date column
-        <div key={idx} className="flex flex-col gap-3 py-8 border-b border-white/5 group">
-          <div className="flex flex-col gap-2">
-            <a 
-              href={item.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              onClick={() => onTrackClick(item.title, item.source)}
-              className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2"
-            >
-              <span className="flex-1">{item.title}</span>
-              <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
-            </a>
-            
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                {formatSourceName(item.source)}
-              </span>
-              {/* Only show Verified tag if it's actually in the whitelist.json */}
-              {isVerified && (
-                <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
-                  <Bot className="w-2.5 h-2.5" /> verified
-                </span>
-              )}
-            </div>
+  return (
+    <div className="flex flex-col">
+      {Object.keys(grouped).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).map((date) => (
+        <React.Fragment key={date}>
+          <div className="flex items-center gap-4 my-8 first:mt-0">
+            <h3 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] whitespace-nowrap">
+              Dispatch: {date}
+            </h3>
+            <div className="h-[1px] w-full bg-orange-500/10" />
           </div>
 
-          <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{item.summary}</p>
+          {grouped[date]?.map((item, idx) => {
+            const isVerified = (whitelist as any[]).some(w =>
+              item.source?.toLowerCase().includes(String(w["Source Name"] || "").toLowerCase()) ||
+              item.url?.toLowerCase().includes(String(w["Website URL"] || "").toLowerCase())
+            );
 
-          {item.moreCoverage && item.moreCoverage.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-white/5">
-              <span className="text-[12px] font-black text-orange-500/30 uppercase italic mr-1">more coverage:</span>
-              {item.moreCoverage.map((cov, cIdx) => (
-                <React.Fragment key={cIdx}>
-                  <a 
-                    href={cov.url} 
-                    target="_blank" 
-                    className="text-[12px] text-slate-500 hover:text-orange-500 font-bold transition-colors"
-                  >
-                    {formatSourceName(cov.source)}
-                  </a>
-                  {cIdx < (item.moreCoverage?.length ?? 0) - 1 && <span className="text-slate-800 text-[10px] mx-1">|</span>}
-                </React.Fragment>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    })}
-  </div>
-);
+            return (
+              <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
+                <a 
+                  href={item.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  onClick={() => onTrackClick(item.title, item.source)}
+                  className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2"
+                >
+                  <span className="flex-1">{item.title}</span>
+                  <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
+                </a>
+                
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                    {formatSourceName(item.source)}
+                  </span>
+                  {isVerified && (
+                    <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
+                      <Bot className="w-2.5 h-2.5" /> verified
+                    </span>
+                  )}
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{item.summary}</p>
+              </div>
+            );
+          })}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
 
 const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -371,13 +354,7 @@ const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: 
         <h4 className="font-bold text-white text-lg group-hover:text-orange-500 line-clamp-2 leading-tight">{video.title}</h4>
         <p className="text-[10px] text-orange-500 mt-2 uppercase font-black tracking-widest">{video.channel} • {formatDate(video.publishedAt)}</p>
         {video.description && <p className="text-slate-400 text-xs mt-3 line-clamp-2 leading-relaxed italic">{video.description}</p>}
-        <a 
-          href={video.url} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          onClick={() => onTrackClick(video.title, video.channel, 'video')}
-          className="absolute inset-0 z-10" 
-        />
+        <a href={video.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(video.title, video.channel, 'video')} className="absolute inset-0 z-10" />
       </div>
     ))}
   </div>
@@ -397,7 +374,6 @@ const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackCli
           </div>
           <p className="text-slate-400 text-sm leading-relaxed line-clamp-3 italic mb-6">{p.description}</p>
         </div>
-
         <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
           <div className="flex flex-col">
             <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Author</span>
@@ -410,15 +386,7 @@ const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackCli
             </span>
           </div>
         </div>
-
-        <a 
-          href={p.url} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          onClick={() => onTrackClick(p.name, p.owner, 'github_repo')}
-          className="absolute inset-0 z-10" 
-          aria-label={`View ${p.name}`} 
-        />
+        <a href={p.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(p.name, p.owner, 'github_repo')} className="absolute inset-0 z-10" />
       </div>
     ))}
   </div>
