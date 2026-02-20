@@ -3,6 +3,7 @@ import requests
 import json
 import re
 import os
+import time
 import numpy as np
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
@@ -61,19 +62,24 @@ def fetch_youtube_videos(channel_id):
         print(f"⚠️ YouTube Fetch Failed for {channel_id}: {e}")
         return []
 
-def get_embeddings_batch(texts):
+def get_embeddings_batch(texts, batch_size=50):
     if not texts: return []
-    try:
-        selected_model = "models/gemini-embedding-001"
-        result = client.models.embed_content(
-            model=selected_model,
-            contents=texts,
-            config=types.EmbedContentConfig(task_type="CLUSTERING")
-        )
-        return [e.values for e in result.embeddings]
-    except Exception as e:
-        print(f"❌ Embedding failed: {e}")
-        return [None] * len(texts)
+    all_embeddings = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
+        try:
+            print(f"📡 Embedding {len(batch)} items...")
+            result = client.models.embed_content(
+                model="models/text-embedding-004", 
+                contents=batch,
+                config=types.EmbedContentConfig(task_type="CLUSTERING")
+            )
+            all_embeddings.extend([e.values for e in result.embeddings])
+            if i + batch_size < len(texts): time.sleep(1) # Small breather
+        except Exception as e:
+            print(f"❌ Batch failed: {e}")
+            all_embeddings.extend([None] * len(batch))
+    return all_embeddings
 
 def cosine_similarity(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
@@ -150,16 +156,25 @@ def scan_rss():
 def cluster_articles_semantic(all_articles):
     if not all_articles: return []
     
-    vectors = get_embeddings_batch([a['title'] for a in all_articles])
-    for i, art in enumerate(all_articles): 
-        art['vec'] = vectors[i]
+    # 1. Separate articles into "Needs Vector" vs "Has Vector"
+    needs_embedding = [a for a in all_articles if 'vec' not in a or a['vec'] is None]
     
+    if needs_embedding:
+        print(f"🧠 New intel detected. Embedding {len(needs_embedding)} new articles...")
+        new_vectors = get_embeddings_batch([a['title'] for a in needs_embedding])
+        for i, art in enumerate(needs_embedding):
+            art['vec'] = new_vectors[i]
+
+    # 2. Filtering out any that failed embedding
+    valid_articles = [a for a in all_articles if a.get('vec') is not None]
+    
+    # 3. Clustering logic (Compare vectors)
     clusters = []
-    for art in all_articles:
-        if art['vec'] is None: continue
+    for art in valid_articles:
         matched = False
         for cluster in clusters:
-            if cosine_similarity(art['vec'], cluster[0]['vec']) > 0.85:
+            # We compare new articles against the "anchor" of each cluster
+            if cosine_similarity(np.array(art['vec']), np.array(cluster[0]['vec'])) > 0.85:
                 cluster.append(art)
                 matched = True
                 break
@@ -178,8 +193,7 @@ def cluster_articles_semantic(all_articles):
                 seen_urls.add(a['url'])
         
         anchor['moreCoverage'] = unique_coverage
-        for a in cluster: 
-            a.pop('vec', None)
+        # We NO LONGER pop the 'vec' here, so it saves to data.json
         final_topics.append(anchor)
         
     return final_topics
@@ -281,8 +295,8 @@ if __name__ == "__main__":
             unique_news.append(art)
             seen_urls.add(art['url'])
 
-    # 5. Cluster and Deepen the River (Increased to 1000)
-    clustered_news = cluster_articles_semantic(unique_news[:1000])
+    # 5. Cluster and Deepen the River
+    clustered_news = cluster_articles_semantic(unique_news)
 
     # 6. YouTube
     all_videos = []
