@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     # 9. Save
     final_data = {
-        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
         "items": clustered_news,
         "videos": all_videos,
         "githubProjects": github_projects
