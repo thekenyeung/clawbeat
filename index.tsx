@@ -14,7 +14,8 @@ import {
   ExternalLink,
   Star,
   Calendar,
-  Layers
+  Layers,
+  Award
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -28,8 +29,11 @@ interface NewsItem {
   url: string;
   source: string;
   date: string;
+  source_type?: 'priority' | 'standard' | 'delist'; // Added Priority Type
   moreCoverage?: Array<{ source: string; url: string }>;
 }
+
+// ... (VideoItem, ProjectItem, formatDate, formatSourceName remain unchanged)
 
 interface VideoItem {
   title: string;
@@ -50,7 +54,6 @@ interface ProjectItem {
   created_at: string;
 }
 
-// --- HELPERS ---
 const formatDate = (dateString: string) => {
   try {
     const date = new Date(dateString);
@@ -92,6 +95,7 @@ const checkIfVerified = (item: NewsItem) => {
 };
 
 const App: React.FC = () => {
+  // ... (App component state and fetch logic remain unchanged)
   const [activePage, setActivePage] = useState<Page>('news');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -256,54 +260,27 @@ const App: React.FC = () => {
   );
 };
 
-// --- COMPONENTS ---
-
-const Pagination = ({ current, total, onChange }: any) => {
-  if (total <= 1) return null;
-  return (
-    <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
-      <button 
-        disabled={current === 1}
-        onClick={() => { onChange((prev: number) => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-      >
-        Prev
-      </button>
-      <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
-        Page {current} <span className="text-orange-500/50">/</span> {total}
-      </span>
-      <button 
-        disabled={current === total}
-        onClick={() => { onChange((prev: number) => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-      >
-        Next
-      </button>
-    </div>
-  );
-};
-
-const NavButton = ({ active, onClick, icon, label }: any) => (
-  <button onClick={onClick} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${active ? 'bg-white/10 text-orange-500' : 'text-slate-500 hover:text-slate-300'}`}>
-    {icon} {label}
-  </button>
-);
-
-const SortButton = ({ active, onClick, label }: any) => (
-  <button onClick={onClick} className={`px-3 py-1 text-[10px] font-black uppercase rounded transition-colors ${active ? 'bg-orange-600 text-white' : 'text-slate-500 hover:bg-white/5'}`}>
-    {label}
-  </button>
-);
+// --- UPDATED NEWSLIST COMPONENT ---
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  const sortedByVerification = [...items].sort((a, b) => {
+  // Sort by Verification status first, then by Source Type Priority
+  const sortedByPriority = [...items].sort((a, b) => {
+    // 1. Check Verification (Whitelist)
     const aVerified = checkIfVerified(a);
     const bVerified = checkIfVerified(b);
-    if (aVerified === bVerified) return 0;
-    return aVerified ? -1 : 1;
+    if (aVerified !== bVerified) return aVerified ? -1 : 1;
+
+    // 2. Check Source Type (Priority Platforms vs Standard Blogs)
+    const priorityWeight = { priority: 1, standard: 2, delist: 3 };
+    const aWeight = priorityWeight[a.source_type || 'standard'];
+    const bWeight = priorityWeight[b.source_type || 'standard'];
+    
+    if (aWeight !== bWeight) return aWeight - bWeight;
+
+    return 0;
   });
 
-  const grouped = sortedByVerification.reduce((acc: Record<string, NewsItem[]>, item) => {
+  const grouped = sortedByPriority.reduce((acc: Record<string, NewsItem[]>, item) => {
     const date = item.date || "recent";
     if (!acc[date]) acc[date] = [];
     acc[date].push(item);
@@ -323,6 +300,7 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
 
           {grouped[date]?.map((item, idx) => {
             const isVerified = checkIfVerified(item);
+            const isPriority = item.source_type === 'priority';
 
             return (
               <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
@@ -341,14 +319,21 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                     {formatSourceName(item.source)}
                   </span>
+                  
                   {isVerified && (
                     <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
                       <Bot className="w-2.5 h-2.5" /> verified
                     </span>
                   )}
+
+                  {/* Optional: Add a subtle badge for journalistic priority */}
+                  {isPriority && !isVerified && (
+                    <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
+                      <Award className="w-2.5 h-2.5" /> priority feed
+                    </span>
+                  )}
                 </div>
 
-                {/* UPDATED: Summary and More Coverage Logic */}
                 {item.summary && (
                   <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
                     {item.summary}
@@ -387,6 +372,45 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
     </div>
   );
 };
+
+// ... (Rest of components Pagination, NavButton, SortButton, VideoGrid, ProjectGrid remain the same)
+
+const Pagination = ({ current, total, onChange }: any) => {
+  if (total <= 1) return null;
+  return (
+    <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
+      <button 
+        disabled={current === 1}
+        onClick={() => { onChange((prev: number) => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+      >
+        Prev
+      </button>
+      <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+        Page {current} <span className="text-orange-500/50">/</span> {total}
+      </span>
+      <button 
+        disabled={current === total}
+        onClick={() => { onChange((prev: number) => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
+      >
+        Next
+      </button>
+    </div>
+  );
+};
+
+const NavButton = ({ active, onClick, icon, label }: any) => (
+  <button onClick={onClick} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${active ? 'bg-white/10 text-orange-500' : 'text-slate-500 hover:text-slate-300'}`}>
+    {icon} {label}
+  </button>
+);
+
+const SortButton = ({ active, onClick, label }: any) => (
+  <button onClick={onClick} className={`px-3 py-1 text-[10px] font-black uppercase rounded transition-colors ${active ? 'bg-orange-600 text-white' : 'text-slate-500 hover:bg-white/5'}`}>
+    {label}
+  </button>
+);
 
 const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

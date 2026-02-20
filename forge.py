@@ -32,7 +32,41 @@ KEYWORDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "steinberger", "claud
 WHITELIST_PATH = "./src/whitelist.json"
 OUTPUT_PATH = "./public/data.json"
 
+# --- RATE LIMIT CONFIGURATION ---
+RPM_LIMIT = 10 
+SLEEP_BETWEEN_REQUESTS = 6.5 # Slightly over 6s to be safe for 10 RPM
+MAX_BATCH_SIZE = 50 # Limit how many new summaries we generate per run to save daily quota
+
+# --- NEW PRIORITY CONFIGURATION ---
+PRIORITY_SITES = [
+    'substack.com', 'beehiiv.com', 'ghost.io', 'medium.com', 'tldr.tech', 
+    'stratechery.com', 'newcomer.co', 'theinformation.com', 'platformer.news',
+    'theverge.com', 'wired.com', 'techcrunch.com', 'venturebeat.com', 
+    'arstechnica.com', 'engadget.com', 'gizmodo.com', 'thenextweb.com',
+    'mashable.com', 'recode.net', 'zdnet.com', 'cnet.com', 'pcmag.com',
+    'technologyreview.com', 'spectrum.ieee.org', 'theintercept.com', 
+    'restofworld.org', 'theregister.com', 'quantamagazine.org',
+    'wsj.com', 'nytimes.com', 'bloomberg.com', 'ft.com', 'forbes.com', 
+    'fastcompany.com', 'businessinsider.com', 'economist.com'
+]
+
+DELIST_SITES = [
+    'prnewswire.com', 'businesswire.com', 'globenewswire.com', 
+    'accesswire.com', 'einpresswire.com', 'prweb.com', 'newswire.com',
+    'prlog.org', 'prowly.com', 'issiswire.com', 'send2press.com',
+    '24-7pressrelease.com', 'pressat.co.uk', 'marketwired.com'
+]
+
 # --- FUNCTIONS ---
+
+def get_source_type(url):
+    """Determines if a source is high-priority, standard, or should be delisted."""
+    url_lower = url.lower()
+    if any(k in url_lower for k in DELIST_SITES):
+        return "delist"
+    if any(k in url_lower for k in PRIORITY_SITES):
+        return "priority"
+    return "standard"
 
 def fetch_youtube_videos(channel_id):
     try:
@@ -125,14 +159,17 @@ def scan_rss():
                 display_title = raw_title.split(":", 1)[1].strip() if ":" in raw_title and "flipboard" in site["Source Name"].lower() else raw_title
                 summary = entry.get('summary', '') or entry.get('description', '')
                 clean_summary = BeautifulSoup(summary, "html.parser").get_text(strip=True)
+                url = entry.link
+                
                 if any(kw in (display_title + clean_summary).lower() for kw in KEYWORDS):
                     found_articles.append({
                         "title": display_title,
-                        "url": entry.link,
+                        "url": url,
                         "source": source,
                         "date": datetime.now().strftime("%m-%d-%Y"),
                         "summary": clean_summary[:200] + "...",
-                        "vec": None
+                        "vec": None,
+                        "source_type": get_source_type(url)
                     })
         except: continue
     return found_articles
@@ -150,23 +187,26 @@ def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR
             clean_title = " - ".join(raw_title.split(" - ")[:-1]) if " - " in raw_title else raw_title
             soup = BeautifulSoup(entry.get('summary', ''), "html.parser")
             clean_summary = soup.get_text(separator=' ', strip=True).split("View Full Coverage")[0].strip()
+            url = entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link
+            
             wild_articles.append({
                 "title": clean_title,
-                "url": entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link,
+                "url": url,
                 "source": entry.source.get('title', 'web search').lower(),
                 "summary": clean_summary[:250] + "..." if len(clean_summary) > 20 else "Ecosystem update.",
                 "date": datetime.now().strftime("%m-%d-%Y"),
-                "vec": None
+                "vec": None,
+                "source_type": get_source_type(url)
             })
         return wild_articles
     except: return []
 
 def get_ai_summary(title, current_summary):
     """
-    Uses Gemini 1.5 Flash (Free Tier) to create a high-quality intel brief.
+    Uses Gemini with retries and backoff to handle 503 errors.
     """
-    # If the summary is already long/good, skip to save your 1,500 daily free requests
-    if current_summary and len(current_summary) > 120:
+    # Skip if we already have a long, professional summary
+    if current_summary and len(current_summary) > 100 and "Summary pending" not in current_summary:
         return current_summary
 
     prompt = (
@@ -174,13 +214,18 @@ def get_ai_summary(title, current_summary):
         f"Focus on the impact. Title: {title}. Raw Context: {current_summary}. "
         f"Output ONLY the sentence."
     )
-    try:
-        # Gemini 1.5 Flash is FREE for up to 1,500 requests per day
-        response = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
-        return response.text.strip()
-    except Exception as e:
-        print(f"⚠️ Summary upgrade failed: {e}")
-        return current_summary
+    
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
+            return response.text.strip()
+        except Exception as e:
+            wait_time = (attempt + 1) * 10
+            print(f"⚠️ Limit hit. Waiting {wait_time}s... (Error: {e})")
+            time.sleep(wait_time)
+            
+    return "Summary pending update." # Fallback for local storage
 
 def cluster_articles_semantic(all_articles):
     if not all_articles: return []
@@ -227,7 +272,7 @@ def fetch_github_projects():
 
 # --- SINGLE MAIN EXECUTION ---
 if __name__ == "__main__":
-    print("🛠️ Forging Intel Feed with Priority Logic...")
+    print(f"🛠️ Forging Intel Feed (Batch Limit: {MAX_BATCH_SIZE}, Throttle: {RPM_LIMIT} RPM)...")
     
     # 1. LOAD HISTORY
     existing_news = []
@@ -239,25 +284,40 @@ if __name__ == "__main__":
         except: pass
 
     # 2. SCRAPE IN PRIORITY ORDER
-    whitelist_articles = scan_rss() # High Priority
-    discovery_articles = scan_google_news() # Low Priority
+    whitelist_articles = scan_rss() 
+    discovery_articles = scan_google_news() 
     
-    # 3. MERGE & DEDUPLICATE (Whitelist/Flipboard wins)
+    # 3. MERGE, DEDUPLICATE, & FILTER
     all_found = whitelist_articles + discovery_articles + existing_news
     seen_urls = set()
     unique_news = []
+    new_summaries_count = 0
 
     for art in all_found:
         if art['url'] not in seen_urls:
-            # NEW: High-quality summary check
-            # If the summary is short/boring, use the FREE AI limit to fix it
-            if len(art.get('summary', '')) < 60:
-                print(f"✍️ Drafting brief for: {art['title']}")
+            # Ensure even old items have a source_type
+            if 'source_type' not in art:
+                art['source_type'] = get_source_type(art['url'])
+            
+            # DELIST FILTER: Drop press releases immediately
+            if art['source_type'] == "delist":
+                continue
+
+            # RATE LIMITED SUMMARY GENERATION
+            # Check if summary is missing, too short, or a previous failure marker
+            is_placeholder = (
+                len(art.get('summary', '')) < 65 or 
+                "Summary pending" in art.get('summary', '') or
+                "upgrade failed" in art.get('summary', '').lower()
+            )
+
+            if is_placeholder and new_summaries_count < MAX_BATCH_SIZE:
+                print(f"✍️ ({new_summaries_count+1}/{MAX_BATCH_SIZE}) Drafting brief: {art['title']}")
                 art['summary'] = get_ai_summary(art['title'], art['summary'])
+                new_summaries_count += 1
                 
-                # CRITICAL: Wait 4.5 seconds to stay under 15 Requests Per Minute
-                # This makes the script 'Free Tier proof'
-                time.sleep(4.5) 
+                # Critical Sleep to stay under 10 RPM
+                time.sleep(SLEEP_BETWEEN_REQUESTS) 
             
             unique_news.append(art)
             seen_urls.add(art['url'])
@@ -274,13 +334,12 @@ if __name__ == "__main__":
                 if yt_id: all_videos.extend(fetch_youtube_videos(yt_id))
 
     # 5. SAVE FINAL DATA
-    # Sort by date (newest first) and keep only the top 1000 items
     clustered_news.sort(key=lambda x: x.get('date', ''), reverse=True)
     final_items = clustered_news[:1000]
 
     final_data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
-        "items": clustered_news,
+        "items": final_items,
         "videos": all_videos,
         "githubProjects": github_projects
     }
@@ -289,4 +348,4 @@ if __name__ == "__main__":
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(final_data, f, indent=4, ensure_ascii=False)
         
-    print(f"✅ Success. River updated. Total items: {len(clustered_news)}")
+    print(f"✅ Success. River updated. Total items: {len(final_items)}")
