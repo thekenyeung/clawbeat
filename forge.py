@@ -70,7 +70,7 @@ def get_embeddings_batch(texts, batch_size=50):
         try:
             print(f"📡 Embedding {len(batch)} items...")
             result = client.models.embed_content(
-                model="models/text-embedding-004", 
+                model="models/gemini-embedding-001", 
                 contents=batch,
                 config=types.EmbedContentConfig(task_type="CLUSTERING")
             )

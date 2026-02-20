@@ -284,6 +284,7 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
       .replace("americanbanker", "american banker")
       .replace("institutionalinvestor", "institutional investor")
       .replace("fastcompany", "fast company")
+      .replace("venture beat", "venturebeat")
       .toLowerCase();
   };
 
