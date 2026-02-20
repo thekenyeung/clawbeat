@@ -236,7 +236,7 @@ def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR
         feed = feedparser.parse(resp.content)
         wild_articles = []
         
-        for entry in feed.entries[:15]:
+        for entry in feed.entries[:100]:
             # 1. REMOVE PUBLICATION FROM HEADLINE
             raw_title = entry.title
             if " - " in raw_title:
@@ -284,13 +284,17 @@ if __name__ == "__main__":
     whitelist_articles = scan_rss()
     wild_articles = scan_google_news()
     
-    # 3. Merge, Deduplicate, and Cluster
+    # 3. Merge and Filter YouTube out of News
     all_found = wild_articles + whitelist_articles + existing_news
 
-    # 4. Deduplicate by URL
+    # 4. Deduplicate by URL AND Filter YouTube
     seen_urls = set()
     unique_news = []
     for art in all_found:
+        # Prevent YouTube from appearing in the News feed
+        if "youtube.com" in art['url'] or "youtu.be" in art['url']:
+            continue
+            
         if art['url'] not in seen_urls:
             unique_news.append(art)
             seen_urls.add(art['url'])

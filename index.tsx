@@ -63,6 +63,45 @@ const formatDate = (dateString: string) => {
   }
 };
 
+/**
+ * Normalizes source names (e.g., BusinessInsider -> Business Insider)
+ * and handles specific manual overrides.
+ */
+const formatSourceName = (name: string) => {
+  if (!name) return "";
+  
+  // 1. Fix PascalCase (TheNewStack -> The New Stack)
+  let cleanName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+  
+  // 2. Specific fixes for common tech/finance sources
+  const manualFixes: Record<string, string> = {
+    "businessinsider": "Business Insider",
+    "venturebeat": "VentureBeat",
+    "thenewstack": "The New Stack",
+    "csoonline": "CSO Online",
+    "americanbanker": "American Banker",
+    "institutionalinvestor": "Institutional Investor",
+    "fastcompany": "Fast Company"
+  };
+
+  const key = cleanName.toLowerCase().replace(/\s+/g, '');
+  return manualFixes[key] || cleanName;
+};
+
+/**
+ * Helper to check if a source is whitelisted
+ */
+const checkIfVerified = (item: NewsItem) => {
+  return (whitelist as any[]).some(w => {
+    const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
+    const articleSource = String(item.source || "").toLowerCase().trim();
+    if (whitelistName === articleSource) return true;
+    const whitelistUrl = String(w["Website URL"] || "").toLowerCase().replace('https://', '').replace('http://', '').replace('www.', '');
+    if (whitelistUrl && item.url?.toLowerCase().includes(whitelistUrl)) return true;
+    return false;
+  });
+};
+
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('news');
   const [loading, setLoading] = useState(false);
@@ -126,7 +165,7 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- SORTING & PAGINATION ---
+  // --- SORTING & PAGINATION CALCULATIONS ---
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -274,22 +313,20 @@ const SortButton = ({ active, onClick, label }: any) => (
 );
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  const grouped = items.reduce((acc: Record<string, NewsItem[]>, item) => {
+  // Sort items to prioritize Whitelisted (Verified) sources at the top of their group
+  const sortedByVerification = [...items].sort((a, b) => {
+    const aVerified = checkIfVerified(a);
+    const bVerified = checkIfVerified(b);
+    if (aVerified === bVerified) return 0;
+    return aVerified ? -1 : 1;
+  });
+
+  const grouped = sortedByVerification.reduce((acc: Record<string, NewsItem[]>, item) => {
     const date = item.date || "recent";
     if (!acc[date]) acc[date] = [];
     acc[date].push(item);
     return acc;
   }, {});
-
-  const formatSourceName = (name: string) => {
-    return name
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace("csoonline", "cso online")
-      .replace("americanbanker", "american banker")
-      .replace("institutionalinvestor", "institutional investor")
-      .replace("fastcompany", "fast company")
-      .toLowerCase();
-  };
 
   return (
     <div className="flex flex-col">
@@ -303,14 +340,7 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
           </div>
 
           {grouped[date]?.map((item, idx) => {
-            const isVerified = (whitelist as any[]).some(w => {
-              const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
-              const articleSource = String(item.source || "").toLowerCase().trim();
-              if (whitelistName === articleSource) return true;
-              const whitelistUrl = String(w["Website URL"] || "").toLowerCase().replace('https://', '').replace('http://', '').replace('www.', '');
-              if (whitelistUrl && item.url?.toLowerCase().includes(whitelistUrl)) return true;
-              return false;
-            });
+            const isVerified = checkIfVerified(item);
 
             return (
               <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
@@ -349,7 +379,7 @@ const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: 
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
     {items.map((video, idx) => (
       <div key={idx} className="group relative flex flex-col">
-        <div className="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-white/10 group-hover:ring-orange-500/50 transition-all">
+        <div className="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-white/10 group-hover:ring-orange-500/50 transition-all shadow-lg">
           {video.thumbnail ? (
             <img src={video.thumbnail} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={video.title} />
           ) : (
@@ -371,7 +401,7 @@ const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: 
 const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     {items.map((p, idx) => (
-      <div key={idx} className="group relative p-6 rounded-xl bg-white/[0.03] border border-white/5 hover:border-orange-500/40 transition-all flex flex-col justify-between">
+      <div key={idx} className="group relative p-6 rounded-xl bg-white/[0.03] border border-white/5 hover:border-orange-500/40 transition-all flex flex-col justify-between shadow-sm">
         <div>
           <div className="flex justify-between items-start mb-4">
             <h4 className="text-lg font-bold text-white group-hover:text-orange-500 transition-colors tracking-tight">{p.name}</h4>
