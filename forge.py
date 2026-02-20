@@ -39,7 +39,6 @@ def fetch_youtube_videos(channel_id):
         uploads_id = ch_resp['items'][0]['contentDetails']['relatedPlaylists']['uploads']
         pl_resp = youtube.playlistItems().list(playlistId=uploads_id, part='snippet', maxResults=10).execute()
 
-        MEDIA_KEYWORDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "steinberger", "claudbot", "openclaw foundation"]
         videos = []
         for item in pl_resp.get('items', []):
             snippet = item['snippet']
@@ -47,7 +46,7 @@ def fetch_youtube_videos(channel_id):
             description = snippet.get('description', '')
             video_id = snippet['resourceId']['videoId']
             
-            if any(kw in (title + description).lower() for kw in MEDIA_KEYWORDS):
+            if any(kw in (title + description).lower() for kw in KEYWORDS):
                 videos.append({
                     "title": title,
                     "url": f"https://www.youtube.com/watch?v={video_id}",
@@ -65,7 +64,6 @@ def fetch_youtube_videos(channel_id):
 def get_embeddings_batch(texts):
     if not texts: return []
     try:
-        # Use verified stable model path for Feb 2026
         selected_model = "models/gemini-embedding-001"
         result = client.models.embed_content(
             model=selected_model,
@@ -81,11 +79,9 @@ def cosine_similarity(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
 def extract_real_source(entry, default_source):
-    # If the whitelist name doesn't mention Flipboard, trust the whitelist
     if "flipboard" not in default_source.lower():
         return default_source
 
-    # Strategy 1: Look at the URL domain (The most reliable way)
     link = entry.get('link', '')
     if link:
         domain = urlparse(link).netloc.replace('www.', '')
@@ -102,10 +98,8 @@ def extract_real_source(entry, default_source):
         }
         if domain in domain_map:
             return domain_map[domain]
-        # Fallback: turn "engadget.com" into "Engadget"
         return domain.split('.')[0].capitalize()
 
-    # Strategy 2: Check the Title for a colon (e.g., "The Verge: Story Title")
     title = entry.get('title', '')
     if ":" in title:
         return title.split(":")[0].strip()
@@ -130,11 +124,8 @@ def scan_rss():
             
             for entry in feed.entries[:20]:
                 raw_title = entry.get('title', '')
-                
-                # Determine real source and clean the title
                 source = extract_real_source(entry, site["Source Name"])
                 
-                # If title is "Source: Headline", remove the "Source:" part
                 if ":" in raw_title and "flipboard" in site["Source Name"].lower():
                     display_title = raw_title.split(":", 1)[1].strip()
                 else:
@@ -147,12 +138,11 @@ def scan_rss():
                     found_articles.append({
                         "title": display_title,
                         "url": entry.link,
-                        "source": source, # Uses the cleaned source name
+                        "source": source,
                         "date": datetime.now().strftime("%m-%d-%Y"),
                         "summary": clean_summary[:200] + "..."
                     })
         except Exception as e:
-            print(f"Error scanning {rss_url}: {e}")
             continue
             
     return found_articles
@@ -160,7 +150,6 @@ def scan_rss():
 def cluster_articles_semantic(all_articles):
     if not all_articles: return []
     
-    # 1. Get embeddings for all headlines
     vectors = get_embeddings_batch([a['title'] for a in all_articles])
     for i, art in enumerate(all_articles): 
         art['vec'] = vectors[i]
@@ -170,7 +159,6 @@ def cluster_articles_semantic(all_articles):
         if art['vec'] is None: continue
         matched = False
         for cluster in clusters:
-            # If similarity is high, add to existing cluster
             if cosine_similarity(art['vec'], cluster[0]['vec']) > 0.85:
                 cluster.append(art)
                 matched = True
@@ -180,44 +168,34 @@ def cluster_articles_semantic(all_articles):
 
     final_topics = []
     for cluster in clusters:
-        # The first article in the cluster becomes the main "Anchor"
         anchor = cluster[0]
-        
-        # 2. Deduplicate "More Coverage"
         unique_coverage = []
-        seen_urls = {anchor['url']} # Pre-populate with the main article's URL to exclude it
+        seen_urls = {anchor['url']}
         
         for a in cluster[1:]:
-            # Only add if the URL is new AND not the same as the main article
             if a['url'] not in seen_urls:
                 unique_coverage.append({"source": a['source'], "url": a['url']})
                 seen_urls.add(a['url'])
         
         anchor['moreCoverage'] = unique_coverage
-        
-        # Cleanup: Remove vectors before saving to JSON
         for a in cluster: 
             a.pop('vec', None)
-            
         final_topics.append(anchor)
         
     return final_topics
 
 def fetch_github_projects():
-    """Searches GitHub for OpenClaw-related repositories."""
     token = os.getenv("GITHUB_TOKEN")
     headers = {"Accept": "application/vnd.github.v3+json"}
     if token:
         headers["Authorization"] = f"token {token}"
 
-    # Change per_page from 10 to 100
     query = "OpenClaw"
     url = f"https://api.github.com/search/repositories?q={query}&sort=updated&order=desc&per_page=100"
 
     try:
         resp = requests.get(url, headers=headers, timeout=10)
         data = resp.json()
-        
         projects = []
         for repo in data.get('items', []):
             projects.append({
@@ -227,49 +205,63 @@ def fetch_github_projects():
                 "url": repo['html_url'],
                 "stars": repo['stargazers_count'],
                 "created_at": repo['created_at'],
-                "updated_at": repo['updated_at'] # Added this for better sorting
+                "updated_at": repo['updated_at']
             })
         return projects
     except Exception as e:
         print(f"⚠️ GitHub Fetch Failed: {e}")
         return []
 
-# --- SINGLE UNIFIED EXECUTION ---
+def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR 'Steinberger'"):
+    import urllib.parse
+    encoded_query = urllib.parse.quote(query)
+    gn_url = f"https://news.google.com/rss/search?q={encoded_query}&hl=en-US&gl=US&ceid=US:en"
+    
+    try:
+        resp = requests.get(gn_url, timeout=10)
+        feed = feedparser.parse(resp.content)
+        wild_articles = []
+        for entry in feed.entries[:15]:
+            wild_articles.append({
+                "title": entry.title,
+                "url": entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link,
+                "source": entry.source.get('title', 'Web Search'),
+                "summary": "Found via ecosystem search.",
+                "date": datetime.now().strftime("%m-%d-%Y")
+            })
+        return wild_articles
+    except Exception as e:
+        print(f"⚠️ Google News Search failed: {e}")
+        return []
+
+# --- MAIN EXECUTION ---
 if __name__ == "__main__":
     print("🛠️ Forging Intel Feed...")
     
-    # 1. Load Existing History FIRST
+    # 1. Load History
     existing_news = []
     if os.path.exists(OUTPUT_PATH):
         try:
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
-                old_data = json.load(f)
-                existing_news = old_data.get('items', [])
-                print(f"📖 Loaded {len(existing_news)} existing articles.")
-        except Exception as e:
-            print(f"⚠️ Could not load history: {e}")
+                existing_news = json.load(f).get('items', [])
+        except: pass
 
-    # 2. News - Scrape the latest
-    new_articles = scan_rss()
-    print(f"📡 Scanned {len(new_articles)} new articles.")
-
-    # 3. Merge & Deduplicate
-    combined_news = new_articles + existing_news
+    # 2. Scrape Whitelist + Google News
+    whitelist_articles = scan_rss()
+    wild_articles = scan_google_news()
+    
+    # 3. Merge, Deduplicate, and Cluster
+    all_found = wild_articles + whitelist_articles + existing_news
     seen_urls = set()
     unique_news = []
-    for art in combined_news:
+    for art in all_found:
         if art['url'] not in seen_urls:
             unique_news.append(art)
             seen_urls.add(art['url'])
 
-    # 4. Clustering (Ensure we always have a list, even if clustering is tight)
-    if unique_news:
-        clustered_news = cluster_articles_semantic(unique_news[:200])
-    else:
-        clustered_news = []
-        print("⚠️ No news articles found or loaded.")
+    clustered_news = cluster_articles_semantic(unique_news[:250])
 
-    # 5. YouTube & GitHub
+    # 4. YouTube
     all_videos = []
     try:
         if os.path.exists(WHITELIST_PATH):
@@ -281,14 +273,14 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"⚠️ YouTube Logic Failed: {e}")
 
+    # 5. GitHub
     github_projects = fetch_github_projects()
 
-    # 6. Safety Check: If news is empty, keep the old news!
+    # 6. Safety Check
     if not clustered_news and existing_news:
-        print("🛑 News scan was empty. Preserving existing history to prevent blank feed.")
         clustered_news = existing_news
 
-    # 7. Save Final Package
+    # 7. Save
     final_data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "items": clustered_news,
@@ -296,7 +288,8 @@ if __name__ == "__main__":
         "githubProjects": github_projects
     }
     
+    if not os.path.exists("./public"): os.makedirs("./public")
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(final_data, f, indent=4, ensure_ascii=False)
         
-    print(f"✅ Success. Total articles in river: {len(clustered_news)}")
+    print(f"✅ Success. River updated. Total items: {len(clustered_news)}")
