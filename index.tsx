@@ -15,7 +15,9 @@ import {
   Star,
   Calendar,
   Layers,
-  Award
+  Award,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -29,11 +31,9 @@ interface NewsItem {
   url: string;
   source: string;
   date: string;
-  source_type?: 'priority' | 'standard' | 'delist'; // Added Priority Type
+  source_type?: 'priority' | 'standard' | 'delist';
   moreCoverage?: Array<{ source: string; url: string }>;
 }
-
-// ... (VideoItem, ProjectItem, formatDate, formatSourceName remain unchanged)
 
 interface VideoItem {
   title: string;
@@ -54,6 +54,7 @@ interface ProjectItem {
   created_at: string;
 }
 
+// --- HELPERS ---
 const formatDate = (dateString: string) => {
   try {
     const date = new Date(dateString);
@@ -95,7 +96,6 @@ const checkIfVerified = (item: NewsItem) => {
 };
 
 const App: React.FC = () => {
-  // ... (App component state and fetch logic remain unchanged)
   const [activePage, setActivePage] = useState<Page>('news');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,8 +106,13 @@ const App: React.FC = () => {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
 
+  // Independent Pagination States
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const [currentVideoPage, setCurrentVideoPage] = useState(1);
+  
+  const newsPerPage = 20;
+  const videosPerPage = 9; // 3x3 grid
+  const projectsPerPage = 20;
 
   const trackEvent = (action: string, params: object) => {
     if (typeof window.gtag === 'function') {
@@ -129,7 +134,8 @@ const App: React.FC = () => {
       page_location: window.location.href,
       page_path: `/${activePage}`
     });
-    setCurrentPage(1);
+    // We don't reset to 1 here anymore to preserve tab state, 
+    // unless you prefer it to reset every time.
   }, [activePage]);
 
   const fetchContent = async (page: Page) => {
@@ -156,6 +162,7 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
+  // Sorting Logic
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -167,15 +174,20 @@ const App: React.FC = () => {
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  
-  const currentNewsItems = news.slice(indexOfFirstItem, indexOfLastItem);
-  const currentProjectItems = sortedProjects.slice(indexOfFirstItem, indexOfLastItem);
+  // News Pagination Math
+  const indexOfLastNews = currentPage * newsPerPage;
+  const currentNewsItems = news.slice(indexOfLastNews - newsPerPage, indexOfLastNews);
+  const totalNewsPages = Math.ceil(news.length / newsPerPage);
 
-  const totalPages = activePage === 'news' 
-    ? Math.ceil(news.length / itemsPerPage) 
-    : Math.ceil(projects.length / itemsPerPage);
+  // Video Pagination Math
+  const indexOfLastVideo = currentVideoPage * videosPerPage;
+  const currentVideoItems = sortedVideos.slice(indexOfLastVideo - videosPerPage, indexOfLastVideo);
+  const totalVideoPages = Math.ceil(sortedVideos.length / videosPerPage);
+
+  // Project Pagination Math
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const currentProjectItems = sortedProjects.slice(indexOfLastProject - projectsPerPage, indexOfLastProject);
+  const totalProjectPages = Math.ceil(sortedProjects.length / projectsPerPage);
 
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
@@ -243,14 +255,19 @@ const App: React.FC = () => {
             {activePage === 'news' && (
               <>
                 <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} />
-                <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} />
+                <Pagination current={currentPage} total={totalNewsPages} onChange={setCurrentPage} />
               </>
             )}
-            {activePage === 'videos' && <VideoGrid items={sortedVideos} onTrackClick={handleLinkClick} />}
+            {activePage === 'videos' && (
+              <>
+                <VideoGrid items={currentVideoItems} onTrackClick={handleLinkClick} />
+                <Pagination current={currentVideoPage} total={totalVideoPages} onChange={setCurrentVideoPage} />
+              </>
+            )}
             {activePage === 'projects' && (
               <>
                 <ProjectGrid items={currentProjectItems} onTrackClick={handleLinkClick} />
-                <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} />
+                <Pagination current={currentPage} total={totalProjectPages} onChange={setCurrentPage} />
               </>
             )}
           </div>
@@ -260,23 +277,81 @@ const App: React.FC = () => {
   );
 };
 
-// --- UPDATED NEWSLIST COMPONENT ---
+// --- COMPONENTS ---
+
+const Pagination = ({ current, total, onChange }: { current: number; total: number; onChange: (p: number) => void }) => {
+  if (total <= 1) return null;
+
+  const handlePageChange = (newPage: number) => {
+    // 1. Trigger the state change
+    onChange(newPage);
+    
+    // 2. Smoothly glide back to the top of the feed
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  return (
+    <div className="flex justify-center items-center gap-6 mt-16 pt-12 border-t border-white/5">
+      <button 
+        disabled={current === 1}
+        onClick={() => handlePageChange(current - 1)}
+        className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 disabled:hover:bg-white/5 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-orange-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+        <ChevronLeft className="w-4 h-4 text-orange-500 relative z-10" />
+        <span className="relative z-10">Prev</span>
+      </button>
+
+      <div className="flex flex-col items-center">
+        <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] mb-1">
+          Stream
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-black text-white italic">{current}</span>
+          <span className="text-orange-500/30 text-xs">/</span>
+          <span className="text-xs font-bold text-slate-500">{total}</span>
+        </div>
+      </div>
+
+      <button 
+        disabled={current === total}
+        onClick={() => handlePageChange(current + 1)}
+        className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 disabled:hover:bg-white/5 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0)] hover:shadow-[0_0_20px_rgba(249,115,22,0.1)]"
+      >
+        <div className="absolute inset-0 bg-orange-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+        <span className="relative z-10">Next</span>
+        <ChevronRight className="w-4 h-4 text-orange-500 relative z-10" />
+      </button>
+    </div>
+  );
+};
+
+// ... (Rest of components: NavButton, SortButton, NewsList, VideoGrid, ProjectGrid)
+
+const NavButton = ({ active, onClick, icon, label }: any) => (
+  <button onClick={onClick} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${active ? 'bg-white/10 text-orange-500' : 'text-slate-500 hover:text-slate-300'}`}>
+    {icon} {label}
+  </button>
+);
+
+const SortButton = ({ active, onClick, label }: any) => (
+  <button onClick={onClick} className={`px-3 py-1 text-[10px] font-black uppercase rounded transition-colors ${active ? 'bg-orange-600 text-white' : 'text-slate-500 hover:bg-white/5'}`}>
+    {label}
+  </button>
+);
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  // Sort by Verification status first, then by Source Type Priority
   const sortedByPriority = [...items].sort((a, b) => {
-    // 1. Check Verification (Whitelist)
     const aVerified = checkIfVerified(a);
     const bVerified = checkIfVerified(b);
     if (aVerified !== bVerified) return aVerified ? -1 : 1;
-
-    // 2. Check Source Type (Priority Platforms vs Standard Blogs)
     const priorityWeight = { priority: 1, standard: 2, delist: 3 };
     const aWeight = priorityWeight[a.source_type || 'standard'];
     const bWeight = priorityWeight[b.source_type || 'standard'];
-    
     if (aWeight !== bWeight) return aWeight - bWeight;
-
     return 0;
   });
 
@@ -326,7 +401,6 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
                     </span>
                   )}
 
-                  {/* Optional: Add a subtle badge for journalistic priority */}
                   {isPriority && !isVerified && (
                     <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
                       <Award className="w-2.5 h-2.5" /> priority feed
@@ -372,45 +446,6 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
     </div>
   );
 };
-
-// ... (Rest of components Pagination, NavButton, SortButton, VideoGrid, ProjectGrid remain the same)
-
-const Pagination = ({ current, total, onChange }: any) => {
-  if (total <= 1) return null;
-  return (
-    <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-white/5">
-      <button 
-        disabled={current === 1}
-        onClick={() => { onChange((prev: number) => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-      >
-        Prev
-      </button>
-      <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
-        Page {current} <span className="text-orange-500/50">/</span> {total}
-      </span>
-      <button 
-        disabled={current === total}
-        onClick={() => { onChange((prev: number) => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        className="px-4 py-2 text-xs font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-lg transition-all"
-      >
-        Next
-      </button>
-    </div>
-  );
-};
-
-const NavButton = ({ active, onClick, icon, label }: any) => (
-  <button onClick={onClick} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${active ? 'bg-white/10 text-orange-500' : 'text-slate-500 hover:text-slate-300'}`}>
-    {icon} {label}
-  </button>
-);
-
-const SortButton = ({ active, onClick, label }: any) => (
-  <button onClick={onClick} className={`px-3 py-1 text-[10px] font-black uppercase rounded transition-colors ${active ? 'bg-orange-600 text-white' : 'text-slate-500 hover:bg-white/5'}`}>
-    {label}
-  </button>
-);
 
 const VideoGrid = ({ items, onTrackClick }: { items: VideoItem[], onTrackClick: (t: string, s: string, type: string) => void }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

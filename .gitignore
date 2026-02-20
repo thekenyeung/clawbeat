@@ -6,6 +6,7 @@ docs/
 forge.log
 *.log
 photoshop/
+sanitize.py
 
 # Ignore raw design files
 photoshop/

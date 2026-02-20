@@ -134,7 +134,9 @@ def extract_real_source(entry, default_source):
             "arstechnica.com": "Ars Technica",
             "bloomberg.com": "Bloomberg",
             "wsj.com": "WSJ",
-            "reuters.com": "Reuters"
+            "reuters.com": "Reuters",
+            "cnet": "CNET",
+            "Npr": "NPR"
         }
         if domain in domain_map:
             return domain_map[domain]
@@ -229,14 +231,23 @@ def get_ai_summary(title, current_summary):
 
 def cluster_articles_semantic(all_articles):
     if not all_articles: return []
+    
+    # helper to clean Google News URLs if possible
+    def clean_url(url):
+        if "news.google.com" in url and "&url=" in url:
+            return url.split("&url=")[-1]
+        return url
+
     needs_embedding = [a for a in all_articles if a.get('vec') is None]
     if needs_embedding:
         print(f"🧠 Embedding {len(needs_embedding)} items...")
         new_vectors = get_embeddings_batch([a['title'] for a in needs_embedding])
         for i, art in enumerate(needs_embedding):
             art['vec'] = new_vectors[i]
+            
     valid_articles = [a for a in all_articles if a.get('vec') is not None]
     clusters = []
+    
     for art in valid_articles:
         matched = False
         for cluster in clusters:
@@ -245,17 +256,40 @@ def cluster_articles_semantic(all_articles):
                 matched = True
                 break
         if not matched: clusters.append([art])
+    
     final_topics = []
     for cluster in clusters:
         anchor = cluster[0]
-        unique_coverage = []
-        seen_urls = {anchor['url']}
+        anchor_url = clean_url(anchor['url'])
+        anchor_source = anchor['source'].lower().strip()
+        
+        unique_coverage = {} # Use dict to deduplicate by Source Name
+        
         for a in cluster[1:]:
-            if a['url'] not in seen_urls:
-                unique_coverage.append({"source": a['source'], "url": a['url']})
-                seen_urls.add(a['url'])
-        anchor['moreCoverage'] = unique_coverage
+            c_url = clean_url(a['url'])
+            c_source_raw = a['source'].strip()
+            c_source_key = c_source_raw.lower()
+            
+            # 1. Filter Facebook
+            if "facebook.com" in c_url.lower():
+                continue
+                
+            # 2. Prevent Self-Repetition
+            # Skip if it's the same URL or same source as the main headline
+            if c_url == anchor_url or c_source_key == anchor_source:
+                continue
+            
+            # 3. Deduplicate Sources & Format Properly
+            # If we haven't seen this source yet, or if this link is "cleaner"
+            if c_source_key not in unique_coverage:
+                unique_coverage[c_source_key] = {
+                    "source": c_source_raw.title() if c_source_raw.islower() else c_source_raw,
+                    "url": c_url
+                }
+        
+        anchor['moreCoverage'] = list(unique_coverage.values())
         final_topics.append(anchor)
+        
     return final_topics
 
 def fetch_github_projects():
