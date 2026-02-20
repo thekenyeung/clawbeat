@@ -221,13 +221,29 @@ def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR
         resp = requests.get(gn_url, timeout=10)
         feed = feedparser.parse(resp.content)
         wild_articles = []
+        
         for entry in feed.entries[:15]:
+            # 1. Fix Headline (Remove trailing " - Source")
+            raw_title = entry.title
+            if " - " in raw_title:
+                clean_title = " - ".join(raw_title.split(" - ")[:-1])
+            else:
+                clean_title = raw_title
+
+            # 2. Extract real summary from Google News description (HTML cleaning)
+            raw_summary = entry.get('summary', '')
+            soup = BeautifulSoup(raw_summary, "html.parser")
+            # Google News RSS usually hides the snippet in the first few lines of text
+            clean_summary = soup.get_text(strip=True)
+            if len(clean_summary) < 20: # Fallback if snippet is too short
+                clean_summary = "ecosystem news update."
+
             wild_articles.append({
-                "title": entry.title,
+                "title": clean_title,
                 "url": entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link,
-                "source": entry.source.get('title', 'Web Search'),
-                "summary": "Found via ecosystem search.",
-                "date": datetime.now().strftime("%m-%d-%Y")
+                "source": entry.source.get('title', 'web search'),
+                "summary": clean_summary[:200] + "...",
+                "date": datetime.now().strftime("%m-%d-%Y") # Still needed for sorting logic, but hidden in UI
             })
         return wild_articles
     except Exception as e:

@@ -285,18 +285,26 @@ const SortButton = ({ active, onClick, label }: any) => (
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => (
   <div className="flex flex-col">
     {items.map((item, idx) => {
+      // Logic for the Verified Tag
       const isVerified = (whitelist as any[]).some(w =>
         item.source?.toLowerCase().includes(String(w["Source Name"] || "").toLowerCase()) ||
         item.url?.toLowerCase().includes(String(w["Website URL"] || "").toLowerCase())
       );
 
-      return (
-        <div key={idx} className="grid grid-cols-[100px_1fr] gap-8 py-8 border-b border-white/5 items-start group">
-          <span className="text-xs font-black text-orange-500 font-mono whitespace-nowrap leading-none pt-1.5">
-            {formatDate(item.date)}
-          </span>
+      // Helper to clean and lowercase source names (e.g., "BusinessInsider" -> "business insider")
+      const formatSourceName = (name: string) => {
+        return name
+          .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between CamelCase
+          .replace("csoonline", "cso online")
+          .replace("americanbanker", "american banker")
+          .replace("institutionalinvestor", "institutional investor")
+          .toLowerCase();
+      };
 
-          <div className="flex flex-col gap-3">
+      return (
+        // Removed the grid-cols-[100px_1fr] to get rid of the date column
+        <div key={idx} className="flex flex-col gap-3 py-8 border-b border-white/5 group">
+          <div className="flex flex-col gap-2">
             <a 
               href={item.url} 
               target="_blank" 
@@ -310,36 +318,36 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
             
             <div className="flex items-center gap-3">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                {item.source}
+                {formatSourceName(item.source)}
               </span>
+              {/* Only show Verified tag if it's actually in the whitelist.json */}
               {isVerified && (
                 <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1">
-                  <Bot className="w-2.5 h-2.5" /> Verified
+                  <Bot className="w-2.5 h-2.5" /> verified
                 </span>
               )}
             </div>
-
-            <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{item.summary}</p>
-
-            {item.moreCoverage && item.moreCoverage.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-white/5">
-                <span className="text-[12px] font-black text-orange-500/30 uppercase italic mr-1">More Coverage:</span>
-                {item.moreCoverage.map((cov, cIdx) => (
-                  <React.Fragment key={cIdx}>
-                    <a 
-                      href={cov.url} 
-                      target="_blank" 
-                      onClick={() => onTrackClick(item.title, cov.source)}
-                      className="text-[12px] text-slate-500 hover:text-orange-500 font-bold transition-colors"
-                    >
-                      {cov.source.includes('.') ? cov.source.split('.').slice(0, -1).join('.') : cov.source}
-                    </a>
-                    {cIdx < (item.moreCoverage?.length ?? 0) - 1 && <span className="text-slate-800 text-[10px] mx-1">|</span>}
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
           </div>
+
+          <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{item.summary}</p>
+
+          {item.moreCoverage && item.moreCoverage.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 mt-2 pt-3 border-t border-white/5">
+              <span className="text-[12px] font-black text-orange-500/30 uppercase italic mr-1">more coverage:</span>
+              {item.moreCoverage.map((cov, cIdx) => (
+                <React.Fragment key={cIdx}>
+                  <a 
+                    href={cov.url} 
+                    target="_blank" 
+                    className="text-[12px] text-slate-500 hover:text-orange-500 font-bold transition-colors"
+                  >
+                    {formatSourceName(cov.source)}
+                  </a>
+                  {cIdx < (item.moreCoverage?.length ?? 0) - 1 && <span className="text-slate-800 text-[10px] mx-1">|</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
         </div>
       );
     })}
