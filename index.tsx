@@ -13,7 +13,8 @@ import {
   Bot, 
   ExternalLink,
   Star,
-  Calendar
+  Calendar,
+  Layers
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -63,17 +64,9 @@ const formatDate = (dateString: string) => {
   }
 };
 
-/**
- * Normalizes source names (e.g., BusinessInsider -> Business Insider)
- * and handles specific manual overrides.
- */
 const formatSourceName = (name: string) => {
   if (!name) return "";
-  
-  // 1. Fix PascalCase (TheNewStack -> The New Stack)
   let cleanName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-  
-  // 2. Specific fixes for common tech/finance sources
   const manualFixes: Record<string, string> = {
     "businessinsider": "Business Insider",
     "venturebeat": "VentureBeat",
@@ -83,14 +76,10 @@ const formatSourceName = (name: string) => {
     "institutionalinvestor": "Institutional Investor",
     "fastcompany": "Fast Company"
   };
-
   const key = cleanName.toLowerCase().replace(/\s+/g, '');
   return manualFixes[key] || cleanName;
 };
 
-/**
- * Helper to check if a source is whitelisted
- */
 const checkIfVerified = (item: NewsItem) => {
   return (whitelist as any[]).some(w => {
     const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
@@ -116,7 +105,6 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  // --- GA4 TRACKING ---
   const trackEvent = (action: string, params: object) => {
     if (typeof window.gtag === 'function') {
       window.gtag('event', action, params);
@@ -140,7 +128,6 @@ const App: React.FC = () => {
     setCurrentPage(1);
   }, [activePage]);
 
-  // --- FETCHING LOGIC ---
   const fetchContent = async (page: Page) => {
     setLoading(true);
     try {
@@ -165,7 +152,6 @@ const App: React.FC = () => {
     fetchContent(activePage);
   }, [activePage]);
 
-  // --- SORTING & PAGINATION CALCULATIONS ---
   const sortedProjects = [...projects].sort((a, b) => 
     sortBy === 'stars' 
       ? (b.stars || 0) - (a.stars || 0) 
@@ -219,7 +205,6 @@ const App: React.FC = () => {
               {activePage === 'videos' && 'Visual Stream'}
               {activePage === 'projects' && 'The Forge'}
             </h2>
-            {/* STACKED HEADER SUBTEXT FOR MOBILE CLARITY */}
             <div className="flex flex-col gap-1 mt-2">
               <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
                 {activePage === 'projects' ? 'Community Repositories' : 'Autonomous Intelligence Curation'}
@@ -311,7 +296,6 @@ const SortButton = ({ active, onClick, label }: any) => (
 );
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  // Sort items to prioritize Whitelisted (Verified) sources at the top of their group
   const sortedByVerification = [...items].sort((a, b) => {
     const aVerified = checkIfVerified(a);
     const bVerified = checkIfVerified(b);
@@ -363,7 +347,38 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
                     </span>
                   )}
                 </div>
-                <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{item.summary}</p>
+
+                {/* UPDATED: Summary and More Coverage Logic */}
+                {item.summary && (
+                  <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
+                    {item.summary}
+                  </p>
+                )}
+
+                {item.moreCoverage && item.moreCoverage.length > 0 && (
+                  <div className="mt-2 flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <Layers className="w-3 h-3 text-slate-600" />
+                      <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">
+                        More Coverage
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {item.moreCoverage.map((link, lIdx) => (
+                        <a
+                          key={lIdx}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => onTrackClick(item.title, link.source)}
+                          className="text-[10px] font-bold text-orange-500/80 bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/10 px-2 py-1 rounded transition-all"
+                        >
+                          {formatSourceName(link.source)}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
