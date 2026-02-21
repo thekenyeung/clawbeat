@@ -34,8 +34,8 @@ OUTPUT_PATH = "./public/data.json"
 
 # --- RATE LIMIT CONFIGURATION ---
 RPM_LIMIT = 10 
-SLEEP_BETWEEN_REQUESTS = 6.5 # Slightly over 6s to be safe for 10 RPM
-MAX_BATCH_SIZE = 50 # Limit how many new summaries we generate per run to save daily quota
+SLEEP_BETWEEN_REQUESTS = 6.5 
+MAX_BATCH_SIZE = 50 
 
 # --- NEW PRIORITY CONFIGURATION ---
 PRIORITY_SITES = [
@@ -53,18 +53,41 @@ DELIST_SITES = [
     'prnewswire.com', 'businesswire.com', 'globenewswire.com', 
     'accesswire.com', 'einpresswire.com', 'prweb.com', 'newswire.com',
     'prlog.org', 'prowly.com', 'issiswire.com', 'send2press.com',
-    '24-7pressrelease.com', 'pressat.co.uk', 'marketwired.com'
+    '24-7pressrelease.com', 'pressat.co.uk', 'marketwired.com', 'accessnewswire.com'
+]
+
+SOCIAL_DOMAINS = [
+    'threads.net', 'mastodon.social', 'bsky.app', 
+    'x.com', 'twitter.com', 'instagram.com'
+]
+
+BANNED_SOURCES = [
+    "access newswire", 
+    "accessnewswire", 
+    "globenewswire", 
+    "prnewswire", 
+    "business wire"
 ]
 
 # --- FUNCTIONS ---
 
-def get_source_type(url):
-    """Determines if a source is high-priority, standard, or should be delisted."""
+def get_source_type(url, source_name=""):
+    """Determines if a source is high-priority, standard (blogs/social), or delisted (newswires)."""
     url_lower = url.lower()
-    if any(k in url_lower for k in DELIST_SITES):
+    source_lower = source_name.lower()
+
+    # 1. HARD DELIST: Press Releases & Banned PR Sources
+    if any(k in url_lower for k in DELIST_SITES) or any(k in source_lower for k in BANNED_SOURCES):
         return "delist"
+    
+    # 2. STANDARD: Social Media & Company Blogs (Forces them to "More Coverage" via clustering logic)
+    if any(k in url_lower for k in SOCIAL_DOMAINS) or "blog" in url_lower or "newsroom" in url_lower:
+        return "standard"
+
+    # 3. PRIORITY: Vetted High-Quality Sites
     if any(k in url_lower for k in PRIORITY_SITES):
         return "priority"
+        
     return "standard"
 
 def fetch_youtube_videos(channel_id):
@@ -154,11 +177,19 @@ def scan_rss():
             feed = feedparser.parse(resp.content)
             for entry in feed.entries[:20]:
                 raw_title = entry.get('title', '')
-                source = extract_real_source(entry, site["Source Name"])
+                url = entry.link
+
+                # --- MEDIUM AUTHOR LOGIC ---
+                author_name = entry.get('author', '').strip()
+                if "medium.com" in url.lower() and author_name:
+                    source = f"{author_name}, Medium"
+                else:
+                    # Only call this if it's NOT a Medium author post
+                    source = extract_real_source(entry, site["Source Name"])
+
                 display_title = raw_title.split(":", 1)[1].strip() if ":" in raw_title and "flipboard" in site["Source Name"].lower() else raw_title
                 summary = entry.get('summary', '') or entry.get('description', '')
                 clean_summary = BeautifulSoup(summary, "html.parser").get_text(strip=True)
-                url = entry.link
                 
                 if any(kw in (display_title + clean_summary).lower() for kw in KEYWORDS):
                     found_articles.append({
@@ -168,7 +199,7 @@ def scan_rss():
                         "date": datetime.now().strftime("%m-%d-%Y"),
                         "summary": clean_summary[:200] + "...",
                         "vec": None,
-                        "source_type": get_source_type(url)
+                        "source_type": get_source_type(url, source)
                     })
         except: continue
     return found_articles
@@ -187,24 +218,21 @@ def scan_google_news(query="OpenClaw OR 'Moltbot' OR 'Clawdbot' OR 'Moltbook' OR
             soup = BeautifulSoup(entry.get('summary', ''), "html.parser")
             clean_summary = soup.get_text(separator=' ', strip=True).split("View Full Coverage")[0].strip()
             url = entry.link.split("&url=")[-1] if "&url=" in entry.link else entry.link
+            source = entry.source.get('title', 'Web Search').split(' via ')[0].split(' - ')[0].strip()
             
             wild_articles.append({
                 "title": clean_title,
                 "url": url,
-                "source": entry.source.get('title', 'web search').lower(),
+                "source": source,
                 "summary": clean_summary[:250] + "..." if len(clean_summary) > 20 else "Ecosystem update.",
                 "date": datetime.now().strftime("%m-%d-%Y"),
                 "vec": None,
-                "source_type": get_source_type(url)
+                "source_type": get_source_type(url, source)
             })
         return wild_articles
     except: return []
 
 def get_ai_summary(title, current_summary):
-    """
-    Uses Gemini with retries and backoff to handle 503 errors.
-    """
-    # Skip if we already have a long, professional summary
     if current_summary and len(current_summary) > 100 and "Summary pending" not in current_summary:
         return current_summary
 
@@ -217,24 +245,30 @@ def get_ai_summary(title, current_summary):
     max_retries = 3
     for attempt in range(max_retries):
         try:
-            response = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
+            response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
             return response.text.strip()
         except Exception as e:
             wait_time = (attempt + 1) * 10
             print(f"⚠️ Limit hit. Waiting {wait_time}s... (Error: {e})")
             time.sleep(wait_time)
             
-    return "Summary pending update." # Fallback for local storage
+    return "Summary pending update."
+
+def normalize_source_name(name):
+    """Strips 'The', '.com', '.net', and extra spaces to prevent 'Decoder' vs 'The Decoder.com' duplicates."""
+    name = name.lower().replace('the ', '').replace('.com', '').replace('.net', '').replace('.org', '').strip()
+    return name
 
 def cluster_articles_semantic(all_articles):
     if not all_articles: return []
     
-    # helper to clean Google News URLs if possible
     def clean_url(url):
+        # Resolve Google News redirects to find the ACTUAL destination
         if "news.google.com" in url and "&url=" in url:
             return url.split("&url=")[-1]
         return url
 
+    # 1. Ensure embeddings exist
     needs_embedding = [a for a in all_articles if a.get('vec') is None]
     if needs_embedding:
         print(f"🧠 Embedding {len(needs_embedding)} items...")
@@ -243,46 +277,52 @@ def cluster_articles_semantic(all_articles):
             art['vec'] = new_vectors[i]
             
     valid_articles = [a for a in all_articles if a.get('vec') is not None]
-    clusters = []
+    valid_articles.sort(key=lambda x: x.get('source_type') == 'priority', reverse=True)
     
+    clusters = []
     for art in valid_articles:
         matched = False
+        norm_art_title = normalize_title(art['title'])
+        
         for cluster in clusters:
-            if cosine_similarity(np.array(art['vec']), np.array(cluster[0]['vec'])) > 0.85:
+            anchor = cluster[0]
+            sim_score = cosine_similarity(np.array(art['vec']), np.array(anchor['vec']))
+            
+            # Lowered threshold (0.75) for better grouping
+            if sim_score > 0.75 or (sim_score > 0.70 and len(set(norm_art_title.split()) & set(normalize_title(anchor['title']).split())) >= 3):
                 cluster.append(art)
                 matched = True
                 break
         if not matched: clusters.append([art])
+
     
+    # 3. Final Assembly
     final_topics = []
     for cluster in clusters:
         anchor = cluster[0]
         anchor_url = clean_url(anchor['url'])
-        anchor_source = anchor['source'].lower().strip()
+        # Use Normalized name for comparison
+        anchor_source_norm = normalize_source_name(anchor['source'])
         
-        unique_coverage = {} # Use dict to deduplicate by Source Name
-        
+        unique_coverage = {}
         for a in cluster[1:]:
             c_url = clean_url(a['url'])
             c_source_raw = a['source'].strip()
-            c_source_key = c_source_raw.lower()
+            # Normalize this source name (e.g., "The Decoder.com" -> "decoder")
+            c_source_norm = normalize_source_name(c_source_raw)
             
-            # 1. Filter Facebook
-            if "facebook.com" in c_url.lower():
-                continue
-                
-            # 2. Prevent Self-Repetition
-            # Skip if it's the same URL or same source as the main headline
-            if c_url == anchor_url or c_source_key == anchor_source:
-                continue
+            # --- THE TRIPLE DEDUPLICATION CHECK ---
+            # 1. Skip if same URL
+            if c_url == anchor_url: continue
+            # 2. Skip if it's the same normalized source as the Headline
+            if c_source_norm == anchor_source_norm: continue
+            # 3. Skip if we've already added this source to More Coverage
+            if c_source_norm in unique_coverage: continue
             
-            # 3. Deduplicate Sources & Format Properly
-            # If we haven't seen this source yet, or if this link is "cleaner"
-            if c_source_key not in unique_coverage:
-                unique_coverage[c_source_key] = {
-                    "source": c_source_raw.title() if c_source_raw.islower() else c_source_raw,
-                    "url": c_url
-                }
+            unique_coverage[c_source_norm] = {
+                "source": c_source_raw, # Keeps the pretty name for display
+                "url": c_url
+            }
         
         anchor['moreCoverage'] = list(unique_coverage.values())
         final_topics.append(anchor)
@@ -301,11 +341,16 @@ def fetch_github_projects():
         return [{"name": repo['name'], "owner": repo['owner']['login'], "description": repo['description'] or "No description.", "url": repo['html_url'], "stars": repo['stargazers_count'], "created_at": repo['created_at']} for repo in data.get('items', [])]
     except: return []
 
-# --- SINGLE MAIN EXECUTION ---
+def normalize_title(title):
+    # Remove punctuation and common "stop words" to find the core meaning
+    title = re.sub(r'[^\w\s]', '', title.lower())
+    stop_words = {'a', 'the', 'is', 'at', 'on', 'by', 'for', 'in', 'of', 'and'}
+    return " ".join([word for word in title.split() if word not in stop_words])
+
+# --- MAIN EXECUTION ---
 if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed (Batch Limit: {MAX_BATCH_SIZE}, Throttle: {RPM_LIMIT} RPM)...")
     
-    # 1. LOAD HISTORY
     existing_news = []
     if os.path.exists(OUTPUT_PATH):
         try:
@@ -314,11 +359,9 @@ if __name__ == "__main__":
             print(f"📂 Loaded {len(existing_news)} historical items.")
         except: pass
 
-    # 2. SCRAPE IN PRIORITY ORDER
     whitelist_articles = scan_rss() 
     discovery_articles = scan_google_news() 
     
-    # 3. MERGE, DEDUPLICATE, & FILTER
     all_found = whitelist_articles + discovery_articles + existing_news
     seen_urls = set()
     unique_news = []
@@ -326,34 +369,31 @@ if __name__ == "__main__":
 
     for art in all_found:
         if art['url'] not in seen_urls:
-            # Ensure even old items have a source_type
-            if 'source_type' not in art:
-                art['source_type'] = get_source_type(art['url'])
+            # Re-evaluate source type for all items to apply new filters
+            art['source_type'] = get_source_type(art['url'], art.get('source', ''))
             
-            # DELIST FILTER: Drop press releases immediately
+            # DELIST FILTER: Drop Access Newswire and PR sources entirely
             if art['source_type'] == "delist":
                 continue
 
-            # RATE LIMITED SUMMARY GENERATION
-            # Check if summary is missing, too short, or a previous failure marker
+            # SUMMARY GENERATION (Only for Headliners)
             is_placeholder = (
                 len(art.get('summary', '')) < 65 or 
-                "Summary pending" in art.get('summary', '') or
-                "upgrade failed" in art.get('summary', '').lower()
+                "Summary pending" in art.get('summary', '')
             )
 
-            if is_placeholder and new_summaries_count < MAX_BATCH_SIZE:
+            # Rule: Don't spend AI budget summarizing Standard (blogs/social) as headliners
+            # unless it's a priority source.
+            if is_placeholder and art['source_type'] == "priority" and new_summaries_count < MAX_BATCH_SIZE:
                 print(f"✍️ ({new_summaries_count+1}/{MAX_BATCH_SIZE}) Drafting brief: {art['title']}")
                 art['summary'] = get_ai_summary(art['title'], art['summary'])
                 new_summaries_count += 1
-                
-                # Critical Sleep to stay under 10 RPM
                 time.sleep(SLEEP_BETWEEN_REQUESTS) 
             
             unique_news.append(art)
             seen_urls.add(art['url'])
 
-    # 4. CLUSTER & DATA FETCHING
+    # CLUSTER: This will now push Standard (Blogs/Social) into 'More Coverage' of Priority anchors
     clustered_news = cluster_articles_semantic(unique_news)
     github_projects = fetch_github_projects()
     
@@ -364,7 +404,6 @@ if __name__ == "__main__":
                 yt_id = entry.get("YouTube Channel ID")
                 if yt_id: all_videos.extend(fetch_youtube_videos(yt_id))
 
-    # 5. SAVE FINAL DATA
     clustered_news.sort(key=lambda x: x.get('date', ''), reverse=True)
     final_items = clustered_news[:1000]
 

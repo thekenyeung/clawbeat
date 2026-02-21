@@ -90,7 +90,16 @@ const formatSourceName = (name: string) => {
     "thehill": "The Hill",
     "wsj": "WSJ",
     "wallstreetjournal": "Wall Street Journal",
-    "mittechnologyreview": "MIT Tech Review"
+    "mittechnologyreview": "MIT Tech Review",
+    "streetinsider": "Street Insider",
+    "Security.Com": "Security.com",
+    "Observer.Com": "Observer",
+    "Pymnts.Com": "Pymnts",
+    "Cnn": "CNN",
+    "Cnet": "CNET",
+    "Ibm": "IBM",
+    "The-Decoder.com": "Decoder",
+    "Tom'S Hardware": "Tom's Hardware"
   };
 
   if (manualFixes[key]) {

@@ -952,5 +952,14 @@
     "Website RSS": "https://futurism.com/feed",
     "YouTube Channel ID": null,
     "Priority": ""
+  },
+{
+    "ID": "107",
+    "Source Name": "This Week in Startups",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@startups",
+    "Website RSS": "",
+    "YouTube Channel ID": "UCkkhmBWfS7pILYIk0izkc3A",
+    "Priority": "1"
   }
 ]
