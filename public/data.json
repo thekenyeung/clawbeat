@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-22 11:13 UTC",
+  "last_updated": "2026-02-22 12:23 UTC",
   "items": [
     {
       "title": "Runlayer is now offering secure OpenClaw agentic capabilities for large enterprises",
@@ -6177,10 +6177,6 @@
         {
           "source": "Sources",
           "url": "https://sources.news/p/openais-4o-valentines-breakup"
-        },
-        {
-          "source": "The Decoder",
-          "url": "https://the-decoder.com/moltbook-the-thriving-social-network-for-ai-agents-is-just-a-small-echo-chamber-researchers-hijacked-in-days/"
         },
         {
           "source": "Medium",
@@ -174919,6 +174915,182 @@
       "url": "https://github.com/lidekahdjdhdhsjjs-lang/Huizai-openclaw",
       "stars": 0,
       "created_at": "2026-02-15T12:37:41Z"
+    },
+    {
+      "name": "opengoat",
+      "owner": "marian2js",
+      "description": "Build organizations of OpenClaw agents that coordinate work across Codex, Claude Code, Cursor, OpenCode, and more 🐐 🐐 🐐",
+      "url": "https://github.com/marian2js/opengoat",
+      "stars": 124,
+      "created_at": "2026-02-06T20:04:17Z"
+    },
+    {
+      "name": "oc-monitor",
+      "owner": "xmg0828888",
+      "description": "🐾 OC Monitor — OpenClaw multi-node real-time monitoring dashboard",
+      "url": "https://github.com/xmg0828888/oc-monitor",
+      "stars": 0,
+      "created_at": "2026-02-22T12:21:46Z"
+    },
+    {
+      "name": "RoClaw",
+      "owner": "EvolvingAgentsLabs",
+      "description": "The Physical Embodiment for OpenClaw — Dual-Brain Bytecode Robot",
+      "url": "https://github.com/EvolvingAgentsLabs/RoClaw",
+      "stars": 0,
+      "created_at": "2026-02-21T22:31:04Z"
+    },
+    {
+      "name": "openclaw",
+      "owner": "Anvit2512",
+      "description": "No description.",
+      "url": "https://github.com/Anvit2512/openclaw",
+      "stars": 0,
+      "created_at": "2026-02-22T12:12:51Z"
+    },
+    {
+      "name": "openclaw-mission-control",
+      "owner": "frank8ai",
+      "description": "OpenClaw Mission Control dashboard and control-center CLI",
+      "url": "https://github.com/frank8ai/openclaw-mission-control",
+      "stars": 1,
+      "created_at": "2026-02-20T04:34:24Z"
+    },
+    {
+      "name": "openclaw",
+      "owner": "7272yusuke-design",
+      "description": "No description.",
+      "url": "https://github.com/7272yusuke-design/openclaw",
+      "stars": 0,
+      "created_at": "2026-02-17T06:01:27Z"
+    },
+    {
+      "name": "openclaw-config",
+      "owner": "imsks",
+      "description": "All About OpenClaw Bot Setup",
+      "url": "https://github.com/imsks/openclaw-config",
+      "stars": 0,
+      "created_at": "2026-02-22T12:19:26Z"
+    },
+    {
+      "name": "openclaw-termux",
+      "owner": "mithun50",
+      "description": "Run OpenClaw AI Gateway on Android — standalone Flutter app with built-in terminal, web dashboard, and one-tap setup. Also available as a Termux CLI package.",
+      "url": "https://github.com/mithun50/openclaw-termux",
+      "stars": 111,
+      "created_at": "2026-02-03T07:00:07Z"
+    },
+    {
+      "name": "pinchy",
+      "owner": "dominic-codespoti",
+      "description": "A rust based, light weight, opinionated OpenClaw alternative.",
+      "url": "https://github.com/dominic-codespoti/pinchy",
+      "stars": 1,
+      "created_at": "2026-02-19T05:55:36Z"
+    },
+    {
+      "name": "model-router-manager",
+      "owner": "Zsdadad",
+      "description": ". Intelligent Multi-Model Routing Manager - OpenClaw skill, supports automatic failover and cost optimization for multiple models",
+      "url": "https://github.com/Zsdadad/model-router-manager",
+      "stars": 0,
+      "created_at": "2026-02-22T12:19:25Z"
+    },
+    {
+      "name": "openclaw-sentinel",
+      "owner": "sunil-sadasivan",
+      "description": "OpenClaw endpoint security monitoring plugin — real-time process, SSH, and privilege escalation alerting",
+      "url": "https://github.com/sunil-sadasivan/openclaw-sentinel",
+      "stars": 0,
+      "created_at": "2026-02-21T13:43:24Z"
+    },
+    {
+      "name": "openclaw-workspace",
+      "owner": "biko007",
+      "description": "No description.",
+      "url": "https://github.com/biko007/openclaw-workspace",
+      "stars": 0,
+      "created_at": "2026-02-22T12:14:01Z"
+    },
+    {
+      "name": "openclaw-plugin",
+      "owner": "ai-warden",
+      "description": "No description.",
+      "url": "https://github.com/ai-warden/openclaw-plugin",
+      "stars": 0,
+      "created_at": "2026-02-21T14:00:46Z"
+    },
+    {
+      "name": "domo",
+      "owner": "comeredon",
+      "description": "DomoAI — Android tablet client for OpenClaw. Proactive voice wake, text Q&A with TTS, and canvas media display.",
+      "url": "https://github.com/comeredon/domo",
+      "stars": 0,
+      "created_at": "2026-02-22T12:07:05Z"
+    },
+    {
+      "name": "openclaw-cloud-template",
+      "owner": "yaoxinda-dya",
+      "description": "OpenClaw Cloud - ??????(????,??SSH??)",
+      "url": "https://github.com/yaoxinda-dya/openclaw-cloud-template",
+      "stars": 0,
+      "created_at": "2026-02-22T12:17:19Z"
+    },
+    {
+      "name": "microclaw",
+      "owner": "SALDAPAL",
+      "description": "🤖 Build flexible AI chat assistants with MicroClaw, supporting multiple platforms and large language models for seamless communication.",
+      "url": "https://github.com/SALDAPAL/microclaw",
+      "stars": 0,
+      "created_at": "2025-06-08T13:40:04Z"
+    },
+    {
+      "name": "shannon",
+      "owner": "lowwkezer",
+      "description": "🛡️ Automate web app pentesting with AI to find real exploits before attackers do, enhancing your app’s security proactively.",
+      "url": "https://github.com/lowwkezer/shannon",
+      "stars": 0,
+      "created_at": "2026-02-22T03:49:30Z"
+    },
+    {
+      "name": "Openclaw-Setup",
+      "owner": "blackroserog",
+      "description": "🤖 Install and configure OpenClaw, a local AI assistant connecting to messaging apps for autonomous tasks and context-aware help.",
+      "url": "https://github.com/blackroserog/Openclaw-Setup",
+      "stars": 0,
+      "created_at": "2024-09-04T23:02:30Z"
+    },
+    {
+      "name": "OpenClaw-Telegram-Printing",
+      "owner": "Ashot72",
+      "description": "Printing Anywhere with OpenClaw and Telegram",
+      "url": "https://github.com/Ashot72/OpenClaw-Telegram-Printing",
+      "stars": 0,
+      "created_at": "2026-02-22T10:38:18Z"
+    },
+    {
+      "name": "clawsuite",
+      "owner": "chakmaanonna",
+      "description": "🤖 Manage and automate OpenClaw AI agents with a secure, full-stack platform featuring chat, browser automation, and multi-agent control.",
+      "url": "https://github.com/chakmaanonna/clawsuite",
+      "stars": 0,
+      "created_at": "2025-12-13T13:37:22Z"
+    },
+    {
+      "name": "AndyClaw",
+      "owner": "EthereumPhone",
+      "description": "OpenClaw for Android",
+      "url": "https://github.com/EthereumPhone/AndyClaw",
+      "stars": 0,
+      "created_at": "2026-02-12T16:56:07Z"
+    },
+    {
+      "name": "pincer",
+      "owner": "TheOneWhoAlwaysWatches",
+      "description": "🦞 Perform automated red team assessments on LLM APIs with streaming results, analysis, and detailed exportable reports for security testing.",
+      "url": "https://github.com/TheOneWhoAlwaysWatches/pincer",
+      "stars": 0,
+      "created_at": "2026-02-21T18:46:57Z"
     }
   ],
   "research": [
