@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-22 10:14 UTC",
+  "last_updated": "2026-02-22 11:13 UTC",
   "items": [
     {
       "title": "Runlayer is now offering secure OpenClaw agentic capabilities for large enterprises",
@@ -174751,6 +174751,174 @@
       "url": "https://github.com/AshrafMorningstar/openclaw-aws-deployment-template",
       "stars": 0,
       "created_at": "2026-02-22T09:34:36Z"
+    },
+    {
+      "name": "openclaw-manager-claude",
+      "owner": "Endlessedwork",
+      "description": "No description.",
+      "url": "https://github.com/Endlessedwork/openclaw-manager-claude",
+      "stars": 0,
+      "created_at": "2026-02-17T22:12:36Z"
+    },
+    {
+      "name": "MenuVision",
+      "owner": "ademczuk",
+      "description": "Restaurant menu builder with AI food photo generation. Build beautiful HTML photo menus from URLs, PDFs, or photos. OpenClaw skill.",
+      "url": "https://github.com/ademczuk/MenuVision",
+      "stars": 0,
+      "created_at": "2026-02-21T10:50:58Z"
+    },
+    {
+      "name": "openclaw-workspace",
+      "owner": "leonxiao91",
+      "description": "OpenClaw workspace files",
+      "url": "https://github.com/leonxiao91/openclaw-workspace",
+      "stars": 0,
+      "created_at": "2026-02-16T04:38:45Z"
+    },
+    {
+      "name": "awesome-claw",
+      "owner": "liangzhang-keepmoving",
+      "description": "A comprehensive analysis and comparison of Claw-related AI agent projects, including OpenClaw, PicoClaw, ZeroClaw, NanoClaw, and more.",
+      "url": "https://github.com/liangzhang-keepmoving/awesome-claw",
+      "stars": 0,
+      "created_at": "2026-02-22T11:11:54Z"
+    },
+    {
+      "name": "holo-polymarket",
+      "owner": "helebest",
+      "description": "Polymarket prediction market query tool for OpenClaw",
+      "url": "https://github.com/helebest/holo-polymarket",
+      "stars": 0,
+      "created_at": "2026-02-15T01:22:03Z"
+    },
+    {
+      "name": "uv-openclaw",
+      "owner": "bachkukkik",
+      "description": "No description.",
+      "url": "https://github.com/bachkukkik/uv-openclaw",
+      "stars": 5,
+      "created_at": "2026-02-18T06:27:16Z"
+    },
+    {
+      "name": "openclaw_workspace_public",
+      "owner": "poposkygyq2018",
+      "description": "No description.",
+      "url": "https://github.com/poposkygyq2018/openclaw_workspace_public",
+      "stars": 0,
+      "created_at": "2026-02-22T11:11:34Z"
+    },
+    {
+      "name": "swedish-lessons",
+      "owner": "dsharpc",
+      "description": "Repo managed by OpenClaw to track my Swedish lessons",
+      "url": "https://github.com/dsharpc/swedish-lessons",
+      "stars": 0,
+      "created_at": "2026-02-21T20:01:42Z"
+    },
+    {
+      "name": "sentinel",
+      "owner": "VANITAX",
+      "description": "Polling & webhook notification hub — monitors services, delivers alerts for OpenClaw",
+      "url": "https://github.com/VANITAX/sentinel",
+      "stars": 0,
+      "created_at": "2026-02-14T03:15:59Z"
+    },
+    {
+      "name": "openclaw-troubleshooter",
+      "owner": "tighten724-hub",
+      "description": "OpenClaw 故障排除技能 - 让0代码基础用户也能轻松解决OpenClaw问题",
+      "url": "https://github.com/tighten724-hub/openclaw-troubleshooter",
+      "stars": 0,
+      "created_at": "2026-02-22T10:55:42Z"
+    },
+    {
+      "name": "Openclaw",
+      "owner": "cinemagicpial",
+      "description": "No description.",
+      "url": "https://github.com/cinemagicpial/Openclaw",
+      "stars": 0,
+      "created_at": "2026-02-22T10:59:40Z"
+    },
+    {
+      "name": "ArmorClaw",
+      "owner": "Gemutly",
+      "description": "Production security for OpenClaw. Run your agent in a hardened container with encrypted credential storage (SQLCipher), zero-trust Matrix control, automatic PII scrubbing, and host hardening. Access agents via Element X mobile app. Deployable to Hostinger VPS ($4-8/mo). OpenClaw you know—safely contained with secrets that never touch disk. ",
+      "url": "https://github.com/Gemutly/ArmorClaw",
+      "stars": 0,
+      "created_at": "2026-02-09T03:52:08Z"
+    },
+    {
+      "name": "opencrust",
+      "owner": "opencrust-org",
+      "description": "Personal AI assistant platform, rewritten in Rust from OpenClaw",
+      "url": "https://github.com/opencrust-org/opencrust",
+      "stars": 9,
+      "created_at": "2026-02-16T06:09:55Z"
+    },
+    {
+      "name": "openclaw-spellbook",
+      "owner": "wynnsu",
+      "description": "No description.",
+      "url": "https://github.com/wynnsu/openclaw-spellbook",
+      "stars": 0,
+      "created_at": "2026-02-22T10:58:00Z"
+    },
+    {
+      "name": "miclaw",
+      "owner": "Agusx1211",
+      "description": "My openclaw, it is for me, don't ask for features just fork it",
+      "url": "https://github.com/Agusx1211/miclaw",
+      "stars": 0,
+      "created_at": "2026-02-21T18:01:04Z"
+    },
+    {
+      "name": "OpenClaw",
+      "owner": "vrontoparsan",
+      "description": "OpenClaw AI Agent - Railway deployment with Claude/Gemini API",
+      "url": "https://github.com/vrontoparsan/OpenClaw",
+      "stars": 0,
+      "created_at": "2026-02-22T09:04:17Z"
+    },
+    {
+      "name": "piclaw",
+      "owner": "rcarmo",
+      "description": "I'm going to build my own OpenClaw, with blackjack... and bun!",
+      "url": "https://github.com/rcarmo/piclaw",
+      "stars": 21,
+      "created_at": "2026-02-17T19:06:49Z"
+    },
+    {
+      "name": "openclaw",
+      "owner": "clive-claw",
+      "description": "No description.",
+      "url": "https://github.com/clive-claw/openclaw",
+      "stars": 0,
+      "created_at": "2026-02-20T11:25:52Z"
+    },
+    {
+      "name": "jellyseer-openclaw",
+      "owner": "k69sknk",
+      "description": "No description.",
+      "url": "https://github.com/k69sknk/jellyseer-openclaw",
+      "stars": 0,
+      "created_at": "2026-02-22T10:27:09Z"
+    },
+    {
+      "name": "arrowgram",
+      "owner": "hotdocx",
+      "description": "arrowgram by LastRevision.pro — Launch 24/7 AI-Workspaces, Diagrams, Books, Slide Decks & 15+ AI Agent Tools for Real Professional Work, to Get Funded by Fans & Local Businesses",
+      "url": "https://github.com/hotdocx/arrowgram",
+      "stars": 0,
+      "created_at": "2025-07-03T20:51:41Z"
+    },
+    {
+      "name": "Huizai-openclaw",
+      "owner": "lidekahdjdhdhsjjs-lang",
+      "description": "辉仔 OpenClaw 每日备份 - 学习记录、技能、配置",
+      "url": "https://github.com/lidekahdjdhdhsjjs-lang/Huizai-openclaw",
+      "stars": 0,
+      "created_at": "2026-02-15T12:37:41Z"
     }
   ],
   "research": [
