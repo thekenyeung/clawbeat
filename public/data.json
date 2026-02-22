@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-22 13:36 UTC",
+  "last_updated": "2026-02-22 14:16 UTC",
   "items": [
     {
       "title": "Runlayer is now offering secure OpenClaw agentic capabilities for large enterprises",
@@ -9265,6 +9265,10 @@
         {
           "source": "CSO",
           "url": "https://www.csoonline.com/article/4134743/us-dominance-of-agentic-ai-at-the-heart-of-new-nist-initiative.html"
+        },
+        {
+          "source": "Medium",
+          "url": "https://medium.com/@duancheng509/ai-agent-skills-supply-chain-defense-lessons-from-openclaw-clawhavoc-and-skilllites-layered-7186379cf3d6?source=rss------openclaw-5"
         }
       ]
     },
@@ -18552,11 +18556,11 @@
         },
         {
           "source": "Medium",
-          "url": "https://blog.stackademic.com/10-real-world-workflows-you-can-automate-with-openclaw-cbcb7ae399c4?source=rss------openclaw-5"
+          "url": "https://pub.towardsai.net/a-beginner-friendly-guide-to-running-openclaw-for-free-04459be33ca0?source=rss------openclaw-5"
         },
         {
           "source": "Medium",
-          "url": "https://medium.com/@ahmedfibrahim/mastering-the-openclaw-skills-ecosystem-6f5d57f90ce8?source=rss------openclaw-5"
+          "url": "https://blog.stackademic.com/10-real-world-workflows-you-can-automate-with-openclaw-cbcb7ae399c4?source=rss------openclaw-5"
         }
       ]
     },
@@ -151151,7 +151155,12 @@
         0.0051392317
       ],
       "source_type": "standard",
-      "moreCoverage": []
+      "moreCoverage": [
+        {
+          "source": "Medium",
+          "url": "https://medium.com/@curi0us_marketer/10-best-openclaw-alternatives-in-2026-for-secure-ai-agents-6f67005364d9?source=rss------openclaw-5"
+        }
+      ]
     },
     {
       "title": "160,000 developers are building digital employees, not chatbots + the 4 prompts I use to deploy agents safely",
@@ -173334,6 +173343,14 @@
       "channel": "TheAIGRID",
       "description": "Deploy OpenClaw in Seconds - https://www.hostinger.com/aigrid\n\n🎓 Learn AI In 10 Minutes A Day - https://www.skool.com/theaigridacademy\nGet your Free A",
       "publishedAt": "2026-02-22T09:15:58Z"
+    },
+    {
+      "title": "Full Tutorial: How to Build an OpenClaw Business That Makes $4,000 a Week (35 Min) | Nat Eliason",
+      "url": "https://www.youtube.com/watch?v=nSBKCZQkmYw",
+      "thumbnail": "https://i.ytimg.com/vi/nSBKCZQkmYw/hqdefault.jpg",
+      "channel": "Peter Yang",
+      "description": "Nat gave his OpenClaw bot, Felix, $1,000 to build its own business 3 weeks ago. Since then, it’s made $14,718 by launching its own website, info produ",
+      "publishedAt": "2026-02-22T14:01:11Z"
     }
   ],
   "githubProjects": [
@@ -175272,6 +175289,150 @@
       "url": "https://github.com/neoalienson/ClawLayer",
       "stars": 1,
       "created_at": "2026-02-17T19:16:37Z"
+    },
+    {
+      "name": "ClawWaifu",
+      "owner": "bloodsucker1",
+      "description": "ClawWaifu — OpenClaw × 二次元一体化虚拟伴侣",
+      "url": "https://github.com/bloodsucker1/ClawWaifu",
+      "stars": 0,
+      "created_at": "2026-02-22T14:13:02Z"
+    },
+    {
+      "name": "startwithopenclaw",
+      "owner": "REMgm",
+      "description": "Starting with openclaw is easy",
+      "url": "https://github.com/REMgm/startwithopenclaw",
+      "stars": 0,
+      "created_at": "2026-02-22T13:20:12Z"
+    },
+    {
+      "name": "claw-bot",
+      "owner": "Zsombra",
+      "description": "OpenClaw bot config for LT. BIG BRAIN — BattleGrid + Computer Use skills",
+      "url": "https://github.com/Zsombra/claw-bot",
+      "stars": 0,
+      "created_at": "2026-02-06T20:47:32Z"
+    },
+    {
+      "name": "hbtcfo-finance-blog",
+      "owner": "HBTCFO",
+      "description": "Finance blog (Hugo) + automated posting via OpenClaw",
+      "url": "https://github.com/HBTCFO/hbtcfo-finance-blog",
+      "stars": 0,
+      "created_at": "2026-02-17T08:18:48Z"
+    },
+    {
+      "name": "OpenClawHomeAssistant-dev",
+      "owner": "techartdev",
+      "description": "DEV channel for OpenClaw Home Assistant add-on (unstable/testing)",
+      "url": "https://github.com/techartdev/OpenClawHomeAssistant-dev",
+      "stars": 1,
+      "created_at": "2026-02-01T12:32:44Z"
+    },
+    {
+      "name": "OpenClaw-ComfyUI",
+      "owner": "SalmonRK",
+      "description": "No description.",
+      "url": "https://github.com/SalmonRK/OpenClaw-ComfyUI",
+      "stars": 0,
+      "created_at": "2026-02-19T09:11:34Z"
+    },
+    {
+      "name": "mcinnis.dev",
+      "owner": "mcinnisdev",
+      "description": "Personal/professional web presence at mcinnis.dev — built and maintained by an autonomous AI agent (OpenClaw). An agentic engineering experiment.",
+      "url": "https://github.com/mcinnisdev/mcinnis.dev",
+      "stars": 0,
+      "created_at": "2026-02-18T18:03:36Z"
+    },
+    {
+      "name": "clawders",
+      "owner": "jabob3000",
+      "description": "🦞 Install and run OpenClaw securely, affordably, and efficiently with our community-maintained guide, offering clear steps for all skill levels.",
+      "url": "https://github.com/jabob3000/clawders",
+      "stars": 0,
+      "created_at": "2026-02-21T06:15:54Z"
+    },
+    {
+      "name": "Openclaw",
+      "owner": "malikmuhammadsaadshafiq-dev",
+      "description": "Autonomous AI agent that scrapes Reddit, builds complete MVPs (web + mobile + extensions), tests them, and auto-deploys to GitHub + Vercel + Expo Go. 15 apps/day. Zero human intervention. Powered by Kimi K2.5.",
+      "url": "https://github.com/malikmuhammadsaadshafiq-dev/Openclaw",
+      "stars": 0,
+      "created_at": "2026-02-12T08:37:41Z"
+    },
+    {
+      "name": "percept",
+      "owner": "GetPercept",
+      "description": "Give your AI agent ears. Ambient voice intelligence for OpenClaw and beyond.",
+      "url": "https://github.com/GetPercept/percept",
+      "stars": 0,
+      "created_at": "2026-02-22T04:20:27Z"
+    },
+    {
+      "name": "openclaw-cloud-quickstarter",
+      "owner": "soohyunme",
+      "description": "One-click deployment templates for running OpenClaw AI Agents on Oracle Cloud (Always Free), AWS, GCP, and Azure.",
+      "url": "https://github.com/soohyunme/openclaw-cloud-quickstarter",
+      "stars": 1,
+      "created_at": "2026-02-08T08:46:20Z"
+    },
+    {
+      "name": "openclaw-mobile",
+      "owner": "Firdavs9512",
+      "description": "No description.",
+      "url": "https://github.com/Firdavs9512/openclaw-mobile",
+      "stars": 0,
+      "created_at": "2026-02-22T13:54:27Z"
+    },
+    {
+      "name": "openclaw-personal-overlay",
+      "owner": "dddabtc",
+      "description": "No description.",
+      "url": "https://github.com/dddabtc/openclaw-personal-overlay",
+      "stars": 0,
+      "created_at": "2026-02-21T04:05:38Z"
+    },
+    {
+      "name": "openclaw-mission-control",
+      "owner": "abhi1693",
+      "description": "AI Agent Orchestration Dashboard - Manage AI agents, assign tasks, and coordinate multi-agent collaboration via OpenClaw Gateway.",
+      "url": "https://github.com/abhi1693/openclaw-mission-control",
+      "stars": 493,
+      "created_at": "2026-02-01T16:53:45Z"
+    },
+    {
+      "name": "ClawBowl",
+      "owner": "Garylauchina",
+      "description": "ClawBowl - AI Chat iOS App powered by OpenClaw",
+      "url": "https://github.com/Garylauchina/ClawBowl",
+      "stars": 0,
+      "created_at": "2026-02-13T09:18:18Z"
+    },
+    {
+      "name": "ferrumyx",
+      "owner": "Classacre",
+      "description": "Ferrumyx is an autonomous oncology drug discovery engine built on top of IronClaw (OpenClaw implementation in Rust).",
+      "url": "https://github.com/Classacre/ferrumyx",
+      "stars": 0,
+      "created_at": "2026-02-20T15:16:40Z"
+    },
+    {
+      "name": "Rustchain",
+      "owner": "Scottcjn",
+      "description": "Proof-of-Antiquity blockchain — vintage PowerPC hardware earns 2.5x mining rewards. Hardware fingerprinting, Solana bridge (wRTC), AI agent economy. Discord: https://discord.gg/VqVVS2CW9Q",
+      "url": "https://github.com/Scottcjn/Rustchain",
+      "stars": 53,
+      "created_at": "2025-04-21T15:12:18Z"
+    },
+    {
+      "name": "openclaw-skills",
+      "owner": "azasan08",
+      "description": "OpenClaw skills for Amazon advertising and EC seasonal campaigns",
+      "url": "https://github.com/azasan08/openclaw-skills",
+      "stars": 0,
+      "created_at": "2026-02-22T14:14:20Z"
     }
   ],
   "research": [
