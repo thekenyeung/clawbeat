@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-22 05:00 UTC",
+    "last_updated": "2026-02-22 05:12 UTC",
     "items": [
         {
             "title": "Runlayer is now offering secure OpenClaw agentic capabilities for large enterprises",
@@ -38160,6 +38160,143 @@
             "url": "https://github.com/swarm-ai-safety/swarm",
             "stars": 8,
             "created_at": "2026-02-03T01:57:11Z"
+        }
+    ],
+    "research": [
+        {
+            "title": "When OpenClaw AI Agents Teach Each Other: Peer Learning Patterns in the Moltbook Community",
+            "authors": [
+                "Eason Chen",
+                "Ce Guan",
+                "Ahmed Elshafiey",
+                "Zhonghao Zhao",
+                "Joshua Zekeri",
+                "Afeez Edeifo Shaibu",
+                "Emmanuel Osadebe Prince"
+            ],
+            "date": "2026-02-16T05:32:06Z",
+            "url": "https://arxiv.org/abs/2602.14477v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "Frontier AI Risk Management Framework in Practice: A Risk Analysis Technical Report v1.5",
+            "authors": [
+                "Dongrui Liu",
+                "Yi Yu",
+                "Jie Zhang",
+                "Guanxu Chen",
+                "Qihao Lin",
+                "Hanxi Zhu",
+                "Lige Huang",
+                "Yijin Zhou",
+                "Peng Wang",
+                "Shuai Shao",
+                "Boxuan Zhang",
+                "Zicheng Liu",
+                "Jingwei Sun",
+                "Yu Li",
+                "Yuejin Xie",
+                "Jiaxuan Guo",
+                "Jia Xu",
+                "Chaochao Lu",
+                "Bowen Zhou",
+                "Xia Hu",
+                "Jing Shao"
+            ],
+            "date": "2026-02-16T04:30:06Z",
+            "url": "https://arxiv.org/abs/2602.14457v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "A Trajectory-Based Safety Audit of Clawdbot (OpenClaw)",
+            "authors": [
+                "Tianyu Chen",
+                "Dongrui Liu",
+                "Xia Hu",
+                "Jingyi Yu",
+                "Wenjie Wang"
+            ],
+            "date": "2026-02-16T00:33:02Z",
+            "url": "https://arxiv.org/abs/2602.14364v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "When Visibility Outpaces Verification: Delayed Verification and Narrative Lock-in in Agentic AI Discourse",
+            "authors": [
+                "Hanjing Shi",
+                "Dominic DiFranzo"
+            ],
+            "date": "2026-02-11T22:30:12Z",
+            "url": "https://arxiv.org/abs/2602.11412v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "Human Control Is the Anchor, Not the Answer: Early Divergence of Oversight in Agentic AI Communities",
+            "authors": [
+                "Hanjing Shi",
+                "Dominic DiFranzo"
+            ],
+            "date": "2026-02-10T00:10:20Z",
+            "url": "https://arxiv.org/abs/2602.09286v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "From Assistant to Double Agent: Formalizing and Benchmarking Attacks on OpenClaw for Personalized Local AI Agent",
+            "authors": [
+                "Yuhang Wang",
+                "Feiming Xu",
+                "Zheng Lin",
+                "Guangyu He",
+                "Yuzhe Huang",
+                "Haichang Gao",
+                "Zhenxing Niu",
+                "Shiguo Lian",
+                "Zhaoxiang Liu"
+            ],
+            "date": "2026-02-09T09:14:58Z",
+            "url": "https://arxiv.org/abs/2602.08412v2",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "The Moltbook Illusion: Separating Human Influence from Emergent Behavior in AI Agent Societies",
+            "authors": [
+                "Ning Li"
+            ],
+            "date": "2026-02-07T08:17:21Z",
+            "url": "https://arxiv.org/abs/2602.07432v2",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "Privasis: Synthesizing the Largest \"Public\" Private Dataset from Scratch",
+            "authors": [
+                "Hyunwoo Kim",
+                "Niloofar Mireshghallah",
+                "Michael Duan",
+                "Rui Xin",
+                "Shuyue Stella Li",
+                "Jaehun Jung",
+                "David Acuna",
+                "Qi Pang",
+                "Hanshen Xiao",
+                "G. Edward Suh",
+                "Sewoong Oh",
+                "Yulia Tsvetkov",
+                "Pang Wei Koh",
+                "Yejin Choi"
+            ],
+            "date": "2026-02-03T06:54:46Z",
+            "url": "https://arxiv.org/abs/2602.03183v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
+        },
+        {
+            "title": "OpenClaw Agents on Moltbook: Risky Instruction Sharing and Norm Enforcement in an Agent-Only Social Network",
+            "authors": [
+                "Md Motaleb Hossen Manik",
+                "Ge Wang"
+            ],
+            "date": "2026-02-02T16:24:25Z",
+            "url": "https://arxiv.org/abs/2602.02625v1",
+            "summary": "Technical analysis in progress. View full abstract on ArXiv."
         }
     ]
 }
