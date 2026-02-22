@@ -1,0 +1,7 @@
+feedparser
+requests
+numpy
+python-dotenv
+beautifulsoup4
+google-genai
+google-api-python-client
