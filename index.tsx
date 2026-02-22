@@ -205,7 +205,7 @@ const App: React.FC = () => {
   const fetchContent = async (page: Page) => {
     setLoading(true);
     try {
-      const GITHUB_RAW_URL = "https://raw.githubusercontent.com/thekenyeung/moltbot-news/main/public/data.json";
+      const GITHUB_RAW_URL = "https://raw.githubusercontent.com/thekenyeung/clawbeat/main/public/data.json";
       const response = await fetch(`${GITHUB_RAW_URL}?t=${new Date().getTime()}`);
       if (!response.ok) throw new Error("Could not find data.json.");
       
