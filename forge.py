@@ -101,15 +101,19 @@ def is_article_relevant(url, keywords):
         article.parse()
         full_text = article.text.lower()
         
-        # Define the brands that MUST be present for a 'Deep Scan' rescue
+        # 1. High-Priority Brands (Instant Pass)
         core_brands = ["openclaw", "moltbot", "clawdbot", "moltbook", "claudbot"]
-        has_core_brand = any(brand in full_text for brand in core_brands)
-        
-        if not has_core_brand:
-            return False # Drop it if the brand isn't actually in the text
+        if any(brand in full_text for brand in core_brands):
+            return True 
             
+        # 2. Industry Intel (The 404 Media Rescue)
+        # We look for a higher "Density" of keywords to filter out general essays (Every.to)
+        # but keep hard news.
         matches = [kw for kw in keywords if kw.lower() in full_text]
-        return len(matches) >= 2
+        
+        # INCREASE this number to 3 or 4 to filter out casual "Board Game" essays,
+        # but allow meaty news stories through.
+        return len(matches) >= 3 
     except:
         return False
 
