@@ -19,11 +19,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Create a totally isolated environment
-          python -m venv venv
-          source venv/bin/activate
           python -m pip install --upgrade pip
-          # Install your clean requirements
+          # Explicitly wipe the old library to prevent the namespace conflict
+          pip uninstall google-generativeai -y
+          # Now install your requirements (which has google-genai)
           pip install -r requirements.txt
 
       - name: Run forge
