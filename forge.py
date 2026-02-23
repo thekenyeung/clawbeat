@@ -116,7 +116,6 @@ def scan_rss():
         if not rss_url or rss_url == "N/A": continue
         try:
             feed = feedparser.parse(rss_url)
-            # Increased scan depth to 30 to catch older stories in active feeds
             for entry in feed.entries[:30]:
                 title = entry.get('title', '')
                 summary = BeautifulSoup(entry.get('summary', ''), "html.parser").get_text(strip=True)
@@ -131,8 +130,16 @@ def scan_rss():
                         is_match = True
 
                 if is_match:
+                    # Logic for Medium Byline Enhancement
+                    display_source = site["Source Name"]
+                    if display_source == "Medium":
+                        # Try to get author from common RSS namespaces (author or dc:creator)
+                        author_name = entry.get('author') or entry.get('author_detail', {}).get('name') or entry.get('dc_creator')
+                        if author_name:
+                            display_source = f"{author_name}, Medium"
+
                     found.append({
-                        "title": title, "url": entry.link, "source": site["Source Name"],
+                        "title": title, "url": entry.link, "source": display_source,
                         "date": datetime.now().strftime("%m-%d-%Y"), "summary": summary[:200] + "...", "vec": None
                     })
         except: continue
