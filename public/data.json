@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-23 22:36 UTC",
+  "last_updated": "2026-02-23 23:11 UTC",
   "items": [
     {
       "title": "Google Restricts AI Ultra Subscribers Over OpenClaw OAuth, Days After Anthropic Ban",
@@ -3092,6 +3092,10 @@
           "url": "https://www.nytimes.com/2026/02/18/upshot/moltbook-artificial-intelligence-ai.html"
         },
         {
+          "source": "CNBC",
+          "url": "https://www.cnbc.com/2026/02/23/cybersecurity-stocks-anthropic-ai-crowdstrike.html"
+        },
+        {
           "source": "Dark Reading",
           "url": "https://www.darkreading.com/application-security/supply-chain-attack-openclaw-cline-users"
         },
@@ -3124,6 +3128,18 @@
           "url": "https://sources.news/p/openais-4o-valentines-breakup"
         },
         {
+          "source": "Sources",
+          "url": "https://sources.news/p/openais-fidji-simo-on-ads-in-chatgpt"
+        },
+        {
+          "source": "Interconnects",
+          "url": "https://www.interconnects.ai/p/opus-46-vs-codex-53"
+        },
+        {
+          "source": "Big Technology",
+          "url": "https://www.bigtechnology.com/p/nvidias-big-week-new-ai-models-social"
+        },
+        {
           "source": "Big Technology",
           "url": "https://www.bigtechnology.com/p/moltbook-is-a-warning"
         },
@@ -3132,12 +3148,20 @@
           "url": "https://www.bigtechnology.com/p/the-markets-ai-guessing-game-moltbook"
         },
         {
+          "source": "One Useful Thing",
+          "url": "https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the"
+        },
+        {
           "source": "Simon Willison's Weblog",
           "url": "https://simonwillison.net/2026/Jan/30/moltbook/#atom-entries"
         },
         {
           "source": "Platformer",
           "url": "https://www.platformer.news/the-infinite-scroll-goes-on-trial/"
+        },
+        {
+          "source": "Platformer",
+          "url": "https://www.platformer.news/social-media-addiction-trial-eu-tiktok-investigation/"
         },
         {
           "source": "Platformer",
@@ -3150,6 +3174,18 @@
         {
           "source": "Platformer",
           "url": "https://www.platformer.news/moltbot-clawdbot-review-ai-agent/"
+        },
+        {
+          "source": "Stratechery",
+          "url": "https://stratechery.com/2026/thin-is-in/"
+        },
+        {
+          "source": "The Deep View",
+          "url": "https://www.thedeepview.com/articles/goodbye-virtual-assistant-hello-ai-chief-of-staff"
+        },
+        {
+          "source": "The Deep View",
+          "url": "https://www.thedeepview.com/articles/sonnet-4-6-anthropic-goes-beyond-techies"
         },
         {
           "source": "The Deep View",
@@ -3166,6 +3202,10 @@
         {
           "source": "The Register",
           "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/20/raspberry_pi_meme_stock_disorder/"
+        },
+        {
+          "source": "The Register",
+          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/20/anthropic_clarifies_ban_third_party_claude_access/"
         },
         {
           "source": "The Register",
@@ -3189,11 +3229,31 @@
         },
         {
           "source": "Ben's Bites",
+          "url": "https://www.bensbites.com/p/something-big-is-happening"
+        },
+        {
+          "source": "Ben's Bites",
+          "url": "https://www.bensbites.com/p/vibe-coding-is-old-now"
+        },
+        {
+          "source": "Ben's Bites",
           "url": "https://www.bensbites.com/p/whats-next-for-coding-agents"
+        },
+        {
+          "source": "Ben's Bites",
+          "url": "https://www.bensbites.com/p/using-coding-agents-if-youre-not"
+        },
+        {
+          "source": "The New Stack",
+          "url": "https://thenewstack.io/aws-strands-labs-launch/"
         },
         {
           "source": "The New Stack",
           "url": "https://thenewstack.io/claude-code-comes-to-roadmap-openclaw-loses-its-head-and-ai-workslop/"
+        },
+        {
+          "source": "The New Stack",
+          "url": "https://thenewstack.io/model-context-protocol-evolution/"
         },
         {
           "source": "The New Stack",
@@ -3206,6 +3266,14 @@
         {
           "source": "IEEE Spectrum",
           "url": "https://spectrum.ieee.org/moltbook-agentic-ai-agents-openclaw"
+        },
+        {
+          "source": "Lenny's Newsletter",
+          "url": "https://www.lennysnewsletter.com/p/sequoia-ceo-coach-why-its-never-been"
+        },
+        {
+          "source": "Lenny's Newsletter",
+          "url": "https://www.lennysnewsletter.com/p/engineers-are-becoming-sorcerers"
         },
         {
           "source": "The Hacker News",
@@ -3264,8 +3332,16 @@
           "url": "https://medium.com/@rithikmotupalli/how-an-openclaw-agent-automated-marketing-and-got-2-million-views-in-2-weeks-c77d6ebb5ea8?source=rss------openclaw-5"
         },
         {
+          "source": "Futurism",
+          "url": "https://futurism.com/artificial-intelligence/ai-agent-canvas-homework"
+        },
+        {
           "source": "Every",
           "url": "https://every.to/context-window/five-ai-agents-walk-into-a-group-chat"
+        },
+        {
+          "source": "Every",
+          "url": "https://every.to/on-every/introducing-every-events"
         },
         {
           "source": "Every",
@@ -40934,6 +41010,102 @@
       "url": "https://github.com/CordiaLabs/OpenClaw-Skill",
       "stars": 1,
       "created_at": "2026-01-31T02:59:20Z"
+    },
+    {
+      "name": "live-openclaw-monitoring",
+      "owner": "wierowskilasse",
+      "description": "OpenClaw Monitoring Dashboard - Next.js, FastAPI, PostgreSQL",
+      "url": "https://github.com/wierowskilasse/live-openclaw-monitoring",
+      "stars": 0,
+      "created_at": "2026-02-23T23:10:16Z"
+    },
+    {
+      "name": "vibeclaw",
+      "owner": "jasonkneen",
+      "description": "Deploy OpenClaw to your local browser",
+      "url": "https://github.com/jasonkneen/vibeclaw",
+      "stars": 69,
+      "created_at": "2026-02-14T23:49:42Z"
+    },
+    {
+      "name": "CrewClaw",
+      "owner": "Vistiqx",
+      "description": "CrewClaw: Build Your AI Crew. Enterprise AI platform for deploying specialized assistants across multi-business holdings and conglomerates. Centralized security, management, and scalability. Built on OpenClaw, Nanobot, and IronClaw.",
+      "url": "https://github.com/Vistiqx/CrewClaw",
+      "stars": 0,
+      "created_at": "2026-02-23T21:03:56Z"
+    },
+    {
+      "name": "2048-game",
+      "owner": "moto1claw",
+      "description": "2048 游戏 - 由 OpenClaw AI 开发 🦞",
+      "url": "https://github.com/moto1claw/2048-game",
+      "stars": 0,
+      "created_at": "2026-02-23T23:09:48Z"
+    },
+    {
+      "name": "opentax",
+      "owner": "xavierliwei",
+      "description": "file tax for free, forever (now with OpenClaw integration)",
+      "url": "https://github.com/xavierliwei/opentax",
+      "stars": 0,
+      "created_at": "2026-02-23T23:09:24Z"
+    },
+    {
+      "name": "openclaw-horror-leaderboard",
+      "owner": "bhekanik",
+      "description": "Community-driven leaderboard for OpenClaw AI agent horror stories. Built with Next.js, Convex, and shadcn/ui.",
+      "url": "https://github.com/bhekanik/openclaw-horror-leaderboard",
+      "stars": 0,
+      "created_at": "2026-02-23T19:15:28Z"
+    },
+    {
+      "name": "job-automation-openclaw",
+      "owner": "sm11t",
+      "description": "Automated job application system using OpenClaw browser automation and LLMs",
+      "url": "https://github.com/sm11t/job-automation-openclaw",
+      "stars": 0,
+      "created_at": "2026-02-20T22:21:59Z"
+    },
+    {
+      "name": "beamclaw",
+      "owner": "peterdmv",
+      "description": "A fault-tolerant AI agent gateway and MCP host implemented in Erlang/OTP. Inspired by OpenClaw.",
+      "url": "https://github.com/peterdmv/beamclaw",
+      "stars": 0,
+      "created_at": "2026-02-20T18:08:00Z"
+    },
+    {
+      "name": "pibot-swarm-v2",
+      "owner": "Pi-Swarm",
+      "description": "🤖 Sovereign AI Security Swarm - Multi-agent security audits and OSINT. Powered by OpenClaw.",
+      "url": "https://github.com/Pi-Swarm/pibot-swarm-v2",
+      "stars": 0,
+      "created_at": "2026-02-23T22:32:13Z"
+    },
+    {
+      "name": "MonoClaw",
+      "owner": "rmruss2022",
+      "description": "🦞 OpenClaw workspace monorepo: dashboards, automation, and autonomous AI systems",
+      "url": "https://github.com/rmruss2022/MonoClaw",
+      "stars": 3,
+      "created_at": "2026-02-08T02:58:47Z"
+    },
+    {
+      "name": "arccos-golf",
+      "owner": "pfrederiksen",
+      "description": "Comprehensive Arccos Golf performance analyzer for OpenClaw",
+      "url": "https://github.com/pfrederiksen/arccos-golf",
+      "stars": 0,
+      "created_at": "2026-02-22T05:46:01Z"
+    },
+    {
+      "name": "DoWhiz",
+      "owner": "KnoWhiz",
+      "description": "DoWhiz: A lightweight Rust replica of OpenClaw🦞 with better security, accessibility, and token usage. Serve as your digital employee team, message us any task! 🧸🐭🐙🐘👾🦞🐦🐉",
+      "url": "https://github.com/KnoWhiz/DoWhiz",
+      "stars": 8,
+      "created_at": "2026-01-29T01:29:43Z"
     }
   ],
   "research": [
