@@ -21,29 +21,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Step 1: Actually CREATE the virtual environment bubble
-          python -m venv venv
-          source venv/bin/activate
           python -m pip install --upgrade pip
-          # Step 2: Install your clean requirements
+          # We install directly to the runner's environment
           pip install -r requirements.txt
 
-      - name: Install and Run Forge
+      - name: Run forge
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUN_RESEARCH: false
         run: |
-          # 1. Create the virtual environment
-          python -m venv venv
+          # No venv activation needed
+          python forge.py
           
-          # 2. Install dependencies using the venv's pip specifically
-          ./venv/bin/pip install --upgrade pip
-          ./venv/bin/pip install -r requirements.txt
-          
-          # 3. Run the script using the venv's python specifically
-          ./venv/bin/python forge.py
-
       - name: Commit and Push Updates
         run: |
           git config --global user.name "ClawBeat Bot"
