@@ -19,19 +19,18 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m venv venv
+          source venv/bin/activate
           python -m pip install --upgrade pip
-          # This creates a folder called 'deps' on the GitHub server 
-          # specifically for this run and puts the library there.
-          pip install google-genai -t ./deps
+          pip install google-genai
           pip install -r requirements.txt
 
-      - name: Run News Forge
+      - name: Run forge
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # This flag tells forge.py to skip the deep ArXiv scan during hourly runs
-          RUN_RESEARCH: "false" 
-        run: python forge.py
+        run: |
+          source venv/bin/activate
+          python forge.py
 
       - name: Commit and Push Updates
         run: |
