@@ -35,7 +35,7 @@ youtube = build('youtube', 'v3', developerKey=GEMINI_KEY)
 client = genai.Client(api_key=GEMINI_KEY)
 
 # Expanded Keywords to catch contextual "Deep Scan" matches
-KEYWORDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "steinberger", "claudbot", "openclaw foundation", "ai safety", "ai agent"]
+KEYWORDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "steinberger", "claudbot", "openclaw foundation"]
 WHITELIST_PATH = "./src/whitelist.json"
 OUTPUT_PATH = "./public/data.json"
 
@@ -95,15 +95,20 @@ def get_embeddings_batch(texts, batch_size=5):
     return all_embeddings
 
 def is_article_relevant(url, keywords):
-    """Pass 2: Fetches full text and checks for keyword density/presence."""
     try:
         article = Article(url)
         article.download()
         article.parse()
         full_text = article.text.lower()
-        # Find how many unique keywords appear in the body
+        
+        # Define the brands that MUST be present for a 'Deep Scan' rescue
+        core_brands = ["openclaw", "moltbot", "clawdbot", "moltbook", "claudbot"]
+        has_core_brand = any(brand in full_text for brand in core_brands)
+        
+        if not has_core_brand:
+            return False # Drop it if the brand isn't actually in the text
+            
         matches = [kw for kw in keywords if kw.lower() in full_text]
-        # Relevant if at least 2 distinct keywords found in body
         return len(matches) >= 2
     except:
         return False
@@ -227,7 +232,7 @@ def cluster_articles_temporal(all_articles):
     if not all_articles: return []
     needs_embedding = [a for a in all_articles if a.get('vec') is None]
     if needs_embedding:
-        new_vectors = get_embeddings_batch([a['title'] for a in needs_embedding])
+        new_vectors = get_embeddings_batch([f"{a['title']}: {a['summary'][:100]}" for a in needs_embedding])
         for i, art in enumerate(needs_embedding): art['vec'] = new_vectors[i]
     
     valid = [a for a in all_articles if a.get('vec') is not None]
@@ -244,7 +249,7 @@ def cluster_articles_temporal(all_articles):
             matched = False
             for cluster in daily_clusters:
                 sim = cosine_similarity(np.array(art['vec']), np.array(cluster[0]['vec']))
-                if sim > 0.85:
+                if sim > 0.70:
                     cluster.append(art)
                     matched = True
                     break
