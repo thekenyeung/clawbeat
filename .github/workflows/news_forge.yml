@@ -28,14 +28,21 @@ jobs:
           # Step 2: Install your clean requirements
           pip install -r requirements.txt
 
-      - name: Run forge
+      - name: Install and Run Forge
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_RESEARCH: false
         run: |
-          # Step 3: Enter the bubble and run the bot
-          source venv/bin/activate
-          python forge.py
+          # 1. Create the virtual environment
+          python -m venv venv
+          
+          # 2. Install dependencies using the venv's pip specifically
+          ./venv/bin/pip install --upgrade pip
+          ./venv/bin/pip install -r requirements.txt
+          
+          # 3. Run the script using the venv's python specifically
+          ./venv/bin/python forge.py
 
       - name: Commit and Push Updates
         run: |
