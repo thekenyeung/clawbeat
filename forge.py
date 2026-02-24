@@ -186,7 +186,12 @@ def fetch_arxiv_research():
     except: return []
 
 def fetch_youtube_videos_ytdlp(channel_url):
-    ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'playlistend': 5}
+    ydl_opts = {
+        'quiet': True, 
+        'extract_flat': 'in_playlist', 
+        'playlistend': 5,
+        'extractor_args': {'youtubetab': {'approximate_date': ['']}} 
+    }
     videos = []
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -195,30 +200,52 @@ def fetch_youtube_videos_ytdlp(channel_url):
                 for entry in info['entries']:
                     title = entry.get('title', '')
                     desc = entry.get('description', '') or ""
+                    raw_date = entry.get('upload_date')
+                    
+                    # Corrected logic: Use dash format, fallback to TODAY if missing
+                    if raw_date and len(raw_date) == 8:
+                        formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
+                    else:
+                        formatted_date = datetime.now().strftime("%Y-%m-%d")
+                    
                     if any(kw in (title + desc).lower() for kw in KEYWORDS):
                         videos.append({
                             "title": title, "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
                             "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
                             "channel": info.get('uploader', 'Unknown'), "description": desc[:150],
-                            "publishedAt": f"{entry['upload_date'][:4]}-{entry['upload_date'][4:6]}-{entry['upload_date'][6:]}" if entry.get('upload_date') else "2000-01-01"
+                            "publishedAt": formatted_date
                         })
         return videos
     except: return []
 
 def fetch_global_openclaw_videos(query="OpenClaw Moltbot Clawdbot", limit=15):
     search_target = f"ytsearch{limit}:{query}"
-    ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'skip_download': True, 'playlist_items': f"1:{limit}"}
+    ydl_opts = {
+        'quiet': True, 
+        'extract_flat': 'in_playlist', 
+        'skip_download': True, 
+        'playlist_items': f"1:{limit}",
+        'extractor_args': {'youtubetab': {'approximate_date': ['']}}
+    }
     videos = []
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(search_target, download=False)
             if 'entries' in info:
                 for entry in info['entries']:
+                    raw_date = entry.get('upload_date')
+                    
+                    # Apply the same YYYY-MM-DD logic here
+                    if raw_date and len(raw_date) == 8:
+                        formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
+                    else:
+                        formatted_date = datetime.now().strftime("%Y-%m-%d")
+                    
                     videos.append({
                         "title": entry.get('title'), "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
                         "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
                         "channel": entry.get('uploader', 'Community'), "description": entry.get('description', '')[:150],
-                        "publishedAt": f"{entry['upload_date'][:4]}-{entry['upload_date'][4:6]}-{entry['upload_date'][6:]}" if entry.get('upload_date') else "2000-01-01"
+                        "publishedAt": formatted_date
                     })
         return videos
     except: return []
@@ -319,10 +346,11 @@ if __name__ == "__main__":
     print("📺 Scanning Global Ecosystem...")
     global_videos = fetch_global_openclaw_videos(limit=15)
     
-    # CRITICAL FIX: Use ALL new videos for sorting and deduping
     all_new_videos = scanned_videos + global_videos
     vid_urls = {v['url'] for v in db.get('videos', [])}
     combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]
+    
+    # Sort chronologically using YYYY-MM-DD strings
     combined_vids.sort(key=lambda x: str(x.get('publishedAt', '2000-01-01')), reverse=True)
     db['videos'] = combined_vids[:50]
 
