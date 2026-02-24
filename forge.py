@@ -36,7 +36,7 @@ client = genai.Client(api_key=GEMINI_KEY)
 
 # Core brand keywords for high-priority matching and density bonuses
 CORE_BRANDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "claudbot", "steinberger"]
-KEYWORDS = CORE_BRANDS + ["openclaw foundation", "ai safety", "ai agent", "autonomous agents", "large language models"]
+KEYWORDS = CORE_BRANDS + ["openclaw foundation", "openclaw safety", "openclaw agent", "moltbot capabilities", "openclaw ecosystem", "clawdbot updates", "openclaw updates", "openclaw openai"]
 
 WHITELIST_PATH = "./src/whitelist.json"
 OUTPUT_PATH = "./public/data.json"
@@ -214,9 +214,10 @@ def fetch_github_projects():
 
 # --- 6. CLUSTERING & ARCHIVING ---
 
-def cluster_articles_temporal(new_articles):
-    """Clusters ONLY new items by date to prevent date-jumping."""
-    if not new_articles: return []
+def cluster_articles_temporal(new_articles, existing_items):
+    if not new_articles: return existing_items
+    
+    # 1. Standard Embedding logic
     needs_embedding = [a for a in new_articles if a.get('vec') is None]
     if needs_embedding:
         texts = [f"{a['title']}: {a['summary'][:100]}" for a in needs_embedding]
@@ -229,10 +230,13 @@ def cluster_articles_temporal(new_articles):
         if d not in date_buckets: date_buckets[d] = []
         date_buckets[d].append(art)
     
-    clustered_output = []
+    current_batch_clustered = []
+    HEADLINE_THRESH = 8  # Articles below this score won't become "Anchors"
+
     for date_key in date_buckets:
         day_articles = date_buckets[date_key]
         day_articles.sort(key=lambda x: x.get('density', 0), reverse=True)
+        
         daily_clusters = []
         for art in day_articles:
             if art['vec'] is None: continue
@@ -244,21 +248,35 @@ def cluster_articles_temporal(new_articles):
                     matched = True
                     break
             if not matched: daily_clusters.append([art])
+            
         for cluster in daily_clusters:
             anchor = cluster[0]
+            
+            # --- TIGHTENED LOGIC ---
+            if anchor.get('density', 0) < HEADLINE_THRESH:
+                anchor['is_minor'] = True 
+            else:
+                anchor['is_minor'] = False
+
             anchor['moreCoverage'] = [{"source": a['source'], "url": a['url']} for a in cluster[1:]]
-            clustered_output.append(anchor)
-    return clustered_output
+            current_batch_clustered.append(anchor)
+
+    # Merge and archive logic
+    existing_urls = {item['url'] for item in existing_items}
+    final_news = [a for a in current_batch_clustered if a['url'] not in existing_urls] + existing_items
+    final_news.sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
+    return final_news[:1000]
 
 # --- 7. MAIN EXECUTION ---
 if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed (Recency Discovery + Additive Archiving)...")
     
-    # 1. LOAD: Always load existing data first
     try:
         if os.path.exists(OUTPUT_PATH):
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
                 db = json.load(f)
+            for key in ["items", "videos", "githubProjects", "research"]:
+                if key not in db: db[key] = []
         else:
             db = {"items": [], "videos": [], "githubProjects": [], "research": []}
     except:
@@ -278,10 +296,14 @@ if __name__ == "__main__":
         # APPLY THE RECENCY FILTER HERE
         if not is_article_recent(art['url']): 
             continue
+
+        # --- THE NOISE KILLER LOGIC ---
+        # 1. Is this a core brand story? (High Priority)
+        is_priority = any(brand.lower() in art['title'].lower() for brand in CORE_BRANDS)
         
-        # Density check (already calculated in scan functions)
-        if art.get('density', 0) >= 3:
-            # AI Briefing for Priority Sites
+        # 2. Does it pass the tightened gate? (Density 5 for general news)
+        if art.get('density', 0) >= 5 or is_priority:
+            
             if get_source_type(art['url'], art['source']) == "priority" and new_summaries_count < MAX_BATCH_SIZE:
                 print(f"✍️ Drafting brief: {art['title']}")
                 art['summary'] = get_ai_summary(art['title'], art['summary'])
@@ -290,17 +312,12 @@ if __name__ == "__main__":
             
             newly_discovered.append(art)
 
-    # 3. FORGE: Cluster only the NEW items
-    new_dispatches = cluster_articles_temporal(newly_discovered)
+    # 3. FORGE: Cluster only the NEW items (Passing existing db items for context)
+    db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
-    # 4. APPEND: Add new dispatches to the TOP of the history (Additivity)
-    db['items'] = new_dispatches + db.get('items', [])
-    
-    # Sort history to ensure UI stays chronological
-    db['items'].sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
-
-    # 5. BACKFILLS (Research, YouTube, GitHub)
+    # 4. BACKFILLS (Research, YouTube, GitHub)
     if os.getenv("RUN_RESEARCH") == "true":
+        print("🔍 Scanning Research...")
         db['research'] = fetch_arxiv_research()
 
     print("📺 Scanning Videos...")
@@ -319,7 +336,7 @@ if __name__ == "__main__":
     repo_urls = {r['url'] for r in db.get('githubProjects', [])}
     db['githubProjects'] = db.get('githubProjects', []) + [r for r in new_repos if r['url'] not in repo_urls]
 
-    # 6. SAVE: Permanent update
+    # 5. SAVE: Permanent update
     db['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(db, f, indent=2, ensure_ascii=False, cls=CompactJSONEncoder)
