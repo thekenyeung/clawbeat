@@ -7,3 +7,4 @@ google-genai
 google-api-python-client
 newspaper3k
 lxml_html_clean
+yt-dlp
