@@ -50,9 +50,6 @@ BANNED_SOURCES = ["access newswire", "globenewswire", "prnewswire", "business wi
 
 # --- 3. HELPER FUNCTIONS ---
 
-def normalize_source_name(name):
-    return name.lower().replace('the ', '').replace('.com', '').replace('.net', '').strip()
-
 def cosine_similarity(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
@@ -90,28 +87,32 @@ def get_embeddings_batch(texts, batch_size=5):
         except: all_embeddings.extend([None] * len(batch))
     return all_embeddings
 
-def process_article_intel(url):
+def is_article_recent(url):
+    """THE GATEKEEPER: Applies the 48-hour discovery window."""
     try:
         article = Article(url)
         article.download()
         article.parse()
-        
-        # 1. Recency Gate (48 Hours)
-        is_recent = True
         if article.publish_date:
             now = datetime.now(article.publish_date.tzinfo) if article.publish_date.tzinfo else datetime.now()
-            if (now - article.publish_date).total_seconds() > 172800:
-                is_recent = False
-        
-        # 2. Density Scoring
+            diff = now - article.publish_date
+            return diff.total_seconds() <= 172800 # 48 hours
+        return True 
+    except: return False
+
+def process_article_intel(url):
+    """Extracts text and calculates density score for relevance filtering."""
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
         full_text = (article.title + " " + article.text).lower()
+        
         brand_bonus = 10 if any(b in full_text for b in CORE_BRANDS) else 0
         keyword_matches = sum(1 for kw in KEYWORDS if kw.lower() in full_text)
-        density_score = keyword_matches + brand_bonus
         
-        return is_recent, density_score, article.text[:300]
-    except:
-        return False, 0, ""
+        return keyword_matches + brand_bonus, article.text[:300]
+    except: return 0, ""
 
 def scan_rss():
     if not os.path.exists(WHITELIST_PATH): return []
@@ -123,12 +124,8 @@ def scan_rss():
         try:
             feed = feedparser.parse(rss_url)
             for entry in feed.entries[:20]:
-                title_summary = (entry.get('title', '') + entry.get('summary', '')).lower()
-                is_likely_match = any(kw in title_summary for kw in KEYWORDS)
-                
-                is_recent, density, full_text = process_article_intel(entry.link)
-                
-                if is_recent and (is_likely_match or density >= 3):
+                density, _ = process_article_intel(entry.link)
+                if density >= 3:
                     display_source = site["Source Name"]
                     if display_source == "Medium":
                         author_name = entry.get('author') or entry.get('author_detail', {}).get('name') or entry.get('dc_creator')
@@ -149,8 +146,8 @@ def scan_google_news():
     try:
         feed = feedparser.parse(gn_url)
         for e in feed.entries[:30]:
-            is_recent, density, _ = process_article_intel(e.link)
-            if is_recent and density >= 2:
+            density, _ = process_article_intel(e.link)
+            if density >= 2:
                 found.append({
                     "title": e.title, "url": e.link, "source": "Web Search", 
                     "summary": "Ecosystem update.", "date": datetime.now().strftime("%m-%d-%Y"), 
@@ -159,7 +156,7 @@ def scan_google_news():
     except: pass
     return found
 
-# --- 5. BACKFILL FETCHERS (RESTORING YOUTUBE/GITHUB/RESEARCH) ---
+# --- 5. BACKFILL FETCHERS ---
 
 def fetch_arxiv_research():
     query = '(OpenClaw OR MoltBot OR Clawdbot)'
@@ -217,8 +214,9 @@ def fetch_github_projects():
 
 # --- 6. CLUSTERING & ARCHIVING ---
 
-def cluster_articles_temporal(new_articles, existing_items):
-    if not new_articles: return existing_items
+def cluster_articles_temporal(new_articles):
+    """Clusters ONLY new items by date to prevent date-jumping."""
+    if not new_articles: return []
     needs_embedding = [a for a in new_articles if a.get('vec') is None]
     if needs_embedding:
         texts = [f"{a['title']}: {a['summary'][:100]}" for a in needs_embedding]
@@ -231,7 +229,7 @@ def cluster_articles_temporal(new_articles, existing_items):
         if d not in date_buckets: date_buckets[d] = []
         date_buckets[d].append(art)
     
-    current_batch_clustered = []
+    clustered_output = []
     for date_key in date_buckets:
         day_articles = date_buckets[date_key]
         day_articles.sort(key=lambda x: x.get('density', 0), reverse=True)
@@ -249,16 +247,14 @@ def cluster_articles_temporal(new_articles, existing_items):
         for cluster in daily_clusters:
             anchor = cluster[0]
             anchor['moreCoverage'] = [{"source": a['source'], "url": a['url']} for a in cluster[1:]]
-            current_batch_clustered.append(anchor)
-
-    existing_urls = {item['url'] for item in existing_items}
-    final_news = [a for a in current_batch_clustered if a['url'] not in existing_urls] + existing_items
-    final_news.sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
-    return final_news[:1000]
+            clustered_output.append(anchor)
+    return clustered_output
 
 # --- 7. MAIN EXECUTION ---
 if __name__ == "__main__":
-    print(f"🛠️ Forging Intel Feed (Isolated Dispatch Mode)...")
+    print(f"🛠️ Forging Intel Feed (Recency Discovery + Additive Archiving)...")
+    
+    # 1. LOAD: Always load existing data first
     try:
         if os.path.exists(OUTPUT_PATH):
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
@@ -267,20 +263,44 @@ if __name__ == "__main__":
             db = {"items": [], "videos": [], "githubProjects": [], "research": []}
     except:
         db = {"items": [], "videos": [], "githubProjects": [], "research": []}
+        
+    existing_news_urls = {item['url'] for item in db.get('items', [])}
 
-    new_discovered = scan_rss() + scan_google_news()
+    # 2. FIND: Only look for NEW news published < 48h ago
+    raw_news = scan_rss() + scan_google_news()
+    newly_discovered = []
     new_summaries_count = 0
-    for art in new_discovered:
-        if get_source_type(art['url'], art['source']) == "priority" and new_summaries_count < MAX_BATCH_SIZE:
-            print(f"✍️ Drafting brief: {art['title']}")
-            art['summary'] = get_ai_summary(art['title'], art['summary'])
-            new_summaries_count += 1
-            time.sleep(SLEEP_BETWEEN_REQUESTS)
 
-    db['items'] = cluster_articles_temporal(new_discovered, db.get('items', []))
+    for art in raw_news:
+        if art['url'] in existing_news_urls: 
+            continue
+        
+        # APPLY THE RECENCY FILTER HERE
+        if not is_article_recent(art['url']): 
+            continue
+        
+        # Density check (already calculated in scan functions)
+        if art.get('density', 0) >= 3:
+            # AI Briefing for Priority Sites
+            if get_source_type(art['url'], art['source']) == "priority" and new_summaries_count < MAX_BATCH_SIZE:
+                print(f"✍️ Drafting brief: {art['title']}")
+                art['summary'] = get_ai_summary(art['title'], art['summary'])
+                new_summaries_count += 1
+                time.sleep(SLEEP_BETWEEN_REQUESTS)
+            
+            newly_discovered.append(art)
 
+    # 3. FORGE: Cluster only the NEW items
+    new_dispatches = cluster_articles_temporal(newly_discovered)
+
+    # 4. APPEND: Add new dispatches to the TOP of the history (Additivity)
+    db['items'] = new_dispatches + db.get('items', [])
+    
+    # Sort history to ensure UI stays chronological
+    db['items'].sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
+
+    # 5. BACKFILLS (Research, YouTube, GitHub)
     if os.getenv("RUN_RESEARCH") == "true":
-        print("🔍 Scanning Research...")
         db['research'] = fetch_arxiv_research()
 
     print("📺 Scanning Videos...")
@@ -299,6 +319,7 @@ if __name__ == "__main__":
     repo_urls = {r['url'] for r in db.get('githubProjects', [])}
     db['githubProjects'] = db.get('githubProjects', []) + [r for r in new_repos if r['url'] not in repo_urls]
 
+    # 6. SAVE: Permanent update
     db['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(db, f, indent=2, ensure_ascii=False, cls=CompactJSONEncoder)
