@@ -12,7 +12,6 @@ from bs4 import BeautifulSoup
 from google import genai
 from google.genai import types
 from datetime import datetime, timedelta
-from googleapiclient.discovery import build
 from urllib.parse import urlparse
 from newspaper import Article
 
@@ -32,7 +31,6 @@ if not GEMINI_KEY:
     print("❌ ERROR: GEMINI_API_KEY not found.")
     exit(1)
 
-youtube = build('youtube', 'v3', developerKey=GEMINI_KEY)
 client = genai.Client(api_key=GEMINI_KEY)
 
 CORE_BRANDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "claudbot", "steinberger"]
@@ -92,10 +90,8 @@ def process_article_intel(url):
         article = Article(url)
         article.download()
         article.parse()
-        
         if article.meta_lang != 'en' and article.meta_lang != '':
             return False, 0, ""
-
         is_recent = True
         if article.publish_date:
             now = datetime.now(article.publish_date.tzinfo) if article.publish_date.tzinfo else datetime.now()
@@ -110,18 +106,13 @@ def process_article_intel(url):
                     is_recent = False
             else:
                 is_recent = False 
-
-        if not is_recent:
-            return False, 0, ""
-
+        if not is_recent: return False, 0, ""
         full_text = (article.title + " " + article.text).lower()
         brand_bonus = 10 if any(b in full_text for b in CORE_BRANDS) else 0
         keyword_matches = sum(1 for kw in KEYWORDS if kw.lower() in full_text)
         density_score = keyword_matches + brand_bonus
-        
         return True, density_score, article.text[:300]
-    except:
-        return False, 0, ""
+    except: return False, 0, ""
 
 def scan_rss():
     if not os.path.exists(WHITELIST_PATH): return []
@@ -141,7 +132,6 @@ def scan_rss():
                     if display_source == "Medium":
                         author_name = entry.get('author') or entry.get('author_detail', {}).get('name') or entry.get('dc_creator')
                         if author_name: display_source = f"{author_name}, Medium"
-
                     found.append({
                         "title": title, "url": entry.link, "source": display_source,
                         "date": datetime.now().strftime("%m-%d-%Y"), 
@@ -195,30 +185,8 @@ def fetch_arxiv_research():
         return papers
     except: return []
 
-def fetch_youtube_videos(channel_id):
-    try:
-        ch_resp = youtube.channels().list(id=channel_id, part='contentDetails').execute()
-        uploads_id = ch_resp['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-        pl_resp = youtube.playlistItems().list(playlistId=uploads_id, part='snippet', maxResults=5).execute()
-        videos = []
-        for item in pl_resp.get('items', []):
-            snip = item['snippet']
-            if any(kw in (snip['title'] + snip['description']).lower() for kw in KEYWORDS):
-                videos.append({
-                    "title": snip['title'], "url": f"https://www.youtube.com/watch?v={snip['resourceId']['videoId']}",
-                    "thumbnail": snip['thumbnails']['high']['url'], "channel": snip['channelTitle'],
-                    "description": snip['description'][:150], "publishedAt": snip['publishedAt']
-                })
-        return videos
-    except: return []
-
 def fetch_youtube_videos_ytdlp(channel_url):
-    ydl_opts = {
-        'quiet': True,
-        'extract_flat': 'in_playlist',
-        'force_generic_extractor': False,
-        'playlistend': 5,
-    }
+    ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'playlistend': 5}
     videos = []
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -226,20 +194,34 @@ def fetch_youtube_videos_ytdlp(channel_url):
             if 'entries' in info:
                 for entry in info['entries']:
                     title = entry.get('title', '')
-                    description = entry.get('description', '') or ""
-                    if any(kw in (title + description).lower() for kw in KEYWORDS):
+                    desc = entry.get('description', '') or ""
+                    if any(kw in (title + desc).lower() for kw in KEYWORDS):
                         videos.append({
-                            "title": title,
-                            "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
+                            "title": title, "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
                             "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
-                            "channel": info.get('uploader', 'Unknown'),
-                            "description": description[:150],
-                            "publishedAt": entry.get('upload_date') or "00000000" # Necessary for sorting
+                            "channel": info.get('uploader', 'Unknown'), "description": desc[:150],
+                            "publishedAt": entry.get('upload_date') or "00000000"
                         })
         return videos
-    except Exception as e:
-        print(f"⚠️ yt-dlp Fetch Failed for {channel_url}: {e}")
-        return []
+    except: return []
+
+def fetch_global_openclaw_videos(query="OpenClaw Moltbot Clawdbot", limit=15):
+    search_target = f"ytsearch{limit}:{query}"
+    ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'skip_download': True, 'playlist_items': f"1:{limit}"}
+    videos = []
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(search_target, download=False)
+            if 'entries' in info:
+                for entry in info['entries']:
+                    videos.append({
+                        "title": entry.get('title'), "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
+                        "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
+                        "channel": entry.get('uploader', 'Community'), "description": entry.get('description', '')[:150],
+                        "publishedAt": entry.get('upload_date') or "00000000"
+                    })
+        return videos
+    except: return []
 
 def fetch_github_projects():
     token = os.getenv("GITHUB_TOKEN")
@@ -248,10 +230,8 @@ def fetch_github_projects():
     try:
         resp = requests.get("https://api.github.com/search/repositories?q=OpenClaw&sort=updated&order=desc", headers=headers, timeout=10)
         items = resp.json().get('items', [])
-        return [{"name": repo['name'], "owner": repo['owner']['login'], "description": repo['description'] or "No description.", "url": repo['html_url'], "stars": repo['stargazers_count'], "created_at": repo['created_at']} for repo in items]
-    except Exception as e:
-        print(f"⚠️ GitHub Fetch Failed: {e}")
-        return []
+        return [{"name": r['name'], "owner": r['owner']['login'], "description": r['description'] or "No description.", "url": r['html_url'], "stars": r['stargazers_count'], "created_at": r['created_at']} for r in items]
+    except: return []
 
 # --- 6. CLUSTERING & ARCHIVING ---
 
@@ -262,17 +242,12 @@ def cluster_articles_temporal(new_articles, existing_items):
         texts = [f"{a['title']}: {a['summary'][:100]}" for a in needs_embedding]
         new_vectors = get_embeddings_batch(texts)
         for i, art in enumerate(needs_embedding): art['vec'] = new_vectors[i]
-    
     date_buckets = {}
     for art in new_articles:
         d = art['date']
         if d not in date_buckets: date_buckets[d] = []
         date_buckets[d].append(art)
-    
     current_batch_clustered = []
-    HEADLINE_THRESH = 8 
-    SIMILARITY_LIMIT = 0.88 
-
     for date_key in date_buckets:
         day_articles = date_buckets[date_key]
         day_articles.sort(key=lambda x: x.get('density', 0), reverse=True)
@@ -282,84 +257,74 @@ def cluster_articles_temporal(new_articles, existing_items):
             matched = False
             for cluster in daily_clusters:
                 sim = cosine_similarity(np.array(art['vec']), np.array(cluster[0]['vec']))
-                if sim > SIMILARITY_LIMIT:
-                    cluster.append(art)
-                    matched = True
-                    break
+                if sim > 0.88:
+                    cluster.append(art); matched = True; break
             if not matched: daily_clusters.append([art])
         for cluster in daily_clusters:
-            anchor = cluster[0]
-            anchor['is_minor'] = anchor.get('density', 0) < HEADLINE_THRESH
+            anchor = cluster[0]; anchor['is_minor'] = anchor.get('density', 0) < 8
             anchor['moreCoverage'] = [{"source": a['source'], "url": a['url']} for a in cluster[1:]]
             current_batch_clustered.append(anchor)
-
     seen_urls = set()
     for item in existing_items:
         seen_urls.add(item['url'])
-        for coverage in item.get('moreCoverage', []):
-            seen_urls.add(coverage['url'])
-
-    unique_new_dispatches = [a for a in current_batch_clustered if a['url'] not in seen_urls]
-    final_news = unique_new_dispatches + existing_items
-    final_news.sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
-    return final_news[:1000]
+        for coverage in item.get('moreCoverage', []): seen_urls.add(coverage['url'])
+    unique_new = [a for a in current_batch_clustered if a['url'] not in seen_urls]
+    final = unique_new + existing_items
+    final.sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
+    return final[:1000]
 
 # --- 7. MAIN EXECUTION ---
 if __name__ == "__main__":
-    print(f"🛠️ Forging Intel Feed (Threshold: 2 + English Only)...")
+    print(f"🛠️ Forging Intel Feed...")
     try:
         if os.path.exists(OUTPUT_PATH):
-            with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
-                db = json.load(f)
-            for key in ["items", "videos", "githubProjects", "research"]:
-                if key not in db: db[key] = []
-        else:
-            db = {"items": [], "videos": [], "githubProjects": [], "research": []}
-    except:
-        db = {"items": [], "videos": [], "githubProjects": [], "research": []}
-        
+            with open(OUTPUT_PATH, 'r', encoding='utf-8') as f: db = json.load(f)
+            for k in ["items", "videos", "githubProjects", "research"]:
+                if k not in db: db[k] = []
+        else: db = {"items": [], "videos": [], "githubProjects": [], "research": []}
+    except: db = {"items": [], "videos": [], "githubProjects": [], "research": []}
+    
     master_seen_urls = set()
     for item in db.get('items', []):
         master_seen_urls.add(item['url'])
         if 'moreCoverage' in item:
-            for sub_link in item['moreCoverage']:
-                master_seen_urls.add(sub_link['url'])
+            for sub in item['moreCoverage']: master_seen_urls.add(sub['url'])
 
     raw_news = scan_rss() + scan_google_news()
     newly_discovered = []
     new_summaries_count = 0
-
     for art in raw_news:
         if art['url'] in master_seen_urls: continue
         if get_source_type(art['url'], art['source']) == "priority" and new_summaries_count < MAX_BATCH_SIZE:
             print(f"✍️ Drafting brief: {art['title']}")
             art['summary'] = get_ai_summary(art['title'], art['summary'])
-            new_summaries_count += 1
-            time.sleep(SLEEP_BETWEEN_REQUESTS)
+            new_summaries_count += 1; time.sleep(SLEEP_BETWEEN_REQUESTS)
         newly_discovered.append(art)
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
     if os.getenv("RUN_RESEARCH") == "true":
-        print("🔍 Scanning Research...")
-        db['research'] = fetch_arxiv_research()
+        print("🔍 Scanning Research..."); db['research'] = fetch_arxiv_research()
 
-    print("📺 Scanning Videos via yt-dlp...")
+    print("📺 Scanning Videos...")
     scanned_videos = []
     if os.path.exists(WHITELIST_PATH):
         with open(WHITELIST_PATH, 'r') as f:
             for entry in json.load(f):
                 yt_target = entry.get("YouTube URL") or entry.get("YouTube Channel ID")
                 if yt_target:
-                    if not yt_target.startswith('http'):
-                        yt_target = f"https://www.youtube.com/channel/{yt_target}"
+                    if not yt_target.startswith('http'): yt_target = f"https://www.youtube.com/channel/{yt_target}"
                     scanned_videos.extend(fetch_youtube_videos_ytdlp(yt_target))
+
+    print("📺 Scanning Global Ecosystem...")
+    global_videos = fetch_global_openclaw_videos(limit=15)
     
+    # CRITICAL FIX: Use ALL new videos for sorting and deduping
+    all_new_videos = scanned_videos + global_videos
     vid_urls = {v['url'] for v in db.get('videos', [])}
-    combined_videos = db.get('videos', []) + [v for v in scanned_videos if v['url'] not in vid_urls]
-    # Sort chronologically (Descending)
-    combined_videos.sort(key=lambda x: str(x.get('publishedAt', '00000000')), reverse=True)
-    db['videos'] = combined_videos[:50]
+    combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]
+    combined_vids.sort(key=lambda x: str(x.get('publishedAt', '00000000')), reverse=True)
+    db['videos'] = combined_vids[:50]
 
     print("💻 Scanning GitHub...")
     new_repos = fetch_github_projects()
@@ -369,5 +334,4 @@ if __name__ == "__main__":
     db['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(db, f, indent=2, ensure_ascii=False, cls=CompactJSONEncoder)
-        
     print(f"✅ Success. Items in Feed: {len(db['items'])}")
