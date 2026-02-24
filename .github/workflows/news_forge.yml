@@ -38,7 +38,10 @@ jobs:
       - name: Commit and Push Updates
         run: |
           git config --global user.name "ClawBeat Bot"
-          git config --global user.email "bot@clawbeat.co"
-          # Only commit if data.json has actually changed
+          git config --global user.email "bot@clawbeat.ai"
           git add public/data.json
-          git diff-index --quiet HEAD || (git commit -m "⚡ Intel Update: Hourly News & Repos" && git push)
+          # Only commit if there are actually changes
+          git diff --quiet && git diff --staged --quiet || git commit -m "⚡ Intel Update: Hourly News & Repos"
+          # THE CRITICAL FIX: Rebase before pushing to avoid the [rejected] error
+          git pull origin main --rebase
+          git push origin main
