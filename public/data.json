@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-24 05:27 UTC",
+  "last_updated": "2026-02-24 05:46 UTC",
   "items": [
     {
       "title": "OpenClaw should terrify anyone who thinks AI agents are ready for real responsibility",
@@ -63050,143 +63050,103 @@
       "url": "https://github.com/mneves75/openclawclub-brasil-astro",
       "stars": 0,
       "created_at": "2026-02-10T00:47:23Z"
+    },
+    {
+      "name": "openclaw-docs",
+      "owner": "arpanbht",
+      "description": "No description.",
+      "url": "https://github.com/arpanbht/openclaw-docs",
+      "stars": 0,
+      "created_at": "2026-02-24T05:45:59Z"
+    },
+    {
+      "name": "Openclaw_Stack_JBCorp",
+      "owner": "JBorp",
+      "description": "No description.",
+      "url": "https://github.com/JBorp/Openclaw_Stack_JBCorp",
+      "stars": 0,
+      "created_at": "2026-02-24T05:29:52Z"
+    },
+    {
+      "name": "my-website",
+      "owner": "diegy",
+      "description": "我的个人网站 - 由OpenClaw部署",
+      "url": "https://github.com/diegy/my-website",
+      "stars": 0,
+      "created_at": "2026-02-23T10:01:15Z"
+    },
+    {
+      "name": "VibeWorker",
+      "owner": "EntropyFlux",
+      "description": "AI VibeWorker - AI Digital Worker",
+      "url": "https://github.com/EntropyFlux/VibeWorker",
+      "stars": 1,
+      "created_at": "2026-02-15T06:53:12Z"
+    },
+    {
+      "name": "ClawSwarm",
+      "owner": "The-Swarm-Corporation",
+      "description": "A smaller, lighter-weight version of OpenClaw—natively multi-agent, compiles to Rust, and built on the Swarms framework and Swarms ecosystem. One API, unified messaging across Telegram, Discord, and WhatsApp with optional Claude-powered reasoning. ",
+      "url": "https://github.com/The-Swarm-Corporation/ClawSwarm",
+      "stars": 19,
+      "created_at": "2026-02-15T22:41:58Z"
+    },
+    {
+      "name": ".openclaw-backups",
+      "owner": "hand-of-erasmus",
+      "description": "No description.",
+      "url": "https://github.com/hand-of-erasmus/.openclaw-backups",
+      "stars": 0,
+      "created_at": "2026-02-24T05:43:05Z"
+    },
+    {
+      "name": "openclaw-chat",
+      "owner": "pomandi",
+      "description": "No description.",
+      "url": "https://github.com/pomandi/openclaw-chat",
+      "stars": 0,
+      "created_at": "2026-02-15T06:15:29Z"
+    },
+    {
+      "name": "openclaw-federation",
+      "owner": "goodtiger",
+      "description": "No description.",
+      "url": "https://github.com/goodtiger/openclaw-federation",
+      "stars": 0,
+      "created_at": "2026-02-21T11:34:39Z"
+    },
+    {
+      "name": "1Panel",
+      "owner": "1Panel-dev",
+      "description": "🔥 1Panel offers an intuitive web interface for a Linux server / VPS, making it easy to manage OpenClaw agents, local LLMs, websites, databases, containers, files, and scheduled tasks.",
+      "url": "https://github.com/1Panel-dev/1Panel",
+      "stars": 33572,
+      "created_at": "2022-07-19T15:44:52Z"
+    },
+    {
+      "name": "openclaw-memory",
+      "owner": "liuhao6741",
+      "description": "OpenClaw Memory is a lightweight, AI-agent-focused memory server implementing the Memory Communication Protocol (MCP). It is built on the principle that “Markdown is the single source of truth,” prioritizing human readability, version control friendliness, and zero external dependencies.",
+      "url": "https://github.com/liuhao6741/openclaw-memory",
+      "stars": 3,
+      "created_at": "2026-02-12T04:29:52Z"
+    },
+    {
+      "name": "FORKTREE",
+      "owner": "LucasGonzmind",
+      "description": "The evolutionary layer of Web 4.0. 3c9reSfHZr7uxUMBs6mgcneRccTUE7qq32Mu63hcpump",
+      "url": "https://github.com/LucasGonzmind/FORKTREE",
+      "stars": 2,
+      "created_at": "2025-05-17T23:29:04Z"
+    },
+    {
+      "name": "NagaAgent",
+      "owner": "RTGS2017",
+      "description": "A simple yet powerful agent framework for personal assistants, designed to enable intelligent interaction, multi-agent collaboration, and seamless tool integration.",
+      "url": "https://github.com/RTGS2017/NagaAgent",
+      "stars": 1392,
+      "created_at": "2025-04-20T02:02:50Z"
     }
   ],
-  "research": [
-    {
-      "title": "When OpenClaw AI Agents Teach Each Other: Peer Learning Patterns in the Moltbook Community",
-      "authors": [
-        "Eason Chen",
-        "Ce Guan",
-        "Ahmed Elshafiey",
-        "Zhonghao Zhao",
-        "Joshua Zekeri",
-        "Afeez Edeifo Shaibu",
-        "Emmanuel Osadebe Prince"
-      ],
-      "date": "2026-02-16T05:32:06Z",
-      "url": "https://arxiv.org/abs/2602.14477v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "Frontier AI Risk Management Framework in Practice: A Risk Analysis Technical Report v1.5",
-      "authors": [
-        "Dongrui Liu",
-        "Yi Yu",
-        "Jie Zhang",
-        "Guanxu Chen",
-        "Qihao Lin",
-        "Hanxi Zhu",
-        "Lige Huang",
-        "Yijin Zhou",
-        "Peng Wang",
-        "Shuai Shao",
-        "Boxuan Zhang",
-        "Zicheng Liu",
-        "Jingwei Sun",
-        "Yu Li",
-        "Yuejin Xie",
-        "Jiaxuan Guo",
-        "Jia Xu",
-        "Chaochao Lu",
-        "Bowen Zhou",
-        "Xia Hu",
-        "Jing Shao"
-      ],
-      "date": "2026-02-16T04:30:06Z",
-      "url": "https://arxiv.org/abs/2602.14457v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "A Trajectory-Based Safety Audit of Clawdbot (OpenClaw)",
-      "authors": [
-        "Tianyu Chen",
-        "Dongrui Liu",
-        "Xia Hu",
-        "Jingyi Yu",
-        "Wenjie Wang"
-      ],
-      "date": "2026-02-16T00:33:02Z",
-      "url": "https://arxiv.org/abs/2602.14364v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "When Visibility Outpaces Verification: Delayed Verification and Narrative Lock-in in Agentic AI Discourse",
-      "authors": [
-        "Hanjing Shi",
-        "Dominic DiFranzo"
-      ],
-      "date": "2026-02-11T22:30:12Z",
-      "url": "https://arxiv.org/abs/2602.11412v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "Human Control Is the Anchor, Not the Answer: Early Divergence of Oversight in Agentic AI Communities",
-      "authors": [
-        "Hanjing Shi",
-        "Dominic DiFranzo"
-      ],
-      "date": "2026-02-10T00:10:20Z",
-      "url": "https://arxiv.org/abs/2602.09286v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "From Assistant to Double Agent: Formalizing and Benchmarking Attacks on OpenClaw for Personalized Local AI Agent",
-      "authors": [
-        "Yuhang Wang",
-        "Feiming Xu",
-        "Zheng Lin",
-        "Guangyu He",
-        "Yuzhe Huang",
-        "Haichang Gao",
-        "Zhenxing Niu",
-        "Shiguo Lian",
-        "Zhaoxiang Liu"
-      ],
-      "date": "2026-02-09T09:14:58Z",
-      "url": "https://arxiv.org/abs/2602.08412v2",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "The Moltbook Illusion: Separating Human Influence from Emergent Behavior in AI Agent Societies",
-      "authors": [
-        "Ning Li"
-      ],
-      "date": "2026-02-07T08:17:21Z",
-      "url": "https://arxiv.org/abs/2602.07432v2",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "Privasis: Synthesizing the Largest \"Public\" Private Dataset from Scratch",
-      "authors": [
-        "Hyunwoo Kim",
-        "Niloofar Mireshghallah",
-        "Michael Duan",
-        "Rui Xin",
-        "Shuyue Stella Li",
-        "Jaehun Jung",
-        "David Acuna",
-        "Qi Pang",
-        "Hanshen Xiao",
-        "G. Edward Suh",
-        "Sewoong Oh",
-        "Yulia Tsvetkov",
-        "Pang Wei Koh",
-        "Yejin Choi"
-      ],
-      "date": "2026-02-03T06:54:46Z",
-      "url": "https://arxiv.org/abs/2602.03183v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    },
-    {
-      "title": "OpenClaw Agents on Moltbook: Risky Instruction Sharing and Norm Enforcement in an Agent-Only Social Network",
-      "authors": [
-        "Md Motaleb Hossen Manik",
-        "Ge Wang"
-      ],
-      "date": "2026-02-02T16:24:25Z",
-      "url": "https://arxiv.org/abs/2602.02625v1",
-      "summary": "Technical analysis in progress. View full abstract on ArXiv."
-    }
-  ]
+  "research": []
 }
