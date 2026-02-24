@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-24 06:08 UTC",
+  "last_updated": "2026-02-24 06:25 UTC",
   "items": [
     {
       "title": "OpenClaw should terrify anyone who thinks AI agents are ready for real responsibility",
@@ -55976,7 +55976,24 @@
       "source_type": "standard"
     }
   ],
-  "videos": [],
+  "videos": [
+    {
+      "title": "OpenClaw + Kimi K2.5: The ULTIMATE AI Assistant Setup You NEED Right Now!",
+      "url": "https://www.youtube.com/watch?v=E1svPZcprRU",
+      "thumbnail": "https://i.ytimg.com/vi/E1svPZcprRU/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCZpz1B0caUtfdOVNBaFRUjCufbnw",
+      "channel": "Universe of AI",
+      "description": "Set up the ULTIMATE AI assistant in minutes! In this video, I show you how to combine OpenClaw with Kimi K2.5 to build a fully automated, memory-power",
+      "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "OpenClaw Setup Tutorial With New Usecases (OpenClaw Usecases 2026)",
+      "url": "https://www.youtube.com/watch?v=1c_9tuQdkLY",
+      "thumbnail": "https://i.ytimg.com/vi/1c_9tuQdkLY/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA6TrkjujlYxFPZliKMpIjZxjIAMQ",
+      "channel": "TheAIGRID",
+      "description": "Deploy OpenClaw in Seconds - https://www.hostinger.com/aigrid\n\n🎓 Learn AI In 10 Minutes A Day - https://www.skool.com/theaigridacademy\nGet your Free A",
+      "publishedAt": "2026-02-24"
+    }
+  ],
   "githubProjects": [
     {
       "name": "openclaw-dashboard",
@@ -63265,6 +63282,126 @@
       "url": "https://github.com/simonzfei/openclaw-python",
       "stars": 0,
       "created_at": "2026-02-23T11:02:56Z"
+    },
+    {
+      "name": "better-openclaw-core",
+      "owner": "bidewio",
+      "description": "No description.",
+      "url": "https://github.com/bidewio/better-openclaw-core",
+      "stars": 0,
+      "created_at": "2026-02-10T04:37:29Z"
+    },
+    {
+      "name": "OpenClaw",
+      "owner": "Clyde-Xu",
+      "description": "No description.",
+      "url": "https://github.com/Clyde-Xu/OpenClaw",
+      "stars": 0,
+      "created_at": "2026-02-24T06:19:12Z"
+    },
+    {
+      "name": "math-worksheets-skill",
+      "owner": "stellawuellner",
+      "description": "OpenClaw skill: generate math worksheets, answer keys, and study guides for K-12 students. Includes SymPy verification and auto reasoning-model detection.",
+      "url": "https://github.com/stellawuellner/math-worksheets-skill",
+      "stars": 0,
+      "created_at": "2026-02-22T22:50:49Z"
+    },
+    {
+      "name": "openclaw_skills",
+      "owner": "HappyFee",
+      "description": "OpenClaw custom skills",
+      "url": "https://github.com/HappyFee/openclaw_skills",
+      "stars": 0,
+      "created_at": "2026-02-21T13:53:25Z"
+    },
+    {
+      "name": "tmux-openclaw",
+      "owner": "sergiopx",
+      "description": "tmux plugin for managing OpenClaw sessions — open new panes/windows, attach existing sessions, switch in-place",
+      "url": "https://github.com/sergiopx/tmux-openclaw",
+      "stars": 0,
+      "created_at": "2026-02-24T04:38:57Z"
+    },
+    {
+      "name": "openclaw_in_desktop",
+      "owner": "baskduf",
+      "description": "데스크탑 속 오픈클로 봇",
+      "url": "https://github.com/baskduf/openclaw_in_desktop",
+      "stars": 0,
+      "created_at": "2026-02-24T05:11:21Z"
+    },
+    {
+      "name": "openclaw-safe-install",
+      "owner": "openclaw-guide",
+      "description": "Step-by-step guide to safely install and secure OpenClaw on Mac and Windows. Includes hardening checklist and security best practices.",
+      "url": "https://github.com/openclaw-guide/openclaw-safe-install",
+      "stars": 0,
+      "created_at": "2026-02-23T08:04:01Z"
+    },
+    {
+      "name": "OPENCLAW",
+      "owner": "TechSafeIndustries",
+      "description": "No description.",
+      "url": "https://github.com/TechSafeIndustries/OPENCLAW",
+      "stars": 0,
+      "created_at": "2026-02-17T12:35:04Z"
+    },
+    {
+      "name": "OPENCLAW-FINANCIAL-GUARDRAIL-SKILL",
+      "owner": "minhtri22",
+      "description": "OpenClaw Financial Guard là một lớp bảo vệ tài chính được trích xuất từ hệ điều hành HiveOS. Nó giúp ngăn chặn tình trạng Agent tự động \"đốt tiền\" token thông qua các cơ chế ngắt mạch, giới hạn ngân sách và chống vòng lặp vô hạn.",
+      "url": "https://github.com/minhtri22/OPENCLAW-FINANCIAL-GUARDRAIL-SKILL",
+      "stars": 0,
+      "created_at": "2026-02-24T06:21:03Z"
+    },
+    {
+      "name": "smoltbot",
+      "owner": "mnemom",
+      "description": "Make any OpenClaw decisions auditable in two lines of code.",
+      "url": "https://github.com/mnemom/smoltbot",
+      "stars": 7,
+      "created_at": "2026-02-02T04:25:11Z"
+    },
+    {
+      "name": "openclaw-presentation",
+      "owner": "coleslaw",
+      "description": "No description.",
+      "url": "https://github.com/coleslaw/openclaw-presentation",
+      "stars": 0,
+      "created_at": "2026-02-24T06:19:18Z"
+    },
+    {
+      "name": "openclaw-skill-builder",
+      "owner": "Satanpapa",
+      "description": "No description.",
+      "url": "https://github.com/Satanpapa/openclaw-skill-builder",
+      "stars": 0,
+      "created_at": "2026-02-24T06:20:24Z"
+    },
+    {
+      "name": "personal-assistant",
+      "owner": "ViccRondo",
+      "description": "Personal assistant with openclaw.",
+      "url": "https://github.com/ViccRondo/personal-assistant",
+      "stars": 0,
+      "created_at": "2026-02-24T03:04:27Z"
+    },
+    {
+      "name": "clawsec",
+      "owner": "prompt-security",
+      "description": "A complete security skill suite for OpenClaw's family of agents. Protect your SOUL.md (etc') with drift detection, live security recommendations, automated audits, and skill integrity verification. All from one installable suite.",
+      "url": "https://github.com/prompt-security/clawsec",
+      "stars": 507,
+      "created_at": "2026-02-05T19:59:46Z"
+    },
+    {
+      "name": "openclaw-memory-template",
+      "owner": "arosstale",
+      "description": "Production-ready memory system template for OpenClaw/Clawdbot agents",
+      "url": "https://github.com/arosstale/openclaw-memory-template",
+      "stars": 18,
+      "created_at": "2026-01-31T13:46:21Z"
     }
   ],
   "research": []
