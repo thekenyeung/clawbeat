@@ -202,7 +202,6 @@ def fetch_youtube_videos_ytdlp(channel_url):
                     desc = entry.get('description', '') or ""
                     raw_date = entry.get('upload_date')
                     
-                    # Corrected logic: Use dash format, fallback to TODAY if missing
                     if raw_date and len(raw_date) == 8:
                         formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
                     else:
@@ -216,7 +215,9 @@ def fetch_youtube_videos_ytdlp(channel_url):
                             "publishedAt": formatted_date
                         })
         return videos
-    except: return []
+    except Exception as e:
+        print(f"⚠️ Channel fetch failed: {e}")
+        return []
 
 def fetch_global_openclaw_videos(query="OpenClaw Moltbot Clawdbot", limit=15):
     search_target = f"ytsearch{limit}:{query}"
@@ -235,7 +236,6 @@ def fetch_global_openclaw_videos(query="OpenClaw Moltbot Clawdbot", limit=15):
                 for entry in info['entries']:
                     raw_date = entry.get('upload_date')
                     
-                    # Apply the same YYYY-MM-DD logic here
                     if raw_date and len(raw_date) == 8:
                         formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
                     else:
@@ -248,7 +248,9 @@ def fetch_global_openclaw_videos(query="OpenClaw Moltbot Clawdbot", limit=15):
                         "publishedAt": formatted_date
                     })
         return videos
-    except: return []
+    except Exception as e:
+        print(f"⚠️ Global search failed: {e}")
+        return []
 
 def fetch_github_projects():
     token = os.getenv("GITHUB_TOKEN")
@@ -309,7 +311,9 @@ if __name__ == "__main__":
             for k in ["items", "videos", "githubProjects", "research"]:
                 if k not in db: db[k] = []
         else: db = {"items": [], "videos": [], "githubProjects": [], "research": []}
-    except: db = {"items": [], "videos": [], "githubProjects": [], "research": []}
+    except Exception as e:
+        print(f"⚠️ DB Load error: {e}")
+        db = {"items": [], "videos": [], "githubProjects": [], "research": []}
     
     master_seen_urls = set()
     for item in db.get('items', []):
@@ -346,6 +350,7 @@ if __name__ == "__main__":
     print("📺 Scanning Global Ecosystem...")
     global_videos = fetch_global_openclaw_videos(limit=15)
     
+    # Combined logic
     all_new_videos = scanned_videos + global_videos
     vid_urls = {v['url'] for v in db.get('videos', [])}
     combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]

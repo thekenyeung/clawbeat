@@ -55976,24 +55976,7 @@
       "source_type": "standard"
     }
   ],
-  "videos": [
-    {
-      "title": "OpenClaw + Kimi K2.5: The ULTIMATE AI Assistant Setup You NEED Right Now!",
-      "url": "https://www.youtube.com/watch?v=E1svPZcprRU",
-      "thumbnail": "https://i.ytimg.com/vi/E1svPZcprRU/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCZpz1B0caUtfdOVNBaFRUjCufbnw",
-      "channel": "Universe of AI",
-      "description": "Set up the ULTIMATE AI assistant in minutes! In this video, I show you how to combine OpenClaw with Kimi K2.5 to build a fully automated, memory-power",
-      "publishedAt": "00000000"
-    },
-    {
-      "title": "OpenClaw Setup Tutorial With New Usecases (OpenClaw Usecases 2026)",
-      "url": "https://www.youtube.com/watch?v=1c_9tuQdkLY",
-      "thumbnail": "https://i.ytimg.com/vi/1c_9tuQdkLY/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA6TrkjujlYxFPZliKMpIjZxjIAMQ",
-      "channel": "TheAIGRID",
-      "description": "Deploy OpenClaw in Seconds - https://www.hostinger.com/aigrid\n\n🎓 Learn AI In 10 Minutes A Day - https://www.skool.com/theaigridacademy\nGet your Free A",
-      "publishedAt": "00000000"
-    }
-  ],
+  "videos": [],
   "githubProjects": [
     {
       "name": "openclaw-dashboard",
