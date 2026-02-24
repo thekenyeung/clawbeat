@@ -1,3 +1,4 @@
+import urllib.parse
 import feedparser
 import requests
 import json
@@ -162,30 +163,65 @@ def scan_google_news():
 
 # --- 5. BACKFILL FETCHERS ---
 
+import urllib.parse
+import time
+import requests
+import feedparser
+
 def fetch_arxiv_research():
-    query = '(OpenClaw OR MoltBot OR Clawdbot)'
-    arxiv_url = f"http://export.arxiv.org/api/query?search_query={query}&sortBy=submittedDate&sortOrder=descending&max_results=10"
+    # Use the simplest possible query string. 
+    # ArXiv API often prefers '+' instead of '%20' for spaces.
+    search_query = 'all:OpenClaw+OR+all:MoltBot+OR+all:Clawdbot'
+    
+    # Construct URL manually to avoid any 'control character' encoding issues from libraries
+    arxiv_url = f"http://export.arxiv.org/api/query?search_query={search_query}&sortBy=submittedDate&sortOrder=descending&max_results=10"
+    
+    print(f"📡 Scanning ArXiv: {arxiv_url}")
+    
     try:
-        feed = feedparser.parse(arxiv_url)
+        # Use a timeout and a proper User-Agent header to avoid being blocked
+        headers = {'User-Agent': 'OpenClawIntelBot/1.0'}
+        response = requests.get(arxiv_url, headers=headers, timeout=10)
+        
+        # feedparser can parse the raw text from the response
+        feed = feedparser.parse(response.text)
+        
+        print(f"  🔍 API matched {len(feed.entries)} papers.")
+        
+        if not feed.entries:
+            return []
+
         papers = []
         for entry in feed.entries:
             arxiv_id = entry.id.split('/abs/')[-1]
             ss_url = f"https://api.semanticscholar.org/graph/v1/paper/ARXIV:{arxiv_id}?fields=tldr,abstract"
-            summary = "Research analysis in progress."
+            
+            # Summary Fallback Logic
+            raw_abstract = entry.summary.replace('\n', ' ')
+            summary = '. '.join(raw_abstract.split('. ')[:2]) + '.'
+            
             try:
+                time.sleep(1) # Respect Semantic Scholar
                 ss_resp = requests.get(ss_url, timeout=5).json()
-                if ss_resp.get('tldr'): summary = ss_resp['tldr']['text']
+                if ss_resp.get('tldr') and ss_resp['tldr'].get('text'):
+                    summary = ss_resp['tldr']['text']
                 elif ss_resp.get('abstract'):
-                    abstract = ss_resp['abstract'].replace('\n', ' ')
-                    summary = '. '.join(abstract.split('. ')[:2]) + '.'
-            except: pass
+                    ss_abstract = ss_resp['abstract'].replace('\n', ' ')
+                    summary = '. '.join(ss_abstract.split('. ')[:2]) + '.'
+            except:
+                pass
+            
             papers.append({
                 "title": entry.title.replace('\n', ' ').strip(),
                 "authors": [a.name for a in entry.authors],
-                "date": entry.published, "url": entry.link, "summary": summary
+                "date": entry.published, 
+                "url": entry.link, 
+                "summary": summary
             })
         return papers
-    except: return []
+    except Exception as e:
+        print(f"⚠️ ArXiv fetch failed: {e}")
+        return []
 
 def fetch_youtube_videos_ytdlp(channel_url):
     # Ensure URL is clean for yt-dlp
@@ -362,8 +398,18 @@ if __name__ == "__main__":
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
-    if os.getenv("RUN_RESEARCH") == "true":
-        print("🔍 Scanning Research..."); db['research'] = fetch_arxiv_research()
+    # Logic: Run if the environment variable is set OR if we are running locally (True)
+    # Once you are happy with the data, you can remove the "or True"
+    if os.getenv("RUN_RESEARCH") == "true" or True:
+        print("🔍 Scanning Research...")
+        new_papers = fetch_arxiv_research()
+        
+        # SAFETY LOCK: Only update if papers were actually found
+        if new_papers and len(new_papers) > 0:
+            db['research'] = new_papers
+            print(f"  ✅ Research section updated with {len(new_papers)} papers.")
+        else:
+            print("  ⚠️ No papers found. Keeping existing research data to avoid blank section.")
 
     print("📺 Scanning Videos...")
     scanned_videos = []
