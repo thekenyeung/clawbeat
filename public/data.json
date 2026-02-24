@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-24 06:25 UTC",
+  "last_updated": "2026-02-24 06:49 UTC",
   "items": [
     {
       "title": "OpenClaw should terrify anyone who thinks AI agents are ready for real responsibility",
@@ -63402,6 +63402,126 @@
       "url": "https://github.com/arosstale/openclaw-memory-template",
       "stars": 18,
       "created_at": "2026-01-31T13:46:21Z"
+    },
+    {
+      "name": "openclaw-skills",
+      "owner": "kuailexiaopanxie",
+      "description": "OpenClaw skills and workspace configuration",
+      "url": "https://github.com/kuailexiaopanxie/openclaw-skills",
+      "stars": 0,
+      "created_at": "2026-02-24T02:33:57Z"
+    },
+    {
+      "name": "withwz",
+      "owner": "withwz",
+      "description": "个人主页，内容为 openclaw 自动更新",
+      "url": "https://github.com/withwz/withwz",
+      "stars": 0,
+      "created_at": "2024-08-09T15:09:30Z"
+    },
+    {
+      "name": "openclaw-grok-imagine",
+      "owner": "AaronFaby",
+      "description": "Grok Imagine image generation skill for OpenClaw",
+      "url": "https://github.com/AaronFaby/openclaw-grok-imagine",
+      "stars": 0,
+      "created_at": "2026-02-24T05:29:18Z"
+    },
+    {
+      "name": "EvoClaw",
+      "owner": "slhleosun",
+      "description": "Structured SOUL evolution framework for AI agents — experience, reflection, governed identity updates, and visual timelines.",
+      "url": "https://github.com/slhleosun/EvoClaw",
+      "stars": 136,
+      "created_at": "2026-02-13T13:16:32Z"
+    },
+    {
+      "name": "frouter",
+      "owner": "jyoung105",
+      "description": "Free model router CLI to discover, benchmark, and configure free AI models for OpenCode and OpenClaw",
+      "url": "https://github.com/jyoung105/frouter",
+      "stars": 1,
+      "created_at": "2026-02-23T17:21:20Z"
+    },
+    {
+      "name": "dailyclaw",
+      "owner": "alincatalin",
+      "description": "all things openclaw",
+      "url": "https://github.com/alincatalin/dailyclaw",
+      "stars": 0,
+      "created_at": "2026-02-23T13:43:38Z"
+    },
+    {
+      "name": "brightspace_navigator",
+      "owner": "LouisCubero",
+      "description": "Skill for Openclaw, automation is awesome.",
+      "url": "https://github.com/LouisCubero/brightspace_navigator",
+      "stars": 0,
+      "created_at": "2026-02-24T06:37:32Z"
+    },
+    {
+      "name": "ode",
+      "owner": "odefun",
+      "description": "Work anywhere with your favourite coding agents connected, channel based project config, session map 1-1 to message thread, live updates and more!",
+      "url": "https://github.com/odefun/ode",
+      "stars": 7,
+      "created_at": "2026-01-17T08:23:00Z"
+    },
+    {
+      "name": "md365",
+      "owner": "lcorneliussen",
+      "description": "AI-native CLI for Microsoft 365. Syncs calendars & contacts as local Markdown files — readable by agents, searchable with grep.",
+      "url": "https://github.com/lcorneliussen/md365",
+      "stars": 0,
+      "created_at": "2026-02-21T09:56:30Z"
+    },
+    {
+      "name": "AionUi",
+      "owner": "iOfficeAI",
+      "description": "Free, local, open-source 24/7 Cowork app and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!",
+      "url": "https://github.com/iOfficeAI/AionUi",
+      "stars": 16956,
+      "created_at": "2025-08-07T10:29:51Z"
+    },
+    {
+      "name": "bot-skllis",
+      "owner": "kelly-create",
+      "description": "openclaw-bot知识库",
+      "url": "https://github.com/kelly-create/bot-skllis",
+      "stars": 0,
+      "created_at": "2026-02-05T14:06:41Z"
+    },
+    {
+      "name": "DotBot",
+      "owner": "AkiKurisu",
+      "description": "DotBot: A lightweight OpenClaw written in C# that is secure, reliable, and ready to use out of the box.",
+      "url": "https://github.com/AkiKurisu/DotBot",
+      "stars": 8,
+      "created_at": "2026-02-15T14:37:47Z"
+    },
+    {
+      "name": "jubilee-agent",
+      "owner": "Jubilee-Protocol",
+      "description": "Jubilee OS - A Triune AI Agent (Mind, Prophet, Will) for research, coding, and operations.",
+      "url": "https://github.com/Jubilee-Protocol/jubilee-agent",
+      "stars": 1,
+      "created_at": "2026-02-08T03:11:35Z"
+    },
+    {
+      "name": "openclaw_kasmvnc",
+      "owner": "ddong8",
+      "description": "No description.",
+      "url": "https://github.com/ddong8/openclaw_kasmvnc",
+      "stars": 0,
+      "created_at": "2026-02-13T18:18:34Z"
+    },
+    {
+      "name": "openclaw_stuff",
+      "owner": "tjefferson",
+      "description": "something about oepnclaw",
+      "url": "https://github.com/tjefferson/openclaw_stuff",
+      "stars": 0,
+      "created_at": "2026-02-24T06:36:23Z"
     }
   ],
   "research": []
