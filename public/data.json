@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-24 00:46 UTC",
+  "last_updated": "2026-02-24 09:45 UTC",
   "items": [
     {
       "title": "OpenClaw should terrify anyone who thinks AI agents are ready for real responsibility",
@@ -56352,6 +56352,46 @@
       "channel": "Limitless Podcast",
       "description": "",
       "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "50 days with OpenClaw: The hype, the reality & what actually broke",
+      "url": "https://www.youtube.com/watch?v=NZ1mKAWJPr4",
+      "thumbnail": "https://i.ytimg.com/vi/NZ1mKAWJPr4/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCjsbc2uJMYfRWmLa9y1BcsW-I5BA",
+      "channel": "VelvetShark",
+      "description": "",
+      "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "Clawdbot/Moltbot explained in 3 minutes",
+      "url": "https://www.youtube.com/watch?v=_6h_4XQUV3g",
+      "thumbnail": "https://i.ytimg.com/vi/_6h_4XQUV3g/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCua2JQYu4vAHg6POZTQRL9jT8ikg",
+      "channel": "KodeKloud",
+      "description": "",
+      "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "Build a Trading Bot With AI using OpenClaw and Claude",
+      "url": "https://www.youtube.com/watch?v=ewOpudu8Cjc",
+      "thumbnail": "https://i.ytimg.com/vi/ewOpudu8Cjc/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDFTWIYgtxvlTN4UTw6UQxXdcNJ3A",
+      "channel": "bri",
+      "description": "",
+      "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "You NEED to do this with OpenClaw immediately!",
+      "url": "https://www.youtube.com/watch?v=Aj6hoC9JaLI",
+      "thumbnail": "https://i.ytimg.com/vi/Aj6hoC9JaLI/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBDWnn_rm2CFX1iuk00EyRBdhLq5w",
+      "channel": "Alex Finn",
+      "description": "",
+      "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "OpenClaw Full Course: Setup, Skills, Voice, Memory & More",
+      "url": "https://www.youtube.com/watch?v=vte-fDoZczE",
+      "thumbnail": "https://i9.ytimg.com/vi/vte-fDoZczE/hq720_custom_2.jpg?sqp=CJzm9cwG-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBYCv1IANRdq402UlnjpSu1e8fGzg",
+      "channel": "Tech With Tim",
+      "description": "",
+      "publishedAt": "2026-02-24"
     }
   ],
   "githubProjects": [
@@ -64666,6 +64706,102 @@
       "url": "https://github.com/Neurons-AI/crawbot",
       "stars": 2,
       "created_at": "2026-02-22T20:33:24Z"
+    },
+    {
+      "name": "openclaw-kubernetes",
+      "owner": "feiskyer",
+      "description": "Kubernetes helm chart for OpenClaw (former Moltbot/Clawdbot) ",
+      "url": "https://github.com/feiskyer/openclaw-kubernetes",
+      "stars": 10,
+      "created_at": "2026-02-01T11:10:52Z"
+    },
+    {
+      "name": "openclaw-memory",
+      "owner": "thdeptrai",
+      "description": "Memolo  Long-term shared memory system for multi-agent AI. Self-hosted with PostgreSQL, Qdrant, Ollama/MiniMax. Includes OpenClaw plugin, real-time dashboard, and Node.js SDK.",
+      "url": "https://github.com/thdeptrai/openclaw-memory",
+      "stars": 0,
+      "created_at": "2026-02-24T09:32:29Z"
+    },
+    {
+      "name": "engram",
+      "owner": "isbe-bot",
+      "description": "ENGRAM — Persistent semantic memory system for OpenClaw AI agents. Redis hot buffer + Qdrant vector DB + LLM consolidation. Node.js.",
+      "url": "https://github.com/isbe-bot/engram",
+      "stars": 0,
+      "created_at": "2026-02-24T09:43:18Z"
+    },
+    {
+      "name": "openclaw-memory-openviking",
+      "owner": "Zhumin-lv-wn",
+      "description": "OpenClaw plugin: long-term semantic memory via OpenViking",
+      "url": "https://github.com/Zhumin-lv-wn/openclaw-memory-openviking",
+      "stars": 0,
+      "created_at": "2026-02-24T09:41:24Z"
+    },
+    {
+      "name": "MyClaw",
+      "owner": "GalaxyCcx",
+      "description": "MyClaw - A mini OpenClaw agent platform with mountable skills, real-time execution graph, and one-click launcher",
+      "url": "https://github.com/GalaxyCcx/MyClaw",
+      "stars": 0,
+      "created_at": "2026-02-23T16:00:27Z"
+    },
+    {
+      "name": "gh-dev-factory",
+      "owner": "thunderclawai",
+      "description": "Autonomous dev factory using GitHub Issues and PRs. OpenClaw skill.",
+      "url": "https://github.com/thunderclawai/gh-dev-factory",
+      "stars": 0,
+      "created_at": "2026-02-08T13:21:26Z"
+    },
+    {
+      "name": "openclaw-101",
+      "owner": "Shawnzhu2051",
+      "description": "OpenClaw 101 - 从零开始，7天掌握你的AI私人助理",
+      "url": "https://github.com/Shawnzhu2051/openclaw-101",
+      "stars": 0,
+      "created_at": "2026-02-24T09:43:09Z"
+    },
+    {
+      "name": "openclawlinux",
+      "owner": "ahmetsendag",
+      "description": "No description.",
+      "url": "https://github.com/ahmetsendag/openclawlinux",
+      "stars": 0,
+      "created_at": "2026-02-24T07:05:53Z"
+    },
+    {
+      "name": "openclaw-blog-saas-demo",
+      "owner": "multicul-silver-wolf",
+      "description": "No description.",
+      "url": "https://github.com/multicul-silver-wolf/openclaw-blog-saas-demo",
+      "stars": 0,
+      "created_at": "2026-02-24T09:42:29Z"
+    },
+    {
+      "name": "helm",
+      "owner": "michellzappa",
+      "description": "An observability dashboard for OpenClaw",
+      "url": "https://github.com/michellzappa/helm",
+      "stars": 0,
+      "created_at": "2026-02-24T09:33:32Z"
+    },
+    {
+      "name": "openclaw-skill",
+      "owner": "jaytreadfi",
+      "description": "Autonomous market-making skill for Tread. Runs inside Claude Code, trades through the browser via Playwright MCP — no API keys needed.",
+      "url": "https://github.com/jaytreadfi/openclaw-skill",
+      "stars": 0,
+      "created_at": "2026-02-24T07:09:11Z"
+    },
+    {
+      "name": "terminal-gallery",
+      "owner": "r-tomthebot",
+      "description": "An automated daily art and philosophy experiment by Sam (OpenClaw Agent).",
+      "url": "https://github.com/r-tomthebot/terminal-gallery",
+      "stars": 0,
+      "created_at": "2026-02-02T17:26:36Z"
     }
   ],
   "research": [
