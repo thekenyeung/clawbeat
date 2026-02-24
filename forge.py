@@ -93,11 +93,9 @@ def process_article_intel(url):
         article.download()
         article.parse()
         
-        # 1. LANGUAGE FILTER: Only feature English posts
         if article.meta_lang != 'en' and article.meta_lang != '':
             return False, 0, ""
 
-        # 2. RECENCY FILTER: Strict 48-hour check
         is_recent = True
         if article.publish_date:
             now = datetime.now(article.publish_date.tzinfo) if article.publish_date.tzinfo else datetime.now()
@@ -116,7 +114,6 @@ def process_article_intel(url):
         if not is_recent:
             return False, 0, ""
 
-        # 3. DENSITY SCORING
         full_text = (article.title + " " + article.text).lower()
         brand_bonus = 10 if any(b in full_text for b in CORE_BRANDS) else 0
         keyword_matches = sum(1 for kw in KEYWORDS if kw.lower() in full_text)
@@ -138,8 +135,6 @@ def scan_rss():
             for entry in feed.entries[:20]:
                 title = entry.get('title', '')
                 passes, density, clean_text = process_article_intel(entry.link)
-                
-                # --- MODIFIED: Minimum threshold set to 2 ---
                 is_priority = any(brand.lower() in title.lower() for brand in CORE_BRANDS)
                 if passes and (density >= 2 or is_priority):
                     display_source = site["Source Name"]
@@ -164,7 +159,6 @@ def scan_google_news():
         feed = feedparser.parse(gn_url)
         for e in feed.entries[:30]:
             passes, density, clean_text = process_article_intel(e.link)
-            # --- MODIFIED: Minimum threshold set to 2 ---
             if passes and density >= 2:
                 found.append({
                     "title": e.title, "url": e.link, "source": "Web Search", 
@@ -219,28 +213,20 @@ def fetch_youtube_videos(channel_id):
     except: return []
 
 def fetch_youtube_videos_ytdlp(channel_url):
-    """
-    Scrapes the last 5 videos from a channel using yt-dlp without API keys.
-    """
     ydl_opts = {
         'quiet': True,
-        'extract_flat': 'in_playlist',  # Fast mode: doesn't load every video page
+        'extract_flat': 'in_playlist',
         'force_generic_extractor': False,
-        'playlistend': 5,               # Only grab the latest 5 videos
+        'playlistend': 5,
     }
-    
     videos = []
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # You can pass a @handle, channel URL, or playlist URL
             info = ydl.extract_info(channel_url, download=False)
-            
             if 'entries' in info:
                 for entry in info['entries']:
                     title = entry.get('title', '')
                     description = entry.get('description', '') or ""
-                    
-                    # Same keyword density logic as before
                     if any(kw in (title + description).lower() for kw in KEYWORDS):
                         videos.append({
                             "title": title,
@@ -248,7 +234,7 @@ def fetch_youtube_videos_ytdlp(channel_url):
                             "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
                             "channel": info.get('uploader', 'Unknown'),
                             "description": description[:150],
-                            "publishedAt": entry.get('upload_date') # Format: YYYYMMDD
+                            "publishedAt": entry.get('upload_date') or "00000000" # Necessary for sorting
                         })
         return videos
     except Exception as e:
@@ -271,8 +257,6 @@ def fetch_github_projects():
 
 def cluster_articles_temporal(new_articles, existing_items):
     if not new_articles: return existing_items
-    
-    # 1. Standard Embedding logic
     needs_embedding = [a for a in new_articles if a.get('vec') is None]
     if needs_embedding:
         texts = [f"{a['title']}: {a['summary'][:100]}" for a in needs_embedding]
@@ -287,14 +271,11 @@ def cluster_articles_temporal(new_articles, existing_items):
     
     current_batch_clustered = []
     HEADLINE_THRESH = 8 
-    # LOOSENING CLUSTERING: Raised from 0.75 to 0.88
-    # Higher number = less grouping = more individual headlines
     SIMILARITY_LIMIT = 0.88 
 
     for date_key in date_buckets:
         day_articles = date_buckets[date_key]
         day_articles.sort(key=lambda x: x.get('density', 0), reverse=True)
-        
         daily_clusters = []
         for art in day_articles:
             if art['vec'] is None: continue
@@ -306,24 +287,19 @@ def cluster_articles_temporal(new_articles, existing_items):
                     matched = True
                     break
             if not matched: daily_clusters.append([art])
-            
         for cluster in daily_clusters:
             anchor = cluster[0]
             anchor['is_minor'] = anchor.get('density', 0) < HEADLINE_THRESH
             anchor['moreCoverage'] = [{"source": a['source'], "url": a['url']} for a in cluster[1:]]
             current_batch_clustered.append(anchor)
 
-    # 2. GLOBAL DEDUPLICATION
-    # We collect EVERY URL that has ever been featured (Anchors + More Coverage)
     seen_urls = set()
     for item in existing_items:
         seen_urls.add(item['url'])
         for coverage in item.get('moreCoverage', []):
             seen_urls.add(coverage['url'])
 
-    # Only keep new dispatches if the URL is truly unique to the entire history
     unique_new_dispatches = [a for a in current_batch_clustered if a['url'] not in seen_urls]
-    
     final_news = unique_new_dispatches + existing_items
     final_news.sort(key=lambda x: datetime.strptime(x['date'], "%m-%d-%Y"), reverse=True)
     return final_news[:1000]
@@ -331,7 +307,6 @@ def cluster_articles_temporal(new_articles, existing_items):
 # --- 7. MAIN EXECUTION ---
 if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed (Threshold: 2 + English Only)...")
-    
     try:
         if os.path.exists(OUTPUT_PATH):
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
@@ -355,22 +330,14 @@ if __name__ == "__main__":
     new_summaries_count = 0
 
     for art in raw_news:
-        # Check against the master set (History + "More Coverage")
-        if art['url'] in master_seen_urls: 
-            continue
-        
-        # --- RESTORED LOGIC START ---
-        # Summarize priority sites
+        if art['url'] in master_seen_urls: continue
         if get_source_type(art['url'], art['source']) == "priority" and new_summaries_count < MAX_BATCH_SIZE:
             print(f"✍️ Drafting brief: {art['title']}")
             art['summary'] = get_ai_summary(art['title'], art['summary'])
             new_summaries_count += 1
             time.sleep(SLEEP_BETWEEN_REQUESTS)
-        
         newly_discovered.append(art)
-        # --- RESTORED LOGIC END ---
 
-    # Cluster with the history
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
     if os.getenv("RUN_RESEARCH") == "true":
@@ -389,7 +356,10 @@ if __name__ == "__main__":
                     scanned_videos.extend(fetch_youtube_videos_ytdlp(yt_target))
     
     vid_urls = {v['url'] for v in db.get('videos', [])}
-    db['videos'] = db.get('videos', []) + [v for v in scanned_videos if v['url'] not in vid_urls]
+    combined_videos = db.get('videos', []) + [v for v in scanned_videos if v['url'] not in vid_urls]
+    # Sort chronologically (Descending)
+    combined_videos.sort(key=lambda x: str(x.get('publishedAt', '00000000')), reverse=True)
+    db['videos'] = combined_videos[:50]
 
     print("💻 Scanning GitHub...")
     new_repos = fetch_github_projects()
