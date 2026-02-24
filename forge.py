@@ -468,7 +468,19 @@ def cluster_articles_temporal(new_articles, existing_items):
     unique_new = [a for a in current_batch_clustered if a['url'] not in seen_urls]
     final = unique_new + existing_items
     final.sort(key=lambda x: try_parse_date(x.get('date', '01-01-2000')), reverse=True)
-    return final[:1000]
+    final = final[:1000]
+
+    # Cleanup: if an article has become a top-level headline, remove it from any
+    # other headline's moreCoverage list (handles cross-run promotion cases).
+    headline_urls = {item['url'] for item in final}
+    for item in final:
+        if item.get('moreCoverage'):
+            item['moreCoverage'] = [
+                mc for mc in item['moreCoverage']
+                if mc['url'] not in headline_urls
+            ]
+
+    return final
 
 # --- 7. MAIN EXECUTION ---
 if __name__ == "__main__":
@@ -486,6 +498,10 @@ if __name__ == "__main__":
     newly_discovered = []
     new_summaries_count = 0
     existing_urls = {item['url'] for item in db.get('items', [])}
+    # Also exclude URLs already featured in moreCoverage — they're grouped under another headline
+    for item in db.get('items', []):
+        for mc in item.get('moreCoverage', []):
+            existing_urls.add(mc['url'])
     for art in raw_news:
         if art['url'] in existing_urls: continue
         # Generate AI briefs for whitelist Publisher articles (authority=3) up to batch limit.

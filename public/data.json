@@ -21604,18 +21604,6 @@
       "is_minor": false,
       "moreCoverage": [
         {
-          "source": "Mikhel V Kuttickal, Medium",
-          "url": "https://medium.com/@mikhela65/how-to-connect-telegram-to-openclaw-on-hostinger-vps-control-your-ai-agent-from-anywhere-532ab7003d0e?source=rss------openclaw-5"
-        },
-        {
-          "source": "Eddie Wassef, Medium",
-          "url": "https://medium.com/archetypical-software/the-era-of-agent-employees-has-arrived-e92a135546b9?source=rss------openclaw-5"
-        },
-        {
-          "source": "Sahin Ahmed, Data Scientist, Medium",
-          "url": "https://medium.com/@sahin.samia/how-openclaw-actually-works-and-why-it-feels-alive-f48f45fcc4aa?source=rss------openclaw-5"
-        },
-        {
           "source": "Sachin Yadav, Medium",
           "url": "https://medium.com/write-a-catalyst/the-ai-job-market-isnt-broken-your-strategy-is-4ac880a1f87b?source=rss------openclaw-5"
         },
@@ -27793,14 +27781,6 @@
       "is_minor": false,
       "moreCoverage": [
         {
-          "source": "Eddie Wassef, Medium",
-          "url": "https://medium.com/archetypical-software/the-era-of-agent-employees-has-arrived-e92a135546b9?source=rss------openclaw-5"
-        },
-        {
-          "source": "Sahin Ahmed, Data Scientist, Medium",
-          "url": "https://medium.com/@sahin.samia/how-openclaw-actually-works-and-why-it-feels-alive-f48f45fcc4aa?source=rss------openclaw-5"
-        },
-        {
           "source": "Sachin Yadav, Medium",
           "url": "https://medium.com/write-a-catalyst/the-ai-job-market-isnt-broken-your-strategy-is-4ac880a1f87b?source=rss------openclaw-5"
         },
@@ -30896,16 +30876,7 @@
         -0.003661079
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "Mikhel V Kuttickal, Medium",
-          "url": "https://medium.com/@mikhela65/how-to-connect-telegram-to-openclaw-on-hostinger-vps-control-your-ai-agent-from-anywhere-532ab7003d0e?source=rss------openclaw-5"
-        },
-        {
-          "source": "Sandeep Sharma, Medium",
-          "url": "https://medium.com/@sandyeep70/clowdbot-developer-team-setup-costs-and-options-aa42079fcc65?source=rss------openclaw-5"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "Kilo launches KiloClaw, allowing anyone to deploy hosted OpenClaw agents into production in 60 seconds",
@@ -43241,12 +43212,7 @@
         0.013328802
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "$250 a Month. No Warning. No Access.",
@@ -46330,12 +46296,7 @@
         0.008954825
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "Meta Security Researcher's AI Agent Accidentally Deleted Her Emails",
@@ -49419,24 +49380,7 @@
         0.011987079
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "TechCrunch",
-          "url": "https://techcrunch.com/2026/02/24/openai-coo-says-we-have-not-yet-really-seen-ai-penetrate-enterprise-business-processes/"
-        },
-        {
-          "source": "Implicator",
-          "url": "https://www.implicator.ai/250-a-month-no-warning-no-access/"
-        },
-        {
-          "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
-        },
-        {
-          "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "Cybersecurity stocks drop for a second day as new Anthropic tool fuels AI disruption fears",
@@ -64856,12 +64800,7 @@
         0.005164636
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "Mashable",
-          "url": "https://mashable.com/article/what-are-claws-ai-clawdbot-openclaw"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "OpenClaw should terrify anyone who thinks AI agents are ready for real responsibility",
@@ -71051,16 +70990,8 @@
           "url": "https://www.bensbites.com/p/something-big-is-happening"
         },
         {
-          "source": "CNBC",
-          "url": "https://www.cnbc.com/2026/02/23/cybersecurity-stocks-anthropic-ai-crowdstrike.html"
-        },
-        {
           "source": "Fortune",
           "url": "https://fortune.com/2026/02/23/always-on-ai-agents-openclaw-claude-promise-work-while-sleeping-reality-problems-oversight-guardrails/"
-        },
-        {
-          "source": "Implicator",
-          "url": "https://www.implicator.ai/250-a-month-no-warning-no-access/"
         },
         {
           "source": "AI Supremacy",
@@ -71087,10 +71018,6 @@
           "url": "https://www.oneusefulthing.org/p/a-guide-to-which-ai-to-use-in-the"
         },
         {
-          "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
-        },
-        {
           "source": "Ben's Bites",
           "url": "https://www.bensbites.com/p/vibe-coding-is-old-now"
         },
@@ -71103,20 +71030,12 @@
           "url": "https://www.bensbites.com/p/how-i-code-with-agents-without-being"
         },
         {
-          "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        },
-        {
           "source": "Lenny's Newsletter",
           "url": "https://www.lennysnewsletter.com/p/engineers-are-becoming-sorcerers"
         },
         {
           "source": "The Hacker News",
           "url": "https://thehackernews.com/2026/02/cline-cli-230-supply-chain-attack.html"
-        },
-        {
-          "source": "CSO",
-          "url": "https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html"
         },
         {
           "source": "CSO",
@@ -74215,10 +74134,6 @@
           "url": "https://www.bensbites.com/p/whats-next-for-coding-agents"
         },
         {
-          "source": "TechCrunch",
-          "url": "https://techcrunch.com/2026/02/23/a-meta-ai-security-researcher-said-an-openclaw-agent-ran-amok-on-her-inbox/"
-        },
-        {
           "source": "The AI Corner",
           "url": "https://www.the-ai-corner.com/p/openai-openclaw-peter-steinberger-lessons"
         },
@@ -74263,10 +74178,6 @@
           "url": "https://www.bensbites.com/p/how-i-code-with-agents-without-being"
         },
         {
-          "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        },
-        {
           "source": "Lenny's Newsletter",
           "url": "https://www.lennysnewsletter.com/p/engineers-are-becoming-sorcerers"
         },
@@ -74275,20 +74186,8 @@
           "url": "https://thehackernews.com/2026/02/cline-cli-230-supply-chain-attack.html"
         },
         {
-          "source": "CSO",
-          "url": "https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html"
-        },
-        {
           "source": "Futurism",
           "url": "https://futurism.com/artificial-intelligence/ai-agent-canvas-homework"
-        },
-        {
-          "source": "CNBC",
-          "url": "https://www.cnbc.com/2026/02/23/cybersecurity-stocks-anthropic-ai-crowdstrike.html"
-        },
-        {
-          "source": "Implicator",
-          "url": "https://www.implicator.ai/250-a-month-no-warning-no-access/"
         },
         {
           "source": "Interconnects",
@@ -74297,10 +74196,6 @@
         {
           "source": "Big Technology",
           "url": "https://www.bigtechnology.com/p/the-markets-ai-guessing-game-moltbook"
-        },
-        {
-          "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
         },
         {
           "source": "Ben's Bites",
@@ -98988,16 +98883,7 @@
         0.01355623
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "CSO",
-          "url": "https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html"
-        },
-        {
-          "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "Google clamps down on Antigravity 'malicious usage', cutting off OpenClaw users in sweeping ToS enforcement move",
@@ -102081,12 +101967,7 @@
         0.012558103
       ],
       "is_minor": false,
-      "moreCoverage": [
-        {
-          "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "Google Restricts AI Ultra Subscribers Over OpenClaw OAuth, Days After Anthropic Ban",
@@ -105171,16 +105052,8 @@
       "source_type": "standard",
       "moreCoverage": [
         {
-          "source": "Axios",
-          "url": "https://www.axios.com/2026/02/23/ai-agents-openclaw-openai-anthropic"
-        },
-        {
           "source": "The New York Times",
           "url": "https://www.nytimes.com/2026/02/18/upshot/moltbook-artificial-intelligence-ai.html"
-        },
-        {
-          "source": "CNBC",
-          "url": "https://www.cnbc.com/2026/02/23/cybersecurity-stocks-anthropic-ai-crowdstrike.html"
         },
         {
           "source": "Dark Reading",
@@ -105193,10 +105066,6 @@
         {
           "source": "Fortune",
           "url": "https://fortune.com/2026/02/23/always-on-ai-agents-openclaw-claude-promise-work-while-sleeping-reality-problems-oversight-guardrails/"
-        },
-        {
-          "source": "Implicator",
-          "url": "https://www.implicator.ai/250-a-month-no-warning-no-access/"
         },
         {
           "source": "Fast Company",
@@ -105225,10 +105094,6 @@
         {
           "source": "Big Technology",
           "url": "https://www.bigtechnology.com/p/nvidias-big-week-new-ai-models-social"
-        },
-        {
-          "source": "Big Technology",
-          "url": "https://www.bigtechnology.com/p/moltbook-is-a-warning"
         },
         {
           "source": "Big Technology",
@@ -105284,10 +105149,6 @@
         },
         {
           "source": "The Register",
-          "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/23/google_antigravity_compute_burden/"
-        },
-        {
-          "source": "The Register",
           "url": "https://go.theregister.com/feed/www.theregister.com/2026/02/20/raspberry_pi_meme_stock_disorder/"
         },
         {
@@ -105332,10 +105193,6 @@
         },
         {
           "source": "The New Stack",
-          "url": "https://thenewstack.io/aws-strands-labs-launch/"
-        },
-        {
-          "source": "The New Stack",
           "url": "https://thenewstack.io/claude-code-comes-to-roadmap-openclaw-loses-its-head-and-ai-workslop/"
         },
         {
@@ -105356,10 +105213,6 @@
         },
         {
           "source": "Lenny's Newsletter",
-          "url": "https://www.lennysnewsletter.com/p/sequoia-ceo-coach-why-its-never-been"
-        },
-        {
-          "source": "Lenny's Newsletter",
           "url": "https://www.lennysnewsletter.com/p/engineers-are-becoming-sorcerers"
         },
         {
@@ -105368,19 +105221,11 @@
         },
         {
           "source": "CSO",
-          "url": "https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html"
-        },
-        {
-          "source": "CSO",
           "url": "https://www.csoonline.com/article/4135449/compromised-npm-package-silently-installs-openclaw-on-developer-machines.html"
         },
         {
           "source": "CSO",
           "url": "https://www.csoonline.com/article/4134743/us-dominance-of-agentic-ai-at-the-heart-of-new-nist-initiative.html"
-        },
-        {
-          "source": "CSO",
-          "url": "https://www.csoonline.com/article/4134540/six-flaws-found-hiding-in-openclaws-plumbing.html"
         },
         {
           "source": "Keshav Agarwal, Medium",
@@ -108517,12 +108362,7 @@
         0.015366269
       ],
       "source_type": "standard",
-      "moreCoverage": [
-        {
-          "source": "Ben's Bites",
-          "url": "https://www.bensbites.com/p/who-owns-the-frontier"
-        }
-      ]
+      "moreCoverage": []
     },
     {
       "title": "How I use OpenClaw to build websites fast (with Codex, Telegram, and Vercel)",
