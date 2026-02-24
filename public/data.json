@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-02-24 14:09 UTC",
+  "last_updated": "2026-02-24 15:51 UTC",
   "items": [
     {
       "title": "1,000 Watts. 16 Million Prompts. One $400 Box.",
@@ -68813,6 +68813,14 @@
       "channel": "9x",
       "description": "",
       "publishedAt": "2026-02-24"
+    },
+    {
+      "title": "ClawdBot Full Tutorial for Beginners: SECURE Setup Guide",
+      "url": "https://www.youtube.com/watch?v=tnsrnsy_Lus",
+      "thumbnail": "https://i.ytimg.com/vi/tnsrnsy_Lus/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC2bwm6cmbzyll7QTuTJioS_IQ4KQ",
+      "channel": "Tech With Tim",
+      "description": "",
+      "publishedAt": "2026-02-24"
     }
   ],
   "githubProjects": [
@@ -77711,6 +77719,150 @@
       "url": "https://github.com/hello337/node-openclaw-sync",
       "stars": 0,
       "created_at": "2026-02-23T19:18:55Z"
+    },
+    {
+      "name": "Jonathantheai",
+      "owner": "handazhuang1123-ai",
+      "description": "Jonathan the openclaw ai service cultivate",
+      "url": "https://github.com/handazhuang1123-ai/Jonathantheai",
+      "stars": 0,
+      "created_at": "2026-02-24T15:17:33Z"
+    },
+    {
+      "name": "openclaw_gateway_guardian",
+      "owner": "yencreator",
+      "description": "Gateway self-healing system for OpenClaw",
+      "url": "https://github.com/yencreator/openclaw_gateway_guardian",
+      "stars": 0,
+      "created_at": "2026-02-24T15:49:20Z"
+    },
+    {
+      "name": "openclaw_memory_manager",
+      "owner": "yencreator",
+      "description": "Topic-based memory management for OpenClaw",
+      "url": "https://github.com/yencreator/openclaw_memory_manager",
+      "stars": 0,
+      "created_at": "2026-02-24T15:49:27Z"
+    },
+    {
+      "name": "goclaw",
+      "owner": "sausheong",
+      "description": " self-hosted AI agent gateway written in Go, inspired by OpenClaw. Single binary, low memory, fast startup.",
+      "url": "https://github.com/sausheong/goclaw",
+      "stars": 0,
+      "created_at": "2026-02-24T15:46:36Z"
+    },
+    {
+      "name": "openclawsimple",
+      "owner": "Yonieh",
+      "description": "No description.",
+      "url": "https://github.com/Yonieh/openclawsimple",
+      "stars": 0,
+      "created_at": "2026-02-24T15:48:24Z"
+    },
+    {
+      "name": "openclaw-memory-final",
+      "owner": "codesfly",
+      "description": "No description.",
+      "url": "https://github.com/codesfly/openclaw-memory-final",
+      "stars": 0,
+      "created_at": "2026-02-24T15:48:13Z"
+    },
+    {
+      "name": "openclaw-workspace",
+      "owner": "robouden",
+      "description": "No description.",
+      "url": "https://github.com/robouden/openclaw-workspace",
+      "stars": 0,
+      "created_at": "2026-02-22T22:30:18Z"
+    },
+    {
+      "name": "claw-log",
+      "owner": "EHR-U",
+      "description": "📝 Automate daily code change summaries with AI to capture technical decisions and streamline resume building from your Git history.",
+      "url": "https://github.com/EHR-U/claw-log",
+      "stars": 0,
+      "created_at": "2026-02-23T17:22:23Z"
+    },
+    {
+      "name": "Sample-for-openClaw",
+      "owner": "inclawheaven-hub",
+      "description": "No description.",
+      "url": "https://github.com/inclawheaven-hub/Sample-for-openClaw",
+      "stars": 0,
+      "created_at": "2026-02-24T15:45:34Z"
+    },
+    {
+      "name": "tima-ops-dashboard",
+      "owner": "rub1kub",
+      "description": "Operational dashboard for OpenClaw agents",
+      "url": "https://github.com/rub1kub/tima-ops-dashboard",
+      "stars": 0,
+      "created_at": "2026-02-23T09:44:34Z"
+    },
+    {
+      "name": "OpenClaw",
+      "owner": "walarconr",
+      "description": "No description.",
+      "url": "https://github.com/walarconr/OpenClaw",
+      "stars": 0,
+      "created_at": "2026-02-24T15:44:43Z"
+    },
+    {
+      "name": "clincher",
+      "owner": "droxey",
+      "description": "Production-grade, least-privilege OpenClaw deployment on a single server using Docker Compose.",
+      "url": "https://github.com/droxey/clincher",
+      "stars": 0,
+      "created_at": "2026-02-16T22:25:18Z"
+    },
+    {
+      "name": "keyjawn",
+      "owner": "jamditis",
+      "description": "Custom Android keyboard for LLM CLI agents -- terminal keys + image upload for Claude Code and OpenClaw users",
+      "url": "https://github.com/jamditis/keyjawn",
+      "stars": 0,
+      "created_at": "2026-02-15T15:29:50Z"
+    },
+    {
+      "name": "openclaw-channel-streamchat",
+      "owner": "def-initialize",
+      "description": "OpenClaw channel plugin for https://getstream.io/chat/",
+      "url": "https://github.com/def-initialize/openclaw-channel-streamchat",
+      "stars": 0,
+      "created_at": "2026-02-21T16:15:56Z"
+    },
+    {
+      "name": "KT-OpenClaw-Info",
+      "owner": "KeeTsui",
+      "description": "No description.",
+      "url": "https://github.com/KeeTsui/KT-OpenClaw-Info",
+      "stars": 0,
+      "created_at": "2026-02-24T15:41:30Z"
+    },
+    {
+      "name": "Openclaw",
+      "owner": "fullaide-student",
+      "description": "No description.",
+      "url": "https://github.com/fullaide-student/Openclaw",
+      "stars": 0,
+      "created_at": "2026-02-23T23:34:53Z"
+    },
+    {
+      "name": "openclaw-channel-wap",
+      "owner": "Ca11back",
+      "description": "通过 WAuxiliary 将微信消息桥接到 OpenClaw",
+      "url": "https://github.com/Ca11back/openclaw-channel-wap",
+      "stars": 1,
+      "created_at": "2026-02-03T01:09:56Z"
+    },
+    {
+      "name": "SurgeScout",
+      "owner": "obseasd",
+      "description": "AI Deal Flow Agent for Internet Capital Markets — OpenClaw skill that scouts Moltbook, analyzes tokenization potential, and launches tokens via SURGE",
+      "url": "https://github.com/obseasd/SurgeScout",
+      "stars": 0,
+      "created_at": "2026-02-24T15:41:50Z"
     }
   ],
   "research": [
