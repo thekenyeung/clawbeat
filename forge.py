@@ -188,10 +188,14 @@ def fetch_arxiv_research():
     except: return []
 
 def fetch_youtube_videos_ytdlp(channel_url):
+    # Ensure URL is clean for yt-dlp
+    if '/channel/' in channel_url and '@' in channel_url:
+        channel_url = channel_url.split('/channel/')[0] + '/' + channel_url.split('/channel/')[1]
+
     ydl_opts = {
         'quiet': True, 
         'extract_flat': 'in_playlist', 
-        'playlistend': 20, # Scanning deeper for brand mentions
+        'playlistend': 50, # Go deep to catch all 6 videos
         'extractor_args': {'youtubetab': {'approximate_date': ['']}} 
     }
     videos = []
@@ -200,26 +204,38 @@ def fetch_youtube_videos_ytdlp(channel_url):
             info = ydl.extract_info(channel_url, download=False)
             if 'entries' in info:
                 for entry in info['entries']:
-                    title = entry.get('title', '')
-                    desc = entry.get('description', '') or ""
-                    raw_date = entry.get('upload_date')
+                    if not entry: continue
+                    title = str(entry.get('title', ''))
+                    desc = str(entry.get('description', ''))
                     
-                    if raw_date and len(raw_date) == 8:
-                        formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
-                    else:
-                        formatted_date = datetime.now().strftime("%Y-%m-%d")
+                    # THE AGGRESSIVE FILTER
+                    # 1. Check title and description separately
+                    # 2. Check for the name with and without spaces
+                    full_text = (title + " " + desc).lower()
                     
-                    # STRICT WHITELIST FILTER: Must mention CORE_BRANDS
-                    if any(brand in (title + desc).lower() for brand in CORE_BRANDS):
+                    match_found = False
+                    for brand in CORE_BRANDS:
+                        b = brand.lower()
+                        # Match "openclaw" or "open claw" or "open-claw"
+                        if b in full_text or b.replace(" ", "") in full_text.replace(" ", ""):
+                            match_found = True
+                            break
+                    
+                    if match_found:
+                        raw_date = entry.get('upload_date')
+                        formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}" if raw_date else datetime.now().strftime("%Y-%m-%d")
+                        
                         videos.append({
-                            "title": title, "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
+                            "title": title,
+                            "url": f"https://www.youtube.com/watch?v={entry['id']}",
                             "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
-                            "channel": info.get('uploader', 'Unknown'), "description": desc[:150],
+                            "channel": info.get('uploader', 'Unknown'),
+                            "description": desc[:150],
                             "publishedAt": formatted_date
                         })
         return videos
     except Exception as e:
-        print(f"⚠️ Channel fetch failed: {e}")
+        print(f"⚠️ Error scanning {channel_url}: {e}")
         return []
 
 def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot", limit=30):
@@ -235,19 +251,28 @@ def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot", limit=
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(search_target, download=False)
-            if 'entries' in info:
+            if info and 'entries' in info:
                 for entry in info['entries']:
+                    # SAFETY CHECK: Skip if the entry is broken (None)
+                    if not entry:
+                        continue
+                        
                     raw_date = entry.get('upload_date')
-                    
                     if raw_date and len(raw_date) == 8:
                         formatted_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
                     else:
                         formatted_date = datetime.now().strftime("%Y-%m-%d")
                     
+                    # Safely fetch ID and URL
+                    v_id = entry.get('id')
+                    if not v_id: continue # Skip if no ID
+                    
                     videos.append({
-                        "title": entry.get('title'), "url": entry.get('url') or f"https://www.youtube.com/watch?v={entry['id']}",
-                        "thumbnail": entry.get('thumbnails', [{}])[-1].get('url'),
-                        "channel": entry.get('uploader', 'Community'), "description": entry.get('description', '')[:150],
+                        "title": entry.get('title') or "Untitled Video",
+                        "url": entry.get('url') or f"https://www.youtube.com/watch?v={v_id}",
+                        "thumbnail": entry.get('thumbnails', [{}])[-1].get('url') if entry.get('thumbnails') else "",
+                        "channel": entry.get('uploader', 'Community'),
+                        "description": (entry.get('description') or "")[:150],
                         "publishedAt": formatted_date
                     })
         return videos
@@ -361,7 +386,7 @@ if __name__ == "__main__":
     
     # Sort chronologically using YYYY-MM-DD strings
     combined_vids.sort(key=lambda x: str(x.get('publishedAt', '2000-01-01')), reverse=True)
-    db['videos'] = combined_vids[:50]
+    db['videos'] = combined_vids[:200]
 
     print("💻 Scanning GitHub...")
     new_repos = fetch_github_projects()
