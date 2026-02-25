@@ -164,26 +164,33 @@ def get_ai_summary(title, current_summary):
         return response.text.strip()
     except: return "Summary pending."
 
-def get_ai_tags(title, summary):
-    """Return 2-4 short topic tags for an article using Gemini."""
-    prompt = (
-        f"Generate 2-4 short topic tags for this tech news article. "
-        f"Tags should be concise (1-2 words each) and categorical. "
-        f"Examples: Funding, Open Source, AI Research, Product Launch, Acquisition, SDK, Mobile, Enterprise, Regulation, Community, Security, Partnership.\n"
-        f"Title: {title}\nSummary: {summary}\n"
-        f"Return ONLY a JSON array of strings, e.g. [\"Tag One\", \"Tag Two\"]. No other text."
-    )
+def get_nlp_tags(title, summary):
+    """Extract 2-4 keyphrases from title+summary using YAKE (local, no API calls)."""
     try:
-        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
-        raw = response.text.strip()
-        # Strip markdown code fences if present
-        raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
-        raw = re.sub(r'\s*```$', '', raw, flags=re.MULTILINE)
-        tags = json.loads(raw.strip())
-        if isinstance(tags, list):
-            return [str(t).strip() for t in tags[:5] if t]
-        return []
-    except:
+        import yake
+        text = (title + " " + (summary or "")).strip()
+        if not text:
+            return []
+        extractor = yake.KeywordExtractor(lan="en", n=2, dedupLim=0.7, top=6, features=None)
+        keywords = extractor.extract_keywords(text)
+        # YAKE scores: lower = more relevant. Filter brand names, keep best 4.
+        brand_lower = {b.lower() for b in CORE_BRANDS}
+        tags = []
+        for kw, _score in keywords:
+            kw = kw.strip()
+            if kw.lower() in brand_lower:
+                continue
+            # Capitalize each word; preserve known acronyms
+            words = []
+            for w in kw.split():
+                words.append(w.upper() if w.lower() in {'ai', 'sdk', 'ios', 'api', 'ml', 'vc', 'ui', 'ux', 'llm', 'ar', 'vr'} else w.capitalize())
+            tag = ' '.join(words)
+            if len(tag) > 2:
+                tags.append(tag)
+            if len(tags) == 4:
+                break
+        return tags
+    except Exception:
         return []
 
 def get_embeddings_batch(texts, batch_size=5):
@@ -675,18 +682,14 @@ if __name__ == "__main__":
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
-    # Tag backfill: generate tags for articles that don't have them yet.
-    # Iterates newest-first (db['items'] is already sorted by date desc), so fresh articles
-    # get tagged before older ones. Capped at MAX_BATCH_SIZE to stay within rate limits.
+    # Tag backfill: extract keyphrases for articles that don't have tags yet.
+    # Uses YAKE (local NLP, no API calls) so there are no rate limits — all
+    # untagged articles are processed in a single pass.
     tags_generated = 0
     for item in db['items']:
-        if tags_generated >= MAX_BATCH_SIZE:
-            break
         if not item.get('tags'):
-            print(f"🏷️  Tagging: {item['title'][:70]}")
-            item['tags'] = get_ai_tags(item['title'], item.get('summary', ''))
+            item['tags'] = get_nlp_tags(item['title'], item.get('summary', ''))
             tags_generated += 1
-            time.sleep(SLEEP_BETWEEN_REQUESTS)
     if tags_generated:
         print(f"🏷️  Tagged {tags_generated} articles.")
 

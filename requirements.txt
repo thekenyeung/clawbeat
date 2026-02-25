@@ -10,3 +10,4 @@ lxml_html_clean
 yt-dlp
 langdetect
 supabase
+yake
