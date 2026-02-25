@@ -164,6 +164,28 @@ def get_ai_summary(title, current_summary):
         return response.text.strip()
     except: return "Summary pending."
 
+def get_ai_tags(title, summary):
+    """Return 2-4 short topic tags for an article using Gemini."""
+    prompt = (
+        f"Generate 2-4 short topic tags for this tech news article. "
+        f"Tags should be concise (1-2 words each) and categorical. "
+        f"Examples: Funding, Open Source, AI Research, Product Launch, Acquisition, SDK, Mobile, Enterprise, Regulation, Community, Security, Partnership.\n"
+        f"Title: {title}\nSummary: {summary}\n"
+        f"Return ONLY a JSON array of strings, e.g. [\"Tag One\", \"Tag Two\"]. No other text."
+    )
+    try:
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        raw = response.text.strip()
+        # Strip markdown code fences if present
+        raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
+        raw = re.sub(r'\s*```$', '', raw, flags=re.MULTILINE)
+        tags = json.loads(raw.strip())
+        if isinstance(tags, list):
+            return [str(t).strip() for t in tags[:5] if t]
+        return []
+    except:
+        return []
+
 def get_embeddings_batch(texts, batch_size=5):
     if not texts: return []
     all_embeddings = []
@@ -453,6 +475,7 @@ def _load_from_supabase() -> dict:
                 'density':      row.get('density', 0),
                 'is_minor':     row.get('is_minor', False),
                 'moreCoverage': row.get('more_coverage', []) or [],
+                'tags':         row.get('tags', []) or [],
                 'vec':          None,
             })
 
@@ -500,6 +523,7 @@ def _save_to_supabase(db: dict) -> None:
             'density':      item.get('density', 0),
             'is_minor':     item.get('is_minor', False),
             'more_coverage': item.get('moreCoverage', []),
+            'tags':          item.get('tags', []),
         } for item in db.get('items', [])]
         if news_records:
             _supabase.table('news_items').upsert(news_records).execute()
@@ -650,6 +674,21 @@ if __name__ == "__main__":
         newly_discovered.append(art)
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
+
+    # Tag backfill: generate tags for articles that don't have them yet.
+    # Iterates newest-first (db['items'] is already sorted by date desc), so fresh articles
+    # get tagged before older ones. Capped at MAX_BATCH_SIZE to stay within rate limits.
+    tags_generated = 0
+    for item in db['items']:
+        if tags_generated >= MAX_BATCH_SIZE:
+            break
+        if not item.get('tags'):
+            print(f"🏷️  Tagging: {item['title'][:70]}")
+            item['tags'] = get_ai_tags(item['title'], item.get('summary', ''))
+            tags_generated += 1
+            time.sleep(SLEEP_BETWEEN_REQUESTS)
+    if tags_generated:
+        print(f"🏷️  Tagged {tags_generated} articles.")
 
     # Retry pass: articles whose Gemini call previously failed and were stored with the
     # fallback string will never be retried by the main loop (URL is already in existing_urls).

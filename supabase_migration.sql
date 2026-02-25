@@ -78,3 +78,8 @@ CREATE POLICY "Public reads" ON research_papers
 
 CREATE POLICY "Public reads" ON feed_metadata
   FOR SELECT TO anon, authenticated USING (true);
+
+-- =============================================================
+-- Add tags column to news_items (run this if migrating an existing DB)
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]'::jsonb;

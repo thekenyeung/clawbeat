@@ -42,6 +42,7 @@ interface NewsItem {
   date: string;
   source_type?: 'priority' | 'standard' | 'delist';
   moreCoverage?: Array<{ source: string; url: string }>;
+  tags?: string[];
 }
 
 interface VideoItem {
@@ -220,6 +221,7 @@ const App: React.FC = () => {
       setNews((newsRes.data || []).map((item: any) => ({
         ...item,
         moreCoverage: item.more_coverage || [],
+        tags: item.tags || [],
       })));
 
       setVideos((videosRes.data || [])
@@ -462,6 +464,15 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
                   {isVerified && <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Bot className="w-2.5 h-2.5" /> verified</span>}
                   {isPriority && !isVerified && <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Award className="w-2.5 h-2.5" /> priority feed</span>}
                 </div>
+                {item.tags && item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {item.tags.map((tag, tIdx) => (
+                      <span key={tIdx} className="text-[9px] font-black text-slate-500 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded uppercase tracking-wider">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {item.summary && <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">{item.summary}</p>}
                 {item.moreCoverage && item.moreCoverage.length > 0 && (
                   <div className="mt-2 flex flex-col gap-2">
