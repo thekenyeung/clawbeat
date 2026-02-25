@@ -11,11 +11,11 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
-import { 
-  Newspaper, 
-  Video, 
-  Github, 
-  Bot, 
+import {
+  Newspaper,
+  Video,
+  Github,
+  Bot,
   ExternalLink,
   Star,
   Calendar,
@@ -26,12 +26,14 @@ import {
   Menu,
   X,
   BookOpen,
-  Microscope
+  Microscope,
+  MapPin,
+  Globe
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
 // --- TYPES ---
-type Page = 'news' | 'videos' | 'projects' | 'research';
+type Page = 'news' | 'videos' | 'projects' | 'research' | 'events';
 type SortCriteria = 'stars' | 'date';
 
 interface NewsItem {
@@ -70,6 +72,19 @@ interface ResearchItem {
   date: string;
   url: string;
   summary: string;
+}
+
+interface EventItem {
+  url: string;
+  title: string;
+  organizer: string;
+  event_type: 'virtual' | 'in-person' | 'unknown';
+  location_city: string;
+  location_state: string;
+  location_country: string;
+  start_date: string;  // MM/DD/YYYY
+  end_date: string;    // MM/DD/YYYY
+  description: string;
 }
 
 // --- HELPERS ---
@@ -132,6 +147,7 @@ const App: React.FC = () => {
   const [currentVideoPage, setCurrentVideoPage] = useState(Number(sessionStorage.getItem('videoPage')) || 1);
   const [currentProjectPage, setCurrentProjectPage] = useState(Number(sessionStorage.getItem('projectPage')) || 1);
   const [currentResearchPage, setCurrentResearchPage] = useState(Number(sessionStorage.getItem('researchPage')) || 1);
+  const [currentEventsPage, setCurrentEventsPage] = useState(Number(sessionStorage.getItem('eventsPage')) || 1);
 
   const [sortBy, setSortBy] = useState<SortCriteria>((sessionStorage.getItem('projectSort') as SortCriteria) || 'date');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -143,6 +159,7 @@ const App: React.FC = () => {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [research, setResearch] = useState<ResearchItem[]>([]);
+  const [events, setEvents] = useState<EventItem[]>([]);
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -179,6 +196,7 @@ const App: React.FC = () => {
     setCurrentVideoPage(1);
     setCurrentProjectPage(1);
     setCurrentResearchPage(1);
+    setCurrentEventsPage(1);
     setActivePage('news');
     setIsMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,8 +208,9 @@ const App: React.FC = () => {
     sessionStorage.setItem('videoPage', currentVideoPage.toString());
     sessionStorage.setItem('projectPage', currentProjectPage.toString());
     sessionStorage.setItem('researchPage', currentResearchPage.toString());
+    sessionStorage.setItem('eventsPage', currentEventsPage.toString());
     sessionStorage.setItem('projectSort', sortBy);
-  }, [activePage, currentPage, currentVideoPage, currentProjectPage, currentResearchPage, sortBy]);
+  }, [activePage, currentPage, currentVideoPage, currentProjectPage, currentResearchPage, currentEventsPage, sortBy]);
 
   const parseMDY = (d: string) => {
     const parts = d.split('-').map(Number);
@@ -202,11 +221,12 @@ const App: React.FC = () => {
   const fetchContent = async () => {
     setLoading(true);
     try {
-      const [newsRes, videosRes, projectsRes, researchRes, metaRes] = await Promise.all([
+      const [newsRes, videosRes, projectsRes, researchRes, eventsRes, metaRes] = await Promise.all([
         supabase.from('news_items').select('*').limit(1000),
         supabase.from('videos').select('*').limit(300),
         supabase.from('github_projects').select('*').limit(100),
         supabase.from('research_papers').select('*').limit(100),
+        supabase.from('events').select('*').limit(500),
         supabase.from('feed_metadata').select('*').eq('id', 1).maybeSingle(),
       ]);
 
@@ -230,6 +250,7 @@ const App: React.FC = () => {
 
       setProjects(projectsRes.data || []);
       setResearch(researchRes.data || []);
+      setEvents(eventsRes.data || []);
     } catch (err: any) {
       setError("Intelligence feed is currently updating...");
     } finally {
@@ -263,6 +284,19 @@ const App: React.FC = () => {
   const currentResearchItems = sortedResearch.slice((currentResearchPage - 1) * researchPerPage, currentResearchPage * researchPerPage);
   const totalResearchPages = Math.ceil(sortedResearch.length / researchPerPage);
 
+  // Events: filter past (end_date < today) client-side, sort nearest upcoming first
+  const eventsPerPage = 20;
+  const parseMMDDYYYY = (d: string) => {
+    const p = d.split('/').map(Number);
+    return p.length === 3 ? new Date(p[2] ?? 0, (p[0] ?? 1) - 1, p[1] ?? 1) : new Date(0);
+  };
+  const todayMidnight = new Date(); todayMidnight.setHours(0, 0, 0, 0);
+  const upcomingEvents = [...events]
+    .filter(e => parseMMDDYYYY(e.end_date || e.start_date) >= todayMidnight)
+    .sort((a, b) => parseMMDDYYYY(a.start_date).getTime() - parseMMDDYYYY(b.start_date).getTime());
+  const currentEventItems = upcomingEvents.slice((currentEventsPage - 1) * eventsPerPage, currentEventsPage * eventsPerPage);
+  const totalEventsPages = Math.ceil(upcomingEvents.length / eventsPerPage);
+
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-xl">
@@ -280,6 +314,7 @@ const App: React.FC = () => {
             <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
             <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media" />
             <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="Forge" />
+            <NavButton active={activePage === 'events'} onClick={() => handleNavClick('events')} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </nav>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-slate-400 hover:text-white">
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -291,6 +326,7 @@ const App: React.FC = () => {
             <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
             <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media Lab" />
             <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="The Forge" />
+            <NavButton active={activePage === 'events'} onClick={() => handleNavClick('events')} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </div>
         )}
       </header>
@@ -303,10 +339,11 @@ const App: React.FC = () => {
               {activePage === 'research' && 'Technical Papers'}
               {activePage === 'videos' && 'Visual Stream'}
               {activePage === 'projects' && 'The Forge'}
+              {activePage === 'events' && 'Community Events'}
             </h2>
             <div className="flex flex-col gap-1 mt-2">
               <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
-                {activePage === 'research' ? 'ArXiv Intelligence & Semantic Scholar' : 'Autonomous Intelligence Curation'}
+                {activePage === 'research' ? 'ArXiv Intelligence & Semantic Scholar' : activePage === 'events' ? 'Upcoming OpenClaw Gatherings' : 'Autonomous Intelligence Curation'}
               </p>
               {lastUpdated && (
                 <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest whitespace-nowrap">
@@ -356,6 +393,12 @@ const App: React.FC = () => {
               <>
                 <ProjectGrid items={currentProjectItems} onTrackClick={handleLinkClick} />
                 <Pagination current={currentProjectPage} total={totalProjectPages} onChange={setCurrentProjectPage} />
+              </>
+            )}
+            {activePage === 'events' && (
+              <>
+                <EventsList items={currentEventItems} total={upcomingEvents.length} onTrackClick={handleLinkClick} />
+                <Pagination current={currentEventsPage} total={totalEventsPages} onChange={setCurrentEventsPage} />
               </>
             )}
           </div>
@@ -579,5 +622,66 @@ const ProjectGrid = ({ items, onTrackClick }: { items: ProjectItem[], onTrackCli
   </div>
 );
 
+const EventsList = ({ items, total, onTrackClick }: { items: EventItem[], total: number, onTrackClick: (t: string, s: string) => void }) => {
+  if (total === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-6 text-center">
+        <Calendar className="w-12 h-12 text-white/10" />
+        <div>
+          <p className="text-white font-black text-xl uppercase italic tracking-tight">No Upcoming Events</p>
+          <p className="text-slate-500 text-sm mt-2 max-w-sm">Events are discovered automatically each day. Check back soon.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {items.map((event, idx) => {
+        const isVirtual = event.event_type === 'virtual';
+        const locationParts = [event.location_city, event.location_state, event.location_country].filter(Boolean);
+        const locationStr = locationParts.join(', ');
+        const dateStr = event.start_date === event.end_date || !event.end_date
+          ? event.start_date
+          : `${event.start_date} – ${event.end_date}`;
+
+        return (
+          <div key={idx} className="group relative p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:border-orange-500/30 transition-all flex flex-col gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              {isVirtual ? (
+                <span className="flex items-center gap-1.5 text-[9px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-wider">
+                  <Globe className="w-2.5 h-2.5" /> Virtual
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded uppercase tracking-wider">
+                  <MapPin className="w-2.5 h-2.5" /> In-Person
+                </span>
+              )}
+              {locationStr && !isVirtual && (
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">{locationStr}</span>
+              )}
+              {dateStr && (
+                <span className="text-[10px] font-black text-slate-600 uppercase tracking-wider ml-auto">{dateStr}</span>
+              )}
+            </div>
+
+            <a href={event.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(event.title, event.organizer)} className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2">
+              <span className="flex-1">{event.title}</span>
+              <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
+            </a>
+
+            {event.organizer && (
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{event.organizer}</span>
+            )}
+            {event.description && (
+              <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">{event.description}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const container = document.getElementById('root');
-if (container) createRoot(container).render(<App />); 
+if (container) createRoot(container).render(<App />);

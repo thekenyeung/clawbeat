@@ -83,3 +83,25 @@ CREATE POLICY "Public reads" ON feed_metadata
 -- Add tags column to news_items (run this if migrating an existing DB)
 -- =============================================================
 ALTER TABLE news_items ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]'::jsonb;
+
+-- =============================================================
+-- Events table (new — run just this block on an existing DB)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS events (
+  url              TEXT PRIMARY KEY,
+  title            TEXT NOT NULL,
+  organizer        TEXT DEFAULT '',
+  event_type       TEXT DEFAULT 'unknown',  -- 'virtual' | 'in-person' | 'unknown'
+  location_city    TEXT DEFAULT '',
+  location_state   TEXT DEFAULT '',
+  location_country TEXT DEFAULT '',
+  start_date       TEXT DEFAULT '',         -- MM/DD/YYYY
+  end_date         TEXT DEFAULT '',         -- MM/DD/YYYY
+  description      TEXT DEFAULT '',
+  inserted_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public reads" ON events
+  FOR SELECT TO anon, authenticated USING (true);
