@@ -86,10 +86,10 @@ HN_API_URL = (
 # ---------------------------------------------------------------------------
 
 EVENTBRITE_SEARCHES = [
-    "https://www.eventbrite.com/d/online/openclaw/",
-    "https://www.eventbrite.com/d/united-states/openclaw/",
-    "https://www.eventbrite.com/d/canada/openclaw/",
-    "https://www.eventbrite.com/d/united-kingdom/openclaw/",
+    "https://www.eventbrite.com/d/online/events/?q=openclaw",
+    "https://www.eventbrite.com/d/united-states/events/?q=openclaw",
+    "https://www.eventbrite.com/d/canada/events/?q=openclaw",
+    "https://www.eventbrite.com/d/united-kingdom/events/?q=openclaw",
 ]
 
 LUMA_SEARCHES = [
@@ -696,6 +696,33 @@ def scan_circle() -> list[dict]:
 # Supabase I/O
 # ---------------------------------------------------------------------------
 
+def cleanup_garbage_events() -> None:
+    """
+    Delete events already in Supabase that contain no mention of 'openclaw'
+    in either their title or description. These were ingested before the
+    keyword density filter was introduced (e.g. Eventbrite category-URL bug).
+    """
+    if not _supabase:
+        return
+    try:
+        resp = _supabase.table("events").select("url,title,description").execute()
+        garbage = [
+            r["url"] for r in (resp.data or [])
+            if KEYWORD not in r.get("title", "").lower()
+            and KEYWORD not in r.get("description", "").lower()
+        ]
+        if not garbage:
+            print("✅ No garbage events found — DB is clean.")
+            return
+        print(f"🗑️  Removing {len(garbage)} garbage event(s) with no 'openclaw' mention...")
+        for url in garbage:
+            print(f"  🗑️  {url[:80]}")
+        _supabase.table("events").delete().in_("url", garbage).execute()
+        print(f"✅ Deleted {len(garbage)} garbage event(s).")
+    except Exception as ex:
+        print(f"⚠️  Cleanup failed: {ex}")
+
+
 def load_existing_urls() -> set[str]:
     if not _supabase:
         return set()
@@ -741,6 +768,10 @@ if __name__ == "__main__":
         "     Validation: title match OR 2+ page mentions of 'openclaw'\n"
     )
 
+    print("\n🧹 Step 1: Cleaning up garbage events from previous runs...")
+    cleanup_garbage_events()
+
+    print("\n🔍 Step 2: Discovering new events...")
     existing_urls = load_existing_urls()
 
     raw_events: list[dict] = (

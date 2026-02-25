@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Events — ClawBeat · Signal Dispatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    :root {
+      --bg: #08090b;
+      --bg-2: #0d0f12;
+      --bg-3: #131619;
+      --border: rgba(255,255,255,0.05);
+      --border-2: rgba(255,255,255,0.09);
+      --orange: #f97316;
+      --orange-bright: #fb923c;
+      --orange-dim: rgba(249,115,22,0.10);
+      --orange-glow: rgba(249,115,22,0.15);
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.08);
+      --cyan: #06b6d4;
+      --cyan-dim: rgba(6,182,212,0.08);
+      --text: #e2e4e9;
+      --text-2: #9097a3;
+      --text-3: #525866;
+      --text-4: #2e333d;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border-2);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .brand-img {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border-2);
+      overflow: hidden;
+    }
+    .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-text {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      font-style: italic;
+      color: #fff;
+    }
+    .brand-text span { color: var(--orange); }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .nav-item {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--text-3);
+      padding: 0.35rem 0.75rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .nav-item:hover { color: var(--text); border-color: var(--border-2); }
+    .nav-item.active { color: var(--orange); background: var(--orange-dim); border-color: rgba(249,115,22,0.2); }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 1.5rem;
+    }
+    .hero-path {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
+      display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.75rem;
+    }
+    .path-sep { color: var(--text-4); }
+    .path-current { color: var(--orange); }
+    .hero-row {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+    }
+    .hero-title {
+      font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 0.95;
+      color: #fff; text-transform: uppercase; font-style: italic;
+    }
+    .hero-title em { color: var(--orange); font-style: italic; }
+    .hero-stats {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;
+      flex-shrink: 0;
+    }
+    .hero-stat {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .hero-stat strong { color: var(--text); font-weight: 600; }
+    .hero-stat .val-orange { color: var(--orange); }
+    .hero-stat .val-green { color: var(--green); }
+    .hero-stat .val-cyan  { color: var(--cyan); }
+
+    /* ── MONTH SELECTOR ── */
+    .month-bar-wrap {
+      border-top: 1px solid var(--border-2);
+      border-bottom: 1px solid var(--border-2);
+      background: var(--bg-2);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .month-bar-wrap::-webkit-scrollbar { display: none; }
+    .month-bar {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .month-tab {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
+      padding: 0.6rem 1.1rem; border: none; background: transparent;
+      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+      position: relative; border-bottom: 2px solid transparent;
+    }
+    .month-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .month-tab.active {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+      background: var(--orange-dim);
+    }
+    .month-tab .tab-count {
+      font-size: 0.7rem; color: var(--text-4); margin-left: 0.3rem;
+      font-weight: 400;
+    }
+    .month-tab.active .tab-count { color: rgba(249,115,22,0.5); }
+
+    /* ── MAIN CONTAINER ── */
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem;
+    }
+
+    /* ── NEXT EVENT FEATURE ── */
+    .next-event-wrap {
+      padding: 1.5rem 0 0;
+    }
+    .next-label {
+      font-family: var(--mono); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--orange); display: flex; align-items: center;
+      gap: 0.5rem; margin-bottom: 0.75rem;
+    }
+    .next-label::before {
+      content: '▶'; font-size: 0.45rem; opacity: 0.7;
+    }
+    .next-event-card {
+      background: var(--bg-2);
+      border: 1px solid rgba(249,115,22,0.25);
+      border-left: 3px solid var(--orange);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .next-event-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, var(--orange), transparent 60%);
+      opacity: 0.4;
+    }
+    .next-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border-2);
+      gap: 0.75rem;
+    }
+    .next-card-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .next-card-countdown {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      color: var(--orange); background: var(--orange-dim);
+      border: 1px solid rgba(249,115,22,0.25); border-radius: 4px;
+      padding: 0.25rem 0.65rem; white-space: nowrap;
+    }
+    .next-card-body { padding: 1.25rem; }
+    .next-card-title {
+      font-family: var(--sans); font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 800; color: #fff; line-height: 1.25;
+      letter-spacing: -0.03em; margin-bottom: 0.65rem;
+    }
+    .next-card-title a { color: inherit; text-decoration: none; }
+    .next-card-title a:hover { color: var(--orange); }
+    .next-card-when {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-2);
+      margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+    }
+    .next-card-when .w-sep { color: var(--text-4); }
+    .next-card-where {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-2);
+      margin-bottom: 1rem; display: flex; align-items: center; gap: 0.35rem;
+    }
+    .next-card-where::before { content: '◎'; color: var(--orange); font-size: 0.55rem; }
+    .next-card-desc {
+      font-size: 0.875rem; color: var(--text-2); line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .next-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem; flex-wrap: wrap;
+    }
+    .next-card-organizer {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-2);
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .next-card-organizer strong { color: var(--text-2); font-weight: 600; }
+    .btn-register {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--bg); background: var(--orange);
+      border: none; border-radius: 5px; padding: 0.55rem 1rem;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: background 0.15s;
+    }
+    .btn-register:hover { background: var(--orange-bright); }
+
+    /* ── DATE GROUP DIVIDER ── */
+    .date-group { margin-top: 2.5rem; }
+    .date-divider {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .date-divider-label {
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 700;
+      color: var(--text-2); white-space: nowrap;
+    }
+    .date-divider-label .date-slash { color: var(--text-4); margin-right: 0.2rem; }
+    .date-divider-label .date-val { color: var(--text-2); }
+    .date-divider-label .date-day { color: var(--orange); }
+    .date-divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--border-2), transparent);
+    }
+    .date-divider-count {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
+      white-space: nowrap;
+    }
+
+    /* ── EVENT CARD ── */
+    .event-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 0.875rem;
+      transition: border-color 0.15s;
+    }
+    .event-card:hover { border-color: rgba(255,255,255,0.12); }
+
+    /* Left border by type */
+    .event-card.type-in-person  { border-left: 3px solid var(--orange); }
+    .event-card.type-virtual    { border-left: 3px solid var(--cyan); }
+    .event-card.type-unknown    { border-left: 3px solid var(--text-4); }
+
+    .event-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.65rem 1rem 0.65rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+    .event-badges { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* Badge base */
+    .badge {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; border-radius: 3px;
+      padding: 0.2rem 0.5rem; display: inline-flex; align-items: center; gap: 0.25rem;
+    }
+    .badge-type-in-person {
+      color: var(--orange); background: var(--orange-dim);
+      border: 1px solid rgba(249,115,22,0.2);
+    }
+    .badge-type-virtual {
+      color: var(--cyan); background: var(--cyan-dim);
+      border: 1px solid rgba(6,182,212,0.2);
+    }
+    .badge-type-unknown {
+      color: var(--text-3); background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-2);
+    }
+    .badge-category {
+      color: var(--text-3); background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+    }
+    .badge-live {
+      color: var(--green); background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+    .badge-live::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 4px var(--green); display: block;
+    }
+
+    .event-countdown {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      color: var(--text-2); white-space: nowrap; flex-shrink: 0;
+    }
+    .event-countdown.soon { color: var(--orange); }
+    .event-countdown.today { color: var(--green); }
+
+    /* Card body */
+    .event-card-body { padding: 1rem 1.1rem; }
+    .event-title {
+      font-family: var(--sans); font-size: 1.05rem; font-weight: 700;
+      color: #fff; line-height: 1.3; letter-spacing: -0.02em;
+      margin-bottom: 0.45rem;
+    }
+    .event-title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+    .event-title a:hover { color: var(--orange); }
+    .event-card.type-virtual .event-title a:hover { color: var(--cyan); }
+
+    .event-meta-row {
+      display: flex; align-items: flex-start; flex-direction: column; gap: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .event-meta-item {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-2);
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .event-meta-item .meta-icon { font-size: 0.7rem; flex-shrink: 0; }
+    .event-meta-item .meta-val { color: var(--text-2); }
+
+    .event-desc {
+      font-size: 0.825rem; color: var(--text-2); line-height: 1.65;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Expand toggle */
+    .event-expand-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1.1rem;
+      border-top: 1px solid var(--border);
+      background: transparent; border-bottom: none; border-left: none; border-right: none;
+      cursor: pointer; width: 100%;
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-2); transition: color 0.15s;
+    }
+    .event-expand-btn:hover { color: var(--text-2); }
+    .event-expand-btn .expand-icon { transition: transform 0.2s; }
+    .event-expand-btn.open .expand-icon { transform: rotate(180deg); }
+    .event-expand-btn.open { color: var(--text-2); }
+
+    .event-details {
+      display: none; padding: 1rem 1.1rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg-3);
+    }
+    .event-details.open { display: block; }
+    .event-details-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .detail-row {
+      font-family: var(--mono); font-size: 0.7rem;
+      display: flex; flex-direction: column; gap: 0.1rem;
+    }
+    .detail-key { color: var(--text-3); }
+    .detail-val { color: var(--text-2); font-weight: 500; }
+    .detail-val.orange { color: var(--orange); }
+    .detail-val.cyan   { color: var(--cyan); }
+    .detail-val.green  { color: var(--green); }
+    .event-full-desc {
+      font-size: 0.825rem; color: var(--text-2); line-height: 1.7;
+      margin-bottom: 0.875rem;
+    }
+    .btn-register-sm {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--orange); background: var(--orange-dim);
+      border: 1px solid rgba(249,115,22,0.25); border-radius: 4px;
+      padding: 0.45rem 0.9rem; cursor: pointer; text-decoration: none;
+      display: inline-block; transition: all 0.15s;
+    }
+    .btn-register-sm:hover { background: var(--orange-glow); }
+    .btn-register-sm.cyan-btn {
+      color: var(--cyan); background: var(--cyan-dim);
+      border-color: rgba(6,182,212,0.25);
+    }
+    .btn-register-sm.cyan-btn:hover { background: rgba(6,182,212,0.12); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 3rem 1.5rem;
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-4);
+    }
+
+    /* ── SIGNAL LEGEND ── */
+    .legend {
+      display: flex; align-items: center; gap: 1.25rem;
+      flex-wrap: wrap; padding: 1.25rem 0 0;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-2);
+    }
+    .legend-pip {
+      width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0;
+    }
+    .pip-orange { background: var(--orange); }
+    .pip-cyan   { background: var(--cyan); }
+    .pip-dim    { background: var(--text-4); }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border-2);
+      background: var(--bg-2);
+      padding: 1.25rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 900px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .footer-brand {
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff;
+    }
+    .footer-brand span { color: var(--orange); }
+    .footer-mono { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); }
+    .footer-back { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; }
+    .footer-back a { color: var(--orange); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .header-inner, .main-container, .page-hero, .footer { padding-left: 1rem; padding-right: 1rem; }
+      .month-bar { padding-left: 1rem; padding-right: 1rem; }
+      .header-nav .nav-item:not(.active) { display: none; }
+      .nav-item.active {
+        pointer-events: none;
+        cursor: default;
+      }
+      .hero-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .hero-stats { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+      .footer-mono { display: none; }
+      .next-card-title { font-size: 1.1rem; }
+      .event-details-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 1.75rem; }
+      .next-card-body { padding: 1rem; }
+      .next-card-footer { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .btn-register { width: 100%; text-align: center; }
+      .event-title { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <a href="/" class="brand">
+        <div class="brand-img">
+          <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+        </div>
+        <span class="brand-text">ClawBeat<span>.co</span></span>
+      </a>
+      <nav class="header-nav">
+        <a href="/" class="nav-item">intel</a>
+        <a href="/" class="nav-item">daily</a>
+        <a href="#" class="nav-item active">events</a>
+        <a href="/" class="nav-item">repos</a>
+        <a href="/" class="nav-item">forge</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ── PAGE HERO ── -->
+<div class="page-hero">
+  <div class="hero-path">
+    <span>clawbeat.co</span>
+    <span class="path-sep">/</span>
+    <span class="path-current">events</span>
+  </div>
+  <div class="hero-row">
+    <h1 class="hero-title">Signal<br><em>Dispatch</em></h1>
+    <div class="hero-stats" id="hero-stats">
+      <div class="hero-stat"><span>loading</span><strong class="val-orange">—</strong></div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-pip pip-orange"></div>
+      <span>in-person</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-pip pip-cyan"></div>
+      <span>virtual / online</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-pip pip-dim"></div>
+      <span>format unknown</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── MONTH SELECTOR ── -->
+<div class="month-bar-wrap">
+  <div class="month-bar" id="month-bar"></div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<main class="main-container" id="events-root">
+  <div class="empty-state">// loading signals...</div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <div class="footer-mono" id="footer-ts">signal_dispatch // events</div>
+    <div class="footer-back"><a href="/">← intel_feed</a></div>
+  </div>
+</footer>
+
+<script>
+  const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
+
+  const MONTHS   = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const DAYS     = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+  function esc(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function parseDate(str) {
+    if (!str) return null;
+    const [m, d, y] = str.split('/');
+    if (!m || !d || !y) return null;
+    return new Date(+y, +m - 1, +d);
+  }
+
+  function todayMidnight() {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return t;
+  }
+
+  function countdown(startDateStr) {
+    const d = parseDate(startDateStr);
+    if (!d) return { text: 'TBD', cls: '' };
+    const diff = Math.round((d - todayMidnight()) / 86400000);
+    if (diff === 0) return { text: 'TODAY', cls: 'today' };
+    if (diff < 0)   return { text: 'ENDED', cls: '' };
+    const n = String(diff).padStart(2, '0');
+    return { text: `T-${n} DAYS`, cls: diff <= 7 ? 'soon' : '' };
+  }
+
+  function formatDateLabel(startDate, endDate) {
+    const d = parseDate(startDate);
+    if (!d) return 'TBD';
+    const dayName = DAYS[d.getDay()];
+    const month   = MONTHS[d.getMonth()];
+    const dd      = String(d.getDate()).padStart(2, '0');
+    const yyyy    = d.getFullYear();
+    if (endDate && endDate !== startDate) {
+      const d2 = parseDate(endDate);
+      if (d2 && d2.getTime() !== d.getTime()) {
+        const dd2 = String(d2.getDate()).padStart(2, '0');
+        return `${dayName}–${DAYS[d2.getDay()]} · ${dd}–${dd2} ${month} ${yyyy}`;
+      }
+    }
+    return `${dayName} · ${dd} ${month} ${yyyy}`;
+  }
+
+  function monthKey(e) {
+    const d = parseDate(e.start_date);
+    return d ? MONTHS[d.getMonth()] : 'TBD';
+  }
+
+  function typeClass(et) {
+    if (et === 'virtual')   return 'type-virtual';
+    if (et === 'in-person') return 'type-in-person';
+    return 'type-unknown';
+  }
+
+  function typeBadge(et) {
+    if (et === 'virtual')   return `<span class="badge badge-type-virtual">◉ Virtual</span>`;
+    if (et === 'in-person') return `<span class="badge badge-type-in-person">▲ In-Person</span>`;
+    return `<span class="badge badge-type-unknown">◈ TBD</span>`;
+  }
+
+  function locationStr(e) {
+    if (e.event_type === 'virtual') return 'Online';
+    const parts = [e.location_city, e.location_state, e.location_country].filter(Boolean);
+    return parts.length ? parts.join(', ') : '';
+  }
+
+  function renderFeaturedCard(e) {
+    const cd  = countdown(e.start_date);
+    const loc = locationStr(e);
+    const dateLabel = formatDateLabel(e.start_date, e.end_date);
+    return `
+    <div class="next-event-wrap" data-month="${monthKey(e)}">
+      <div class="next-label">Next Uplink</div>
+      <div class="next-event-card">
+        <div class="next-card-top">
+          <div class="next-card-badges">${typeBadge(e.event_type)}</div>
+          <div class="next-card-countdown">${cd.text}</div>
+        </div>
+        <div class="next-card-body">
+          <h2 class="next-card-title">
+            <a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>
+          </h2>
+          <div class="next-card-when">${dateLabel}</div>
+          ${loc ? `<div class="next-card-where">${esc(loc)}</div>` : ''}
+          ${e.description ? `<p class="next-card-desc">${esc(e.description)}</p>` : ''}
+          <div class="next-card-footer">
+            ${e.organizer ? `<div class="next-card-organizer">org: <strong>${esc(e.organizer)}</strong></div>` : '<div></div>'}
+            <a href="${esc(e.url)}" class="btn-register" target="_blank" rel="noopener">→ Register</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderEventCard(e) {
+    const cd       = countdown(e.start_date);
+    const loc      = locationStr(e);
+    const mKey     = monthKey(e);
+    const isCyan   = e.event_type === 'virtual';
+    const formatLabel = e.event_type === 'virtual'
+      ? `<span class="detail-val cyan">VIRTUAL</span>`
+      : e.event_type === 'in-person'
+        ? `<span class="detail-val orange">IN-PERSON</span>`
+        : `<span class="detail-val">UNKNOWN</span>`;
+
+    return `
+    <div class="event-card ${typeClass(e.event_type)}" data-month="${mKey}">
+      <div class="event-card-top">
+        <div class="event-badges">${typeBadge(e.event_type)}</div>
+        <div class="event-countdown ${cd.cls}">${cd.text}</div>
+      </div>
+      <div class="event-card-body">
+        <div class="event-title">
+          <a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>
+        </div>
+        ${loc ? `
+        <div class="event-meta-row">
+          <div class="event-meta-item">
+            <span class="meta-icon">${isCyan ? '⊕' : '◎'}</span>
+            <span class="meta-val">${esc(loc)}</span>
+          </div>
+        </div>` : ''}
+        ${e.description ? `<p class="event-desc">${esc(e.description)}</p>` : ''}
+      </div>
+      <button class="event-expand-btn" onclick="toggleExpand(this)">
+        <span>// full_signal</span>
+        <span class="expand-icon">▾</span>
+      </button>
+      <div class="event-details">
+        <div class="event-details-grid">
+          ${e.organizer ? `<div class="detail-row"><span class="detail-key">organizer</span><span class="detail-val">${esc(e.organizer)}</span></div>` : ''}
+          <div class="detail-row"><span class="detail-key">format</span>${formatLabel}</div>
+          ${loc && loc !== 'Online' ? `<div class="detail-row"><span class="detail-key">location</span><span class="detail-val">${esc(loc)}</span></div>` : ''}
+        </div>
+        ${e.description ? `<p class="event-full-desc">${esc(e.description)}</p>` : ''}
+        <a href="${esc(e.url)}" class="btn-register-sm${isCyan ? ' cyan-btn' : ''}" target="_blank" rel="noopener">→ Register</a>
+      </div>
+    </div>`;
+  }
+
+  function renderDateGroup(dateStr, events) {
+    const d     = parseDate(dateStr);
+    const mKey  = d ? MONTHS[d.getMonth()] : 'TBD';
+    const day   = d ? DAYS[d.getDay()] : '';
+    const month = d ? MONTHS[d.getMonth()] : '';
+    const dd    = d ? String(d.getDate()).padStart(2, '0') : '';
+    const yyyy  = d ? d.getFullYear() : '';
+    const count = events.length === 1 ? '1 signal' : `${events.length} signals`;
+
+    return `
+    <div class="date-group" data-month="${mKey}">
+      <div class="date-divider">
+        <div class="date-divider-label">
+          <span class="date-slash">//</span>
+          <span class="date-day">${day}</span>
+          <span class="date-val"> ${dd} ${month} ${yyyy}</span>
+        </div>
+        <div class="date-divider-line"></div>
+        <div class="date-divider-count">${count}</div>
+      </div>
+      ${events.map(renderEventCard).join('')}
+    </div>`;
+  }
+
+  function renderMonthTabs(monthCounts, defaultMonth) {
+    const bar    = document.getElementById('month-bar');
+    const months = Object.keys(monthCounts);
+    const total  = Object.values(monthCounts).reduce((a, b) => a + b, 0);
+
+    let html = months.map((m, i) =>
+      `<button class="month-tab${i === 0 ? ' active' : ''}" onclick="filterMonth('${m}')">
+        ${m} <span class="tab-count">${monthCounts[m]}</span>
+      </button>`
+    ).join('');
+
+    if (months.length > 1) {
+      html += `<button class="month-tab" onclick="filterMonth('ALL')">
+        ALL <span class="tab-count">${total}</span>
+      </button>`;
+    }
+
+    bar.innerHTML = html;
+  }
+
+  function updateHeroStats(events) {
+    const inPerson = events.filter(e => e.event_type === 'in-person').length;
+    const virtual  = events.filter(e => e.event_type === 'virtual').length;
+    document.getElementById('hero-stats').innerHTML = `
+      <div class="hero-stat"><span>upcoming</span><strong class="val-orange">${events.length}</strong></div>
+      <div class="hero-stat"><span>in-person</span><strong class="val-orange">${inPerson}</strong></div>
+      <div class="hero-stat"><span>virtual</span><strong class="val-cyan">${virtual}</strong></div>
+    `;
+  }
+
+  async function fetchUpcomingEvents() {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/events?select=*&limit=500`,
+      { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+    );
+    if (!res.ok) throw new Error(`Supabase HTTP ${res.status}`);
+    const all    = await res.json();
+    const cutoff = todayMidnight();
+    return all
+      .filter(e => {
+        const d = parseDate(e.end_date || e.start_date);
+        return d && d >= cutoff;
+      })
+      .sort((a, b) => (parseDate(a.start_date) || 0) - (parseDate(b.start_date) || 0));
+  }
+
+  async function init() {
+    const root = document.getElementById('events-root');
+
+    let events;
+    try {
+      events = await fetchUpcomingEvents();
+    } catch (err) {
+      root.innerHTML = `<div class="empty-state">// failed to load events — ${esc(String(err))}</div>`;
+      return;
+    }
+
+    updateHeroStats(events);
+
+    // Update footer timestamp
+    const now = new Date();
+    document.getElementById('footer-ts').textContent =
+      `signal_dispatch // events // ${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+    if (events.length === 0) {
+      document.getElementById('month-bar').innerHTML = '';
+      root.innerHTML = `<div class="empty-state">// no upcoming OpenClaw events found — check back soon</div>`;
+      return;
+    }
+
+    // Build month counts
+    const monthCounts = {};
+    for (const e of events) {
+      const m = monthKey(e);
+      monthCounts[m] = (monthCounts[m] || 0) + 1;
+    }
+    const firstMonth = Object.keys(monthCounts)[0];
+    renderMonthTabs(monthCounts, firstMonth);
+
+    // Featured card = nearest upcoming event
+    let html = renderFeaturedCard(events[0]);
+
+    // Date groups for remaining events
+    const rest = events.slice(1);
+    if (rest.length > 0) {
+      const dateMap = new Map();
+      for (const e of rest) {
+        const key = e.start_date || 'TBD';
+        if (!dateMap.has(key)) dateMap.set(key, []);
+        dateMap.get(key).push(e);
+      }
+      for (const [dateStr, evs] of dateMap) {
+        html += renderDateGroup(dateStr, evs);
+      }
+    }
+
+    root.innerHTML = html;
+
+    // Apply default month filter (first month active)
+    filterMonth(firstMonth);
+  }
+
+  function filterMonth(month) {
+    document.querySelectorAll('.month-tab').forEach(tab => {
+      const label = tab.textContent.trim().split(/\s+/)[0];
+      tab.classList.toggle('active', label === month);
+    });
+    document.querySelectorAll('[data-month]').forEach(el => {
+      el.style.display = (month === 'ALL' || el.dataset.month === month) ? '' : 'none';
+    });
+  }
+
+  function toggleExpand(btn) {
+    const details = btn.nextElementSibling;
+    const isOpen  = details.classList.contains('open');
+    details.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.expand-icon').textContent = isOpen ? '▾' : '▴';
+  }
+
+  init();
+</script>
+</body>
+</html>
