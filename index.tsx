@@ -314,6 +314,7 @@ const App: React.FC = () => {
             <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
             <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media" />
             <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="Forge" />
+            <NavButton active={activePage === 'events'} onClick={() => handleNavClick('events')} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </nav>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-slate-400 hover:text-white">
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -325,6 +326,7 @@ const App: React.FC = () => {
             <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
             <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media Lab" />
             <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="The Forge" />
+            <NavButton active={activePage === 'events'} onClick={() => handleNavClick('events')} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </div>
         )}
       </header>

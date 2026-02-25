@@ -1,19 +1,32 @@
 """
 events_forge.py — Daily event discovery for the ClawBeat events feed.
 
-Sources:
-  • Eventbrite   — keyword search for "openclaw"
-  • Luma         — keyword search for "openclaw"
-  • Circle.so    — scans configured community event spaces directly
+Discovery (RSS-first, per editorial plan):
+  Layer 1 — RSS / API (low-friction, no scraping instability):
+    • Google News RSS  — searches "openclaw" + "event"
+    • Reddit RSS       — searches "openclaw event"
+    • HN Algolia API   — searches "openclaw event"
+    Event-platform URLs found in feed content are extracted and validated
+    without fetching the source articles.
 
-Restricting to dedicated event platforms (rather than news/social feeds)
-eliminates false positives — everything these platforms return is a
-genuine event listing, not a news article, blog post, or sponsored content.
+  Layer 2 — Platform scrapers (HTML keyword search):
+    • Eventbrite       — keyword search pages for "openclaw"
+    • Luma             — keyword search page for "openclaw"
+    • Meetup           — keyword search pages for "openclaw"
+    • Circle.so        — scans configured community event spaces directly
 
-Extraction uses schema.org Event JSON-LD where available, with og:/meta
-tag fallbacks. No LLM, no paid APIs.
+Validation (editorial plan keyword density rule):
+  Every candidate event page is checked before saving:
+    • PASS if "openclaw" appears in the event title
+    • PASS if "openclaw" appears 2+ times on the event registration page
+    • REJECT otherwise
+
+Note: LinkedIn Events and Facebook Events are auth-walled and cannot be
+scraped directly. They are discovered indirectly when their URLs appear in
+RSS feed content (Google News, Reddit).
 """
 
+import feedparser
 import requests
 import re
 import os
@@ -48,7 +61,30 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
-# Eventbrite: search for "openclaw" on virtual and general listings
+# ---------------------------------------------------------------------------
+# Layer 1 — RSS / API feeds
+# ---------------------------------------------------------------------------
+
+RSS_FEEDS = {
+    "Google News": (
+        "https://news.google.com/rss/search"
+        "?q=%22openclaw%22+%22event%22&hl=en-US&gl=US&ceid=US:en"
+    ),
+    "Reddit": (
+        "https://www.reddit.com/search.rss"
+        "?q=openclaw+event&sort=new&limit=25"
+    ),
+}
+
+HN_API_URL = (
+    "https://hn.algolia.com/api/v1/search_by_date"
+    "?query=openclaw+event&tags=story&hitsPerPage=20"
+)
+
+# ---------------------------------------------------------------------------
+# Layer 2 — Platform searches
+# ---------------------------------------------------------------------------
+
 EVENTBRITE_SEARCHES = [
     "https://www.eventbrite.com/d/online/openclaw/",
     "https://www.eventbrite.com/d/united-states/openclaw/",
@@ -56,13 +92,16 @@ EVENTBRITE_SEARCHES = [
     "https://www.eventbrite.com/d/united-kingdom/openclaw/",
 ]
 
-# Luma: attempt their search page (may be JS-rendered; handled gracefully)
 LUMA_SEARCHES = [
     "https://lu.ma/search?q=openclaw",
 ]
 
+MEETUP_SEARCHES = [
+    "https://www.meetup.com/find/?q=openclaw&source=EVENTS",
+    "https://www.meetup.com/find/?q=openclaw&source=EVENTS&eventType=online",
+]
+
 # Circle.so communities to scan directly.
-# Each entry needs base_url and the slug of the events space.
 # Add more communities here as needed.
 CIRCLE_COMMUNITIES = [
     {
@@ -77,20 +116,65 @@ EVENT_SCHEMA_TYPES = {
     "BusinessEvent", "Hackathon", "ExhibitionEvent", "CourseInstance",
 }
 
+# Regex to find event-platform URLs in arbitrary text.
+# Covers Eventbrite, Luma, Meetup, LinkedIn Events, Facebook Events, Circle.so.
+_EVENT_URL_RE = re.compile(
+    r'https?://(?:'
+    r'(?:www\.)?eventbrite\.com/e/[^\s\'"<>)\]]+|'
+    r'lu\.ma/[^\s\'"<>)\]]+|'
+    r'(?:www\.)?meetup\.com/[^/\s\'"<>)\]]+/events/[^\s\'"<>)\]]+|'
+    r'(?:www\.)?linkedin\.com/events/[^\s\'"<>)\]]+|'
+    r'(?:www\.)?facebook\.com/events/[^\s\'"<>)\]]+|'
+    r'[a-z0-9-]+\.circle\.so/c/[^\s\'"<>)\]]+'
+    r')',
+    re.IGNORECASE,
+)
+
 
 # ---------------------------------------------------------------------------
 # HTML fetch
 # ---------------------------------------------------------------------------
 
-def fetch_html(url: str, timeout: int = 12) -> tuple[BeautifulSoup | None, str]:
+def fetch_html(url: str, timeout: int = 12) -> tuple["BeautifulSoup | None", str]:
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=timeout)
+        resp = requests.get(url, headers=HEADERS, timeout=timeout, allow_redirects=True)
         if resp.status_code == 200:
             return BeautifulSoup(resp.text, "html.parser"), resp.text
         print(f"  ⚠️  HTTP {resp.status_code} for {url}")
     except Exception as ex:
         print(f"  ⚠️  Fetch error for {url}: {ex}")
     return None, ""
+
+
+# ---------------------------------------------------------------------------
+# Keyword density validation
+# ---------------------------------------------------------------------------
+
+def passes_keyword_filter(title: str, page_text: str) -> bool:
+    """
+    PASS if "openclaw" is in the event title.
+    PASS if "openclaw" appears 2+ times on the event page.
+    REJECT otherwise.
+    """
+    kw = KEYWORD.lower()
+    if kw in title.lower():
+        return True
+    return page_text.lower().count(kw) >= 2
+
+
+# ---------------------------------------------------------------------------
+# Event URL extraction from arbitrary text (for RSS layer)
+# ---------------------------------------------------------------------------
+
+def extract_event_urls(text: str) -> list[str]:
+    """Find event-platform URLs embedded in article/post text."""
+    raw = re.findall(_EVENT_URL_RE, text)
+    cleaned: list[str] = []
+    for u in raw:
+        u = u.rstrip(".,;:!?)")
+        if u not in cleaned:
+            cleaned.append(u)
+    return cleaned
 
 
 # ---------------------------------------------------------------------------
@@ -118,13 +202,11 @@ def find_event_schemas(blocks: list) -> list:
         elif isinstance(block, dict):
             if block.get("@type") in EVENT_SCHEMA_TYPES:
                 events.append(block)
-            # ItemList (Eventbrite search results embed events this way)
             for elem in block.get("itemListElement", []):
                 if isinstance(elem, dict):
                     inner = elem.get("item", elem)
                     if isinstance(inner, dict) and inner.get("@type") in EVENT_SCHEMA_TYPES:
                         events.append(inner)
-            # @graph (used by some CMS platforms)
             for node in block.get("@graph", []):
                 if isinstance(node, dict) and node.get("@type") in EVENT_SCHEMA_TYPES:
                     events.append(node)
@@ -188,7 +270,7 @@ def clean_text(raw: str, max_sentences: int = 3) -> str:
     return " ".join(sentences[:max_sentences]).strip()
 
 
-def schema_to_event(schema: dict, fallback_url: str) -> dict | None:
+def schema_to_event(schema: dict, fallback_url: str) -> "dict | None":
     title = schema.get("name", "").replace("\n", " ").strip()
     if not title:
         return None
@@ -233,14 +315,194 @@ def schema_to_event(schema: dict, fallback_url: str) -> dict | None:
 
 
 # ---------------------------------------------------------------------------
-# Platform scanners
+# Generic event-page extractor (JSON-LD → og: meta fallback)
+# Used by the RSS layer and wherever per-page fetching is needed.
+# ---------------------------------------------------------------------------
+
+def _extract_date_from_text(text: str) -> str:
+    months = (
+        "january|february|march|april|may|june|july|august|"
+        "september|october|november|december|"
+        "jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec"
+    )
+    month_map = {
+        "january": 1, "february": 2, "march": 3, "april": 4,
+        "may": 5, "june": 6, "july": 7, "august": 8,
+        "september": 9, "october": 10, "november": 11, "december": 12,
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4,
+        "jun": 6, "jul": 7, "aug": 8, "sep": 9,
+        "oct": 10, "nov": 11, "dec": 12,
+    }
+    dm = re.search(
+        rf'({months})\.?\s+(\d{{1,2}}),?\s+(20\d{{2}})',
+        text, re.IGNORECASE,
+    )
+    if dm:
+        mon = month_map.get(dm.group(1).lower(), 0)
+        day = int(dm.group(2))
+        yr  = int(dm.group(3))
+        if mon:
+            return f"{mon:02d}/{day:02d}/{yr}"
+    return ""
+
+
+def extract_event_from_page(url: str, org_name: str = "") -> "dict | None":
+    """
+    Fetch url, validate keyword density, extract event data.
+    Returns None if page is inaccessible or fails the keyword filter.
+    """
+    soup, _ = fetch_html(url)
+    if not soup:
+        return None
+
+    page_text = soup.get_text(separator=" ", strip=True)
+
+    # Try JSON-LD first
+    schemas = find_event_schemas(extract_json_ld(soup))
+    for s in schemas:
+        e = schema_to_event(s, url)
+        if e:
+            if not passes_keyword_filter(e["title"], page_text):
+                print(f"     ⛔ Filtered (low density): {e['title'][:60]}")
+                return None
+            return e
+
+    # Fallback: og: meta tags
+    def og(prop: str) -> str:
+        tag = soup.find("meta", {"property": f"og:{prop}"}) or \
+              soup.find("meta", {"name": prop})
+        return str(tag["content"]).strip() if tag and tag.get("content") else ""
+
+    title = og("title") or (soup.title.string.strip() if soup.title else "")
+    if not title:
+        return None
+
+    if not passes_keyword_filter(title, page_text):
+        print(f"     ⛔ Filtered (low density): {title[:60]}")
+        return None
+
+    description = clean_text(og("description"))
+    start_date  = _extract_date_from_text(page_text)
+
+    combined = (title + " " + description + " " + page_text[:500]).lower()
+    if any(w in combined for w in ("virtual", "online", "zoom", "webinar", "livestream")):
+        event_type = "virtual"
+    else:
+        event_type = "unknown"
+
+    if not org_name:
+        try:
+            org_name = urlparse(url).netloc.lstrip("www.").split(".")[0].capitalize()
+        except Exception:
+            org_name = ""
+
+    return {
+        "url":              url,
+        "title":            title,
+        "organizer":        org_name,
+        "event_type":       event_type,
+        "location_city":    "",
+        "location_state":   "",
+        "location_country": "",
+        "start_date":       start_date,
+        "end_date":         start_date,
+        "description":      description,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Layer 1: RSS / API scanners
+# ---------------------------------------------------------------------------
+
+def scan_rss_feeds() -> list[dict]:
+    """
+    Scan Google News and Reddit RSS feeds for event-platform URLs.
+    Extracts event URLs directly from feed item content (title + link + summary)
+    without fetching source articles — minimises request volume.
+    LinkedIn Events and Facebook Events are discovered here when their URLs
+    appear in articles or posts (auth-walled platforms cannot be scraped directly).
+    """
+    found = []
+    for name, feed_url in RSS_FEEDS.items():
+        print(f"  📡 RSS [{name}]...")
+        try:
+            feed = feedparser.parse(feed_url)
+        except Exception as ex:
+            print(f"     ⚠️  feedparser error: {ex}")
+            continue
+
+        entries = feed.entries[:25]
+        print(f"     {len(entries)} item(s) in feed.")
+
+        candidate_urls: set[str] = set()
+        for entry in entries:
+            blob = " ".join([
+                getattr(entry, "title", ""),
+                getattr(entry, "link", ""),
+                getattr(entry, "summary", ""),
+            ])
+            for url in extract_event_urls(blob):
+                candidate_urls.add(url)
+
+        print(f"     {len(candidate_urls)} candidate event URL(s) extracted.")
+        for url in candidate_urls:
+            time.sleep(1)
+            e = extract_event_from_page(url)
+            if e:
+                found.append(e)
+                print(f"     ✅ {e['title'][:60]}")
+
+        time.sleep(2)
+
+    return found
+
+
+def scan_hn_api() -> list[dict]:
+    """
+    Query the Hacker News Algolia API for OpenClaw event stories.
+    Checks story URLs directly for event-platform matches.
+    """
+    print(f"  📡 HN Algolia API...")
+    found = []
+    try:
+        resp = requests.get(HN_API_URL, timeout=12)
+        if resp.status_code != 200:
+            print(f"     ⚠️  HTTP {resp.status_code}")
+            return found
+        hits = resp.json().get("hits", [])
+        print(f"     {len(hits)} hit(s) from HN.")
+    except Exception as ex:
+        print(f"     ⚠️  HN API error: {ex}")
+        return found
+
+    candidate_urls: set[str] = set()
+    for hit in hits:
+        blob = f"{hit.get('title', '')} {hit.get('url', '')}"
+        for url in extract_event_urls(blob):
+            candidate_urls.add(url)
+
+    print(f"     {len(candidate_urls)} candidate event URL(s).")
+    for url in candidate_urls:
+        time.sleep(1)
+        e = extract_event_from_page(url)
+        if e:
+            found.append(e)
+            print(f"     ✅ {e['title'][:60]}")
+
+    time.sleep(2)
+    return found
+
+
+# ---------------------------------------------------------------------------
+# Layer 2: Platform scrapers
 # ---------------------------------------------------------------------------
 
 def scan_eventbrite() -> list[dict]:
     """
-    Fetch Eventbrite keyword search pages.
-    Primary: extract Event schema from the search results page JSON-LD.
-    Fallback: follow individual /e/ event links and extract from detail pages.
+    Fetch Eventbrite keyword search pages for "openclaw".
+    Primary: extract Event schemas from search-page JSON-LD.
+    Fallback: visit individual /e/ event links.
+    Validation: keyword density filter applied on every event.
     """
     found = []
     for search_url in EVENTBRITE_SEARCHES:
@@ -250,35 +512,31 @@ def scan_eventbrite() -> list[dict]:
             time.sleep(2)
             continue
 
+        page_text = soup.get_text(separator=" ", strip=True)
         schemas = find_event_schemas(extract_json_ld(soup))
         if schemas:
             print(f"     {len(schemas)} event schema(s) on search page.")
             for s in schemas:
                 e = schema_to_event(s, search_url)
-                if e:
+                if e and passes_keyword_filter(e["title"], page_text):
                     found.append(e)
+                elif e:
+                    print(f"     ⛔ Filtered: {e['title'][:60]}")
         else:
-            # No JSON-LD on search page — collect individual event page links
             event_links: set[str] = set()
             for a in soup.find_all("a", href=True):
                 href = str(a["href"])
-                # Eventbrite event URLs contain /e/ followed by a slug
                 if re.search(r"eventbrite\.com/e/", href):
                     clean = href.split("?")[0].split("#")[0]
                     if not clean.startswith("http"):
                         clean = urljoin("https://www.eventbrite.com", clean)
                     event_links.add(clean)
-
-            print(f"     No JSON-LD on search page; visiting {len(event_links)} event link(s).")
+            print(f"     No JSON-LD; visiting {len(event_links)} event link(s).")
             for link in list(event_links)[:10]:
                 time.sleep(1.5)
-                esoup, _ = fetch_html(link)
-                if not esoup:
-                    continue
-                for s in find_event_schemas(extract_json_ld(esoup)):
-                    e = schema_to_event(s, link)
-                    if e:
-                        found.append(e)
+                e = extract_event_from_page(link)
+                if e:
+                    found.append(e)
 
         time.sleep(2)
     return found
@@ -286,9 +544,9 @@ def scan_eventbrite() -> list[dict]:
 
 def scan_luma() -> list[dict]:
     """
-    Fetch Luma search page for OpenClaw events.
-    Luma is often JS-rendered; this extracts whatever is available server-side.
-    Falls back to Next.js __NEXT_DATA__ if present.
+    Fetch Luma search page for "openclaw".
+    Luma is often JS-rendered; falls back to Next.js __NEXT_DATA__ and link crawl.
+    Validation: keyword density filter applied on every event.
     """
     found = []
     for search_url in LUMA_SEARCHES:
@@ -298,40 +556,85 @@ def scan_luma() -> list[dict]:
             time.sleep(2)
             continue
 
-        # Try standard JSON-LD first
         schemas = find_event_schemas(extract_json_ld(soup))
         if schemas:
             print(f"     {len(schemas)} event schema(s) found.")
+            page_text = soup.get_text(separator=" ", strip=True)
             for s in schemas:
                 e = schema_to_event(s, search_url)
-                if e:
+                if e and passes_keyword_filter(e["title"], page_text):
                     found.append(e)
+                elif e:
+                    print(f"     ⛔ Filtered: {e['title'][:60]}")
         else:
-            # Try extracting event URLs from Next.js data (Luma uses Next.js)
+            event_urls: set[str] = set()
             m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', raw, re.DOTALL)
             if m:
                 try:
                     next_data = json.loads(m.group(1))
-                    # Walk the tree looking for event-like objects with a url/name/startAt
-                    event_urls: set[str] = set()
-                    raw_str = json.dumps(next_data)
-                    # lu.ma URLs in the data
-                    for match in re.finditer(r'"url"\s*:\s*"(https://lu\.ma/[^"]+)"', raw_str):
+                    for match in re.finditer(r'"url"\s*:\s*"(https://lu\.ma/[^"]+)"', json.dumps(next_data)):
                         event_urls.add(match.group(1))
-                    print(f"     Next.js data found; visiting {len(event_urls)} Luma event link(s).")
-                    for link in list(event_urls)[:10]:
-                        time.sleep(1.5)
-                        esoup, _ = fetch_html(link)
-                        if not esoup:
-                            continue
-                        for s in find_event_schemas(extract_json_ld(esoup)):
-                            e = schema_to_event(s, link)
-                            if e:
-                                found.append(e)
                 except Exception as ex:
                     print(f"     Could not parse Next.js data: {ex}")
-            else:
-                print(f"     No usable data from Luma (likely fully JS-rendered).")
+
+            # Also collect Luma links from anchor tags
+            for a in soup.find_all("a", href=True):
+                href = str(a["href"])
+                if re.match(r'https?://lu\.ma/[^/?#\s]+$', href):
+                    event_urls.add(href.split("?")[0])
+
+            print(f"     Visiting {len(event_urls)} Luma event link(s).")
+            for link in list(event_urls)[:10]:
+                time.sleep(1.5)
+                e = extract_event_from_page(link)
+                if e:
+                    found.append(e)
+
+        time.sleep(2)
+    return found
+
+
+def scan_meetup() -> list[dict]:
+    """
+    Fetch Meetup keyword search pages for "openclaw".
+    Meetup's API is no longer freely accessible; uses HTML scraping.
+    Primary: JSON-LD on search page or event pages.
+    Validation: keyword density filter applied on every event.
+    """
+    found = []
+    for search_url in MEETUP_SEARCHES:
+        print(f"  📅 Meetup: {search_url}")
+        soup, _ = fetch_html(search_url)
+        if not soup:
+            time.sleep(2)
+            continue
+
+        page_text = soup.get_text(separator=" ", strip=True)
+        schemas = find_event_schemas(extract_json_ld(soup))
+        if schemas:
+            print(f"     {len(schemas)} event schema(s) on search page.")
+            for s in schemas:
+                e = schema_to_event(s, search_url)
+                if e and passes_keyword_filter(e["title"], page_text):
+                    found.append(e)
+                elif e:
+                    print(f"     ⛔ Filtered: {e['title'][:60]}")
+        else:
+            event_links: set[str] = set()
+            for a in soup.find_all("a", href=True):
+                href = str(a["href"])
+                # Meetup event URLs: meetup.com/GroupName/events/EVENTID/
+                if re.search(r'meetup\.com/[^/]+/events/\d+', href):
+                    clean = href.split("?")[0].split("#")[0]
+                    if not clean.startswith("http"):
+                        clean = urljoin("https://www.meetup.com", clean)
+                    event_links.add(clean)
+            print(f"     No JSON-LD; visiting {len(event_links)} event link(s).")
+            for link in list(event_links)[:10]:
+                time.sleep(1.5)
+                e = extract_event_from_page(link)
+                if e:
+                    found.append(e)
 
         time.sleep(2)
     return found
@@ -339,19 +642,14 @@ def scan_luma() -> list[dict]:
 
 def scan_circle() -> list[dict]:
     """
-    Scan configured Circle.so community event spaces.
-
-    Strategy:
-      1. Fetch the events space listing page.
-      2. Collect links to individual event pages that match the space URL pattern.
-      3. For each event page, try JSON-LD first, then og:/meta tags, then
-         __NEXT_DATA__ JSON for title, description, and date.
+    Scan configured Circle.so community event spaces directly.
+    Validation: keyword density filter applied on every event.
     """
     found = []
     for community in CIRCLE_COMMUNITIES:
-        base     = community["base_url"].rstrip("/")
-        space    = community["events_space"]
-        org_name = community["name"]
+        base      = community["base_url"].rstrip("/")
+        space     = community["events_space"]
+        org_name  = community["name"]
         space_url = f"{base}/c/{space}"
         print(f"  📅 Circle.so [{org_name}]: {space_url}")
 
@@ -360,7 +658,6 @@ def scan_circle() -> list[dict]:
             time.sleep(2)
             continue
 
-        # Collect links to individual event pages within this space
         event_links: set[str] = set()
         pattern = re.compile(rf"^{re.escape(base)}/c/{re.escape(space)}/[^/?#]+$")
         for a in soup.find_all("a", href=True):
@@ -371,7 +668,6 @@ def scan_circle() -> list[dict]:
             if pattern.match(href) and href != space_url:
                 event_links.add(href)
 
-        # Also try extracting from Next.js bundle (Circle.so uses Next.js)
         if not event_links:
             m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', raw, re.DOTALL)
             if m:
@@ -379,87 +675,18 @@ def scan_circle() -> list[dict]:
                     raw_str = json.loads(m.group(1))
                     for match in re.finditer(
                         rf'"url"\s*:\s*"({re.escape(base)}/c/{re.escape(space)}/[^"]+)"',
-                        json.dumps(raw_str)
+                        json.dumps(raw_str),
                     ):
                         event_links.add(match.group(1).split("?")[0])
                 except Exception:
                     pass
 
         print(f"     Found {len(event_links)} event link(s) to visit.")
-
         for link in list(event_links)[:15]:
             time.sleep(1.5)
-            esoup, eraw = fetch_html(link)
-            if not esoup:
-                continue
-
-            # Try JSON-LD first
-            schemas = find_event_schemas(extract_json_ld(esoup))
-            if schemas:
-                for s in schemas:
-                    e = schema_to_event(s, link)
-                    if e:
-                        found.append(e)
-                continue
-
-            # Fallback: build event from og:/meta tags + any date we can find
-            def og(prop: str) -> str:
-                tag = esoup.find("meta", {"property": f"og:{prop}"}) or \
-                      esoup.find("meta", {"name": prop})
-                return str(tag["content"]).strip() if tag and tag.get("content") else ""
-
-            title = og("title") or (esoup.title.string.strip() if esoup.title else "")
-            if not title:
-                continue
-
-            description = clean_text(og("description"))
-
-            # Try to find a date in the page text using regex
-            page_text = esoup.get_text(separator=" ", strip=True)
-            start_date = ""
-            months = (
-                "january|february|march|april|may|june|july|august|"
-                "september|october|november|december|"
-                "jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec"
-            )
-            dm = re.search(
-                rf'({months})\.?\s+(\d{{1,2}}),?\s+(20\d{{2}})',
-                page_text, re.IGNORECASE
-            )
-            month_map = {
-                "january": 1, "february": 2, "march": 3, "april": 4,
-                "may": 5, "june": 6, "july": 7, "august": 8,
-                "september": 9, "october": 10, "november": 11, "december": 12,
-                "jan": 1, "feb": 2, "mar": 3, "apr": 4,
-                "jun": 6, "jul": 7, "aug": 8, "sep": 9,
-                "oct": 10, "nov": 11, "dec": 12,
-            }
-            if dm:
-                mon = month_map.get(dm.group(1).lower(), 0)
-                day = int(dm.group(2))
-                yr  = int(dm.group(3))
-                if mon:
-                    start_date = f"{mon:02d}/{day:02d}/{yr}"
-
-            # Detect virtual vs in-person
-            combined = (title + " " + description + " " + page_text[:500]).lower()
-            if any(w in combined for w in ("virtual", "online", "zoom", "webinar", "livestream")):
-                event_type = "virtual"
-            else:
-                event_type = "unknown"
-
-            found.append({
-                "url":              link,
-                "title":            title,
-                "organizer":        org_name,
-                "event_type":       event_type,
-                "location_city":    "",
-                "location_state":   "",
-                "location_country": "",
-                "start_date":       start_date,
-                "end_date":         start_date,
-                "description":      description,
-            })
+            e = extract_event_from_page(link, org_name)
+            if e:
+                found.append(e)
 
         time.sleep(2)
     return found
@@ -507,13 +734,25 @@ def save_events(events: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("🗓️  Events Forge — scanning Eventbrite, Luma & Circle.so for OpenClaw events...")
+    print(
+        "🗓️  Events Forge — scanning RSS feeds + platforms for OpenClaw events...\n"
+        "     Layer 1 (RSS/API): Google News · Reddit · HN\n"
+        "     Layer 2 (scrapers): Eventbrite · Luma · Meetup · Circle.so\n"
+        "     Validation: title match OR 2+ page mentions of 'openclaw'\n"
+    )
 
     existing_urls = load_existing_urls()
 
-    raw_events: list[dict] = scan_eventbrite() + scan_luma() + scan_circle()
+    raw_events: list[dict] = (
+        scan_rss_feeds()
+        + scan_hn_api()
+        + scan_eventbrite()
+        + scan_luma()
+        + scan_meetup()
+        + scan_circle()
+    )
 
-    # Deduplicate by URL
+    # Deduplicate by URL within this run
     seen: set[str] = set()
     unique_events: list[dict] = []
     for e in raw_events:
@@ -522,7 +761,7 @@ if __name__ == "__main__":
             unique_events.append(e)
 
     new_events = [e for e in unique_events if e["url"] not in existing_urls]
-    print(f"🔍 {len(unique_events)} unique event(s) found, {len(new_events)} new.")
+    print(f"\n🔍 {len(unique_events)} unique event(s) found, {len(new_events)} new.")
 
     if new_events:
         for e in new_events:
