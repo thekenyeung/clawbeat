@@ -1,14 +1,17 @@
 """
-events_forge.py — Daily OpenClaw event discovery.
+events_forge.py — Daily event discovery for the ClawBeat events feed.
 
-Sources: Eventbrite and Luma only.
+Sources:
+  • Eventbrite   — keyword search for "openclaw"
+  • Luma         — keyword search for "openclaw"
+  • Circle.so    — scans configured community event spaces directly
 
 Restricting to dedicated event platforms (rather than news/social feeds)
 eliminates false positives — everything these platforms return is a
 genuine event listing, not a news article, blog post, or sponsored content.
 
-Extraction uses schema.org Event JSON-LD, which both platforms embed for SEO.
-No LLM, no paid APIs.
+Extraction uses schema.org Event JSON-LD where available, with og:/meta
+tag fallbacks. No LLM, no paid APIs.
 """
 
 import requests
@@ -56,6 +59,17 @@ EVENTBRITE_SEARCHES = [
 # Luma: attempt their search page (may be JS-rendered; handled gracefully)
 LUMA_SEARCHES = [
     "https://lu.ma/search?q=openclaw",
+]
+
+# Circle.so communities to scan directly.
+# Each entry needs base_url and the slug of the events space.
+# Add more communities here as needed.
+CIRCLE_COMMUNITIES = [
+    {
+        "name":         "MindStudio Academy",
+        "base_url":     "https://mindstudio-academy.circle.so",
+        "events_space": "events-bootcamps",
+    },
 ]
 
 EVENT_SCHEMA_TYPES = {
@@ -323,6 +337,134 @@ def scan_luma() -> list[dict]:
     return found
 
 
+def scan_circle() -> list[dict]:
+    """
+    Scan configured Circle.so community event spaces.
+
+    Strategy:
+      1. Fetch the events space listing page.
+      2. Collect links to individual event pages that match the space URL pattern.
+      3. For each event page, try JSON-LD first, then og:/meta tags, then
+         __NEXT_DATA__ JSON for title, description, and date.
+    """
+    found = []
+    for community in CIRCLE_COMMUNITIES:
+        base     = community["base_url"].rstrip("/")
+        space    = community["events_space"]
+        org_name = community["name"]
+        space_url = f"{base}/c/{space}"
+        print(f"  📅 Circle.so [{org_name}]: {space_url}")
+
+        soup, raw = fetch_html(space_url)
+        if not soup:
+            time.sleep(2)
+            continue
+
+        # Collect links to individual event pages within this space
+        event_links: set[str] = set()
+        pattern = re.compile(rf"^{re.escape(base)}/c/{re.escape(space)}/[^/?#]+$")
+        for a in soup.find_all("a", href=True):
+            href = str(a["href"])
+            if not href.startswith("http"):
+                href = urljoin(base, href)
+            href = href.split("?")[0].split("#")[0]
+            if pattern.match(href) and href != space_url:
+                event_links.add(href)
+
+        # Also try extracting from Next.js bundle (Circle.so uses Next.js)
+        if not event_links:
+            m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', raw, re.DOTALL)
+            if m:
+                try:
+                    raw_str = json.loads(m.group(1))
+                    for match in re.finditer(
+                        rf'"url"\s*:\s*"({re.escape(base)}/c/{re.escape(space)}/[^"]+)"',
+                        json.dumps(raw_str)
+                    ):
+                        event_links.add(match.group(1).split("?")[0])
+                except Exception:
+                    pass
+
+        print(f"     Found {len(event_links)} event link(s) to visit.")
+
+        for link in list(event_links)[:15]:
+            time.sleep(1.5)
+            esoup, eraw = fetch_html(link)
+            if not esoup:
+                continue
+
+            # Try JSON-LD first
+            schemas = find_event_schemas(extract_json_ld(esoup))
+            if schemas:
+                for s in schemas:
+                    e = schema_to_event(s, link)
+                    if e:
+                        found.append(e)
+                continue
+
+            # Fallback: build event from og:/meta tags + any date we can find
+            def og(prop: str) -> str:
+                tag = esoup.find("meta", {"property": f"og:{prop}"}) or \
+                      esoup.find("meta", {"name": prop})
+                return str(tag["content"]).strip() if tag and tag.get("content") else ""
+
+            title = og("title") or (esoup.title.string.strip() if esoup.title else "")
+            if not title:
+                continue
+
+            description = clean_text(og("description"))
+
+            # Try to find a date in the page text using regex
+            page_text = esoup.get_text(separator=" ", strip=True)
+            start_date = ""
+            months = (
+                "january|february|march|april|may|june|july|august|"
+                "september|october|november|december|"
+                "jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec"
+            )
+            dm = re.search(
+                rf'({months})\.?\s+(\d{{1,2}}),?\s+(20\d{{2}})',
+                page_text, re.IGNORECASE
+            )
+            month_map = {
+                "january": 1, "february": 2, "march": 3, "april": 4,
+                "may": 5, "june": 6, "july": 7, "august": 8,
+                "september": 9, "october": 10, "november": 11, "december": 12,
+                "jan": 1, "feb": 2, "mar": 3, "apr": 4,
+                "jun": 6, "jul": 7, "aug": 8, "sep": 9,
+                "oct": 10, "nov": 11, "dec": 12,
+            }
+            if dm:
+                mon = month_map.get(dm.group(1).lower(), 0)
+                day = int(dm.group(2))
+                yr  = int(dm.group(3))
+                if mon:
+                    start_date = f"{mon:02d}/{day:02d}/{yr}"
+
+            # Detect virtual vs in-person
+            combined = (title + " " + description + " " + page_text[:500]).lower()
+            if any(w in combined for w in ("virtual", "online", "zoom", "webinar", "livestream")):
+                event_type = "virtual"
+            else:
+                event_type = "unknown"
+
+            found.append({
+                "url":              link,
+                "title":            title,
+                "organizer":        org_name,
+                "event_type":       event_type,
+                "location_city":    "",
+                "location_state":   "",
+                "location_country": "",
+                "start_date":       start_date,
+                "end_date":         start_date,
+                "description":      description,
+            })
+
+        time.sleep(2)
+    return found
+
+
 # ---------------------------------------------------------------------------
 # Supabase I/O
 # ---------------------------------------------------------------------------
@@ -365,11 +507,11 @@ def save_events(events: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("🗓️  Events Forge — scanning Eventbrite & Luma for OpenClaw events...")
+    print("🗓️  Events Forge — scanning Eventbrite, Luma & Circle.so for OpenClaw events...")
 
     existing_urls = load_existing_urls()
 
-    raw_events: list[dict] = scan_eventbrite() + scan_luma()
+    raw_events: list[dict] = scan_eventbrite() + scan_luma() + scan_circle()
 
     # Deduplicate by URL
     seen: set[str] = set()
