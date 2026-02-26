@@ -305,7 +305,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={handleLogoClick}>
             <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 group-hover:border-orange-500/50 transition-all shadow-2xl">
               <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="Logo" className="w-full h-full object-cover" />
@@ -326,7 +326,7 @@ const App: React.FC = () => {
           </button>
         </div>
         {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-16 left-0 w-full bg-[#0a0a0c]/95 backdrop-blur-lg border-b border-white/10 py-4 px-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
+          <div className="md:hidden absolute top-16 left-0 w-full bg-[#0a0a0c]/95 backdrop-blur-lg border-b border-white/10 py-4 px-6 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel Feed" />
             <NavButton active={false} onClick={() => window.location.href = '/research.html'} icon={<BookOpen className="w-4 h-4" />} label="Research" />
             <NavButton active={false} onClick={() => window.location.href = '/media.html'} icon={<Video className="w-4 h-4" />} label="Media Lab" />
@@ -336,8 +336,8 @@ const App: React.FC = () => {
         )}
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-end mb-12 border-b border-white/5 pb-8">
+      <main className="max-w-6xl mx-auto px-6 pt-8 pb-0">
+        <div className="flex justify-between items-end pb-6">
           <div>
             <h2 className="text-4xl font-black text-white uppercase italic tracking-tighter leading-[1.1]">
               {activePage === 'news' && <>Ecosystem <span className="text-orange-500">Dispatch</span></>}
@@ -346,12 +346,12 @@ const App: React.FC = () => {
               {activePage === 'projects' && <>The <span className="text-orange-500">Forge</span></>}
               {activePage === 'events' && <>Community <span className="text-orange-500">Events</span></>}
             </h2>
-            <div className="flex flex-col gap-1 mt-2">
-              <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
+            <div className="flex flex-col gap-1 mt-3">
+              <p style={{fontFamily:"'JetBrains Mono',monospace"}} className="text-[0.65rem] text-[#525866] uppercase tracking-[0.1em]">
                 {activePage === 'research' ? 'ArXiv Intelligence & Semantic Scholar' : activePage === 'events' ? 'Upcoming OpenClaw Gatherings' : 'Autonomous Intelligence Curation'}
               </p>
               {lastUpdated && (
-                <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest whitespace-nowrap">
+                <span style={{fontFamily:"'JetBrains Mono',monospace"}} className="text-[0.7rem] text-[#525866] whitespace-nowrap">
                   Last Sync: {lastUpdated}
                 </span>
               )}
@@ -375,7 +375,7 @@ const App: React.FC = () => {
             <button onClick={() => fetchContent()} className="mt-4 text-xs text-slate-500 underline uppercase tracking-widest">Retry Sync</button>
           </div>
         ) : (
-          <div className="min-h-[50vh]">
+          <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
                 <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} />
