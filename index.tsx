@@ -139,8 +139,9 @@ const checkIfVerified = (item: NewsItem) => {
 };
 
 const App: React.FC = () => {
+  const urlTab = new URLSearchParams(window.location.search).get('tab') as Page | null;
   const [activePage, setActivePage] = useState<Page>(
-    (sessionStorage.getItem('activePage') as Page) || 'news'
+    urlTab || (sessionStorage.getItem('activePage') as Page) || 'news'
   );
   
   const [currentPage, setCurrentPage] = useState(Number(sessionStorage.getItem('newsPage')) || 1);
@@ -420,9 +421,6 @@ const App: React.FC = () => {
             ClawBeat<span className="text-orange-500">.co</span>
           </div>
           <div className="font-mono text-[10px] text-slate-600">signal_dispatch // intel_feed</div>
-          <div className="font-mono text-[10px] font-bold">
-            <a href="/events-calendar.html" className="text-orange-500 hover:text-orange-400 no-underline">→ events_calendar</a>
-          </div>
         </div>
       </footer>
     </div>

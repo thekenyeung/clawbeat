@@ -105,6 +105,13 @@ LUMA_COMMUNITY_CALENDARS = [
     "https://lu.ma/claw",  # OpenClaw community calendar
 ]
 
+# Hand-curated OpenClaw event URLs (seed list).
+# Add specific event pages here to guarantee they are ingested on the next run.
+# Keyword density filter is skipped — these are manually verified as on-topic.
+LUMA_SEED_EVENTS = [
+    "https://luma.com/poiq9yzx",  # Claw-a-rado — OpenClaw Denver meetup
+]
+
 AITINKERERS_URL = "https://aitinkerers.org/p/events"
 
 EVENTSHIP_SEARCHES = [
@@ -137,6 +144,7 @@ _EVENT_URL_RE = re.compile(
     r'https?://(?:'
     r'(?:www\.)?eventbrite\.com/e/[^\s\'"<>)\]]+|'
     r'lu\.ma/[^\s\'"<>)\]]+|'
+    r'(?:www\.)?luma\.com/[^\s\'"<>)\]]+|'
     r'(?:www\.)?meetup\.com/[^/\s\'"<>)\]]+/events/[^\s\'"<>)\]]+|'
     r'(?:www\.)?linkedin\.com/events/[^\s\'"<>)\]]+|'
     r'(?:www\.)?facebook\.com/events/[^\s\'"<>)\]]+|'
@@ -699,6 +707,58 @@ def scan_luma_communities() -> list[dict]:
     return found
 
 
+def scan_seed_events() -> list[dict]:
+    """
+    Directly fetch hand-curated OpenClaw event URLs from LUMA_SEED_EVENTS.
+    Keyword density filter is skipped — all seed events are manually verified.
+    Uses the same JSON-LD / og: meta extraction as the community calendar scanner.
+    """
+    found = []
+    for url in LUMA_SEED_EVENTS:
+        print(f"  📌 Seed event: {url}")
+        time.sleep(1)
+        soup, _ = fetch_html(url)
+        if not soup:
+            continue
+
+        schemas = find_event_schemas(extract_json_ld(soup))
+        added = False
+        for s in schemas:
+            e = schema_to_event(s, url)
+            if e:
+                found.append(e)
+                print(f"     ✅ {e['title'][:60]}")
+                added = True
+                break
+
+        if not added:
+            def og(prop: str) -> str:
+                tag = soup.find("meta", {"property": f"og:{prop}"}) or \
+                      soup.find("meta", {"name": prop})
+                return str(tag["content"]).strip() if tag and tag.get("content") else ""
+
+            title = og("title") or (soup.title.string.strip() if soup.title else "")
+            if title:
+                page_text = soup.get_text(separator=" ", strip=True)
+                description = clean_text(og("description"))
+                start_date  = _extract_date_from_text(page_text)
+                found.append({
+                    "url":              url,
+                    "title":            title,
+                    "organizer":        "OpenClaw",
+                    "event_type":       "in-person",
+                    "location_city":    "",
+                    "location_state":   "",
+                    "location_country": "",
+                    "start_date":       start_date,
+                    "end_date":         start_date,
+                    "description":      description,
+                })
+                print(f"     ✅ {title[:60]} (og: fallback)")
+
+    return found
+
+
 def scan_aitinkerers() -> list[dict]:
     """
     Scrape AI Tinkerers events page for OpenClaw-related events.
@@ -962,11 +1022,12 @@ def save_events(events: list[dict]) -> None:
 if __name__ == "__main__":
     print(
         "🗓️  Events Forge — scanning RSS feeds + platforms for OpenClaw events...\n"
+        "     Seed events: hand-curated OpenClaw URLs (no keyword filter)\n"
         "     Layer 1 (RSS/API): Google News · Reddit · HN\n"
         "     Layer 2 (scrapers): Eventbrite · Luma search · lu.ma/claw\n"
         "                         AI Tinkerers · Eventship · Meetup · Circle.so\n"
         "     Validation: title match OR 2+ page mentions of 'openclaw'\n"
-        "     Note: lu.ma/claw is a trusted community calendar — keyword filter skipped\n"
+        "     Note: lu.ma/claw + seed events skip the keyword filter\n"
     )
 
     print("\n🧹 Step 1: Cleaning up garbage events from previous runs...")
@@ -976,7 +1037,8 @@ if __name__ == "__main__":
     existing_urls = load_existing_urls()
 
     raw_events: list[dict] = (
-        scan_rss_feeds()
+        scan_seed_events()
+        + scan_rss_feeds()
         + scan_hn_api()
         + scan_eventbrite()
         + scan_luma()

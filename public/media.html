@@ -96,7 +96,7 @@
     .path-sep { color: var(--text-4); }
     .path-current { color: var(--orange); }
     .hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; }
-    .hero-title { font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -0.04em; line-height: 0.95; color: #fff; text-transform: uppercase; font-style: italic; }
+    .hero-title { font-family: var(--sans); font-size: 2.25rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1.1; color: #fff; text-transform: uppercase; font-style: italic; }
     .hero-title em { color: var(--orange); font-style: italic; }
     .hero-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; flex-shrink: 0; }
     .hero-stat { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); display: flex; align-items: center; gap: 0.4rem; }
@@ -185,7 +185,7 @@
       .footer-mono { display: none; }
       .video-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
-    @media (max-width: 480px) { .hero-title { font-size: 1.75rem; } }
+
   </style>
 </head>
 <body>
@@ -193,14 +193,14 @@
 <!-- ── HEADER ── -->
 <header class="header">
   <div class="header-inner">
-    <a href="/" class="brand">
+    <a href="/?tab=news" class="brand">
       <div class="brand-img">
         <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
       </div>
       <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
     <nav class="header-nav">
-      <a href="/" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+      <a href="/?tab=news" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
       <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
       <a href="/media.html" class="nav-item active"><i data-lucide="video"></i>Media</a>
       <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
@@ -215,7 +215,7 @@
 
 <!-- ── MOBILE MENU ── -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="/" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/?tab=news" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
   <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html" class="mobile-nav-item active"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
@@ -230,7 +230,7 @@
     <span class="path-current">media</span>
   </div>
   <div class="hero-row">
-    <h1 class="hero-title">Visual<br><em>Stream</em></h1>
+    <h1 class="hero-title">Visual <em>Stream</em></h1>
     <div class="hero-stats" id="hero-stats">
       <div class="hero-stat"><span>loading</span><strong class="val-orange">—</strong></div>
     </div>
@@ -251,7 +251,6 @@
   <div class="footer-inner">
     <div class="footer-brand">ClawBeat<span>.co</span></div>
     <div class="footer-mono" id="footer-ts">signal_dispatch // media</div>
-    <div class="footer-back"><a href="/">← intel_feed</a></div>
   </div>
 </footer>
 

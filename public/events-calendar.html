@@ -195,8 +195,8 @@
       display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
     }
     .hero-title {
-      font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900; letter-spacing: -0.04em; line-height: 0.95;
+      font-family: var(--sans); font-size: 2.25rem;
+      font-weight: 900; letter-spacing: -0.05em; line-height: 1.1;
       color: #fff; text-transform: uppercase; font-style: italic;
     }
     .hero-title em { color: var(--orange); font-style: italic; }
@@ -556,7 +556,6 @@
     }
 
     @media (max-width: 480px) {
-      .hero-title { font-size: 1.75rem; }
       .next-card-body { padding: 1rem; }
       .next-card-footer { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
       .btn-register { width: 100%; text-align: center; }
@@ -569,14 +568,14 @@
 <!-- ── HEADER ── -->
 <header class="header">
   <div class="header-inner">
-    <a href="/" class="brand">
+    <a href="/?tab=news" class="brand">
       <div class="brand-img">
         <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
       </div>
       <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
     <nav class="header-nav">
-      <a href="/" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+      <a href="/?tab=news" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
       <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
       <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
       <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
@@ -591,7 +590,7 @@
 
 <!-- ── MOBILE MENU ── -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="/" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/?tab=news" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
   <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
@@ -639,7 +638,6 @@
   <div class="footer-inner">
     <div class="footer-brand">ClawBeat<span>.co</span></div>
     <div class="footer-mono" id="footer-ts">signal_dispatch // events</div>
-    <div class="footer-back"><a href="/">← intel_feed</a></div>
   </div>
 </footer>
 
