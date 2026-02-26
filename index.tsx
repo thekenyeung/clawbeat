@@ -170,6 +170,10 @@ const App: React.FC = () => {
   const researchPerPage = 10;
 
   useEffect(() => {
+    if (window.location.search) history.replaceState(null, '', '/');
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => setShowScrollTop(window.scrollY > 800);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -335,12 +339,12 @@ const App: React.FC = () => {
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex justify-between items-end mb-12 border-b border-white/5 pb-8">
           <div>
-            <h2 className="text-4xl font-black text-white uppercase italic tracking-tighter">
-              {activePage === 'news' && 'Ecosystem Dispatch'}
-              {activePage === 'research' && 'Technical Papers'}
-              {activePage === 'videos' && 'Visual Stream'}
-              {activePage === 'projects' && 'The Forge'}
-              {activePage === 'events' && 'Community Events'}
+            <h2 className="text-4xl font-black text-white uppercase italic tracking-tighter leading-[1.1]">
+              {activePage === 'news' && <>Ecosystem <span className="text-orange-500">Dispatch</span></>}
+              {activePage === 'research' && <>Technical <span className="text-orange-500">Papers</span></>}
+              {activePage === 'videos' && <>Visual <span className="text-orange-500">Stream</span></>}
+              {activePage === 'projects' && <>The <span className="text-orange-500">Forge</span></>}
+              {activePage === 'events' && <>Community <span className="text-orange-500">Events</span></>}
             </h2>
             <div className="flex flex-col gap-1 mt-2">
               <p className="text-slate-500 text-xs uppercase font-black tracking-[0.2em]">
