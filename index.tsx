@@ -316,9 +316,9 @@ const App: React.FC = () => {
           </div>
           <nav className="hidden md:flex items-center gap-1">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel" />
-            <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
-            <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media" />
-            <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="Forge" />
+            <NavButton active={false} onClick={() => window.location.href = '/research.html'} icon={<BookOpen className="w-4 h-4" />} label="Research" />
+            <NavButton active={false} onClick={() => window.location.href = '/media.html'} icon={<Video className="w-4 h-4" />} label="Media" />
+            <NavButton active={false} onClick={() => window.location.href = '/forge.html'} icon={<Github className="w-4 h-4" />} label="Forge" />
             <NavButton active={false} onClick={() => window.location.href = '/events-calendar.html'} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </nav>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-slate-400 hover:text-white">
@@ -328,9 +328,9 @@ const App: React.FC = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 w-full bg-[#0a0a0c]/95 backdrop-blur-lg border-b border-white/10 py-4 px-4 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel Feed" />
-            <NavButton active={activePage === 'research'} onClick={() => handleNavClick('research')} icon={<BookOpen className="w-4 h-4" />} label="Research" />
-            <NavButton active={activePage === 'videos'} onClick={() => handleNavClick('videos')} icon={<Video className="w-4 h-4" />} label="Media Lab" />
-            <NavButton active={activePage === 'projects'} onClick={() => handleNavClick('projects')} icon={<Github className="w-4 h-4" />} label="The Forge" />
+            <NavButton active={false} onClick={() => window.location.href = '/research.html'} icon={<BookOpen className="w-4 h-4" />} label="Research" />
+            <NavButton active={false} onClick={() => window.location.href = '/media.html'} icon={<Video className="w-4 h-4" />} label="Media Lab" />
+            <NavButton active={false} onClick={() => window.location.href = '/forge.html'} icon={<Github className="w-4 h-4" />} label="The Forge" />
             <NavButton active={false} onClick={() => window.location.href = '/events-calendar.html'} icon={<Calendar className="w-4 h-4" />} label="Events" />
           </div>
         )}
