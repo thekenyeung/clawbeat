@@ -305,14 +305,14 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={handleLogoClick}>
-            <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 group-hover:border-orange-500/50 transition-all shadow-2xl">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={handleLogoClick}>
+            <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10">
               <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-xl font-black text-white uppercase italic tracking-tighter">
+            <span className="text-xl font-black text-white uppercase italic tracking-tighter">
               ClawBeat<span className="text-orange-500">.co</span>
-            </h1>
+            </span>
           </div>
           <nav className="hidden md:flex items-center gap-1">
             <NavButton active={activePage === 'news'} onClick={() => handleNavClick('news')} icon={<Newspaper className="w-4 h-4" />} label="Intel" />
