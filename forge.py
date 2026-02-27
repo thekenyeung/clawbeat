@@ -466,7 +466,7 @@ def _load_from_supabase() -> dict:
     if not _supabase:
         return empty
     try:
-        news_resp     = _supabase.table('news_items').select('*').limit(1500).execute()
+        news_resp     = _supabase.table('news_items').select('*').order('inserted_at', desc=True).limit(1500).execute()
         videos_resp   = _supabase.table('videos').select('*').limit(300).execute()
         research_resp = _supabase.table('research_papers').select('*').limit(100).execute()
 

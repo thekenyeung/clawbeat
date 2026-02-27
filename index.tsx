@@ -139,6 +139,13 @@ const checkIfVerified = (item: NewsItem) => {
   });
 };
 
+// Parse MM-DD-YYYY → timestamp (used for sorting by publication date)
+const parseMDY = (d: string) => {
+  const parts = (d || '').split('-').map(Number);
+  const [m, day, y] = [parts[0] ?? 0, parts[1] ?? 0, parts[2] ?? 0];
+  return isNaN(y) || y === 0 ? 0 : new Date(y, m - 1, day).getTime();
+};
+
 const App: React.FC = () => {
   const urlTab = new URLSearchParams(window.location.search).get('tab') as Page | null;
   const [activePage, setActivePage] = useState<Page>(
@@ -218,12 +225,6 @@ const App: React.FC = () => {
     sessionStorage.setItem('projectSort', sortBy);
   }, [activePage, currentPage, currentVideoPage, currentProjectPage, currentResearchPage, currentEventsPage, sortBy]);
 
-  const parseMDY = (d: string) => {
-    const parts = d.split('-').map(Number);
-    const [m, day, y] = [parts[0] ?? 0, parts[1] ?? 0, parts[2] ?? 0];
-    return isNaN(y) || y === 0 ? 0 : new Date(y, m - 1, day).getTime();
-  };
-
   const fetchContent = async () => {
     setLoading(true);
     try {
@@ -278,8 +279,13 @@ const App: React.FC = () => {
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
-  const currentNewsItems = news.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
-  const totalNewsPages = Math.ceil(news.length / newsPerPage);
+  // Sort all articles by publication date (MM-DD-YYYY) descending before paginating
+  const sortedNews = React.useMemo(
+    () => [...news].sort((a, b) => parseMDY(b.date) - parseMDY(a.date)),
+    [news]
+  );
+  const currentNewsItems = sortedNews.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
+  const totalNewsPages = Math.ceil(sortedNews.length / newsPerPage);
 
   const currentVideoItems = videos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
   const totalVideoPages = Math.ceil(videos.length / videosPerPage);
@@ -468,35 +474,40 @@ const SortButton = ({ active, onClick, label }: any) => (
 );
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  const sortedByPriority = [...items].sort((a, b) => {
-    const aVerified = checkIfVerified(a);
-    const bVerified = checkIfVerified(b);
-    if (aVerified !== bVerified) return aVerified ? -1 : 1;
-    const priorityWeight = { priority: 1, standard: 2, delist: 3 };
-    const aWeight = priorityWeight[a.source_type || 'standard'];
-    const bWeight = priorityWeight[b.source_type || 'standard'];
-    if (aWeight !== bWeight) return aWeight - bWeight;
-    return 0;
-  });
+  // Group by publication date (MM-DD-YYYY field), then sort within each day by priority
+  const grouped: Record<string, NewsItem[]> = {};
+  for (const item of items) {
+    const day = item.date || 'unknown';
+    if (!grouped[day]) grouped[day] = [];
+    grouped[day].push(item);
+  }
+  for (const day of Object.keys(grouped)) {
+    (grouped[day] as NewsItem[]).sort((a, b) => {
+      const aVerified = checkIfVerified(a);
+      const bVerified = checkIfVerified(b);
+      if (aVerified !== bVerified) return aVerified ? -1 : 1;
+      const priorityWeight: Record<string, number> = { priority: 1, standard: 2, delist: 3 };
+      const aWeight = priorityWeight[a.source_type || 'standard'] ?? 2;
+      const bWeight = priorityWeight[b.source_type || 'standard'] ?? 2;
+      return aWeight - bWeight;
+    });
+  }
 
-  // Group by inserted_at date (YYYY-MM-DD) — ISO format sorts correctly lexicographically
-  const grouped = sortedByPriority.reduce((acc: Record<string, NewsItem[]>, item) => {
-    const day = item.inserted_at ? item.inserted_at.slice(0, 10) : 'unknown';
-    if (!acc[day]) acc[day] = [];
-    acc[day].push(item);
-    return acc;
-  }, {});
-
-  const formatDispatchDay = (isoDay: string) => {
-    if (isoDay === 'unknown') return 'Unknown';
-    const [y, m, d] = isoDay.split('-').map(Number);
+  // Format MM-DD-YYYY → "FEB 27 2026"
+  const formatDispatchDay = (mdy: string) => {
+    if (mdy === 'unknown') return 'Unknown';
+    const parts = mdy.split('-').map(Number);
+    const [m, d, y] = [parts[0] ?? 1, parts[1] ?? 1, parts[2] ?? 0];
     const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    return `${months[(m ?? 1) - 1]} ${String(d).padStart(2, '0')} ${y}`;
+    return `${months[(m - 1)]} ${String(d).padStart(2, '0')} ${y}`;
   };
+
+  // Sort day keys by parsed date descending ('unknown' → 0 → end of list)
+  const sortedDays = Object.keys(grouped).sort((a, b) => parseMDY(b) - parseMDY(a));
 
   return (
     <div className="flex flex-col">
-      {Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map((day) => (
+      {sortedDays.map((day) => (
         <React.Fragment key={day}>
           <div className="flex items-center gap-6 my-12 first:mt-0 relative overflow-hidden">
             <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
