@@ -296,6 +296,23 @@ const App: React.FC = () => {
   const currentNewsItems = sortedNews.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
   const totalNewsPages = Math.ceil(sortedNews.length / newsPerPage);
 
+  // Determine which dispatch days show their spotlight on the current page:
+  // a day's spotlight only appears on the page where that day's first article lands.
+  const spotlightDays = React.useMemo(() => {
+    const days = new Set<string>();
+    const pageStart = (currentPage - 1) * newsPerPage;
+    const pageEnd = currentPage * newsPerPage;
+    const seen = new Set<string>();
+    for (let i = 0; i < sortedNews.length; i++) {
+      const day = sortedNews[i]!.date || 'unknown';
+      if (!seen.has(day)) {
+        seen.add(day);
+        if (i >= pageStart && i < pageEnd) days.add(day);
+      }
+    }
+    return days;
+  }, [sortedNews, currentPage]);
+
   const currentVideoItems = videos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
   const totalVideoPages = Math.ceil(videos.length / videosPerPage);
 
@@ -394,7 +411,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} />
+                <NewsList items={currentNewsItems} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightDays={spotlightDays} />
                 <Pagination current={currentPage} total={totalNewsPages} onChange={setCurrentPage} />
               </>
             )}
@@ -511,10 +528,11 @@ const scoreArticle = (item: NewsItem): number => {
   return score;
 };
 
-const NewsList = ({ items, onTrackClick, spotlightOverrides }: {
+const NewsList = ({ items, onTrackClick, spotlightOverrides, spotlightDays }: {
   items: NewsItem[];
   onTrackClick: (t: string, s: string) => void;
   spotlightOverrides: SpotlightOverride[];
+  spotlightDays: Set<string>;
 }) => {
   // Group by publication date
   const grouped: Record<string, NewsItem[]> = {};
@@ -528,7 +546,7 @@ const NewsList = ({ items, onTrackClick, spotlightOverrides }: {
   const overrideLookup: Record<string, Record<number, SpotlightOverride>> = {};
   for (const ov of spotlightOverrides) {
     if (!overrideLookup[ov.dispatch_date]) overrideLookup[ov.dispatch_date] = {};
-    overrideLookup[ov.dispatch_date][ov.slot] = ov;
+    overrideLookup[ov.dispatch_date]![ov.slot] = ov;
   }
 
   const formatDispatchDay = (mdy: string) => {
@@ -568,7 +586,6 @@ const NewsList = ({ items, onTrackClick, spotlightOverrides }: {
               tags:         dayOverrides[slot].tags    || [],
               date:         day,
               moreCoverage: [],
-              source_type:  undefined,
             } as NewsItem;
           }
           // Algorithmic pick
@@ -602,8 +619,8 @@ const NewsList = ({ items, onTrackClick, spotlightOverrides }: {
               <span className="date-count">{dayItems.length} {dayItems.length === 1 ? 'story' : 'stories'}</span>
             </div>
 
-            {/* ── Spotlight card ── */}
-            {leadSlot && (() => {
+            {/* ── Spotlight card (only on the page where this day first appears) ── */}
+            {leadSlot && spotlightDays.has(day) && (() => {
               const isVerified = checkIfVerified(leadSlot);
               const isPriority = leadSlot.source_type === 'priority';
               const moreCov = (leadSlot.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
