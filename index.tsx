@@ -14,15 +14,11 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 import {
   Newspaper,
   Video,
-  Github,
-  Bot,
+  GitBranch,
   ExternalLink,
   Star,
   Calendar,
-  Layers,
-  Award,
   ChevronLeft,
-  ChevronRight,
   Menu,
   X,
   BookOpen,
@@ -325,7 +321,7 @@ const App: React.FC = () => {
             </button>
             <a href="/research.html" className="nav-item"><BookOpen size={16} />Research</a>
             <a href="/media.html" className="nav-item"><Video size={16} />Media</a>
-            <a href="/forge.html" className="nav-item"><Github size={16} />Forge</a>
+            <a href="/forge.html" className="nav-item"><GitBranch size={16} />Forge</a>
             <a href="/events-calendar.html" className="nav-item"><Calendar size={16} />Events</a>
           </nav>
           <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -338,7 +334,7 @@ const App: React.FC = () => {
           </button>
           <a href="/research.html" className="mobile-nav-item"><BookOpen size={16} />Research</a>
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
-          <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
+          <a href="/forge.html" className="mobile-nav-item"><GitBranch size={16} />The Forge</a>
           <a href="/events-calendar.html" className="mobile-nav-item"><Calendar size={16} />Events</a>
         </div>
       </header>
@@ -445,23 +441,44 @@ const Pagination = ({ current, total, onChange }: { current: number; total: numb
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Build pill list: always show first/last, up to 3 around current, ellipsis elsewhere
+  const pills: (number | '…')[] = [];
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pills.push(i);
+  } else if (current <= 4) {
+    for (let i = 1; i <= 5; i++) pills.push(i);
+    pills.push('…'); pills.push(total);
+  } else if (current >= total - 3) {
+    pills.push(1); pills.push('…');
+    for (let i = total - 4; i <= total; i++) pills.push(i);
+  } else {
+    pills.push(1); pills.push('…');
+    for (let i = current - 1; i <= current + 1; i++) pills.push(i);
+    pills.push('…'); pills.push(total);
+  }
+
   return (
-    <div className="flex justify-center items-center gap-6 mt-16 pt-12 border-t border-white/5">
-      <button disabled={current === 1} onClick={() => handlePageChange(current - 1)} className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 rounded-xl transition-all border border-white/5 hover:border-orange-500/30">
-        <ChevronLeft className="w-4 h-4 text-orange-500" />
-        <span>Prev</span>
+    <div className="flex justify-center items-center gap-4 mt-16 pt-12 border-t border-white/5 flex-wrap">
+      <button disabled={current === 1} onClick={() => handlePageChange(current - 1)} className="page-btn">
+        ← Prev
       </button>
-      <div className="flex flex-col items-center">
-        <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] mb-1">Page</span>
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-black text-white italic">{current}</span>
-          <span className="text-orange-500/30 text-xs">/</span>
-          <span className="text-xs font-bold text-slate-500">{total}</span>
+      <div className="page-pills">
+        {pills.map((p, i) =>
+          p === '…'
+            ? <span key={`e${i}`} className="page-pill ellipsis">…</span>
+            : <button key={p} onClick={() => handlePageChange(p as number)} className={`page-pill${p === current ? ' active' : ''}`}>{p}</button>
+        )}
+      </div>
+      <div className="page-info">
+        <span className="page-info-label">Page</span>
+        <div className="page-info-nums">
+          <span className="page-current">{current}</span>
+          <span className="page-sep">/</span>
+          <span className="page-total">{total}</span>
         </div>
       </div>
-      <button disabled={current === total} onClick={() => handlePageChange(current + 1)} className="group relative flex items-center gap-2 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-orange-500/10 disabled:opacity-20 rounded-xl transition-all border border-white/5 hover:border-orange-500/30 shadow-[0_0_20px_rgba(249,115,22,0.1)]">
-        <span>Next</span>
-        <ChevronRight className="w-4 h-4 text-orange-500" />
+      <button disabled={current === total} onClick={() => handlePageChange(current + 1)} className="page-btn">
+        Next →
       </button>
     </div>
   );
@@ -474,7 +491,7 @@ const SortButton = ({ active, onClick, label }: any) => (
 );
 
 const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t: string, s: string) => void }) => {
-  // Group by publication date (MM-DD-YYYY field), then sort within each day by priority
+  // Group by publication date, sort within each day by verified → priority → standard
   const grouped: Record<string, NewsItem[]> = {};
   for (const item of items) {
     const day = item.date || 'unknown';
@@ -486,14 +503,11 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
       const aVerified = checkIfVerified(a);
       const bVerified = checkIfVerified(b);
       if (aVerified !== bVerified) return aVerified ? -1 : 1;
-      const priorityWeight: Record<string, number> = { priority: 1, standard: 2, delist: 3 };
-      const aWeight = priorityWeight[a.source_type || 'standard'] ?? 2;
-      const bWeight = priorityWeight[b.source_type || 'standard'] ?? 2;
-      return aWeight - bWeight;
+      const w: Record<string, number> = { priority: 1, standard: 2, delist: 3 };
+      return (w[a.source_type || 'standard'] ?? 2) - (w[b.source_type || 'standard'] ?? 2);
     });
   }
 
-  // Format MM-DD-YYYY → "FEB 27 2026"
   const formatDispatchDay = (mdy: string) => {
     if (mdy === 'unknown') return 'Unknown';
     const parts = mdy.split('-').map(Number);
@@ -502,68 +516,134 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
     return `${months[(m - 1)]} ${String(d).padStart(2, '0')} ${y}`;
   };
 
-  // Sort day keys by parsed date descending ('unknown' → 0 → end of list)
   const sortedDays = Object.keys(grouped).sort((a, b) => parseMDY(b) - parseMDY(a));
 
   return (
     <div className="flex flex-col">
-      {sortedDays.map((day) => (
-        <React.Fragment key={day}>
-          <div className="flex items-center gap-6 my-12 first:mt-0 relative overflow-hidden">
-            <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
-            <h3 className="text-[11px] font-black text-orange-500 uppercase tracking-[0.5em] whitespace-nowrap bg-black px-2 relative z-10">
-              Dispatch: <span className="text-white">{formatDispatchDay(day)}</span>
-            </h3>
-            <div className="h-[1px] flex-grow bg-gradient-to-r from-orange-500/50 via-orange-500/10 to-transparent relative">
-              <div className="absolute inset-0 bg-orange-500/20 blur-sm" />
+      {sortedDays.map((day) => {
+        const dayItems = grouped[day] ?? [];
+        const lead = dayItems[0];
+        const rest = dayItems.slice(1);
+
+        return (
+          <React.Fragment key={day}>
+            {/* ── Date divider ── */}
+            <div className="date-divider">
+              <span className="date-label">
+                Dispatch: <span className="date-text">{formatDispatchDay(day)}</span>
+              </span>
+              <div className="date-line" />
+              <span className="date-count">{dayItems.length} {dayItems.length === 1 ? 'story' : 'stories'}</span>
             </div>
-          </div>
-          {grouped[day]?.map((item, idx) => {
-            const isVerified = checkIfVerified(item);
-            const isPriority = item.source_type === 'priority';
-            return (
-              <div key={idx} className="flex flex-col gap-3 py-6 border-b border-white/5 last:border-0 group">
-                <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)} className="text-xl font-bold text-white group-hover:text-orange-500 leading-tight transition-colors flex items-start gap-2">
-                  <span className="flex-1">{item.title}</span>
-                  <ExternalLink className="w-4 h-4 mt-1.5 opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0" />
-                </a>
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{formatSourceName(item.source)}</span>
-                  {isVerified && <span className="text-[8px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Bot className="w-2.5 h-2.5" /> verified</span>}
-                  {isPriority && !isVerified && <span className="text-[8px] font-black text-slate-400 border border-white/10 px-2 py-0.5 rounded uppercase tracking-tighter flex items-center gap-1"><Award className="w-2.5 h-2.5" /> priority feed</span>}
-                </div>
-                {item.tags && item.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {item.tags.map((tag, tIdx) => (
-                      <span key={tIdx} className="text-[9px] font-black text-slate-500 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded uppercase tracking-wider">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {item.summary && <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">{item.summary}</p>}
-                {item.moreCoverage && item.moreCoverage.length > 0 && (
-                  <div className="mt-2 flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <Layers className="w-3 h-3 text-slate-600" />
-                      <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">More Coverage</span>
+
+            {/* ── Lead story ── */}
+            {lead && (() => {
+              const isVerified = checkIfVerified(lead);
+              const isPriority = lead.source_type === 'priority';
+              const moreCov = (lead.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              return (
+                <div className="lead-card">
+                  <div className="lead-body">
+                    <div className="lead-flag">Lead Signal</div>
+                    <h2 className="lead-headline">
+                      <a href={lead.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(lead.title, lead.source)}>
+                        {lead.title}
+                      </a>
+                    </h2>
+                    {lead.summary && <p className="lead-summary">{lead.summary}</p>}
+                    <div className="story-meta">
+                      <span className="meta-source">{formatSourceName(lead.source)}</span>
+                      <span className="meta-sep">·</span>
+                      <span className="meta-date">{lead.date}</span>
+                      {isVerified && <span className="badge-verified">✓ verified</span>}
+                      {isPriority && !isVerified && <span className="badge-priority">priority</span>}
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {item.moreCoverage
-                        .filter(link => !link.source.toLowerCase().includes('facebook'))
-                        .map((link, lIdx) => (
-                          <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, link.source)} className="text-[10px] font-bold text-orange-500/80 bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/10 px-2 py-1 rounded transition-all">
+                    {lead.tags && lead.tags.length > 0 && (
+                      <div className="tags-strip">
+                        {lead.tags.map((tag, i) => <span key={i} className="tag">{tag}</span>)}
+                      </div>
+                    )}
+                    {moreCov.length > 0 && (
+                      <div className="coverage-strip" style={{marginTop: '0.75rem'}}>
+                        <span className="coverage-label">// more coverage</span>
+                        {moreCov.map((link, i) => (
+                          <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="coverage-link" onClick={() => onTrackClick(lead.title, link.source)}>
                             {formatSourceName(link.source)}
                           </a>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </React.Fragment>
-      ))}
+                  {rest.length > 0 && (
+                    <aside className="lead-sidebar">
+                      <div className="sidebar-hdr">// also_today</div>
+                      {rest.slice(0, 5).map((item, idx) => (
+                        <div key={idx} className="sidebar-item">
+                          <div className="sidebar-num">{String(idx + 2).padStart(2, '0')} ›</div>
+                          <div className="sidebar-title">
+                            <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
+                              {item.title}
+                            </a>
+                          </div>
+                          <div className="sidebar-source">
+                            {formatSourceName(item.source)}{checkIfVerified(item) ? ' · verified' : ''}
+                          </div>
+                        </div>
+                      ))}
+                    </aside>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* ── Remaining story cards ── */}
+            {rest.map((item, idx) => {
+              const isVerified = checkIfVerified(item);
+              const isPriority = item.source_type === 'priority';
+              const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              const storyNum = String(idx + 2).padStart(2, '0');
+              return (
+                <div key={idx} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}`}>
+                  <div className="story-num">
+                    <span className="num-text">{storyNum}</span>
+                    <div className="num-line" />
+                  </div>
+                  <div className="story-body">
+                    <div className="story-meta">
+                      <span className="meta-source">{formatSourceName(item.source)}</span>
+                      <span className="meta-sep">·</span>
+                      <span className="meta-date">{item.date}</span>
+                      {isVerified && <span className="badge-verified">✓ verified</span>}
+                      {isPriority && !isVerified && <span className="badge-priority">priority</span>}
+                    </div>
+                    <div className="story-headline">
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
+                        {item.title}
+                      </a>
+                    </div>
+                    {item.summary && <p className="story-summary">{item.summary}</p>}
+                    {item.tags && item.tags.length > 0 && (
+                      <div className="tags-strip">
+                        {item.tags.map((tag, i) => <span key={i} className="tag">{tag}</span>)}
+                      </div>
+                    )}
+                    {moreCov.length > 0 && (
+                      <div className="coverage-strip">
+                        <span className="coverage-label">// more coverage</span>
+                        {moreCov.map((link, i) => (
+                          <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="coverage-link" onClick={() => onTrackClick(item.title, link.source)}>
+                            {formatSourceName(link.source)}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 };
