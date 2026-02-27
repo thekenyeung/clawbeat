@@ -693,10 +693,10 @@
       if (d2 && d2.getTime() !== d.getTime()) {
         const mm2 = String(d2.getMonth() + 1).padStart(2, '0');
         const dd2 = String(d2.getDate()).padStart(2, '0');
-        return `${dayName}–${DAYS[d2.getDay()]} · ${mm}/${dd}–${mm2}/${dd2}/${yyyy}`;
+        return `${dayName}–${DAYS[d2.getDay()]} · ${mm}-${dd}–${mm2}-${dd2}-${yyyy}`;
       }
     }
-    return `${dayName} · ${mm}/${dd}/${yyyy}`;
+    return `${dayName} · ${mm}-${dd}-${yyyy}`;
   }
 
   function monthKey(e) {
