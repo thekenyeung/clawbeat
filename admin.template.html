@@ -387,9 +387,10 @@
         setSaving(true);
         const payload = {
           ...form,
-          tags:     tagStr.split(',').map(t => t.trim()).filter(Boolean),
-          density:  parseInt(form.density) || 0,
+          tags:          tagStr.split(',').map(t => t.trim()).filter(Boolean),
+          density:       parseInt(form.density) || 0,
           more_coverage: form.more_coverage || [],
+          inserted_at:   new Date().toISOString(),
         };
         const { error } = await supabase.from('news_items').upsert(payload, { onConflict: 'url' });
         setSaving(false);

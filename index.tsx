@@ -42,6 +42,7 @@ interface NewsItem {
   url: string;
   source: string;
   date: string;
+  inserted_at?: string;
   source_type?: 'priority' | 'standard' | 'delist';
   moreCoverage?: Array<{ source: string; url: string }>;
   tags?: string[];
@@ -227,7 +228,7 @@ const App: React.FC = () => {
     setLoading(true);
     try {
       const [newsRes, videosRes, projectsRes, researchRes, eventsRes, metaRes] = await Promise.all([
-        supabase.from('news_items').select('*').limit(1000),
+        supabase.from('news_items').select('*').order('inserted_at', { ascending: false }).limit(1000),
         supabase.from('videos').select('*').limit(300),
         supabase.from('github_projects').select('*').limit(100),
         supabase.from('research_papers').select('*').limit(100),
@@ -478,27 +479,35 @@ const NewsList = ({ items, onTrackClick }: { items: NewsItem[], onTrackClick: (t
     return 0;
   });
 
+  // Group by inserted_at date (YYYY-MM-DD) — ISO format sorts correctly lexicographically
   const grouped = sortedByPriority.reduce((acc: Record<string, NewsItem[]>, item) => {
-    const date = item.date || "recent";
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(item);
+    const day = item.inserted_at ? item.inserted_at.slice(0, 10) : 'unknown';
+    if (!acc[day]) acc[day] = [];
+    acc[day].push(item);
     return acc;
   }, {});
 
+  const formatDispatchDay = (isoDay: string) => {
+    if (isoDay === 'unknown') return 'Unknown';
+    const [y, m, d] = isoDay.split('-').map(Number);
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    return `${months[(m ?? 1) - 1]} ${String(d).padStart(2, '0')} ${y}`;
+  };
+
   return (
     <div className="flex flex-col">
-      {Object.keys(grouped).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).map((date) => (
-        <React.Fragment key={date}>
+      {Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map((day) => (
+        <React.Fragment key={day}>
           <div className="flex items-center gap-6 my-12 first:mt-0 relative overflow-hidden">
             <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
             <h3 className="text-[11px] font-black text-orange-500 uppercase tracking-[0.5em] whitespace-nowrap bg-black px-2 relative z-10">
-              Dispatch: <span className="text-white">{date}</span>
+              Dispatch: <span className="text-white">{formatDispatchDay(day)}</span>
             </h3>
             <div className="h-[1px] flex-grow bg-gradient-to-r from-orange-500/50 via-orange-500/10 to-transparent relative">
               <div className="absolute inset-0 bg-orange-500/20 blur-sm" />
             </div>
           </div>
-          {grouped[date]?.map((item, idx) => {
+          {grouped[day]?.map((item, idx) => {
             const isVerified = checkIfVerified(item);
             const isPriority = item.source_type === 'priority';
             return (
