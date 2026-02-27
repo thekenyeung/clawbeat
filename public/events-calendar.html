@@ -659,9 +659,16 @@
   }
 
   function todayMidnight() {
-    const t = new Date();
-    t.setHours(0, 0, 0, 0);
-    return t;
+    // Always evaluate "today" in Pacific Time (auto-handles PST/PDT)
+    const now   = new Date();
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(now);
+    const y = +parts.find(p => p.type === 'year').value;
+    const m = +parts.find(p => p.type === 'month').value;
+    const d = +parts.find(p => p.type === 'day').value;
+    return new Date(y, m - 1, d);
   }
 
   function countdown(startDateStr) {
@@ -678,17 +685,18 @@
     const d = parseDate(startDate);
     if (!d) return 'TBD';
     const dayName = DAYS[d.getDay()];
-    const month   = MONTHS[d.getMonth()];
+    const mm      = String(d.getMonth() + 1).padStart(2, '0');
     const dd      = String(d.getDate()).padStart(2, '0');
     const yyyy    = d.getFullYear();
     if (endDate && endDate !== startDate) {
       const d2 = parseDate(endDate);
       if (d2 && d2.getTime() !== d.getTime()) {
+        const mm2 = String(d2.getMonth() + 1).padStart(2, '0');
         const dd2 = String(d2.getDate()).padStart(2, '0');
-        return `${dayName}–${DAYS[d2.getDay()]} · ${dd}–${dd2} ${month} ${yyyy}`;
+        return `${dayName}–${DAYS[d2.getDay()]} · ${mm}/${dd}–${mm2}/${dd2}/${yyyy}`;
       }
     }
-    return `${dayName} · ${dd} ${month} ${yyyy}`;
+    return `${dayName} · ${mm}/${dd}/${yyyy}`;
   }
 
   function monthKey(e) {
@@ -806,7 +814,7 @@
     const d     = parseDate(dateStr);
     const mKey  = d ? MONTHS[d.getMonth()] : 'TBD';
     const day   = d ? DAYS[d.getDay()] : '';
-    const month = d ? MONTHS[d.getMonth()] : '';
+    const mm    = d ? String(d.getMonth() + 1).padStart(2, '0') : '';
     const dd    = d ? String(d.getDate()).padStart(2, '0') : '';
     const yyyy  = d ? d.getFullYear() : '';
     const count = events.length === 1 ? '1 signal' : `${events.length} signals`;
@@ -817,7 +825,7 @@
         <div class="date-divider-label">
           <span class="date-slash">//</span>
           <span class="date-day">${day}</span>
-          <span class="date-val"> ${dd} ${month} ${yyyy}</span>
+          <span class="date-val"> ${mm}/${dd}/${yyyy}</span>
         </div>
         <div class="date-divider-line"></div>
         <div class="date-divider-count">${count}</div>
