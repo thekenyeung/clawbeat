@@ -241,6 +241,15 @@
       return `${mm}-${dd}-${yyyy}`;
     }
 
+    // Basic tag extraction from title + description text (fallback when no keywords meta)
+    function extractTagsFromText(title = '', description = '') {
+      const stop = new Set(['the','a','an','and','or','but','in','on','at','to','for','of','with','by','from','as','is','was','are','were','be','been','have','has','had','do','does','did','will','would','could','should','may','might','that','this','these','those','it','its','what','which','who','how','when','where','why','not','no','so','if','then','than','about','into','after','before','also','can','just','more','their','there','they','all','out','up','we','you','me','us','them','new','says','said','one','two','using','used','use','make','makes','made','get','gets','got','time','year','day','week','now','today','first','last','some','many','most','over','under','while','since']);
+      const words = `${title} ${description}`.toLowerCase().match(/\b[a-z][a-z]{2,}\b/g) || [];
+      const freq = {};
+      words.forEach(w => { if (!stop.has(w)) freq[w] = (freq[w] || 0) + 1; });
+      return Object.entries(freq).sort(([,a],[,b]) => b - a).slice(0, 6).map(([w]) => w);
+    }
+
     // ─── LOGIN SCREEN ─────────────────────────────────────────────────────────
     function LoginScreen() {
       const [loading, setLoading] = useState(false);
@@ -312,8 +321,9 @@
       const [form,     setForm]     = useState(EMPTY_ARTICLE);
       const [tagStr,   setTagStr]   = useState('');
       const [saving,   setSaving]   = useState(false);
-      const [fetching, setFetching] = useState(false);
-      const [search,   setSearch]   = useState('');
+      const [fetching,          setFetching]          = useState(false);
+      const [coverageFetching,  setCoverageFetching]  = useState({});
+      const [search,            setSearch]            = useState('');
 
       const load = useCallback(async () => {
         setLoading(true);
@@ -359,6 +369,11 @@
             summary: d.description || f.summary,
             date:    d.date ? formatMicrolinkDate(d.date) : f.date,
           }));
+          // Auto-populate tags from meta keywords or extract from title+description
+          const tags = Array.isArray(d.keywords) && d.keywords.length
+            ? d.keywords.slice(0, 6)
+            : extractTagsFromText(d.title, d.description);
+          if (tags.length) setTagStr(tags.join(', '));
           showToast('Metadata fetched — review and save');
         } catch (e) {
           showToast('Fetch failed: ' + e.message, 'error');
@@ -400,6 +415,21 @@
         return { ...f, more_coverage: mc };
       });
       const removeCoverage = (i) => setForm(f => ({ ...f, more_coverage: (f.more_coverage||[]).filter((_,idx) => idx !== i) }));
+
+      // Auto-fetch publisher name for a more_coverage URL
+      const fetchCoverageSource = async (i, url) => {
+        if (!url) return;
+        setCoverageFetching(prev => ({ ...prev, [i]: true }));
+        try {
+          const res  = await fetch(`https://api.microlink.io?url=${encodeURIComponent(url)}`);
+          const json = await res.json();
+          if (json.status === 'success' && json.data.publisher) {
+            updateCoverage(i, 'source', json.data.publisher);
+          }
+        } catch (_) { /* silent — source stays empty */ } finally {
+          setCoverageFetching(prev => ({ ...prev, [i]: false }));
+        }
+      };
 
       const setF      = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }));
 
@@ -498,22 +528,12 @@
                 <input className="field-input" value={form.title} onChange={setF('title')} placeholder="Article headline" />
               </Field>
 
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 130px 80px', gap:'0.6rem' }}>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 80px', gap:'0.6rem' }}>
                 <Field label="Source">
                   <input className="field-input" value={form.source} onChange={setF('source')} placeholder="TechCrunch" />
                 </Field>
                 <Field label="Date (MM-DD-YYYY)">
                   <input className="field-input" value={form.date} onChange={setF('date')} placeholder="02-26-2026" />
-                </Field>
-                <Field label="Article Type">
-                  <select
-                    className="field-input"
-                    value={form.is_minor ? 'minor' : 'anchor'}
-                    onChange={e => setForm(f => ({ ...f, is_minor: e.target.value === 'minor' }))}
-                  >
-                    <option value="anchor">Anchor Headline</option>
-                    <option value="minor">Minor</option>
-                  </select>
                 </Field>
                 <Field label="Density">
                   <input className="field-input" type="number" min="0" value={form.density} onChange={setF('density')} />
@@ -528,6 +548,17 @@
                 <input className="field-input" value={tagStr} onChange={e => setTagStr(e.target.value)} placeholder="ai, llm, agents" />
               </Field>
 
+              <Field label="Article Type">
+                <select
+                  className="field-input"
+                  value={form.is_minor ? 'minor' : 'anchor'}
+                  onChange={e => setForm(f => ({ ...f, is_minor: e.target.value === 'minor' }))}
+                >
+                  <option value="anchor">Anchor</option>
+                  <option value="minor">Minor</option>
+                </select>
+              </Field>
+
               {/* More Coverage */}
               <div>
                 <div className="sdiv">
@@ -539,10 +570,25 @@
                   Add other publications covering the same story — shown as "Also covered by:" links on this article's card. Unrelated to the Article Type above.
                 </div>
                 {(form.more_coverage||[]).map((cov, i) => (
-                  <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr auto', gap:'0.4rem', marginBottom:'0.4rem' }}>
-                    <input className="field-input" value={cov.source} onChange={e => updateCoverage(i,'source',e.target.value)} placeholder="Source name" />
-                    <input className="field-input" value={cov.url}    onChange={e => updateCoverage(i,'url',e.target.value)}    placeholder="https://..." />
-                    <button className="btn btn-danger" onClick={() => removeCoverage(i)} style={{ padding:'0.4rem 0.6rem' }}>×</button>
+                  <div key={i} style={{ marginBottom:'0.5rem' }}>
+                    <div style={{ display:'flex', gap:'0.4rem', alignItems:'center' }}>
+                      <input
+                        className="field-input"
+                        value={cov.url}
+                        onChange={e => setForm(f => {
+                          const mc = [...(f.more_coverage||[])];
+                          mc[i] = { ...mc[i], url: e.target.value, source: '' };
+                          return { ...f, more_coverage: mc };
+                        })}
+                        onBlur={e => fetchCoverageSource(i, e.target.value)}
+                        placeholder="https://... (source auto-fetched)"
+                        style={{ flex:1 }}
+                      />
+                      <button className="btn btn-danger" onClick={() => removeCoverage(i)} style={{ padding:'0.4rem 0.6rem', flexShrink:0 }}>×</button>
+                    </div>
+                    <div style={{ marginTop:'0.2rem', fontFamily:'var(--mono)', fontSize:'0.68rem', minHeight:'1.1em', color: coverageFetching[i] ? 'var(--text-3)' : 'var(--text-2)' }}>
+                      {coverageFetching[i] ? 'Fetching source...' : cov.source || ''}
+                    </div>
                   </div>
                 ))}
               </div>
