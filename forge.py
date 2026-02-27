@@ -164,29 +164,42 @@ def get_ai_summary(title, current_summary):
         return response.text.strip()
     except: return "Summary pending."
 
+# Lazy-loaded spaCy model — loaded once per process, never reloaded.
+_spacy_nlp = None
+
+def _get_spacy():
+    global _spacy_nlp
+    if _spacy_nlp is None:
+        import spacy
+        _spacy_nlp = spacy.load("en_core_web_sm")
+    return _spacy_nlp
+
 def get_nlp_tags(title, summary):
-    """Extract 2-4 keyphrases from title+summary using YAKE (local, no API calls)."""
+    """Extract up to 4 named-entity tags using spaCy NER (local, no API calls).
+
+    Only retains ORG, PRODUCT, PERSON, GPE, and WORK_OF_ART entities, which
+    map directly to what readers want to filter on in a tech-news feed.
+    Requires: pip install spacy && python -m spacy download en_core_web_sm
+    """
     try:
-        import yake
-        text = (title + " " + (summary or "")).strip()
-        if not text:
-            return []
-        extractor = yake.KeywordExtractor(lan="en", n=2, dedupLim=0.7, top=6, features=None)
-        keywords = extractor.extract_keywords(text)
-        # YAKE scores: lower = more relevant. Filter brand names, keep best 4.
+        nlp = _get_spacy()
+        # Title carries the highest signal; append a short summary window for context.
+        text = title + (" " + summary[:200] if summary else "")
+        doc = nlp(text)
         brand_lower = {b.lower() for b in CORE_BRANDS}
-        tags = []
-        for kw, _score in keywords:
-            kw = kw.strip()
-            if kw.lower() in brand_lower:
+        seen, tags = set(), []
+        KEEP = {"ORG", "PRODUCT", "PERSON", "GPE", "WORK_OF_ART"}
+        for ent in doc.ents:
+            if ent.label_ not in KEEP:
                 continue
-            # Capitalize each word; preserve known acronyms
-            words = []
-            for w in kw.split():
-                words.append(w.upper() if w.lower() in {'ai', 'sdk', 'ios', 'api', 'ml', 'vc', 'ui', 'ux', 'llm', 'ar', 'vr'} else w.capitalize())
-            tag = ' '.join(words)
-            if len(tag) > 2:
-                tags.append(tag)
+            tag = ent.text.strip()
+            if len(tag) < 3 or tag.lower() in brand_lower:
+                continue
+            key = tag.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            tags.append(tag)
             if len(tags) == 4:
                 break
         return tags
@@ -695,8 +708,8 @@ if __name__ == "__main__":
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
-    # Tag backfill: extract keyphrases for articles that don't have tags yet.
-    # Uses YAKE (local NLP, no API calls) so there are no rate limits — all
+    # Tag backfill: extract named-entity tags for articles that don't have tags yet.
+    # Uses spaCy NER (local, no API calls) so there are no rate limits — all
     # untagged articles are processed in a single pass.
     tags_generated = 0
     for item in db['items']:
