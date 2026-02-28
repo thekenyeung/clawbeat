@@ -221,3 +221,14 @@ CREATE POLICY "Admin writes" ON daily_editions
   FOR ALL TO authenticated
   USING     (auth.email() = 'ADMIN_EMAIL_HERE')
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
+
+-- =============================================================
+-- Supabase Storage bucket for Daily Edition hero images
+-- This cannot be created via SQL — do it in the Supabase Dashboard:
+--   Storage → New bucket → Name: "daily-edition-images" → Public: ON
+-- Then add this RLS policy so the admin can upload:
+--   Storage → daily-edition-images → Policies → New policy (INSERT)
+--   Role: authenticated, USING: auth.email() = 'ADMIN_EMAIL_HERE'
+-- Uploaded images are stored at: {edition_date}/slot-{N}-{timestamp}.{ext}
+-- Public URL format: {SUPABASE_URL}/storage/v1/object/public/daily-edition-images/{path}
+-- =============================================================

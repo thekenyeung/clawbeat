@@ -789,8 +789,9 @@
       // Daily Edition panel state
       const [dailyEdSlot,    setDailyEdSlot]    = useState(null);  // slot number or null
       const [dailyEdForm,    setDailyEdForm]    = useState({});    // {image_url,image_alt,credit_name,credit_url,summary_html,why_it_matters}
-      const [dailyEdLoading, setDailyEdLoading] = useState(false);
-      const [dailyEdSaving,  setDailyEdSaving]  = useState(false);
+      const [dailyEdLoading,   setDailyEdLoading]   = useState(false);
+      const [dailyEdSaving,    setDailyEdSaving]    = useState(false);
+      const [dailyEdUploading, setDailyEdUploading] = useState(false);
 
       // Load distinct dispatch dates from news_items + which dates have overrides
       useEffect(() => {
@@ -940,6 +941,28 @@
           showToast('Could not load Daily Edition data', 'error');
         } finally {
           setDailyEdLoading(false);
+        }
+      };
+
+      const uploadDailyEdImage = async (file, slot) => {
+        setDailyEdUploading(true);
+        try {
+          const isoDate = parseMDYtoISO(selectedDate);
+          const ext = file.name.split('.').pop().toLowerCase();
+          const path = `${isoDate}/slot-${slot}-${Date.now()}.${ext}`;
+          const { error: upErr } = await supabase.storage
+            .from('daily-edition-images')
+            .upload(path, file, { upsert: true });
+          if (upErr) throw upErr;
+          const { data: { publicUrl } } = supabase.storage
+            .from('daily-edition-images')
+            .getPublicUrl(path);
+          setDailyEdForm(f => ({ ...f, image_url: publicUrl }));
+          showToast('Image uploaded');
+        } catch (e) {
+          showToast('Upload failed: ' + e.message, 'error');
+        } finally {
+          setDailyEdUploading(false);
         }
       };
 
@@ -1152,25 +1175,50 @@
                               <Loader />
                             ) : (
                               <>
-                                {/* Image URL + preview */}
-                                <div style={{ display:'flex', gap:'0.75rem', alignItems:'flex-start', marginBottom:'0.6rem' }}>
-                                  <div style={{ flex:1 }}>
-                                    <label className="field-label">Hero Image URL</label>
-                                    <input
-                                      className="field-input"
-                                      value={dailyEdForm.image_url || ''}
-                                      onChange={e => setDailyEdForm(f => ({ ...f, image_url: e.target.value }))}
-                                      placeholder="https://example.com/image.jpg"
-                                    />
+                                {/* Hero image — upload or URL */}
+                                <div style={{ marginBottom:'0.6rem' }}>
+                                  <label className="field-label">
+                                    Hero Image
+                                    <span style={{ fontWeight:400, opacity:0.6, marginLeft:'0.35em' }}>
+                                      {slot === 1 ? '· 21:8 · 1500×571px recommended' : '· 21:7 · 1500×500px recommended'}
+                                    </span>
+                                  </label>
+                                  <div style={{ display:'flex', gap:'0.5rem', alignItems:'center', marginBottom:'0.35rem' }}>
+                                    <label style={{ cursor: dailyEdUploading ? 'default' : 'pointer', flexShrink:0 }}>
+                                      <input
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png,.webp"
+                                        style={{ display:'none' }}
+                                        disabled={dailyEdUploading}
+                                        onChange={async e => {
+                                          const file = e.target.files[0];
+                                          if (file) await uploadDailyEdImage(file, slot);
+                                          e.target.value = '';
+                                        }}
+                                      />
+                                      <span
+                                        className="btn btn-secondary"
+                                        style={{ fontSize:'0.68rem', padding:'0.28rem 0.6rem', display:'inline-block', opacity: dailyEdUploading ? 0.55 : 1, pointerEvents: dailyEdUploading ? 'none' : 'auto' }}
+                                      >
+                                        {dailyEdUploading ? 'Uploading…' : '↑ Upload Image'}
+                                      </span>
+                                    </label>
+                                    {dailyEdForm.image_url && (
+                                      <img
+                                        src={dailyEdForm.image_url}
+                                        alt="preview"
+                                        style={{ width:'72px', height:'45px', objectFit:'cover', borderRadius:'4px', border:'1px solid var(--border-2)', flexShrink:0 }}
+                                        onError={e => e.target.style.display='none'}
+                                      />
+                                    )}
                                   </div>
-                                  {dailyEdForm.image_url && (
-                                    <img
-                                      src={dailyEdForm.image_url}
-                                      alt="preview"
-                                      style={{ width:'72px', height:'48px', objectFit:'cover', borderRadius:'4px', border:'1px solid var(--border-2)', flexShrink:0, marginTop:'1.5rem' }}
-                                      onError={e => e.target.style.display='none'}
-                                    />
-                                  )}
+                                  <input
+                                    className="field-input"
+                                    value={dailyEdForm.image_url || ''}
+                                    onChange={e => setDailyEdForm(f => ({ ...f, image_url: e.target.value }))}
+                                    placeholder="Or paste image URL"
+                                    style={{ fontSize:'0.72rem' }}
+                                  />
                                 </div>
                                 {/* Image alt */}
                                 <div style={{ marginBottom:'0.6rem' }}>
