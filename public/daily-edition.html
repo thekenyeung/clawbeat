@@ -4,33 +4,24 @@
   ║  CLAWBEAT · THE DAILY EDITION — HTML TEMPLATE                   ║
   ║  Base design: daily-edition-v5 "Signal Intercept"               ║
   ╠══════════════════════════════════════════════════════════════════╣
-  ║  TEMPLATE VARIABLES — replace all {{...}} before serving        ║
+  ║  TEMPLATE VARIABLES (baked at generation time)                   ║
   ║                                                                  ║
-  ║  GLOBAL (2)                                                      ║
-  ║    {{DATE}}            Edition date, format: MM-DD-YYYY          ║
+  ║  GLOBAL                                                          ║
+  ║    {{DATE}}            Edition date display, MM-DD-YYYY          ║
+  ║    {{EDITION_ISO}}     Edition date ISO, YYYY-MM-DD              ║
   ║    {{COMPILED_TIME}}   Compilation time, e.g. "17:00 PT"        ║
+  ║    {{SUPABASE_URL}}    Supabase project URL                      ║
+  ║    {{SUPABASE_ANON_KEY}} Supabase anon (public read) key        ║
   ║                                                                  ║
-  ║  PER STORY — repeat for N = 1, 2, 3, 4                          ║
-  ║    {{STORY_N_IMAGE_URL}}          Hero image src URL             ║
-  ║                                   (leave blank → shows fallback) ║
-  ║    {{STORY_N_IMAGE_ALT}}          Alt text for hero image        ║
-  ║    {{STORY_N_HERO_CREDIT_HTML}}    Full <div class="hero-credit"> ║
-  ║                                   block, or empty if no credit.  ║
-  ║                                   Adobe Firefly = plain text.    ║
-  ║    {{STORY_N_PUBLICATION_NAME}}   Publication name               ║
-  ║    {{STORY_N_PUBLICATION_URL}}    Publication homepage href       ║
-  ║    {{STORY_N_CATEGORY}}           Tag label, e.g. "AI · Policy"  ║
-  ║    {{STORY_N_URL}}                Original article URL           ║
-  ║    {{STORY_N_HEADLINE}}           Article headline               ║
-  ║    {{STORY_N_AUTHOR}}             Author full name               ║
-  ║    {{STORY_N_PUB_DATE}}           Article date, MM-DD-YYYY       ║
-  ║    {{STORY_N_SUMMARY_HTML}}       One or more full <p> blocks    ║
-  ║    {{STORY_N_WHY_IT_MATTERS}}     Plain-text insight paragraph   ║
+  ║  STORY 1 ONLY (for OG / social meta tags)                        ║
+  ║    {{STORY_1_HEADLINE}}   Lead headline                          ║
+  ║    {{STORY_1_IMAGE_URL}}  Lead hero image URL (og:image)         ║
   ║                                                                  ║
   ║  NOTES                                                           ║
-  ║  · Story 1 renders as Lead (larger hero + type size)            ║
-  ║  · Stories 2–4 render as Standard                               ║
-  ║  · Remove .hero-credit div if no image / no credit available    ║
+  ║  · All 4 story signals are fetched client-side from Supabase    ║
+  ║    daily_editions table and rendered on page load.               ║
+  ║  · OG/social tags are baked at generation time from story 1.    ║
+  ║  · Admin edits in Supabase appear on next page refresh.         ║
   ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
@@ -56,10 +47,10 @@
   <meta property="og:title" content="The Daily Edition: {{STORY_1_HEADLINE}} | ClawBeat">
   <meta property="og:description" content="{{STORY_1_HEADLINE}} and more — AI-powered analysis of today's top OpenClaw and AI stories.">
   <meta property="og:image" content="{{STORY_1_IMAGE_URL}}">
-  <meta property="og:url" content="https://clawbeat.co/daily/{{DATE}}.html">
+  <meta property="og:url" content="https://clawbeat.co/daily/{{EDITION_ISO}}.html">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ClawBeat">
-  <link rel="canonical" href="https://clawbeat.co/daily/{{DATE}}.html">
+  <link rel="canonical" href="https://clawbeat.co/daily/{{EDITION_ISO}}.html">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -403,265 +394,13 @@
   </div>
 </div>
 
-<!-- ══ MAIN CONTENT ════════════════════════════════════════════════ -->
+<!-- ══ MAIN CONTENT (dynamic — fetched from Supabase on page load) ═ -->
 <main id="main-content">
 
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 01 — LEAD STORY
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 1 of 4: Lead story">
-
-    <!-- Hero image (lead = taller 21:8 crop) -->
-    <div class="story-hero lead" aria-hidden="true">
-      <!-- Image: src filled by generator; onerror hides broken img and shows placeholder -->
-      <img class="hero-img"
-           src="{{STORY_1_IMAGE_URL}}"
-           alt="{{STORY_1_IMAGE_ALT}}"
-           onerror="this.style.display='none'">
-      <!-- Fallback shown when image is missing or fails -->
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">01</div>
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_1_HERO_CREDIT_HTML}}
+  <div id="signals-container" aria-live="polite">
+    <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
+      <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;">Loading signals…</span>
     </div>
-
-    <div class="story-col">
-      <!-- Signal badges + category tag -->
-      <div class="signal-row">
-        <span class="signal-badge">Signal 01</span>
-        <span class="signal-badge dim">Lead Story</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">{{STORY_1_CATEGORY}}</span>
-      </div>
-
-      <!-- Headline -->
-      <h2 class="story-headline lead">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="{{STORY_1_URL}}" target="_blank" rel="noopener">{{STORY_1_HEADLINE}}</a>
-      </h2>
-
-      <!-- Byline -->
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author">{{STORY_1_AUTHOR}}</span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">{{STORY_1_PUBLICATION_NAME}}</span>
-        <span class="byline-sep">·</span>
-        <span>{{STORY_1_PUB_DATE}}</span>
-      </div>
-
-      <!-- Summary — inject one or more <p class="story-summary">…</p> blocks -->
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_1_SUMMARY_HTML}}
-
-      <!-- Why It Matters -->
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">{{STORY_1_WHY_IT_MATTERS}}</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 02</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 02
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 2 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="{{STORY_2_IMAGE_URL}}"
-           alt="{{STORY_2_IMAGE_ALT}}"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">02</div>
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_2_HERO_CREDIT_HTML}}
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 02</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">{{STORY_2_CATEGORY}}</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="{{STORY_2_URL}}" target="_blank" rel="noopener">{{STORY_2_HEADLINE}}</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author">{{STORY_2_AUTHOR}}</span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">{{STORY_2_PUBLICATION_NAME}}</span>
-        <span class="byline-sep">·</span>
-        <span>{{STORY_2_PUB_DATE}}</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_2_SUMMARY_HTML}}
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">{{STORY_2_WHY_IT_MATTERS}}</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 03</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 03
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 3 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="{{STORY_3_IMAGE_URL}}"
-           alt="{{STORY_3_IMAGE_ALT}}"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">03</div>
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_3_HERO_CREDIT_HTML}}
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 03</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">{{STORY_3_CATEGORY}}</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="{{STORY_3_URL}}" target="_blank" rel="noopener">{{STORY_3_HEADLINE}}</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author">{{STORY_3_AUTHOR}}</span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">{{STORY_3_PUBLICATION_NAME}}</span>
-        <span class="byline-sep">·</span>
-        <span>{{STORY_3_PUB_DATE}}</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_3_SUMMARY_HTML}}
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">{{STORY_3_WHY_IT_MATTERS}}</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 04</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 04
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 4 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="{{STORY_4_IMAGE_URL}}"
-           alt="{{STORY_4_IMAGE_ALT}}"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">04</div>
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_4_HERO_CREDIT_HTML}}
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 04</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">{{STORY_4_CATEGORY}}</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="{{STORY_4_URL}}" target="_blank" rel="noopener">{{STORY_4_HEADLINE}}</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author">{{STORY_4_AUTHOR}}</span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">{{STORY_4_PUBLICATION_NAME}}</span>
-        <span class="byline-sep">·</span>
-        <span>{{STORY_4_PUB_DATE}}</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      {{STORY_4_SUMMARY_HTML}}
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">{{STORY_4_WHY_IT_MATTERS}}</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- End cap -->
-  <div class="end-cap" aria-hidden="true">
-    <div class="end-line"></div>
-    <!-- ══ DYNAMIC ══ -->
-    <span class="end-label">End of Edition · {{DATE}}</span>
-    <div class="end-line"></div>
   </div>
 
 </main>
@@ -677,6 +416,107 @@
 </footer>
 
 <script>
+  /* ══ Edition config — values baked in at generation time ══ */
+  const EDITION_DATE  = '{{EDITION_ISO}}';
+  const SUPABASE_URL  = '{{SUPABASE_URL}}';
+  const SUPABASE_ANON = '{{SUPABASE_ANON_KEY}}';
+
+  /* ── HTML text-escape helper (prevent XSS in plain-text fields) ── */
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  /* ── Photo credit block ── */
+  function creditHtml(story) {
+    if (!story.credit_name) return '';
+    if (story.credit_name === 'Adobe Firefly') {
+      return '<div class="hero-credit">Photo by Adobe Firefly</div>';
+    }
+    const href = esc(story.credit_url || story.url || '#');
+    return `<div class="hero-credit">Photo by <a href="${href}" target="_blank" rel="noopener">${esc(story.credit_name)}</a></div>`;
+  }
+
+  /* ── Story section builder ── */
+  function buildStory(story, idx) {
+    const n      = idx + 1;
+    const nStr   = String(n).padStart(2, '0');
+    const isLead = n === 1;
+    const badge  = isLead
+      ? '<span class="signal-badge">Signal 01</span><span class="signal-badge dim">Lead Story</span>'
+      : `<span class="signal-badge dim">Signal ${nStr}</span>`;
+    const bylineA = story.author
+      ? `<span class="byline-author">${esc(story.author)}</span><span class="byline-sep">·</span>` : '';
+    const bylineP = story.pub_name
+      ? `<span class="byline-pub">${esc(story.pub_name)}</span><span class="byline-sep">·</span>` : '';
+    const divider = idx > 0
+      ? `<div class="signal-divider" aria-hidden="true"><div class="signal-divider-line"></div><span class="signal-divider-label">Signal ${nStr}</span><div class="signal-divider-line"></div></div>`
+      : '';
+    return `${divider}
+<section aria-label="Story ${n} of 4${isLead ? ': Lead story' : ''}">
+  <div class="story-hero ${isLead ? 'lead' : 'standard'}" aria-hidden="true">
+    <img class="hero-img" src="${esc(story.image_url || '')}" alt="${esc(story.image_alt || '')}" onerror="this.style.display='none'">
+    <div class="hero-placeholder-full"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-num">${nStr}</div>
+    ${creditHtml(story)}
+  </div>
+  <div class="story-col">
+    <div class="signal-row">
+      ${badge}
+      <span class="signal-tag">${esc(story.category || '')}</span>
+    </div>
+    <h2 class="story-headline ${isLead ? 'lead' : 'standard'}">
+      <a href="${esc(story.url || '#')}" target="_blank" rel="noopener">${esc(story.headline || '—')}</a>
+    </h2>
+    <div class="story-byline" aria-label="Article byline">
+      ${bylineA}${bylineP}<span>${esc(story.pub_date || '')}</span>
+    </div>
+    ${story.summary_html || '<p class="story-summary">Summary unavailable.</p>'}
+    <div class="why-matters" role="note" aria-label="Why It Matters">
+      <div class="wim-head">
+        <span class="wim-head-label">Why It Matters</span>
+        <span class="wim-head-sub">AI-generated insight</span>
+      </div>
+      <div class="wim-body">
+        <p class="wim-text">${esc(story.why_it_matters || 'Analysis unavailable.')}</p>
+      </div>
+    </div>
+  </div>
+</section>`;
+  }
+
+  /* ── Fetch edition data from Supabase and render ── */
+  async function loadEdition() {
+    const container = document.getElementById('signals-container');
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/daily_editions?edition_date=eq.${EDITION_DATE}&select=stories`,
+        { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+      );
+      const rows    = await res.json();
+      const stories = (rows[0]?.stories || []).sort((a, b) => a.slot - b.slot);
+      if (!stories.length) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">No edition data found.</p>';
+        return;
+      }
+      const [y, m, d] = EDITION_DATE.split('-');
+      const displayDate = `${m}-${d}-${y}`;
+      let html = stories.map((story, i) => buildStory(story, i)).join('');
+      html += `<div class="end-cap" aria-hidden="true"><div class="end-line"></div><span class="end-label">End of Edition · ${displayDate}</span><div class="end-line"></div></div>`;
+      container.style.display   = 'block';
+      container.style.minHeight = '';
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">Failed to load edition.</p>';
+      console.error('[ClawBeat] Edition load error:', err);
+    }
+  }
+
+  loadEdition();
+
+  /* ── Mobile menu ── */
   function toggleMenu() {
     const menu      = document.getElementById('mobile-menu');
     const btn       = document.getElementById('hamburger-btn');

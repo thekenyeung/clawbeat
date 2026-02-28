@@ -38,6 +38,7 @@ from google import genai
 
 SUPABASE_URL         = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
+SUPABASE_ANON_KEY    = os.environ.get("SUPABASE_ANON_KEY", "")   # public read key for client-side JS
 GEMINI_API_KEY       = os.environ["GEMINI_API_KEY"]
 EDITION_DATE_OVERRIDE = os.environ.get("EDITION_DATE", "").strip()  # YYYY-MM-DD
 
@@ -492,40 +493,19 @@ def main():
     }, on_conflict="edition_date").execute()
 
     # --- Build template variables ---
+    # Story content is now fetched client-side from Supabase — only global vars
+    # and story-1 fields (for OG/social meta tags) need to be baked into the HTML.
+    s1 = final_stories[0] if final_stories else {}
     template_vars: dict[str, str] = {
-        "DATE":          display_date,
-        "COMPILED_TIME": COMPILED_TIME,
+        "DATE":             display_date,
+        "EDITION_ISO":      edition_iso,
+        "COMPILED_TIME":    COMPILED_TIME,
+        "SUPABASE_URL":     SUPABASE_URL,
+        "SUPABASE_ANON_KEY": SUPABASE_ANON_KEY,
+        # Story 1 fields needed for OG title + og:image meta tags
+        "STORY_1_HEADLINE":  s1.get("headline", "—"),
+        "STORY_1_IMAGE_URL": s1.get("image_url", ""),
     }
-
-    for story in final_stories:
-        n = story["slot"]
-        template_vars[f"STORY_{n}_URL"]               = story["url"]
-        template_vars[f"STORY_{n}_HEADLINE"]          = story["headline"]
-        template_vars[f"STORY_{n}_AUTHOR"]            = story["author"]
-        template_vars[f"STORY_{n}_PUBLICATION_NAME"]  = story["pub_name"]
-        template_vars[f"STORY_{n}_PUBLICATION_URL"]   = story["pub_url"]
-        template_vars[f"STORY_{n}_PUB_DATE"]          = story["pub_date"]
-        template_vars[f"STORY_{n}_CATEGORY"]          = story["category"]
-        template_vars[f"STORY_{n}_IMAGE_URL"]         = story["image_url"]
-        template_vars[f"STORY_{n}_IMAGE_ALT"]         = story["image_alt"]
-        template_vars[f"STORY_{n}_HERO_CREDIT_HTML"]  = build_hero_credit_html(
-            story["credit_name"], story["credit_url"], story["url"]
-        )
-
-    # Fill empty slots (stories 2-4 may be missing if dispatch had fewer articles)
-    for n in range(len(final_stories) + 1, 5):
-        template_vars[f"STORY_{n}_URL"]               = "#"
-        template_vars[f"STORY_{n}_HEADLINE"]          = "—"
-        template_vars[f"STORY_{n}_AUTHOR"]            = ""
-        template_vars[f"STORY_{n}_PUBLICATION_NAME"]  = ""
-        template_vars[f"STORY_{n}_PUBLICATION_URL"]   = "#"
-        template_vars[f"STORY_{n}_PUB_DATE"]          = ""
-        template_vars[f"STORY_{n}_CATEGORY"]          = ""
-        template_vars[f"STORY_{n}_IMAGE_URL"]         = ""
-        template_vars[f"STORY_{n}_IMAGE_ALT"]         = ""
-        template_vars[f"STORY_{n}_HERO_CREDIT_HTML"]  = ""
-        template_vars[f"STORY_{n}_SUMMARY_HTML"]      = '<p class="story-summary">No story available for this slot.</p>'
-        template_vars[f"STORY_{n}_WHY_IT_MATTERS"]    = ""
 
     # --- Render & write HTML ---
     template_html = TEMPLATE_PATH.read_text(encoding="utf-8")
