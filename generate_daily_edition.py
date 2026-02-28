@@ -291,9 +291,12 @@ def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
         ---ANALYSIS---
 
         SECTION 2 — Why It Matters (~500 characters, plain text):
-        As a senior industry analyst covering AI and OpenClaw: explain the strategic significance —
-        why this matters beyond the headline, who benefits, what this signals about where the
-        market is heading, and what's missing or underplayed in the coverage.
+        You are a senior analyst specializing in the OpenClaw ecosystem.
+        Explain what this development means specifically for OpenClaw — how it affects the platform,
+        its developer community, and the trajectory of OpenClaw technology. Ground your analysis in
+        the OpenClaw context: does this expand or constrain what developers can build with it, does
+        it signal a shift in how OpenClaw competes or evolves, and what should the OpenClaw community
+        be paying attention to as a result? Do not generalize to AI broadly.
         No bullets. One plain paragraph.
 
         Article:
