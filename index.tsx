@@ -152,6 +152,33 @@ const parseMDY = (d: string) => {
   return isNaN(y) || y === 0 ? 0 : new Date(y, m - 1, day).getTime();
 };
 
+// "Today" as a timestamp in Pacific time (midnight Pacific), for dispatch cutoff
+const getTodayPacific = (): number => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const y = parts.find(p => p.type === 'year')?.value ?? '0';
+  const m = parts.find(p => p.type === 'month')?.value ?? '0';
+  const d = parts.find(p => p.type === 'day')?.value ?? '0';
+  return parseMDY(`${m}-${d}-${y}`);
+};
+
+// Format "YYYY-MM-DD HH:MM UTC" → Pacific time display string
+const formatLastSyncPacific = (raw: string): string => {
+  if (!raw) return '';
+  const match = raw.match(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) UTC$/);
+  if (!match) return raw;
+  const date = new Date(`${match[1]}T${match[2]}:00Z`);
+  if (isNaN(date.getTime())) return raw;
+  return date.toLocaleString('en-US', {
+    timeZone: 'America/Los_Angeles',
+    month: '2-digit', day: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+    timeZoneName: 'short',
+  });
+};
+
 const App: React.FC = () => {
   const urlTab = new URLSearchParams(window.location.search).get('tab') as Page | null;
   const [activePage, setActivePage] = useState<Page>(
@@ -250,7 +277,7 @@ const App: React.FC = () => {
       if (projectsRes.error) throw projectsRes.error;
       if (researchRes.error) throw researchRes.error;
 
-      setLastUpdated(metaRes.data?.last_updated || '');
+      setLastUpdated(formatLastSyncPacific(metaRes.data?.last_updated || ''));
 
       // Map DB snake_case → frontend camelCase
       setNews((newsRes.data || []).map((item: any) => ({
@@ -289,8 +316,15 @@ const App: React.FC = () => {
   );
 
   // Sort all articles by publication date (MM-DD-YYYY) descending before paginating
+  // Filter out any items dated after today in Pacific time (prevents early UTC-midnight scraper runs
+  // from surfacing tomorrow's dispatch before Pacific midnight)
   const sortedNews = React.useMemo(
-    () => [...news].sort((a, b) => parseMDY(b.date) - parseMDY(a.date)),
+    () => {
+      const todayPT = getTodayPacific();
+      return [...news]
+        .filter(item => !item.date || parseMDY(item.date) <= todayPT)
+        .sort((a, b) => parseMDY(b.date) - parseMDY(a.date));
+    },
     [news]
   );
   const currentNewsItems = sortedNews.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
