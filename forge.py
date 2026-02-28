@@ -331,6 +331,103 @@ def scan_rss():
         except: continue
     return found
 
+def scan_hackernews(hours_back: int = 48) -> list:
+    """Search Hacker News for OpenClaw-related content via the Algolia HN Search API.
+
+    Uses the search_by_date endpoint (date-sorted) with a recency window, then
+    fetches full article content via process_article_intel for density scoring.
+    Stories and Show HN posts are both included.
+
+    Returns articles in the same dict format as scan_rss() / scan_google_news(),
+    augmented with 'hn_points' and 'hn_comments' for D3 engagement scoring.
+    """
+    import time as _time
+    cutoff_ts = int(_time.time()) - (hours_back * 3600)
+
+    # Search each brand separately to maximise recall; deduplicate by URL.
+    # Algolia HN Search API: https://hn.algolia.com/api/v1/
+    HN_SEARCH_URL = 'https://hn.algolia.com/api/v1/search_by_date'
+    HN_HEADERS    = {'User-Agent': 'OpenClawIntelBot/1.0'}
+
+    found    = []
+    seen_urls: set = set()
+
+    for brand in ["OpenClaw", "Moltbot", "Clawdbot", "Moltbook"]:
+        try:
+            resp = requests.get(
+                HN_SEARCH_URL,
+                params={
+                    'query':          brand,
+                    'tags':           '(story,show_hn)',
+                    'numericFilters': f'created_at_i>{cutoff_ts}',
+                    'hitsPerPage':    20,
+                },
+                headers=HN_HEADERS,
+                timeout=10,
+            )
+            resp.raise_for_status()
+            hits = resp.json().get('hits', [])
+            print(f"  🔶 HN '{brand}': {len(hits)} hits")
+
+            for hit in hits:
+                story_url = hit.get('url')
+                # Skip self-posts (Ask/Show HN without an external URL) and dupes
+                if not story_url or story_url in seen_urls:
+                    continue
+                if get_source_type(story_url) == 'delist':
+                    continue
+
+                seen_urls.add(story_url)
+
+                hn_points   = hit.get('points', 0) or 0
+                hn_comments = hit.get('num_comments', 0) or 0
+
+                # Publication date from HN Unix timestamp
+                created_at_i = hit.get('created_at_i', 0)
+                if created_at_i:
+                    article_date = datetime.fromtimestamp(created_at_i).strftime('%m-%d-%Y')
+                else:
+                    article_date = datetime.now().strftime('%m-%d-%Y')
+
+                # Source name: derive from URL domain (whitelist-aware via get_source_type)
+                try:
+                    domain = urlparse(story_url).netloc.lower().replace('www.', '')
+                except Exception:
+                    domain = 'hacker-news.com'
+
+                # Full article fetch for density scoring; tolerate failures gracefully
+                passes, density, clean_text = process_article_intel(story_url)
+
+                if not passes:
+                    title_lower = (hit.get('title') or '').lower()
+                    is_brand_title = any(b in title_lower for b in CORE_BRANDS)
+                    # Allow through only if brand is in the title or HN score signals relevance
+                    if not is_brand_title and hn_points < 10:
+                        continue
+                    # Estimate density from HN score when article fetch failed
+                    density = max(density, hn_points // 15)
+                    clean_text = ''
+
+                found.append({
+                    'title':       hit.get('title', ''),
+                    'url':         story_url,
+                    'source':      domain,
+                    'date':        article_date,
+                    'summary':     clean_text[:250] + '...' if clean_text else '',
+                    'density':     density,
+                    'hn_points':   hn_points,
+                    'hn_comments': hn_comments,
+                    'vec':         None,
+                })
+
+            time.sleep(1)   # courtesy pause between brand queries
+        except Exception as e:
+            print(f"⚠️ HN scan failed for '{brand}': {e}")
+
+    print(f"📡 HN: {len(found)} new candidate articles.")
+    return found
+
+
 def scan_google_news():
     query = "OpenClaw OR Moltbot OR Clawdbot OR Claudbot OR Moltbook OR \"Peter Steinberger\""
     gn_url = f"https://news.google.com/rss/search?q={query}+when:48h&hl=en-US&gl=US&ceid=US:en"
@@ -482,7 +579,302 @@ def fetch_github_projects():
         } for r in items]
     except: return []
 
-# --- 6. SUPABASE I/O ---
+# --- 6. OPENCLAW FEED SCORING (Methodology v1.2) ---
+
+# Tier classification keywords
+_TIER1_BRANDS = ['openclaw', 'moltbot', 'clawdbot', 'claudbot']
+_TIER2_BRANDS = ['moltbook']
+_COMPETITOR_SIGNALS = ['vs ', ' versus ', 'compared to', 'alternative to', 'competitor']
+
+def _get_centrality(density: int, is_brand_title: bool, has_brand_in_text: bool) -> int:
+    """Map density and title signal to a 0–10 centrality score (D1 sub-dimension)."""
+    if is_brand_title and density >= 10:
+        return 10
+    elif is_brand_title and density >= 5:
+        return 8
+    elif is_brand_title:
+        return 6
+    elif has_brand_in_text and density >= 5:
+        return 6
+    elif has_brand_in_text:
+        return 4
+    elif density >= 3:
+        return 3
+    else:
+        return 2
+
+def _compute_d5(item: dict, tier: int, centrality: int, authority: int) -> float:
+    """Heuristic approximation of D5 Reader Value (0–20 pts, v1.3 methodology).
+
+    Answers the 12 checklist questions via structural signals since full
+    content analysis is unavailable at ingest time.
+
+    Categories:
+      A  Practical Utility         0–8 pts
+      B  Community Relevance       0–6 pts
+      C  Technology Directness     0–4 pts  (–2 penalty if generic)
+      D  Timeliness & Accuracy     0–4 pts
+    """
+    title   = (item.get('title', '') or '').lower()
+    text    = (title + ' ' + (item.get('summary', '') or '')).lower()
+    density = item.get('density', 0)
+    mc      = len(item.get('moreCoverage', []) or [])
+    hn_pts  = item.get('hn_points', 0) or 0
+    hn_cmt  = item.get('hn_comments', 0) or 0
+
+    d5 = 0.0
+
+    # ── Category A: Practical Utility (0–8 pts) ──────────────────────────────
+
+    # A1 (+3): Helps a developer build / configure / debug with OpenClaw directly?
+    # Proxy: step-by-step / process keywords in title/summary AND Tier 1 or 2
+    BUILD_TERMS = {'tutorial', 'guide', 'how to', 'how-to', 'walkthrough',
+                   'setup', 'configure', 'debug', 'debugging', 'install',
+                   'getting started', 'quickstart', 'migration'}
+    if any(t in text for t in BUILD_TERMS) and tier <= 2:
+        d5 += 3
+
+    # A2 (+2): Introduces or explains a feature, API, or capability?
+    # Proxy: introduction/feature keywords AND Tier 1 (primary ecosystem)
+    FEATURE_TERMS = {'introduces', 'new feature', "what's new", 'new in',
+                     'announcing', 'new api', 'new sdk', 'new plugin',
+                     'new integration', 'new endpoint'}
+    if any(t in text for t in FEATURE_TERMS) and tier == 1:
+        d5 += 2
+
+    # A3 (+2): Includes working code, commands, or implementation guidance?
+    # Proxy: code/artifact keywords AND Tier 1 or 2
+    CODE_TERMS = {'code snippet', 'code sample', 'implementation', 'example code',
+                  'runnable', 'demo', 'playground', 'repository', 'github.com'}
+    if any(t in text for t in CODE_TERMS) and tier <= 2:
+        d5 += 2
+
+    # A4 (+1): Addresses a known pain point or FAQ?
+    # Proxy: high multi-source or HN discussion → many people care about this
+    if mc >= 2 or hn_cmt >= 20:
+        d5 += 1
+
+    # ── Category B: Community & Ecosystem Relevance (0–6 pts) ────────────────
+
+    # B5 (+2): Covers a person, project, or org in the OpenClaw ecosystem?
+    # Proxy: whitelist publisher/creator sources are known ecosystem players
+    if authority >= 2:
+        d5 += 2
+
+    # B6 (+2): Surfaces a community discussion, debate, or decision?
+    # Proxy: cross-source coverage or meaningful HN engagement
+    if mc >= 1 or hn_cmt >= 10 or hn_pts >= 20:
+        d5 += 2
+
+    # B7 (+2): Announces something developers need to act on or be aware of?
+    # Proxy: announcement/change keywords AND Tier 1 or 2
+    ANNOUNCE_TERMS = {'release', 'launches', 'launch', 'announced', 'deprecat',
+                      'end of life', 'eol', 'breaking change', 'roadmap',
+                      'beta', 'rc ', 'v2.', 'v3.', 'v4.', 'v5.', '2.0', '3.0'}
+    if any(t in text for t in ANNOUNCE_TERMS) and tier <= 2:
+        d5 += 2
+
+    # ── Category C: Technology Directness (0–4 pts, –2 penalty) ─────────────
+
+    # C8: Is OpenClaw the primary technology? (+2 primary / +1 supporting)
+    if tier == 1 and centrality >= 7:
+        d5 += 2   # primary subject
+    elif tier <= 2 and centrality >= 4:
+        d5 += 1   # supporting role
+
+    # C9: Adjacent tool with OpenClaw-specific impact explained?
+    # Proxy: Tier 2/3 articles that still have substantial density signal
+    if tier <= 2:
+        d5 += 1   # implicit connection via brand mention
+    elif density >= 3:
+        d5 += 1   # Tier 3 but meaningful brand signal
+
+    # C10: Would this be equally relevant to non-OpenClaw developers? (–2 if yes)
+    # Proxy: Tier 3 articles without the brand in the raw title are likely generic
+    is_brand_title = any(b in title for b in _TIER1_BRANDS + _TIER2_BRANDS)
+    if tier == 3 and not is_brand_title:
+        d5 -= 2
+
+    # ── Category D: Timeliness & Accuracy (0–4 pts) ──────────────────────────
+
+    # D11 (+2): Reflects current state of OpenClaw?
+    # All ingested articles pass a 48 h recency filter, so presumed current.
+    d5 += 2
+
+    # D12 (+2): Responding to something in the current news cycle?
+    # Proxy: multi-source coverage or notable HN engagement
+    if mc >= 1 or hn_pts >= 10:
+        d5 += 2
+
+    return max(0.0, min(20.0, d5))
+
+
+def compute_scores(item: dict) -> dict:
+    """Compute D1–D5 scores, total_score, d1_tier, stage_tags, and source_type
+    for a single article dict (post-clustering, so moreCoverage is set).
+
+    Returns a dict with the score keys ready to merge into the DB record.
+    Total Score = (D1/40×35)+(D2/25×20)+(D3/20×15)+(D4/15×10)+(D5/20×20)  max=100 (v1.3).
+    """
+    url          = item.get('url', '')
+    source       = item.get('source', '')
+    title        = item.get('title', '')
+    summary      = item.get('summary', '')
+    density      = item.get('density', 0)
+    more_cov     = item.get('moreCoverage', []) or []
+    hn_points    = item.get('hn_points', 0) or 0
+    hn_comments  = item.get('hn_comments', 0) or 0
+
+    url_lower    = url.lower()
+    source_lower = source.lower()
+    title_lower  = title.lower()
+    text_lower   = (title + ' ' + summary).lower()
+
+    # ── D1: Product Relevance (0–40) ─────────────────────────────────────────
+    has_tier1 = any(b in text_lower for b in _TIER1_BRANDS)
+    has_tier2 = any(b in text_lower for b in _TIER2_BRANDS)
+
+    if has_tier1:
+        tier, tier_mult = 1, 1.0
+    elif has_tier2:
+        tier, tier_mult = 2, 0.65
+    else:
+        tier, tier_mult = 3, 0.30
+
+    is_brand_title = any(b in title_lower for b in _TIER1_BRANDS + _TIER2_BRANDS)
+    has_brand_text = has_tier1 or has_tier2
+    centrality = _get_centrality(density, is_brand_title, has_brand_text)
+
+    d1 = min(40.0, centrality * tier_mult * 4)
+
+    # Competitor/comparison penalty: –10 if article is comparison-framed and
+    # our brand is not the primary subject of the title.
+    if any(sig in title_lower for sig in _COMPETITOR_SIGNALS) and not is_brand_title:
+        d1 = max(0.0, d1 - 10)
+
+    # ── D2: Content Depth & Actionability (0–25) ─────────────────────────────
+    authority = get_source_authority(url, source)
+    has_summary = bool(summary and len(summary.strip()) > 50)
+
+    # Depth (0–15)
+    if authority >= 3 and has_summary and len(summary) > 150:
+        depth = 12   # whitelist publisher, rich AI-generated brief
+    elif authority >= 2 and has_summary:
+        depth = 9
+    elif has_summary:
+        depth = 6
+    else:
+        depth = 3
+
+    # Actionability (0–10): title keyword signals
+    ACT_KEYWORDS = {
+        'release': 3, 'launches': 3, 'launch': 3, 'update': 3,
+        'tutorial': 2, 'guide': 2, 'how to': 2, 'how-to': 2,
+        'api': 2, 'patch': 2, 'changelog': 2,
+        'documentation': 1, 'docs': 1, 'example': 1, 'demo': 1,
+    }
+    actionability = 0
+    for kw, pts in ACT_KEYWORDS.items():
+        if kw in title_lower:
+            actionability += pts
+    actionability = min(10, actionability)
+
+    d2 = float(depth + actionability)
+
+    # ── D3: Engagement & Social Signal (0–20) ────────────────────────────────
+    d3 = 0.0
+    mc_count = len(more_cov)
+
+    # Multi-source coverage proxy
+    if mc_count >= 4:
+        d3 += 10
+    elif mc_count >= 2:
+        d3 += 7
+    elif mc_count >= 1:
+        d3 += 5
+
+    # Source-level signal
+    if authority >= 3:
+        d3 += 8
+    elif any(k in url_lower for k in ('substack.com', 'beehiiv.com')):
+        d3 += 4
+    elif authority >= 2:
+        d3 += 3
+
+    # High keyword density → community interest
+    if density >= 15:
+        d3 += 3
+    elif density >= 8:
+        d3 += 1
+
+    # HN direct engagement signal (Stage 3 methodology, social media row)
+    # Points and comments are capped together; social cap is still 20 overall.
+    if hn_points > 100:
+        d3 += 10
+    elif hn_points > 50 or hn_comments >= 50:
+        d3 += 7
+    elif hn_points >= 20 or hn_comments >= 20:
+        d3 += 3
+    elif hn_points > 0:
+        d3 += 1
+
+    d3 = min(20.0, d3)
+
+    # ── D4: Source Credibility (0–15) ────────────────────────────────────────
+    is_delist = (
+        any(k in url_lower for k in DELIST_SITES)
+        or any(k in source_lower for k in BANNED_SOURCES)
+    )
+    if is_delist:
+        d4 = 0.0
+    elif authority >= 3:
+        d4 = 14.0
+    elif authority == 2:
+        d4 = 11.0
+    elif authority == 1:
+        d4 = 6.0
+    else:
+        d4 = 0.0
+
+    d5 = _compute_d5(item, tier, centrality, authority)
+    total = round((d1/40*35) + (d2/25*20) + (d3/20*15) + (d4/15*10) + (d5/20*20), 2)
+
+    # ── Stage 3 Tags ─────────────────────────────────────────────────────────
+    stage_tags = []
+    if authority >= 3:
+        stage_tags.append('official-source')
+    if authority >= 2:
+        stage_tags.append('whitelisted')
+    if d3 >= 15:
+        stage_tags.append('high-engagement')
+    if tier == 2:
+        stage_tags.append('moltbook-only')
+    if mc_count >= 1:
+        stage_tags.append('cluster-anchor')
+    # Legacy name: uses moltbot/clawdbot but not openclaw, within 90 days
+    has_legacy_only = (
+        any(b in text_lower for b in ['moltbot', 'clawdbot', 'claudbot'])
+        and 'openclaw' not in text_lower
+    )
+    if has_legacy_only:
+        stage_tags.append('legacy-name')
+    if is_delist:
+        stage_tags.append('promotional')
+
+    return {
+        'd1_score':   round(d1, 2),
+        'd2_score':   round(d2, 2),
+        'd3_score':   round(d3, 2),
+        'd4_score':   round(d4, 2),
+        'd5_score':   round(d5, 2),
+        'total_score': total,
+        'd1_tier':    tier,
+        'stage_tags': stage_tags,
+        'source_type': get_source_type(url, source),
+    }
+
+
+# --- 7. SUPABASE I/O ---
 
 def _load_from_supabase() -> dict:
     """Load all existing data from Supabase at forge startup."""
@@ -508,6 +900,17 @@ def _load_from_supabase() -> dict:
                 'moreCoverage':  row.get('more_coverage', []) or [],
                 'tags':          row.get('tags', []) or [],
                 'date_is_manual': row.get('date_is_manual', False),
+                'source_type':   row.get('source_type', 'standard'),
+                'total_score':   row.get('total_score'),
+                'd1_score':      row.get('d1_score'),
+                'd2_score':      row.get('d2_score'),
+                'd3_score':      row.get('d3_score'),
+                'd4_score':      row.get('d4_score'),
+                'd1_tier':       row.get('d1_tier'),
+                'stage_tags':    row.get('stage_tags', []) or [],
+                'hn_points':     row.get('hn_points'),
+                'hn_comments':   row.get('hn_comments'),
+                'd5_score':      row.get('d5_score'),
                 'vec':           None,
             })
 
@@ -566,6 +969,17 @@ def _save_to_supabase(db: dict) -> None:
             'more_coverage': item.get('moreCoverage', []),
             'tags':          item.get('tags', []),
             'date_is_manual': item.get('date_is_manual', False) or (item['url'] in manual_date_map),
+            'source_type':   item.get('source_type', 'standard'),
+            'total_score':   item.get('total_score'),
+            'd1_score':      item.get('d1_score'),
+            'd2_score':      item.get('d2_score'),
+            'd3_score':      item.get('d3_score'),
+            'd4_score':      item.get('d4_score'),
+            'd1_tier':       item.get('d1_tier'),
+            'stage_tags':    item.get('stage_tags', []),
+            'hn_points':     item.get('hn_points'),
+            'hn_comments':   item.get('hn_comments'),
+            'd5_score':      item.get('d5_score'),
         } for item in db.get('items', [])]
         if news_records:
             _supabase.table('news_items').upsert(news_records).execute()
@@ -646,7 +1060,7 @@ def _save_to_supabase(db: dict) -> None:
         print(f"❌ Supabase save failed: {e}")
 
 
-# --- 7. CLUSTERING & ARCHIVING ---
+# --- 8. CLUSTERING & ARCHIVING ---
 
 def cluster_articles_temporal(new_articles, existing_items):
     if not new_articles: return existing_items
@@ -708,12 +1122,12 @@ def cluster_articles_temporal(new_articles, existing_items):
 
     return final
 
-# --- 8. MAIN EXECUTION ---
+# --- 9. MAIN EXECUTION ---
 if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed...")
     db = _load_from_supabase()
 
-    raw_news = scan_rss() + scan_google_news()
+    raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
     new_summaries_count = 0
     existing_urls = {item['url'] for item in db.get('items', [])}
@@ -731,6 +1145,29 @@ if __name__ == "__main__":
             new_summaries_count += 1; time.sleep(SLEEP_BETWEEN_REQUESTS)
         newly_discovered.append(art)
 
+    # HN enrichment: articles already in the DB (found via RSS) may now appear
+    # on HN with engagement data.  Back-fill hn_points/hn_comments so the next
+    # score pass can incorporate them.  Only updates items whose HN data was
+    # absent or has improved (higher points / more comments).
+    hn_by_url = {
+        a['url']: a for a in raw_news
+        if a.get('hn_points') is not None
+    }
+    hn_enriched = 0
+    for item in db.get('items', []):
+        hn_hit = hn_by_url.get(item['url'])
+        if not hn_hit:
+            continue
+        new_pts = hn_hit.get('hn_points', 0) or 0
+        new_cmt = hn_hit.get('hn_comments', 0) or 0
+        if new_pts > (item.get('hn_points') or 0) or new_cmt > (item.get('hn_comments') or 0):
+            item['hn_points']   = new_pts
+            item['hn_comments'] = new_cmt
+            item['total_score'] = None  # invalidate score so re-scoring runs below
+            hn_enriched += 1
+    if hn_enriched:
+        print(f"🔶 HN enriched {hn_enriched} existing articles.")
+
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
     # Tag backfill: extract named-entity tags for articles that don't have tags yet.
@@ -743,6 +1180,21 @@ if __name__ == "__main__":
             tags_generated += 1
     if tags_generated:
         print(f"🏷️  Tagged {tags_generated} articles.")
+
+    # Score pass: compute D1–D4 scores for all items that don't yet have a
+    # total_score, or whose moreCoverage changed this run (anchor selection can
+    # change D3 engagement score).  Runs fully locally — no API calls.
+    scores_computed = 0
+    for item in db['items']:
+        # Re-score if: new article (no score yet) OR moreCoverage changed this run
+        # We detect "changed this run" by checking if the item was in newly_discovered.
+        is_new = item.get('total_score') is None
+        if is_new:
+            scores = compute_scores(item)
+            item.update(scores)
+            scores_computed += 1
+    if scores_computed:
+        print(f"📊 Scored {scores_computed} articles.")
 
     # Retry pass: articles whose Gemini call previously failed and were stored with the
     # fallback string will never be retried by the main loop (URL is already in existing_urls).

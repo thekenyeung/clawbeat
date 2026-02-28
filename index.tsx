@@ -42,6 +42,15 @@ interface NewsItem {
   source_type?: 'priority' | 'standard' | 'delist';
   moreCoverage?: Array<{ source: string; url: string }>;
   tags?: string[];
+  // OpenClaw Feed Scoring Methodology v1.3
+  total_score?: number | null;
+  d1_score?: number | null;
+  d2_score?: number | null;
+  d3_score?: number | null;
+  d4_score?: number | null;
+  d5_score?: number | null;
+  d1_tier?: number | null;   // 1=OpenClaw/Moltbot/Clawdbot  2=Moltbook  3=Tangential
+  stage_tags?: string[];
 }
 
 interface VideoItem {
@@ -309,6 +318,14 @@ const App: React.FC = () => {
         ...item,
         moreCoverage: item.more_coverage || [],
         tags: item.tags || [],
+        stage_tags: item.stage_tags || [],
+        total_score: item.total_score ?? null,
+        d1_score: item.d1_score ?? null,
+        d2_score: item.d2_score ?? null,
+        d3_score: item.d3_score ?? null,
+        d4_score: item.d4_score ?? null,
+        d5_score: item.d5_score ?? null,
+        d1_tier: item.d1_tier ?? null,
       })));
 
       setVideos((videosRes.data || [])
@@ -580,6 +597,19 @@ const SortButton = ({ active, onClick, label }: any) => (
   </button>
 );
 
+// Scoring for the article list (OpenClaw Feed Scoring Methodology v1.2).
+// Uses server-computed total_score when present; falls back to a heuristic for
+// legacy articles that pre-date the scoring migration.
+const feedScore = (item: NewsItem): number => {
+  if (item.total_score != null) return item.total_score;
+  // Legacy fallback — approximates the new scoring without D1/D2 data.
+  let score = 20;
+  if (item.source_type === 'priority') score += 10;
+  if (checkIfVerified(item)) score += 8;
+  score += Math.min(9, (item.moreCoverage?.length || 0) * 3);
+  return score;
+};
+
 // Score an article for spotlight selection (higher = more prominent)
 const scoreArticle = (item: NewsItem): number => {
   let score = (item.moreCoverage?.length || 0) * 3;
@@ -614,11 +644,28 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
     }
     for (const day of Object.keys(byDay)) {
       byDay[day]!.sort((a, b) => {
-        const aV = checkIfVerified(a), bV = checkIfVerified(b);
-        if (aV !== bV) return aV ? -1 : 1;
-        const w: Record<string, number> = { priority: 1, standard: 2, delist: 3 };
-        const wDiff = (w[a.source_type || 'standard'] ?? 2) - (w[b.source_type || 'standard'] ?? 2);
-        if (wDiff !== 0) return wDiff;
+        // Stage 2: suppressed items (total_score < 10) sort to absolute bottom
+        const aSup = a.total_score != null && a.total_score < 10;
+        const bSup = b.total_score != null && b.total_score < 10;
+        if (aSup !== bSup) return aSup ? 1 : -1;
+
+        const aScore = feedScore(a);
+        const bScore = feedScore(b);
+
+        // Whitelist tiebreaker: within a ±3 pt band, whitelisted source ranks first
+        if (Math.abs(aScore - bScore) <= 3) {
+          const aWL = checkIfVerified(a), bWL = checkIfVerified(b);
+          if (aWL !== bWL) return aWL ? -1 : 1;
+        }
+
+        // Primary sort: total score descending
+        if (aScore !== bScore) return bScore - aScore;
+
+        // D2 depth tiebreaker
+        const aD2 = a.d2_score ?? 0, bD2 = b.d2_score ?? 0;
+        if (aD2 !== bD2) return bD2 - aD2;
+
+        // Final fallback: insertion order
         return new Date(b.inserted_at || 0).getTime() - new Date(a.inserted_at || 0).getTime();
       });
     }
@@ -678,10 +725,12 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
         const leadSlot      = spotlightSlots[0];
         const alsoTodaySlots = spotlightSlots.slice(1).filter(Boolean) as NewsItem[];
 
-        // Below-spotlight: current-page items for this day, in full-day sort order
-        // Filtering from the full sorted day list preserves continuous numbering across pages
+        // Below-spotlight: current-page items for this day, in full-day sort order.
+        // Suppressed items (Stage 2: total_score < 10) are hidden from display.
         const currentPageUrls = new Set(dayItems.map(i => i.url));
-        const allArticles = (fullDayArticles[day] || []).filter(a => currentPageUrls.has(a.url));
+        const allArticles = (fullDayArticles[day] || [])
+          .filter(a => currentPageUrls.has(a.url))
+          .filter(a => !(a.total_score != null && a.total_score < 10));
 
         return (
           <React.Fragment key={day}>
@@ -795,7 +844,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
                     )}
                     {moreCov.length > 0 && (
                       <div className="coverage-strip">
-                        <span className="coverage-label">// more coverage</span>
+                        <span className="coverage-label">// also covering</span>
                         {moreCov.map((link, i) => (
                           <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="coverage-link" onClick={() => onTrackClick(item.title, link.source)}>
                             {formatSourceName(link.source)}

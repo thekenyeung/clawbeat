@@ -223,6 +223,27 @@ CREATE POLICY "Admin writes" ON daily_editions
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- OpenClaw Feed Scoring Methodology — score columns
+-- Run this block on an existing DB to add the new columns.
+-- Scores are computed server-side by forge.py and stored here.
+-- total_score = d1_score + d2_score + d3_score + d4_score (max 100)
+-- d1_tier: 1=OpenClaw/Moltbot/Clawdbot, 2=Moltbook, 3=Tangential
+-- stage_tags: array of tags (legacy-name, whitelisted, high-engagement, etc.)
+-- source_type: 'priority' | 'standard' | 'delist'
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS total_score  FLOAT   DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d1_score     FLOAT   DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d2_score     FLOAT   DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d3_score     FLOAT   DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d4_score     FLOAT   DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d1_tier      INTEGER DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS stage_tags   JSONB   DEFAULT '[]'::jsonb;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS source_type  TEXT    DEFAULT 'standard';
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS hn_points    INTEGER DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS hn_comments  INTEGER DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS d5_score     FLOAT   DEFAULT NULL;
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON
