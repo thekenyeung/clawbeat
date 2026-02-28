@@ -181,6 +181,13 @@ CREATE POLICY "Admin writes" ON whitelist_sources
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- Add date_is_manual flag to news_items
+-- Prevents forge.py from overwriting admin-set dates on the next scrape run.
+-- Run this block on an existing DB.
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS date_is_manual BOOLEAN DEFAULT false;
+
+-- =============================================================
 -- Add language/topics/forks/license to github_projects
 -- Run this block in Supabase SQL Editor if migrating existing DB
 -- =============================================================
@@ -188,3 +195,29 @@ ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS language TEXT    DEFAULT ''
 ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS topics   JSONB   DEFAULT '[]'::jsonb;
 ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS forks    INTEGER DEFAULT 0;
 ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS license  TEXT    DEFAULT '';
+
+-- =============================================================
+-- daily_editions table — stores Daily Edition story data per date
+-- One row per edition date; stories is a JSONB array of up to 4 objects
+-- Run just this block on an existing DB
+-- =============================================================
+CREATE TABLE IF NOT EXISTS daily_editions (
+  edition_date  TEXT PRIMARY KEY,               -- YYYY-MM-DD
+  generated_at  TIMESTAMPTZ DEFAULT NOW(),
+  stories       JSONB DEFAULT '[]'::jsonb       -- array of story objects (see below)
+  -- Each story object:
+  -- { slot, url, headline, author, pub_name, pub_url, pub_date, category,
+  --   image_url, image_alt, credit_name, credit_url, summary_html, why_it_matters }
+);
+
+ALTER TABLE daily_editions ENABLE ROW LEVEL SECURITY;
+
+-- Public reads (main app can query this)
+CREATE POLICY "Public reads" ON daily_editions
+  FOR SELECT TO anon, authenticated USING (true);
+
+-- Admin writes only
+CREATE POLICY "Admin writes" ON daily_editions
+  FOR ALL TO authenticated
+  USING     (auth.email() = 'ADMIN_EMAIL_HERE')
+  WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');

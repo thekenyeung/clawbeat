@@ -34,6 +34,13 @@
 -->
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-WHLSLX6VL3');
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#08090b">
@@ -42,9 +49,16 @@
   <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
   <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
 
-  <!-- ══ DYNAMIC: date in title ══ -->
-  <title>The Daily Edition — ClawBeat · {{DATE}}</title>
-  <meta name="description" content="ClawBeat Daily Edition: the top 4 OpenClaw stories for {{DATE}}, with AI-generated insights. Compiled at {{COMPILED_TIME}}.">
+  <!-- ══ DYNAMIC: SEO & social meta ══ -->
+  <title>The Daily Edition: {{STORY_1_HEADLINE}} — ClawBeat · {{DATE}}</title>
+  <meta name="description" content="{{STORY_1_HEADLINE}} and more — AI-powered analysis of today's top OpenClaw stories, compiled at {{COMPILED_TIME}}.">
+  <meta property="og:title" content="The Daily Edition: {{STORY_1_HEADLINE}} | ClawBeat">
+  <meta property="og:description" content="{{STORY_1_HEADLINE}} and more — AI-powered analysis of today's top OpenClaw and AI stories.">
+  <meta property="og:image" content="{{STORY_1_IMAGE_URL}}">
+  <meta property="og:url" content="https://clawbeat.co/daily/{{DATE}}.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ClawBeat">
+  <link rel="canonical" href="https://clawbeat.co/daily/{{DATE}}.html">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -85,67 +99,71 @@
     a { color: inherit; text-decoration: none; }
     :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
 
-    /* ── STATUS BAR ── */
-    .status-bar {
-      background: #000;
-      border-bottom: 1px solid var(--border-2);
-      padding: 0.4rem 1.5rem;
-      display: flex; align-items: center; gap: 2rem;
-      font-family: var(--mono); font-size: var(--min-font);
-      overflow-x: auto;
-    }
-    .status-item { display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; color: var(--text-3); }
-    .status-dot  { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .dot-green   { background: var(--green);  box-shadow: 0 0 6px var(--green); }
-    .dot-orange  { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
-    .status-value { color: var(--text); font-weight: 500; }
-    .status-sep   { color: var(--text-4); margin-left: auto; }
-
     /* ── STICKY HEADER ── */
     .header {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(8,9,11,0.88);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-2);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,12,0.8);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
     }
     .header-inner {
-      max-width: 1120px; margin: 0 auto; padding: 0 1.5rem;
-      height: 3.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+      height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     }
-    .brand      { display: flex; align-items: center; gap: 0.65rem; }
-    .brand-img  { width: 34px; height: 34px; border-radius: 7px; border: 1px solid var(--border-2); overflow: hidden; flex-shrink: 0; }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem; text-decoration: none;
+    }
+    .brand-img {
+      width: 40px; height: 40px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+    }
     .brand-img img { width: 100%; height: 100%; object-fit: cover; }
-    .brand-text { font-family: var(--sans); font-size: 1.05rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; font-style: italic; color: #fff; }
-    .brand-text span { color: var(--orange); }
-    .header-nav { display: flex; align-items: center; gap: 0.2rem; }
-    .nav-item {
-      font-family: var(--mono); font-size: var(--min-font); font-weight: 500; letter-spacing: 0.05em;
-      color: var(--text-3); padding: 0.35rem 0.7rem; border-radius: 4px; border: 1px solid transparent;
-      transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem;
+    .brand-text {
+      font-family: var(--sans); font-size: 1.25rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff;
     }
-    .nav-item svg { width: 13px; height: 13px; }
-    .nav-item:hover  { color: var(--text); border-color: var(--border-2); }
-    .nav-item.active { color: var(--orange); background: var(--orange-dim); border-color: rgba(249,115,22,0.2); }
-    .hamburger-btn { display: none; padding: 0.5rem; color: var(--text-3); background: none; border: none; cursor: pointer; }
-    .hamburger-btn svg { width: 22px; height: 22px; }
-    @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
-
-    /* ── MOBILE MENU ── */
+    .brand-text span { color: var(--orange); }
+    .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-item {
+      font-family: var(--sans); font-size: 0.625rem; font-weight: 900;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #64748b;
+      padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none;
+      transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-item svg { width: 16px; height: 16px; }
+    .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(255,255,255,0.1); color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .hamburger-btn {
+      display: none; padding: 0.5rem; color: #94a3b8;
+      background: transparent; border: none; cursor: pointer;
+      align-items: center; justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fff; }
+    .hamburger-btn svg { width: 24px; height: 24px; }
     .mobile-menu {
-      display: none; position: absolute; top: 3.75rem; left: 0; width: 100%;
-      background: rgba(8,9,11,0.97); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-2); padding: 0.75rem;
-      flex-direction: column; gap: 0.25rem; z-index: 49;
+      display: none; position: absolute; top: 4rem; left: 0; width: 100%;
+      background: rgba(10,10,12,0.95); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60;
     }
     .mobile-menu.open { display: flex; }
     .mobile-nav-item {
-      font-family: var(--mono); font-size: 0.75rem; color: var(--text-3);
-      padding: 0.65rem 1rem; border-radius: 4px;
-      display: flex; align-items: center; gap: 0.6rem;
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 900;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #64748b;
+      padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none;
+      transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%;
     }
-    .mobile-nav-item:hover  { background: rgba(255,255,255,0.04); color: var(--text); }
-    .mobile-nav-item.active { color: var(--orange); background: var(--orange-dim); }
-    .mobile-nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .mobile-nav-item.active {
+      background: rgba(255,255,255,0.1); color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
 
     /* ── EDITION MASTHEAD ── */
     .masthead {
@@ -336,54 +354,35 @@
 </head>
 <body>
 
-<!-- ══ STATUS BAR ══════════════════════════════════════════════════ -->
-<div class="status-bar" role="status" aria-label="Site status">
-  <div class="status-item">
-    <div class="status-dot dot-green" aria-hidden="true"></div>
-    <span>edition</span><span class="status-value">LIVE</span>
-  </div>
-  <div class="status-item">
-    <div class="status-dot dot-orange" aria-hidden="true"></div>
-    <span>signals</span><span class="status-value">4</span>
-  </div>
-  <!-- ══ DYNAMIC ══ -->
-  <div class="status-item"><span>compiled</span><span class="status-value">{{COMPILED_TIME}}</span></div>
-  <div class="status-item"><span>date</span><span class="status-value">{{DATE}}</span></div>
-  <span class="status-sep" aria-hidden="true">clawbeat.co / daily-edition</span>
-</div>
-
 <!-- ══ STICKY HEADER ═══════════════════════════════════════════════ -->
 <header class="header">
   <div class="header-inner">
-    <a href="/?tab=news" class="brand" aria-label="ClawBeat home">
+    <a href="/?tab=news" class="brand">
       <div class="brand-img">
-        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="" role="presentation" onerror="this.style.background='#131619'">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
       </div>
-      <span class="brand-text" aria-hidden="true">ClawBeat<span>.co</span></span>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
-    <nav class="header-nav" aria-label="Primary navigation">
-      <a href="/?tab=news"            class="nav-item"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
-      <a href="/research.html"        class="nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-      <a href="/media.html"           class="nav-item"><i data-lucide="video"     aria-hidden="true"></i>Media</a>
-      <a href="/forge.html"           class="nav-item"><i data-lucide="github"    aria-hidden="true"></i>Forge</a>
-      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"  aria-hidden="true"></i>Events</a>
+    <nav class="header-nav">
+      <a href="/?tab=news"            class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+      <a href="/forge.html"           class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a href="#"                     class="nav-item active"><i data-lucide="book-text"></i>Daily Edition</a>
     </nav>
-    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()"
-            aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-menu">
-      <span id="icon-menu"  aria-hidden="true"><i data-lucide="menu"></i></span>
-      <span id="icon-close" style="display:none" aria-hidden="true"><i data-lucide="x"></i></span>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
     </button>
   </div>
 </header>
 
 <!-- ══ MOBILE MENU ══════════════════════════════════════════════════ -->
-<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
-  <a href="/?tab=news"            class="mobile-nav-item"><i data-lucide="newspaper" aria-hidden="true"></i>Intel Feed</a>
-  <a href="/research.html"        class="mobile-nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-  <a href="/media.html"           class="mobile-nav-item"><i data-lucide="video"     aria-hidden="true"></i>Media Lab</a>
-  <a href="/forge.html"           class="mobile-nav-item"><i data-lucide="github"    aria-hidden="true"></i>The Forge</a>
-  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"  aria-hidden="true"></i>Events</a>
-</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/?tab=news"            class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/forge.html"           class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a href="#"                     class="mobile-nav-item active"><i data-lucide="book-text"></i>Daily Edition</a>
+</div>
 
 <!-- ══ EDITION MASTHEAD ════════════════════════════════════════════ -->
 <div class="masthead">

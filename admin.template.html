@@ -387,10 +387,11 @@
         setSaving(true);
         const payload = {
           ...form,
-          tags:          tagStr.split(',').map(t => t.trim()).filter(Boolean),
-          density:       parseInt(form.density) || 0,
-          more_coverage: form.more_coverage || [],
-          inserted_at:   new Date().toISOString(),
+          tags:           tagStr.split(',').map(t => t.trim()).filter(Boolean),
+          density:        parseInt(form.density) || 0,
+          more_coverage:  form.more_coverage || [],
+          date_is_manual: true,
+          inserted_at:    new Date().toISOString(),
         };
         const { error } = await supabase.from('news_items').upsert(payload, { onConflict: 'url' });
         setSaving(false);
@@ -785,6 +786,11 @@
       const [fetchedData,    setFetchedData]    = useState(null);
       const [fetching,       setFetching]       = useState(false);
       const [saving,         setSaving]         = useState(false);
+      // Daily Edition panel state
+      const [dailyEdSlot,    setDailyEdSlot]    = useState(null);  // slot number or null
+      const [dailyEdForm,    setDailyEdForm]    = useState({});    // {image_url,image_alt,credit_name,credit_url,summary_html,why_it_matters}
+      const [dailyEdLoading, setDailyEdLoading] = useState(false);
+      const [dailyEdSaving,  setDailyEdSaving]  = useState(false);
 
       // Load distinct dispatch dates from news_items + which dates have overrides
       useEffect(() => {
@@ -886,6 +892,8 @@
         setReplaceUrl('');
         setFetchedData(null);
         showToast('Spotlight override saved');
+        // Clear AI-generated content for this slot so next generation run picks up the new article
+        clearDailyEdAiForSlot(slot);
       };
 
       const clearOverride = async (slot) => {
@@ -903,6 +911,101 @@
           setOverrideDates(prev => { const next = new Set(prev); next.delete(selectedDate); return next; });
         }
         showToast('Override cleared');
+      };
+
+      const openDailyEdPanel = async (slot) => {
+        if (dailyEdSlot === slot) { setDailyEdSlot(null); return; }
+        setDailyEdSlot(slot);
+        setDailyEdForm({});
+        setDailyEdLoading(true);
+        try {
+          const isoDate = parseMDYtoISO(selectedDate);  // YYYY-MM-DD
+          const { data } = await supabase
+            .from('daily_editions')
+            .select('stories')
+            .eq('edition_date', isoDate)
+            .maybeSingle();
+          if (data && Array.isArray(data.stories)) {
+            const story = data.stories.find(s => s.slot === slot) || {};
+            setDailyEdForm({
+              image_url:      story.image_url      || '',
+              image_alt:      story.image_alt      || '',
+              credit_name:    story.credit_name    || '',
+              credit_url:     story.credit_url     || '',
+              summary_html:   story.summary_html   || '',
+              why_it_matters: story.why_it_matters || '',
+            });
+          }
+        } catch (e) {
+          showToast('Could not load Daily Edition data', 'error');
+        } finally {
+          setDailyEdLoading(false);
+        }
+      };
+
+      const saveDailyEdOverride = async (slot) => {
+        setDailyEdSaving(true);
+        const isoDate = parseMDYtoISO(selectedDate);  // YYYY-MM-DD
+        try {
+          // Load current stories array (we need to merge, not overwrite)
+          const { data: existing } = await supabase
+            .from('daily_editions')
+            .select('stories')
+            .eq('edition_date', isoDate)
+            .maybeSingle();
+          const stories = (existing && Array.isArray(existing.stories))
+            ? [...existing.stories]
+            : [];
+          // Get spotlight data for this slot to fill required fields
+          const slotData = getSlotData(slot);
+          const idx = stories.findIndex(s => s.slot === slot);
+          const updatedStory = {
+            ...(idx >= 0 ? stories[idx] : {}),
+            slot,
+            url:      slotData ? slotData.url   : '',
+            headline: slotData ? slotData.title : '',
+            pub_name: slotData ? slotData.source : '',
+            ...dailyEdForm,
+          };
+          if (idx >= 0) {
+            stories[idx] = updatedStory;
+          } else {
+            stories.push(updatedStory);
+          }
+          const { error } = await supabase
+            .from('daily_editions')
+            .upsert({ edition_date: isoDate, stories }, { onConflict: 'edition_date' });
+          if (error) throw error;
+          showToast('Daily Edition override saved');
+          setDailyEdSlot(null);
+        } catch (e) {
+          showToast('Error saving Daily Edition: ' + e.message, 'error');
+        } finally {
+          setDailyEdSaving(false);
+        }
+      };
+
+      // When a Spotlight Replace is saved, clear AI fields for that slot in daily_editions
+      // so the next GitHub Actions run regenerates fresh content for the new article.
+      const clearDailyEdAiForSlot = async (slot) => {
+        const isoDate = parseMDYtoISO(selectedDate);
+        try {
+          const { data: existing } = await supabase
+            .from('daily_editions')
+            .select('stories')
+            .eq('edition_date', isoDate)
+            .maybeSingle();
+          if (!existing || !Array.isArray(existing.stories)) return;
+          const stories = existing.stories.map(s => {
+            if (s.slot !== slot) return s;
+            return { ...s, summary_html: '', why_it_matters: '', image_url: '', image_alt: '', credit_name: '', credit_url: '' };
+          });
+          await supabase
+            .from('daily_editions')
+            .upsert({ edition_date: isoDate, stories }, { onConflict: 'edition_date' });
+        } catch (_) {
+          // Non-critical — don't surface errors for this cleanup step
+        }
       };
 
       return (
@@ -994,10 +1097,21 @@
                                 setReplacing(isReplacing ? null : slot);
                                 setReplaceUrl('');
                                 setFetchedData(null);
+                                if (!isReplacing) setDailyEdSlot(null);
                               }}
                               style={{ fontSize:'0.68rem', padding:'0.28rem 0.55rem' }}
                             >
                               {isReplacing ? 'Cancel' : 'Replace'}
+                            </button>
+                            <button
+                              className="btn btn-ghost"
+                              onClick={() => {
+                                openDailyEdPanel(slot);
+                                if (isReplacing) { setReplacing(null); setReplaceUrl(''); setFetchedData(null); }
+                              }}
+                              style={{ fontSize:'0.68rem', padding:'0.28rem 0.55rem', color: dailyEdSlot === slot ? 'var(--orange)' : undefined, borderColor: dailyEdSlot === slot ? 'rgba(249,115,22,0.3)' : undefined }}
+                            >
+                              Daily Ed.
                             </button>
                           </div>
                         </div>
@@ -1025,6 +1139,117 @@
                         ) : (
                           <div style={{ fontFamily:'var(--mono)', fontSize:'0.75rem', color:'var(--text-3)' }}>
                             — Not enough articles in this dispatch for this slot —
+                          </div>
+                        )}
+
+                        {/* ── Daily Edition override panel ── */}
+                        {dailyEdSlot === slot && (
+                          <div style={{ marginTop:'0.85rem', paddingTop:'0.85rem', borderTop:'1px solid rgba(249,115,22,0.2)', background:'rgba(249,115,22,0.04)', borderRadius:'0 0 6px 6px', padding:'0.85rem', marginLeft:'-1rem', marginRight:'-1rem', marginBottom:'-1rem' }}>
+                            <div style={{ fontFamily:'var(--mono)', fontSize:'0.70rem', fontWeight:700, color:'var(--orange)', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'0.75rem' }}>
+                              // daily_edition_override
+                            </div>
+                            {dailyEdLoading ? (
+                              <Loader />
+                            ) : (
+                              <>
+                                {/* Image URL + preview */}
+                                <div style={{ display:'flex', gap:'0.75rem', alignItems:'flex-start', marginBottom:'0.6rem' }}>
+                                  <div style={{ flex:1 }}>
+                                    <label className="field-label">Hero Image URL</label>
+                                    <input
+                                      className="field-input"
+                                      value={dailyEdForm.image_url || ''}
+                                      onChange={e => setDailyEdForm(f => ({ ...f, image_url: e.target.value }))}
+                                      placeholder="https://example.com/image.jpg"
+                                    />
+                                  </div>
+                                  {dailyEdForm.image_url && (
+                                    <img
+                                      src={dailyEdForm.image_url}
+                                      alt="preview"
+                                      style={{ width:'72px', height:'48px', objectFit:'cover', borderRadius:'4px', border:'1px solid var(--border-2)', flexShrink:0, marginTop:'1.5rem' }}
+                                      onError={e => e.target.style.display='none'}
+                                    />
+                                  )}
+                                </div>
+                                {/* Image alt */}
+                                <div style={{ marginBottom:'0.6rem' }}>
+                                  <label className="field-label">Image Alt Text</label>
+                                  <input
+                                    className="field-input"
+                                    value={dailyEdForm.image_alt || ''}
+                                    onChange={e => setDailyEdForm(f => ({ ...f, image_alt: e.target.value }))}
+                                    placeholder="Brief description of the image"
+                                  />
+                                </div>
+                                {/* Credit fields */}
+                                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.5rem', marginBottom:'0.6rem' }}>
+                                  <div>
+                                    <label className="field-label">Photo Credit Name</label>
+                                    <input
+                                      className="field-input"
+                                      value={dailyEdForm.credit_name || ''}
+                                      onChange={e => setDailyEdForm(f => ({ ...f, credit_name: e.target.value }))}
+                                      placeholder="TechCrunch"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="field-label">Photo Credit URL</label>
+                                    <input
+                                      className="field-input"
+                                      value={dailyEdForm.credit_url || ''}
+                                      onChange={e => setDailyEdForm(f => ({ ...f, credit_url: e.target.value }))}
+                                      placeholder="https://techcrunch.com"
+                                    />
+                                  </div>
+                                </div>
+                                {/* AI Summary */}
+                                <div style={{ marginBottom:'0.6rem' }}>
+                                  <label className="field-label">AI Summary (~700 chars)</label>
+                                  <textarea
+                                    className="field-input"
+                                    rows={5}
+                                    value={dailyEdForm.summary_html || ''}
+                                    onChange={e => setDailyEdForm(f => ({ ...f, summary_html: e.target.value }))}
+                                    placeholder={'<p class="story-summary">Story summary goes here.</p>'}
+                                    style={{ fontFamily:'var(--mono)', fontSize:'0.72rem', lineHeight:1.55 }}
+                                  />
+                                </div>
+                                {/* Why It Matters */}
+                                <div style={{ marginBottom:'0.85rem' }}>
+                                  <label className="field-label">Why It Matters (~500 chars)</label>
+                                  <textarea
+                                    className="field-input"
+                                    rows={4}
+                                    value={dailyEdForm.why_it_matters || ''}
+                                    onChange={e => setDailyEdForm(f => ({ ...f, why_it_matters: e.target.value }))}
+                                    placeholder="Plain-text analyst insight…"
+                                    style={{ lineHeight:1.55 }}
+                                  />
+                                </div>
+                                {/* Actions */}
+                                <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', flexWrap:'wrap' }}>
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() => saveDailyEdOverride(slot)}
+                                    disabled={dailyEdSaving}
+                                  >
+                                    {dailyEdSaving ? 'Saving…' : 'Save Daily Edition'}
+                                  </button>
+                                  <button
+                                    className="btn btn-ghost"
+                                    onClick={() => setDailyEdSlot(null)}
+                                    style={{ fontSize:'0.68rem' }}
+                                  >
+                                    Cancel
+                                  </button>
+                                  <span style={{ fontFamily:'var(--mono)', fontSize:'0.62rem', color:'var(--text-3)', marginLeft:'auto', textAlign:'right', lineHeight:1.4 }}>
+                                    Leave AI fields blank to auto-generate.<br />
+                                    To re-run: trigger "Daily Edition" in GitHub Actions.
+                                  </span>
+                                </div>
+                              </>
+                            )}
                           </div>
                         )}
 

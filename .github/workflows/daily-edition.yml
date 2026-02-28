@@ -1,0 +1,48 @@
+name: Daily Edition
+
+on:
+  schedule:
+    # 01:00 UTC = 5:00pm PST / 6:00pm PDT
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      edition_date:
+        description: 'Edition date override (YYYY-MM-DD). Leave blank to use today PT.'
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    name: Generate Daily Edition HTML
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 supabase google-generativeai
+
+      - name: Run generation script
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
+          EDITION_DATE:         ${{ inputs.edition_date }}
+        run: python generate_daily_edition.py
+
+      - name: Commit and push generated HTML
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "GitHub Actions"
+          git add public/daily/
+          # Only commit if there are staged changes
+          git diff --staged --quiet || git commit -m "Daily Edition: $(date -u +%Y-%m-%d)"
+          git push

@@ -614,6 +614,34 @@
         .page-sep { color: rgba(249,115,22,0.6); font-size: 0.8125rem; }
         .page-total { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--text-2); }
 
+        /* Daily Edition link — full-width footer strip on each lead card */
+        .daily-edition-link {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 2rem;
+            border-top: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+            letter-spacing: 0.03em;
+        }
+        .daily-edition-link:hover {
+            color: var(--orange);
+            background: rgba(249,115,22,0.04);
+        }
+        .daily-edition-label {
+            color: var(--orange);
+            opacity: 0.6;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+        .daily-edition-link:hover .daily-edition-label { opacity: 1; }
+
         /* Responsive — intel feed */
         @media (max-width: 900px) {
             .lead-card { grid-template-columns: 1fr; }

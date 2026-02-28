@@ -746,6 +746,17 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
                       ))}
                     </aside>
                   )}
+                  {/* ── Daily Edition link ── */}
+                  {(() => {
+                    const parts = leadSlot.date.split('-'); // MM-DD-YYYY
+                    const isoDate = parts.length === 3 ? `${parts[2]}-${parts[0]}-${parts[1]}` : leadSlot.date;
+                    return (
+                      <a href={`/daily/${isoDate}.html`} className="daily-edition-link">
+                        <span className="daily-edition-label">// daily_edition</span>
+                        Read The Daily Edition →
+                      </a>
+                    );
+                  })()}
                 </div>
               );
             })()}
