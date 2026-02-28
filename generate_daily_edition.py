@@ -239,7 +239,7 @@ def fetch_article_text(url: str) -> str:
 def setup_gemini():
     return genai.Client(api_key=GEMINI_API_KEY)
 
-def call_gemini(client, prompt: str, retries: int = 3) -> str:
+def call_gemini(client, prompt: str, retries: int = 5) -> str:
     """Call Gemini with retry on rate-limit errors."""
     for attempt in range(retries):
         try:
@@ -247,9 +247,14 @@ def call_gemini(client, prompt: str, retries: int = 3) -> str:
             return response.text.strip()
         except Exception as e:
             err = str(e).lower()
-            if "429" in err or "quota" in err or "rate" in err:
-                wait = 60 * (attempt + 1)
-                print(f"  [gemini] Rate limited, waiting {wait}s…", file=sys.stderr)
+            is_rate_limit = (
+                "429" in err or "quota" in err or "rate" in err
+                or "resource_exhausted" in err or "resourceexhausted" in err
+                or "too many requests" in err
+            )
+            if is_rate_limit:
+                wait = 30 * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+                print(f"  [gemini] Rate limited (attempt {attempt+1}), waiting {wait}s…", file=sys.stderr)
                 time.sleep(wait)
             else:
                 print(f"  [gemini] Error: {e}", file=sys.stderr)
@@ -430,14 +435,14 @@ def main():
             else:
                 print(f"  Slot {slot}: Generating summary…")
                 summary_html = generate_summary(model, article_text, fallback_text)
-                time.sleep(2)  # Respect Gemini RPM limits
+                time.sleep(6)  # Stay safely under 15 RPM free tier limit
 
             if saved.get("why_it_matters"):
                 why_it_matters = saved["why_it_matters"]
             else:
                 print(f"  Slot {slot}: Generating analysis…")
                 why_it_matters = generate_analysis(model, article_text, fallback_text)
-                time.sleep(2)
+                time.sleep(6)
 
         story = {
             "slot":           slot,
