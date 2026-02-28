@@ -46,7 +46,7 @@ OUTPUT_DIR    = Path(__file__).parent / "public" / "daily"
 COMPILED_TIME = "17:00 PT"
 
 # Gemini model
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 # Max characters for article text sent to Gemini (to stay within token limits)
 MAX_ARTICLE_CHARS = 8000
