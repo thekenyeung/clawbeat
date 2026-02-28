@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  CLAWBEAT · THE DAILY EDITION — HTML TEMPLATE                   ║
+  ║  Base design: daily-edition-v5 "Signal Intercept"               ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  TEMPLATE VARIABLES (baked at generation time)                   ║
+  ║                                                                  ║
+  ║  GLOBAL                                                          ║
+  ║    02-25-2026            Edition date display, MM-DD-YYYY          ║
+  ║    2026-02-25     Edition date ISO, YYYY-MM-DD              ║
+  ║    17:00 PT   Compilation time, e.g. "17:00 PT"        ║
+  ║    https://twouuiapzrkezwbtylij.supabase.co    Supabase project URL                      ║
+  ║    sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG Supabase anon (public read) key        ║
+  ║                                                                  ║
+  ║  STORY 1 ONLY (for OG / social meta tags)                        ║
+  ║    OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve   Lead headline                          ║
+  ║    https://techcrunch.com/wp-content/uploads/2026/02/openclaw-creator-Peter-Steinberger.jpg?resize=1200,564  Lead hero image URL (og:image)         ║
+  ║                                                                  ║
+  ║  NOTES                                                           ║
+  ║  · All 4 story signals are fetched client-side from Supabase    ║
+  ║    daily_editions table and rendered on page load.               ║
+  ║  · OG/social tags are baked at generation time from story 1.    ║
+  ║  · Admin edits in Supabase appear on next page refresh.         ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-WHLSLX6VL3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+
+  <!-- ══ DYNAMIC: SEO & social meta ══ -->
+  <title>The Daily Edition: OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve — ClawBeat · 02-25-2026</title>
+  <meta name="description" content="OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve and more — AI-powered analysis of today's top OpenClaw stories, compiled at 17:00 PT.">
+  <meta property="og:title" content="The Daily Edition: OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve | ClawBeat">
+  <meta property="og:description" content="OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve and more — AI-powered analysis of today's top OpenClaw and AI stories.">
+  <meta property="og:image" content="https://techcrunch.com/wp-content/uploads/2026/02/openclaw-creator-Peter-Steinberger.jpg?resize=1200,564">
+  <meta property="og:url" content="https://clawbeat.co/daily/2026-02-25.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ClawBeat">
+  <link rel="canonical" href="https://clawbeat.co/daily/2026-02-25.html">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; font-size: 16px; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:          #08090b;
+      --bg-2:        #0d0f12;
+      --bg-3:        #131619;
+      --border:      rgba(255,255,255,0.05);
+      --border-2:    rgba(255,255,255,0.09);
+      --orange:      #f97316;
+      --orange-dim:  rgba(249,115,22,0.10);
+      --orange-glow: rgba(249,115,22,0.18);
+      --green:       #22c55e;
+      --green-dim:   rgba(34,197,94,0.08);
+      --text:        #e2e4e9;
+      --text-2:      #9097a3;
+      --text-3:      #6e7680;
+      --text-4:      #3d4451;
+      --mono:        'JetBrains Mono', monospace;
+      --sans:        'Space Grotesk', sans-serif;
+      --min-font:    11px;
+      --col-w:       720px;   /* max-width of body text column */
+    }
+
+    /* ── BASE ── */
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+
+    /* ── STICKY HEADER ── */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,12,0.8);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    }
+    .header-inner {
+      max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+      height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem; text-decoration: none;
+    }
+    .brand-img {
+      width: 40px; height: 40px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+    }
+    .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-text {
+      font-family: var(--sans); font-size: 1.25rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff;
+    }
+    .brand-text span { color: var(--orange); }
+    .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-item {
+      font-family: var(--sans); font-size: 0.625rem; font-weight: 900;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #64748b;
+      padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none;
+      transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-item svg { width: 16px; height: 16px; }
+    .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(255,255,255,0.1); color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .hamburger-btn {
+      display: none; padding: 0.5rem; color: #94a3b8;
+      background: transparent; border: none; cursor: pointer;
+      align-items: center; justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fff; }
+    .hamburger-btn svg { width: 24px; height: 24px; }
+    .mobile-menu {
+      display: none; position: absolute; top: 4rem; left: 0; width: 100%;
+      background: rgba(10,10,12,0.95); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-nav-item {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 900;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #64748b;
+      padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none;
+      transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%;
+    }
+    .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .mobile-nav-item.active {
+      background: rgba(255,255,255,0.1); color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+
+    /* ── EDITION MASTHEAD ── */
+    .masthead {
+      background: var(--bg); border-bottom: 1px solid var(--border-2);
+      padding: 4rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    /* Subtle scan-line grid texture */
+    .masthead::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg,  transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.010) 79px, rgba(255,255,255,0.010) 80px);
+    }
+    .masthead-eyebrow {
+      font-family: var(--mono); font-size: var(--min-font);
+      color: var(--orange); letter-spacing: 0.3em; text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .masthead-eyebrow::before,
+    .masthead-eyebrow::after { content: '─────'; color: var(--text-4); letter-spacing: -0.1em; }
+    .masthead-title {
+      font-family: var(--sans);
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      font-weight: 900; letter-spacing: -0.045em; line-height: 0.88;
+      color: #fff; text-transform: uppercase; font-style: italic;
+      position: relative;
+    }
+    .masthead-title em { color: var(--orange); display: block; }
+    .masthead-date-bar {
+      margin-top: 1.75rem;
+      display: flex; align-items: center; justify-content: center; gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .date-chip { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); display: flex; align-items: center; gap: 0.4rem; }
+    .date-chip strong { color: var(--text); font-weight: 500; }
+    .date-chip.highlight strong { color: var(--orange); }
+    .date-divider { width: 1px; height: 14px; background: var(--border-2); flex-shrink: 0; }
+
+    /* ── FULL-WIDTH HERO IMAGE ── */
+    .story-hero {
+      width: 100%; position: relative; overflow: hidden;
+      background: var(--bg-3);
+    }
+    .story-hero.lead     { aspect-ratio: 21 / 8; }
+    .story-hero.standard { aspect-ratio: 21 / 7; }
+
+    /* Real image — absolutely positioned so placeholder shows through on error */
+    .hero-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0.75; transition: opacity 0.4s; z-index: 1;
+    }
+    .story-hero:hover .hero-img { opacity: 0.88; }
+
+    /* Fallback shown when no image URL or image fails to load */
+    .hero-placeholder-full {
+      position: absolute; inset: 0; z-index: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-placeholder-full::after {
+      content: '[ HERO IMAGE ]';
+      font-family: var(--mono); font-size: var(--min-font);
+      color: var(--text-4); letter-spacing: 0.3em;
+    }
+
+    /* Gradient overlay — top + bottom vignette */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,9,11,0.35) 0%,
+        transparent 30%,
+        transparent 65%,
+        rgba(8,9,11,0.7) 100%
+      );
+    }
+
+    /* Large ghost story number — bottom-left of hero */
+    .hero-num {
+      position: absolute; bottom: 1.5rem; left: 1.75rem; z-index: 3;
+      font-family: var(--mono); font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700; font-style: italic;
+      color: rgba(255,255,255,0.08); line-height: 1;
+      user-select: none; pointer-events: none;
+    }
+
+    /* Photo credit pill — bottom-right of hero */
+    .hero-credit {
+      position: absolute; bottom: 0.75rem; right: 1rem; z-index: 3;
+      font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.45);
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+      padding: 0.2rem 0.5rem; border-radius: 2px; line-height: 1.5;
+    }
+    .hero-credit a { color: rgba(249,115,22,0.65); }
+    .hero-credit a:hover { color: var(--orange); }
+
+    /* ── STORY CONTENT COLUMN ── */
+    .story-col {
+      max-width: var(--col-w); margin: 0 auto;
+      padding: 2.5rem 1.5rem 0;
+    }
+
+    /* Signal badge row */
+    .signal-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .signal-badge {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      color: var(--bg); background: var(--orange);
+      padding: 0.3rem 0.75rem; border-radius: 4px;
+      text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
+    }
+    .signal-badge.dim {
+      background: transparent; color: var(--orange);
+      border: 1px solid rgba(249,115,22,0.3);
+    }
+    .signal-tag { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Headline */
+    .story-headline { font-family: var(--sans); font-weight: 800; line-height: 1.18; letter-spacing: -0.035em; color: #fff; margin-bottom: 0.9rem; }
+    .story-headline.lead     { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+    .story-headline.standard { font-size: clamp(1.3rem, 2.5vw, 1.85rem); }
+    .story-headline a:hover  { color: var(--orange); transition: color 0.15s; }
+
+    /* Byline */
+    .story-byline { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.5rem; }
+    .byline-author { color: var(--text-2); font-weight: 500; }
+    .byline-sep    { color: var(--text-4); }
+
+    /* Summary */
+    .story-summary { font-size: 1rem; color: var(--text-2); line-height: 1.8; margin-bottom: 0.9rem; }
+    .story-summary:last-of-type { margin-bottom: 0; }
+
+    /* ── WHY IT MATTERS PANEL ── */
+    .why-matters { margin: 2rem 0 0; border: 1px solid rgba(249,115,22,0.2); border-radius: 8px; overflow: hidden; }
+    .wim-head {
+      background: var(--orange-dim); border-bottom: 1px solid rgba(249,115,22,0.2);
+      padding: 0.65rem 1.25rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .wim-head-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.2em; }
+    .wim-head-label::before { content: '// '; opacity: 0.5; }
+    .wim-head-sub  { font-family: var(--mono); font-size: 9px; color: var(--text-3); margin-left: auto; text-transform: uppercase; letter-spacing: 0.1em; }
+    .wim-body { padding: 1.1rem 1.25rem; background: rgba(249,115,22,0.03); }
+    .wim-text { font-size: 0.9rem; color: var(--text-2); line-height: 1.78; font-style: italic; }
+
+    /* ── STORY DIVIDER ── */
+    .signal-divider {
+      max-width: var(--col-w); margin: 3rem auto 0;
+      display: flex; align-items: center; gap: 1rem; padding: 0 1.5rem;
+    }
+    .signal-divider-line  { flex: 1; height: 1px; background: var(--border-2); }
+    .signal-divider-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.15em; white-space: nowrap; }
+
+    /* ── END CAP ── */
+    .end-cap {
+      max-width: var(--col-w); margin: 3.5rem auto 0;
+      padding: 0 1.5rem 6rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .end-line  { flex: 1; height: 1px; background: var(--border-2); }
+    .end-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); letter-spacing: 0.15em; text-transform: uppercase; }
+
+    /* ── FOOTER ── */
+    .footer { border-top: 1px solid var(--border-2); background: var(--bg-2); padding: 1.25rem 1.5rem; }
+    .footer-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--sans); font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff; }
+    .footer-brand span { color: var(--orange); }
+    .footer-mono  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+    .footer-back a { font-family: var(--mono); font-size: var(--min-font); color: var(--orange); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .masthead { padding: 3rem 1rem 2.5rem; }
+      .masthead-eyebrow::before,
+      .masthead-eyebrow::after { content: '──'; }
+      .story-hero.lead     { aspect-ratio: 4 / 3; }
+      .story-hero.standard { aspect-ratio: 16 / 9; }
+      .hero-num   { font-size: 3rem; bottom: 1rem; left: 1rem; }
+      .story-col  { padding: 1.75rem 1rem 0; }
+      .signal-divider { padding: 0 1rem; }
+      .end-cap    { padding: 0 1rem 5rem; }
+      .story-summary { font-size: 0.925rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+      .footer-mono  { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ STICKY HEADER ═══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/?tab=news" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <a href="/?tab=news"            class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+      <a href="/forge.html"           class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a href="#"                     class="nav-item active"><i data-lucide="book-text"></i>Daily Edition</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- ══ MOBILE MENU ══════════════════════════════════════════════════ -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/?tab=news"            class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/forge.html"           class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a href="#"                     class="mobile-nav-item active"><i data-lucide="book-text"></i>Daily Edition</a>
+</div>
+
+<!-- ══ EDITION MASTHEAD ════════════════════════════════════════════ -->
+<div class="masthead">
+  <div class="masthead-eyebrow" aria-hidden="true">Daily Edition</div>
+  <h1 class="masthead-title">
+    The Daily<em>Edition</em>
+  </h1>
+  <div class="masthead-date-bar" role="complementary" aria-label="Edition metadata">
+    <!-- ══ DYNAMIC ══ -->
+    <div class="date-chip highlight"><strong>02-25-2026</strong></div>
+    <div class="date-divider" aria-hidden="true"></div>
+    <div class="date-chip"><span>compiled</span>&nbsp;<strong>17:00 PT</strong></div>
+    <div class="date-divider" aria-hidden="true"></div>
+    <div class="date-chip"><span>signals</span>&nbsp;<strong>4</strong></div>
+    <div class="date-divider" aria-hidden="true"></div>
+    <div class="date-chip"><span>source</span>&nbsp;<strong>Spotlight</strong></div>
+  </div>
+</div>
+
+<!-- ══ MAIN CONTENT (dynamic — fetched from Supabase on page load) ═ -->
+<main id="main-content">
+
+  <div id="signals-container" aria-live="polite">
+    <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
+      <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;">Loading signals…</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <!-- ══ DYNAMIC ══ -->
+    <div class="footer-mono">The Daily Edition · openclaw intelligence · 02-25-2026</div>
+    <div class="footer-back"><a href="/?tab=news">← intel_feed</a></div>
+  </div>
+</footer>
+
+<script>
+  /* ══ Edition config — values baked in at generation time ══ */
+  const EDITION_DATE  = '2026-02-25';
+  const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
+
+  /* ── HTML text-escape helper (prevent XSS in plain-text fields) ── */
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  /* ── Photo credit block ── */
+  function creditHtml(story) {
+    if (!story.credit_name) return '';
+    if (story.credit_name === 'Adobe Firefly') {
+      return '<div class="hero-credit">Photo by Adobe Firefly</div>';
+    }
+    const href = esc(story.credit_url || story.url || '#');
+    return `<div class="hero-credit">Photo by <a href="${href}" target="_blank" rel="noopener">${esc(story.credit_name)}</a></div>`;
+  }
+
+  /* ── Story section builder ── */
+  function buildStory(story, idx) {
+    const n      = idx + 1;
+    const nStr   = String(n).padStart(2, '0');
+    const isLead = n === 1;
+    const badge  = isLead
+      ? '<span class="signal-badge">Signal 01</span><span class="signal-badge dim">Lead Story</span>'
+      : `<span class="signal-badge dim">Signal ${nStr}</span>`;
+    const bylineA = story.author
+      ? `<span class="byline-author">${esc(story.author)}</span><span class="byline-sep">·</span>` : '';
+    const bylineP = story.pub_name
+      ? `<span class="byline-pub">${esc(story.pub_name)}</span><span class="byline-sep">·</span>` : '';
+    const divider = idx > 0
+      ? `<div class="signal-divider" aria-hidden="true"><div class="signal-divider-line"></div><span class="signal-divider-label">Signal ${nStr}</span><div class="signal-divider-line"></div></div>`
+      : '';
+    return `${divider}
+<section aria-label="Story ${n} of 4${isLead ? ': Lead story' : ''}">
+  <div class="story-hero ${isLead ? 'lead' : 'standard'}" aria-hidden="true">
+    <img class="hero-img" src="${esc(story.image_url || '')}" alt="${esc(story.image_alt || '')}" onerror="this.style.display='none'">
+    <div class="hero-placeholder-full"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-num">${nStr}</div>
+    ${creditHtml(story)}
+  </div>
+  <div class="story-col">
+    <div class="signal-row">
+      ${badge}
+      <span class="signal-tag">${esc(story.category || '')}</span>
+    </div>
+    <h2 class="story-headline ${isLead ? 'lead' : 'standard'}">
+      <a href="${esc(story.url || '#')}" target="_blank" rel="noopener">${esc(story.headline || '—')}</a>
+    </h2>
+    <div class="story-byline" aria-label="Article byline">
+      ${bylineA}${bylineP}<span>${esc(story.pub_date || '')}</span>
+    </div>
+    ${story.summary_html || '<p class="story-summary">Summary unavailable.</p>'}
+    <div class="why-matters" role="note" aria-label="Why It Matters">
+      <div class="wim-head">
+        <span class="wim-head-label">Why It Matters</span>
+        <span class="wim-head-sub">AI-generated insight</span>
+      </div>
+      <div class="wim-body">
+        <p class="wim-text">${esc(story.why_it_matters || 'Analysis unavailable.')}</p>
+      </div>
+    </div>
+  </div>
+</section>`;
+  }
+
+  /* ── Supabase client (same SDK as index.tsx, works with sb_publishable_ keys) ── */
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  /* ── Fetch edition data from Supabase and render ── */
+  async function loadEdition() {
+    const container = document.getElementById('signals-container');
+    try {
+      const { data, error } = await sb
+        .from('daily_editions')
+        .select('stories')
+        .eq('edition_date', EDITION_DATE)
+        .maybeSingle();
+      if (error) throw error;
+      const stories = (data?.stories || []).sort((a, b) => a.slot - b.slot);
+      if (!stories.length) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">No edition data found.</p>';
+        return;
+      }
+      const [y, m, d] = EDITION_DATE.split('-');
+      const displayDate = `${m}-${d}-${y}`;
+      let html = stories.map((story, i) => buildStory(story, i)).join('');
+      html += `<div class="end-cap" aria-hidden="true"><div class="end-line"></div><span class="end-label">End of Edition · ${displayDate}</span><div class="end-line"></div></div>`;
+      container.style.display   = 'block';
+      container.style.minHeight = '';
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">Failed to load edition.</p>';
+      console.error('[ClawBeat] Edition load error:', err);
+    }
+  }
+
+  loadEdition();
+
+  /* ── Mobile menu ── */
+  function toggleMenu() {
+    const menu      = document.getElementById('mobile-menu');
+    const btn       = document.getElementById('hamburger-btn');
+    const iconMenu  = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+    const isOpen    = menu.classList.contains('open');
+    menu.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    menu.setAttribute('aria-hidden',  String(isOpen));
+    iconMenu.style.display  = isOpen ? ''     : 'none';
+    iconClose.style.display = isOpen ? 'none' : '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('mobile-menu').classList.contains('open')) toggleMenu();
+  });
+  lucide.createIcons();
+</script>
+</body>
+</html>
