@@ -179,3 +179,12 @@ CREATE POLICY "Admin writes" ON whitelist_sources
   FOR ALL TO authenticated
   USING     (auth.email() = 'ADMIN_EMAIL_HERE')
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
+
+-- =============================================================
+-- Add language/topics/forks/license to github_projects
+-- Run this block in Supabase SQL Editor if migrating existing DB
+-- =============================================================
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS language TEXT    DEFAULT '';
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS topics   JSONB   DEFAULT '[]'::jsonb;
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS forks    INTEGER DEFAULT 0;
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS license  TEXT    DEFAULT '';

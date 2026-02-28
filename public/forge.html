@@ -71,23 +71,6 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
 
-    /* ── STATUS BAR ── */
-    .status-bar {
-      background: #000;
-      border-bottom: 1px solid var(--border-2);
-      padding: 0.4rem 1.5rem;
-      display: flex; align-items: center; gap: 2rem;
-      font-family: var(--mono); font-size: var(--min-font);
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .status-bar::-webkit-scrollbar { display: none; }
-    .status-item { display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; color: var(--text-3); }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .dot-green  { background: var(--green);  box-shadow: 0 0 6px var(--green); }
-    .dot-orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
-    .status-value { color: var(--text); font-weight: 500; }
-    .status-sep   { color: var(--text-4); margin-left: auto; white-space: nowrap; }
-
     /* ── HEADER ── */
     .header {
       position: sticky; top: 0; z-index: 50;
@@ -148,7 +131,7 @@
       letter-spacing: 0.25em; text-transform: uppercase; color: var(--orange);
       display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.65rem;
     }
-    .pinned-lbl::before { content: '📌'; font-size: 10px; }
+    .pinned-lbl::before { content: '📌'; font-size: 11px; }
     .pinned-card {
       display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;
     }
@@ -251,6 +234,17 @@
     }
     .cph::before { content: '// '; color: var(--text-4); white-space: pre; }
     .cph-note { font-size: var(--min-font); color: var(--text-3); font-weight: 400; letter-spacing: 0; text-transform: none; }
+
+    /* ── CHART WINDOW TABS ── */
+    .win-tabs { display: flex; align-items: center; gap: 0.2rem; }
+    .win-tab {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3);
+      padding: 0.15rem 0.45rem; border: 1px solid var(--border); background: transparent;
+      border-radius: 3px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    }
+    .win-tab:hover { color: var(--text); border-color: var(--border-2); background: rgba(255,255,255,0.03); }
+    .win-tab.active { color: var(--orange); border-color: rgba(249,115,22,0.35); background: var(--orange-dim); }
 
     /* Daily chart legend */
     .daily-legend { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.75rem; }
@@ -374,10 +368,6 @@
     .footer-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .footer-brand { font-family: var(--sans); font-size: 0.875rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff; }
     .footer-brand span { color: var(--orange); }
-    .footer-mono { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
-    .footer-back { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; }
-    .footer-back a { color: var(--orange); text-decoration: none; }
-    .footer-back a:hover { text-decoration: underline; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 1100px) {
@@ -393,7 +383,6 @@
       .hero-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
       .hero-stats { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-      .footer-mono { display: none; }
       .metrics-row { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
       .pinned-right { flex-direction: row; align-items: center; }
       .pinned-card { gap: 0.75rem; }
@@ -412,22 +401,6 @@
 
 <!-- ── SKIP LINK (accessibility) ── -->
 <a class="skip-link" href="#main-content">Skip to main content</a>
-
-<!-- ── STATUS BAR ── -->
-<div class="status-bar" role="status" aria-label="Site status">
-  <div class="status-item">
-    <div class="status-dot dot-green" aria-hidden="true"></div>
-    <span>index</span><span class="status-value">LIVE</span>
-  </div>
-  <div class="status-item"><span>repos</span><span class="status-value" id="sb-repos">—</span></div>
-  <div class="status-item">
-    <div class="status-dot dot-orange" aria-hidden="true"></div>
-    <span>total_stars</span><span class="status-value" id="sb-stars">—</span>
-  </div>
-  <div class="status-item"><span>languages</span><span class="status-value" id="sb-langs">—</span></div>
-  <div class="status-item"><span>synced</span><span class="status-value" id="sb-sync">—</span></div>
-  <span class="status-sep" aria-hidden="true">clawbeat.co / forge</span>
-</div>
 
 <!-- ── HEADER ── -->
 <header class="header">
@@ -524,15 +497,23 @@
   </div>
 
   <div class="chart-panel-full" role="figure" aria-label="Monthly build activity chart">
-    <div class="cph" aria-hidden="true">Monthly Build Activity</div>
+    <div class="cph" aria-hidden="true">
+      Monthly Build Activity
+      <div class="win-tabs" role="group" aria-label="Chart time window">
+        <button class="win-tab" data-days="7"  onclick="setWindow(7)"  aria-pressed="false">7D</button>
+        <button class="win-tab" data-days="30" onclick="setWindow(30)" aria-pressed="false">30D</button>
+        <button class="win-tab" data-days="60" onclick="setWindow(60)" aria-pressed="false">60D</button>
+        <button class="win-tab active" data-days="90" onclick="setWindow(90)" aria-pressed="true">90D</button>
+      </div>
+    </div>
     <div style="position:relative;height:140px"><canvas id="chart-monthly" aria-label="Bar chart showing number of repositories created each month" role="img"></canvas></div>
   </div>
 
-  <!-- Daily additions chart (NEW) -->
+  <!-- Daily additions chart -->
   <div class="chart-panel-full" role="figure" aria-label="Daily new repositories chart with trend line">
     <div class="cph">
       Daily New Repos
-      <span class="cph-note">90-day window</span>
+      <span class="cph-note" id="daily-win-note">90-day window</span>
     </div>
     <div style="position:relative;height:180px"><canvas id="chart-daily" aria-label="Bar chart of daily repository additions with 7-day rolling average and linear growth trend" role="img"></canvas></div>
     <div class="daily-legend" aria-hidden="true">
@@ -574,8 +555,10 @@
                 Topics <span class="sort-arrow" aria-hidden="true" id="arr-topic"></span>
               </button>
             </th>
-            <th scope="col" class="col-date">
-              <span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Created</span>
+            <th scope="col" class="col-date" aria-sort="none" id="th-created">
+              <button class="sort-th-btn" onclick="sortTable('created')" aria-label="Sort by created date">
+                Created <span class="sort-arrow" aria-hidden="true" id="arr-created"></span>
+              </button>
             </th>
             <th scope="col" class="col-link"><span class="sr-only">Link</span></th>
           </tr>
@@ -598,8 +581,6 @@
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">ClawBeat<span>.co</span></div>
-    <div class="footer-mono">openclaw ecosystem · github index</div>
-    <div class="footer-back"><a href="/?tab=repos">← intel_feed</a></div>
   </div>
 </footer>
 
@@ -639,6 +620,9 @@
   let tablePage   = 1;
   let tableSort   = { col: 'stars', dir: 'desc' };
   let chartsInited = false;
+  let chartWindow  = 90;
+  let chartMonthly = null;
+  let chartDaily   = null;
 
   /* ─────────────────────────────────────────
    *  HELPERS
@@ -765,15 +749,8 @@
    *  STATUS BAR + HERO STATS
    * ───────────────────────────────────────── */
   function updateStatus() {
-    const now   = new Date();
-    const p     = n => String(n).padStart(2,'0');
-    const ts    = `${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())} · ${p(now.getHours())}:${p(now.getMinutes())} UTC`;
     const stars = allRepos.reduce((s,r)=>s+(r.stars||0), 0);
     const langs = new Set(allRepos.map(r=>r.language||'other')).size;
-    document.getElementById('sb-repos').textContent = allRepos.length;
-    document.getElementById('sb-stars').textContent = stars.toLocaleString();
-    document.getElementById('sb-langs').textContent = langs;
-    document.getElementById('sb-sync').textContent  = ts;
     document.getElementById('intel-count').textContent = `${allRepos.length} repos indexed`;
     document.getElementById('hero-stats').innerHTML = `
       <div class="hero-stat"><span>repos</span><strong class="val-orange">${allRepos.length}</strong></div>
@@ -910,30 +887,11 @@
       },
     });
 
-    /* ── Monthly timeline bar ── */
-    const earliest = allRepos.reduce((mn,r)=>{const d=parseDate(r.created_at); return d&&d<mn?d:mn;}, new Date());
-    const tStart   = new Date(earliest.getFullYear(), earliest.getMonth(), 1);
-    const monthly  = {};
-    for (let d=new Date(tStart); d<=new Date(); d.setMonth(d.getMonth()+1)) {
-      monthly[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`] = 0;
-    }
-    for (const r of allRepos) {
-      const dt = parseDate(r.created_at); if (!dt) continue;
-      const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-      if (key in monthly) monthly[key]++;
-    }
-    const MONS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    const mLabels = Object.keys(monthly).map(k=>{ const [y,m]=k.split('-'); return `${MONS[+m-1]} ${y.slice(2)}`; });
-    const mData   = Object.values(monthly);
-    new Chart(document.getElementById('chart-monthly'), {
+    /* ── Monthly bar (window-aware — populated by rebuildMonthlyChart) ── */
+    chartMonthly = new Chart(document.getElementById('chart-monthly'), {
       type: 'bar',
-      data: {
-        labels: mLabels,
-        datasets: [{ label:'Repos Created', data:mData,
-          backgroundColor:mData.map(v=>v>0?'rgba(249,115,22,0.22)':'rgba(255,255,255,0.02)'),
-          borderColor:mData.map(v=>v>0?'#f97316':'rgba(255,255,255,0.05)'),
-          borderWidth:1, borderRadius:2 }],
-      },
+      data: { labels: [], datasets: [{ label:'Repos Created', data:[],
+        backgroundColor:[], borderColor:[], borderWidth:1, borderRadius:2 }] },
       options: {
         responsive:true, maintainAspectRatio:false,
         plugins:{ legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>` ${c.raw} repo${c.raw!==1?'s':''}`}} },
@@ -944,11 +902,89 @@
       },
     });
 
-    /* ── Daily additions + trend line (90-day window) ── */
+    /* ── Daily bar + trend (window-aware — populated by rebuildDailyChart) ── */
+    chartDaily = new Chart(document.getElementById('chart-daily'), {
+      type: 'bar',
+      data: { labels: [], datasets: [
+        { type:'bar',  label:'New repos / day', data:[],
+          backgroundColor:'rgba(249,115,22,0.22)', borderColor:'#f97316',
+          borderWidth:1, borderRadius:2, order:3 },
+        { type:'line', label:'7-day avg', data:[],
+          borderColor:'#06b6d4', backgroundColor:'transparent',
+          borderWidth:2, pointRadius:0, tension:0.4, order:2 },
+        { type:'line', label:'Growth trend', data:[],
+          borderColor:'rgba(249,115,22,0.55)', backgroundColor:'transparent',
+          borderWidth:1.5, borderDash:[5,4], pointRadius:0, tension:0, order:1 },
+      ]},
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{
+          legend:{display:false},
+          tooltip:{...TT, callbacks:{label: ctx => {
+            if (ctx.dataset.label==='New repos / day') return ` ${ctx.raw} new repo${ctx.raw!==1?'s':''}`;
+            if (ctx.dataset.label==='7-day avg')       return ` 7-day avg: ${ctx.raw.toFixed(2)}`;
+            if (ctx.dataset.label==='Growth trend')    return ` trend: ${ctx.raw.toFixed(2)}`;
+            return ` ${ctx.raw}`;
+          }}},
+        },
+        scales:{
+          x:{ grid:{display:false}, ticks:{...TICK_X,maxTicksLimit:15}, border:BORDER },
+          y:{ grid:GRID, ticks:{...TICK_Y,stepSize:1,precision:0}, border:BORDER, min:0 },
+        },
+      },
+    });
+
+    rebuildMonthlyChart();
+    rebuildDailyChart();
+  }
+
+  /* ─────────────────────────────────────────
+   *  CHART WINDOW CONTROLS
+   * ───────────────────────────────────────── */
+  function setWindow(n) {
+    chartWindow = n;
+    document.querySelectorAll('.win-tab').forEach(btn => {
+      const active = +btn.dataset.days === n;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    const note = document.getElementById('daily-win-note');
+    if (note) note.textContent = n + '-day window';
+    rebuildMonthlyChart();
+    rebuildDailyChart();
+  }
+
+  function rebuildMonthlyChart() {
+    if (!chartMonthly) return;
+    const MONS   = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     const today  = new Date(); today.setHours(0,0,0,0);
-    const DAYS   = 90;
+    const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - chartWindow + 1);
+    const mStart = new Date(cutoff.getFullYear(), cutoff.getMonth(), 1);
+    const monthly = {};
+    for (let d = new Date(mStart); d <= today; d.setMonth(d.getMonth()+1)) {
+      monthly[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`] = 0;
+    }
+    for (const r of allRepos) {
+      const dt = parseDate(r.created_at); if (!dt) continue;
+      if (dt < cutoff) continue;
+      const k = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      if (k in monthly) monthly[k]++;
+    }
+    const mLabels = Object.keys(monthly).map(k=>{ const [y,m]=k.split('-'); return `${MONS[+m-1]} ${y.slice(2)}`; });
+    const mData   = Object.values(monthly);
+    chartMonthly.data.labels = mLabels;
+    chartMonthly.data.datasets[0].data = mData;
+    chartMonthly.data.datasets[0].backgroundColor = mData.map(v=>v>0?'rgba(249,115,22,0.22)':'rgba(255,255,255,0.02)');
+    chartMonthly.data.datasets[0].borderColor      = mData.map(v=>v>0?'#f97316':'rgba(255,255,255,0.05)');
+    chartMonthly.update();
+  }
+
+  function rebuildDailyChart() {
+    if (!chartDaily) return;
+    const today   = new Date(); today.setHours(0,0,0,0);
     const dLabels = [], dData = [];
-    for (let i = DAYS-1; i >= 0; i--) {
+    for (let i = chartWindow-1; i >= 0; i--) {
       const d = new Date(today); d.setDate(d.getDate()-i);
       dLabels.push(d.toISOString().slice(0,10));
       dData.push(0);
@@ -960,48 +996,17 @@
       const idx = dLabels.indexOf(key);
       if (idx >= 0) dData[idx]++;
     }
-    const rolling = rollingAvg(dData, 7);
-    const trend   = linReg(dData);
-    const dispLabels = dLabels.map(k => {
+    const rolling     = rollingAvg(dData, 7);
+    const trend       = linReg(dData);
+    const dispLabels  = dLabels.map(k => {
       const d = new Date(k+'T00:00:00');
       return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
     });
-    new Chart(document.getElementById('chart-daily'), {
-      type: 'bar',
-      data: {
-        labels: dispLabels,
-        datasets: [
-          { type:'bar',  label:'New repos / day',  data:dData,
-            backgroundColor:'rgba(249,115,22,0.22)', borderColor:'#f97316',
-            borderWidth:1, borderRadius:2, order:3 },
-          { type:'line', label:'7-day avg',         data:rolling,
-            borderColor:'#06b6d4', backgroundColor:'transparent',
-            borderWidth:2, pointRadius:0, tension:0.4, order:2 },
-          { type:'line', label:'Growth trend',      data:trend,
-            borderColor:'rgba(249,115,22,0.55)', backgroundColor:'transparent',
-            borderWidth:1.5, borderDash:[5,4], pointRadius:0, tension:0, order:1 },
-        ],
-      },
-      options: {
-        responsive:true, maintainAspectRatio:false,
-        interaction:{ mode:'index', intersect:false },
-        plugins:{
-          legend:{display:false},
-          tooltip:{...TT, callbacks:{
-            label: ctx => {
-              if (ctx.dataset.label==='New repos / day') return ` ${ctx.raw} new repo${ctx.raw!==1?'s':''}`;
-              if (ctx.dataset.label==='7-day avg')  return ` 7-day avg: ${ctx.raw.toFixed(2)}`;
-              if (ctx.dataset.label==='Growth trend') return ` trend: ${ctx.raw.toFixed(2)}`;
-              return ` ${ctx.raw}`;
-            },
-          }},
-        },
-        scales:{
-          x:{ grid:{display:false}, ticks:{...TICK_X,maxTicksLimit:15}, border:BORDER },
-          y:{ grid:GRID, ticks:{...TICK_Y,stepSize:1,precision:0}, border:BORDER, min:0 },
-        },
-      },
-    });
+    chartDaily.data.labels = dispLabels;
+    chartDaily.data.datasets[0].data = dData;
+    chartDaily.data.datasets[1].data = rolling;
+    chartDaily.data.datasets[2].data = trend;
+    chartDaily.update();
   }
 
   /* ─────────────────────────────────────────
@@ -1011,12 +1016,12 @@
     if (tableSort.col === col) {
       tableSort.dir = tableSort.dir === 'desc' ? 'asc' : 'desc';
     } else {
-      tableSort = { col, dir: col === 'stars' ? 'desc' : 'asc' };
+      tableSort = { col, dir: (col === 'stars' || col === 'created') ? 'desc' : 'asc' };
     }
     tablePage = 1;
 
     /* Update th aria-sort and button styles */
-    const cols = ['stars','language','topic'];
+    const cols = ['stars','language','topic','created'];
     cols.forEach(c => {
       const th  = document.getElementById(`th-${c}`);
       const arr = document.getElementById(`arr-${c}`);
@@ -1049,10 +1054,11 @@
       const ta = getTopics(a)[0] || '';
       const tb = getTopics(b)[0] || '';
       switch (tableSort.col) {
-        case 'stars':    av = a.stars||0;     bv = b.stars||0;    break;
-        case 'language': av = a.language||''; bv = b.language||''; break;
-        case 'topic':    av = ta;             bv = tb;             break;
-        default:         av = a.stars||0;     bv = b.stars||0;
+        case 'stars':    av = a.stars||0;       bv = b.stars||0;      break;
+        case 'language': av = a.language||'';   bv = b.language||'';  break;
+        case 'topic':    av = ta;               bv = tb;              break;
+        case 'created':  av = parseDate(a.created_at)||new Date(0); bv = parseDate(b.created_at)||new Date(0); break;
+        default:         av = a.stars||0;       bv = b.stars||0;
       }
       if (typeof av === 'string') return tableSort.dir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
       return tableSort.dir==='asc' ? av-bv : bv-av;

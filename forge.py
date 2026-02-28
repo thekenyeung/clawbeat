@@ -468,7 +468,18 @@ def fetch_github_projects():
     try:
         resp = requests.get("https://api.github.com/search/repositories?q=OpenClaw&sort=updated&order=desc", headers=headers, timeout=10)
         items = resp.json().get('items', [])
-        return [{"name": r['name'], "owner": r['owner']['login'], "description": r['description'] or "No description.", "url": r['html_url'], "stars": r['stargazers_count'], "created_at": r['created_at']} for r in items]
+        return [{
+            "name":        r['name'],
+            "owner":       r['owner']['login'],
+            "description": r['description'] or "No description.",
+            "url":         r['html_url'],
+            "stars":       r['stargazers_count'],
+            "created_at":  r['created_at'],
+            "language":    r.get('language') or '',
+            "topics":      r.get('topics') or [],
+            "forks":       r.get('forks_count', 0),
+            "license":     (r.get('license') or {}).get('spdx_id') or '',
+        } for r in items]
     except: return []
 
 # --- 6. SUPABASE I/O ---
@@ -597,6 +608,10 @@ def _save_to_supabase(db: dict) -> None:
             'description': p.get('description', ''),
             'stars':       p.get('stars', 0),
             'created_at':  p.get('created_at', ''),
+            'language':    p.get('language', ''),
+            'topics':      p.get('topics', []),
+            'forks':       p.get('forks', 0),
+            'license':     p.get('license', ''),
         } for p in db.get('githubProjects', [])]
         if project_records:
             _supabase.table('github_projects').upsert(project_records).execute()
