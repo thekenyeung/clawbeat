@@ -211,8 +211,29 @@ const App: React.FC = () => {
   const projectsPerPage = 20;
   const researchPerPage = 10;
 
+  // Suppress pushState on first render and after popstate/logo resets
+  const skipHistoryPush = React.useRef(true);
+
+  // On mount: set initial history state without pushing a new entry
   useEffect(() => {
-    if (window.location.search) history.replaceState(null, '', '/');
+    history.replaceState({ newsPage: currentPage }, '', currentPage > 1 ? `/?page=${currentPage}` : '/');
+  }, []); // eslint-disable-line
+
+  // Push history entry on page changes; skip is consumed and cleared inside the effect
+  useEffect(() => {
+    if (skipHistoryPush.current) { skipHistoryPush.current = false; return; }
+    const url = currentPage > 1 ? `/?page=${currentPage}` : '/';
+    history.pushState({ newsPage: currentPage }, '', url);
+  }, [currentPage]);
+
+  // Restore page from browser back/forward
+  useEffect(() => {
+    const handlePop = (e: PopStateEvent) => {
+      skipHistoryPush.current = true;   // effect will skip push and clear the flag
+      setCurrentPage(e.state?.newsPage ?? 1);
+    };
+    window.addEventListener('popstate', handlePop);
+    return () => window.removeEventListener('popstate', handlePop);
   }, []);
 
   useEffect(() => {
@@ -239,6 +260,7 @@ const App: React.FC = () => {
   // Consolidation of Logo Click Reset Logic
   const handleLogoClick = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
+    skipHistoryPush.current = true; // effect will skip push and clear the flag
     setCurrentPage(1);
     setCurrentVideoPage(1);
     setCurrentProjectPage(1);
@@ -246,6 +268,7 @@ const App: React.FC = () => {
     setCurrentEventsPage(1);
     setActivePage('news');
     setIsMobileMenuOpen(false);
+    history.pushState({ newsPage: 1 }, '', '/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -732,14 +755,8 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
               const isVerified = checkIfVerified(item);
               const isPriority = item.source_type === 'priority';
               const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
-              const globalIdx = (fullDayArticles[day] || []).findIndex(a => a.url === item.url);
-              const storyNum = String(globalIdx + 1).padStart(2, '0');
               return (
-                <div key={globalIdx} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}`}>
-                  <div className="story-num">
-                    <span className="num-text">{storyNum}</span>
-                    <div className="num-line" />
-                  </div>
+                <div key={item.url} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}`}>
                   <div className="story-body">
                     <div className="story-meta">
                       <span className="meta-source">{formatSourceName(item.source)}</span>
