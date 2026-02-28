@@ -4,32 +4,24 @@
   ║  CLAWBEAT · THE DAILY EDITION — HTML TEMPLATE                   ║
   ║  Base design: daily-edition-v5 "Signal Intercept"               ║
   ╠══════════════════════════════════════════════════════════════════╣
-  ║  TEMPLATE VARIABLES — replace all {{...}} before serving        ║
+  ║  TEMPLATE VARIABLES (baked at generation time)                   ║
   ║                                                                  ║
-  ║  GLOBAL (2)                                                      ║
-  ║    02-27-2026            Edition date, format: MM-DD-YYYY          ║
+  ║  GLOBAL                                                          ║
+  ║    02-27-2026            Edition date display, MM-DD-YYYY          ║
+  ║    2026-02-27     Edition date ISO, YYYY-MM-DD              ║
   ║    17:00 PT   Compilation time, e.g. "17:00 PT"        ║
+  ║    https://twouuiapzrkezwbtylij.supabase.co    Supabase project URL                      ║
+  ║    sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG Supabase anon (public read) key        ║
   ║                                                                  ║
-  ║  PER STORY — repeat for N = 1, 2, 3, 4                          ║
-  ║    {{STORY_N_IMAGE_URL}}          Hero image src URL             ║
-  ║                                   (leave blank → shows fallback) ║
-  ║    {{STORY_N_IMAGE_ALT}}          Alt text for hero image        ║
-  ║    {{STORY_N_PHOTO_CREDIT_NAME}}  Photographer name              ║
-  ║    {{STORY_N_PHOTO_CREDIT_URL}}   Photographer link href         ║
-  ║    {{STORY_N_PUBLICATION_NAME}}   Publication name               ║
-  ║    {{STORY_N_PUBLICATION_URL}}    Publication homepage href       ║
-  ║    {{STORY_N_CATEGORY}}           Tag label, e.g. "AI · Policy"  ║
-  ║    {{STORY_N_URL}}                Original article URL           ║
-  ║    {{STORY_N_HEADLINE}}           Article headline               ║
-  ║    {{STORY_N_AUTHOR}}             Author full name               ║
-  ║    {{STORY_N_PUB_DATE}}           Article date, MM-DD-YYYY       ║
-  ║    {{STORY_N_SUMMARY_HTML}}       One or more full <p> blocks    ║
-  ║    {{STORY_N_WHY_IT_MATTERS}}     Plain-text insight paragraph   ║
+  ║  STORY 1 ONLY (for OG / social meta tags)                        ║
+  ║    OpenClaw: Enough of the talking, level up to doing   Lead headline                          ║
+  ║    https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg  Lead hero image URL (og:image)         ║
   ║                                                                  ║
   ║  NOTES                                                           ║
-  ║  · Story 1 renders as Lead (larger hero + type size)            ║
-  ║  · Stories 2–4 render as Standard                               ║
-  ║  · Remove .hero-credit div if no image / no credit available    ║
+  ║  · All 4 story signals are fetched client-side from Supabase    ║
+  ║    daily_editions table and rendered on page load.               ║
+  ║  · OG/social tags are baked at generation time from story 1.    ║
+  ║  · Admin edits in Supabase appear on next page refresh.         ║
   ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
@@ -55,13 +47,14 @@
   <meta property="og:title" content="The Daily Edition: OpenClaw: Enough of the talking, level up to doing | ClawBeat">
   <meta property="og:description" content="OpenClaw: Enough of the talking, level up to doing and more — AI-powered analysis of today's top OpenClaw and AI stories.">
   <meta property="og:image" content="https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg">
-  <meta property="og:url" content="https://clawbeat.co/daily/02-27-2026.html">
+  <meta property="og:url" content="https://clawbeat.co/daily/2026-02-27.html">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ClawBeat">
-  <link rel="canonical" href="https://clawbeat.co/daily/02-27-2026.html">
+  <link rel="canonical" href="https://clawbeat.co/daily/2026-02-27.html">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
   <style>
@@ -402,277 +395,13 @@
   </div>
 </div>
 
-<!-- ══ MAIN CONTENT ════════════════════════════════════════════════ -->
+<!-- ══ MAIN CONTENT (dynamic — fetched from Supabase on page load) ═ -->
 <main id="main-content">
 
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 01 — LEAD STORY
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 1 of 4: Lead story">
-
-    <!-- Hero image (lead = taller 21:8 crop) -->
-    <div class="story-hero lead" aria-hidden="true">
-      <!-- Image: src filled by generator; onerror hides broken img and shows placeholder -->
-      <img class="hero-img"
-           src="https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg"
-           alt="OpenClaw: Enough of the talking, level up to doing"
-           onerror="this.style.display='none'">
-      <!-- Fallback shown when image is missing or fails -->
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">01</div>
-      <!-- REMOVE this block if no image credit is available -->
-      <div class="hero-credit">
-        Photo by <a href="https://medium.com/@irishabh11/openclaw-enough-of-the-talking-level-up-to-doing-f4aebc3d0298?source=rss------openclaw-5" target="_blank" rel="noopener">Rishabh Sharma, Medium</a>
-        · <a href="" target="_blank" rel="noopener">Rishabh Sharma, Medium</a>
-      </div>
+  <div id="signals-container" aria-live="polite">
+    <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
+      <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;">Loading signals…</span>
     </div>
-
-    <div class="story-col">
-      <!-- Signal badges + category tag -->
-      <div class="signal-row">
-        <span class="signal-badge">Signal 01</span>
-        <span class="signal-badge dim">Lead Story</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">Rishabh Sharma, Medium</span>
-      </div>
-
-      <!-- Headline -->
-      <h2 class="story-headline lead">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="https://medium.com/@irishabh11/openclaw-enough-of-the-talking-level-up-to-doing-f4aebc3d0298?source=rss------openclaw-5" target="_blank" rel="noopener">OpenClaw: Enough of the talking, level up to doing</a>
-      </h2>
-
-      <!-- Byline -->
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author"></span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">Rishabh Sharma, Medium</span>
-        <span class="byline-sep">·</span>
-        <span>02-27-2026</span>
-      </div>
-
-      <!-- Summary — inject one or more <p class="story-summary">…</p> blocks -->
-      <!-- ══ DYNAMIC ══ -->
-      <p class="story-summary">OpenClaw introduces a self-hosted autonomous agent runtime, empowering AI agents to execute real-world workflows directly from social messaging platforms like Telegram, Discord, and WhatsApp. Users can command these agents to perform continuous, complex tasks—like deploying code or monitoring markets—without manual intervention. This innovation moves AI beyond passive chatbots, offering persistent memory, deep tool integration (shell, browser, APIs), and user control over agent operations and data.</p>
-
-      <!-- Why It Matters -->
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">OpenClaw signals a significant shift in AI's evolution from passive dialogue systems to proactive, autonomous agent architectures. By enabling self-hosted, tool-integrated AI agents directly controllable via messaging platforms, it empowers developers and businesses with unprecedented operational automation and data sovereignty. This challenges centralized AI services, indicating a market move towards agentic, localized AI systems. However, the profound security implications of granting direct execution access to such agents, particularly in non-expert self-hosted environments, remain critically underplayed and warrant extensive future scrutiny for widespread adoption.</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 02</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 02
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 2 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg"
-           alt="Mastering OpenClaw | A Quick Guide to Integrating OpenClaw (Clawdbot) into iMessage on the Cloud"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">02</div>
-      <!-- REMOVE this block if no image credit is available -->
-      <div class="hero-credit">
-        Photo by <a href="https://medium.com/@lighthouse_global/mastering-openclaw-a-quick-guide-to-integrating-openclaw-clawdbot-into-imessage-on-the-cloud-2895747e1f54?source=rss------openclaw-5" target="_blank" rel="noopener">Tencent Cloud Compute, Medium</a>
-        · <a href="" target="_blank" rel="noopener">Tencent Cloud Compute, Medium</a>
-      </div>
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 02</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">A Quick Guide</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="https://medium.com/@lighthouse_global/mastering-openclaw-a-quick-guide-to-integrating-openclaw-clawdbot-into-imessage-on-the-cloud-2895747e1f54?source=rss------openclaw-5" target="_blank" rel="noopener">Mastering OpenClaw | A Quick Guide to Integrating OpenClaw (Clawdbot) into iMessage on the Cloud</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author"></span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">Tencent Cloud Compute, Medium</span>
-        <span class="byline-sep">·</span>
-        <span>02-27-2026</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      <p class="story-summary">OpenClaw now provides a streamlined guide for integrating its ClawDBot directly into Apple's iMessage platform via cloud services. This development enables iMessage users to leverage OpenClaw's advanced bot capabilities within their messaging app, enhancing personal and business communications with automation and new functionalities. The clear instructions aim to accelerate adoption, making sophisticated AI assistance more accessible to a vast user base.</p>
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">OpenClaw’s iMessage integration signals a strategic play for market share, embedding its AI bot into a major consumer platform. This benefits OpenClaw by expanding its reach and demonstrating real-world utility for its ClawDBot. It shows the market shifting towards ubiquitous AI integration directly within communication channels, moving AI assistance from specialized apps to everyday messaging. What's underplayed is the stringent security and privacy considerations Apple typically enforces, especially for cloud-mediated bot functionality, and the actual depth of ClawDBot's capabilities.</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 03</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 03
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 3 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg"
-           alt="Google's Opal just quietly showed enterprise teams the new blueprint for building AI agents"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">03</div>
-      <!-- REMOVE this block if no image credit is available -->
-      <div class="hero-credit">
-        Photo by <a href="https://venturebeat.com/technology/googles-opal-just-quietly-showed-enterprise-teams-the-new-blueprint-for" target="_blank" rel="noopener">VentureBeat</a>
-        · <a href="" target="_blank" rel="noopener">VentureBeat</a>
-      </div>
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 03</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">Google</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="https://venturebeat.com/technology/googles-opal-just-quietly-showed-enterprise-teams-the-new-blueprint-for" target="_blank" rel="noopener">Google's Opal just quietly showed enterprise teams the new blueprint for building AI agents</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author"></span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">VentureBeat</span>
-        <span class="byline-sep">·</span>
-        <span>02-27-2026</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      <p class="story-summary">Google's Opal no-code platform now allows enterprise AI agents to dynamically plan actions, select tools, and interact with users based on defined goals, moving beyond rigid, pre-programmed workflows. This update frees IT leaders and developers from anticipating every contingency, enabling them to build adaptive, self-correcting agents with persistent memory across sessions and human-in-the-loop interaction. Teams can now focus on managing agent goals and constraints, accelerating the deployment of more robust, production-ready AI systems.</p>
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">This Opal update signifies Google's strategic move to productize advanced agentic AI capabilities, leveraging Gemini 3's reasoning to abstract complexity into a no-code offering. Enterprise IT leaders and line-of-business users directly benefit from a more accessible path to deploy robust, adaptive agents, shifting the market from bespoke, framework-driven solutions (like OpenClaw's earlier, simpler memory handling) to managed, goal-oriented platforms. This signals a critical maturation point for AI agents, pushing them from experimental to production-grade by baking in essential features like persistent memory and human-in-the-loop orchestration. What's underplayed is the potential for vendor lock-in within the Google ecosystem and the nuanced security and data governance challenges of scaling secure, multi-user memory in enterprise environments.</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Story divider -->
-  <div class="signal-divider" aria-hidden="true">
-    <div class="signal-divider-line"></div>
-    <span class="signal-divider-label">Signal 04</span>
-    <div class="signal-divider-line"></div>
-  </div>
-
-  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-       SIGNAL 04
-       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-  <section aria-label="Story 4 of 4">
-
-    <div class="story-hero standard" aria-hidden="true">
-      <img class="hero-img"
-           src="https://images.fastcompany.com/image/upload/f_webp,q_auto,c_fit/wp-cms-2/2026/02/p-1-91498841-openai-codex-growing-fast-agentic-engineering.jpg"
-           alt="Inside OpenAI’s fast-growing Codex: The people building the AI that codes alongside you"
-           onerror="this.style.display='none'">
-      <div class="hero-placeholder-full"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-num">04</div>
-      <!-- REMOVE this block if no image credit is available -->
-      <div class="hero-credit">
-        Photo by <a href="https://www.fastcompany.com/91498841/openai-codex-growing-fast-agentic-engineering?partner=rss&utm_source=rss&utm_medium=feed&utm_campaign=rss+fastcompany&utm_content=rss" target="_blank" rel="noopener">Fast Company</a>
-        · <a href="https://www.fastcompany.com" target="_blank" rel="noopener">Fast Company</a>
-      </div>
-    </div>
-
-    <div class="story-col">
-      <div class="signal-row">
-        <span class="signal-badge dim">Signal 04</span>
-        <!-- ══ DYNAMIC ══ -->
-        <span class="signal-tag">Openai</span>
-      </div>
-
-      <h2 class="story-headline standard">
-        <!-- ══ DYNAMIC ══ -->
-        <a href="https://www.fastcompany.com/91498841/openai-codex-growing-fast-agentic-engineering?partner=rss&utm_source=rss&utm_medium=feed&utm_campaign=rss+fastcompany&utm_content=rss" target="_blank" rel="noopener">Inside OpenAI’s fast-growing Codex: The people building the AI that codes alongside you</a>
-      </h2>
-
-      <div class="story-byline" aria-label="Article byline">
-        <!-- ══ DYNAMIC ══ -->
-        <span class="byline-author">Mark Sullivan</span>
-        <span class="byline-sep">·</span>
-        <span class="byline-pub">Fast Company</span>
-        <span class="byline-sep">·</span>
-        <span>02-27-2026</span>
-      </div>
-
-      <!-- ══ DYNAMIC ══ -->
-      <p class="story-summary">OpenAI’s Codex coding assistant experienced a massive surge in activity, tripling its weekly active users and increasing overall token usage fivefold since the year began. This growth stems from new GPT-5.2 and GPT-5.3-Codex model releases, alongside a new app version downloaded over a million times. Over a million developers and non-coders now rely on Codex weekly, delegating complex software engineering tasks—including writing and testing code, and documentation—to it. This widespread adoption is ushering in "agentic engineering," where AI agents work autonomously across project facets, fundamentally changing how software is built.</p>
-
-      <div class="why-matters" role="note" aria-label="Why It Matters">
-        <div class="wim-head">
-          <span class="wim-head-label">Why It Matters</span>
-          <span class="wim-head-sub">AI-generated insight</span>
-        </div>
-        <div class="wim-body">
-          <!-- ══ DYNAMIC ══ -->
-          <p class="wim-text">OpenAI’s Codex surge signals a critical market shift to agentic AI platforms, not just code generators. Developers gain powerful AI partners for autonomous, complex engineering tasks, increasing efficiency and democratizing software creation. For OpenAI, this solidifies leadership in specialized AI agents, accelerating an industry-wide race towards integrated, multi-agent systems. The article underplays the profound redefinition of developer roles and skills, plus the intensifying competitive pressure on rivals as this paradigm fundamentally alters software development.</p>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- End cap -->
-  <div class="end-cap" aria-hidden="true">
-    <div class="end-line"></div>
-    <!-- ══ DYNAMIC ══ -->
-    <span class="end-label">End of Edition · 02-27-2026</span>
-    <div class="end-line"></div>
   </div>
 
 </main>
@@ -688,6 +417,111 @@
 </footer>
 
 <script>
+  /* ══ Edition config — values baked in at generation time ══ */
+  const EDITION_DATE  = '2026-02-27';
+  const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
+
+  /* ── HTML text-escape helper (prevent XSS in plain-text fields) ── */
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  /* ── Photo credit block ── */
+  function creditHtml(story) {
+    if (!story.credit_name) return '';
+    if (story.credit_name === 'Adobe Firefly') {
+      return '<div class="hero-credit">Photo by Adobe Firefly</div>';
+    }
+    const href = esc(story.credit_url || story.url || '#');
+    return `<div class="hero-credit">Photo by <a href="${href}" target="_blank" rel="noopener">${esc(story.credit_name)}</a></div>`;
+  }
+
+  /* ── Story section builder ── */
+  function buildStory(story, idx) {
+    const n      = idx + 1;
+    const nStr   = String(n).padStart(2, '0');
+    const isLead = n === 1;
+    const badge  = isLead
+      ? '<span class="signal-badge">Signal 01</span><span class="signal-badge dim">Lead Story</span>'
+      : `<span class="signal-badge dim">Signal ${nStr}</span>`;
+    const bylineA = story.author
+      ? `<span class="byline-author">${esc(story.author)}</span><span class="byline-sep">·</span>` : '';
+    const bylineP = story.pub_name
+      ? `<span class="byline-pub">${esc(story.pub_name)}</span><span class="byline-sep">·</span>` : '';
+    const divider = idx > 0
+      ? `<div class="signal-divider" aria-hidden="true"><div class="signal-divider-line"></div><span class="signal-divider-label">Signal ${nStr}</span><div class="signal-divider-line"></div></div>`
+      : '';
+    return `${divider}
+<section aria-label="Story ${n} of 4${isLead ? ': Lead story' : ''}">
+  <div class="story-hero ${isLead ? 'lead' : 'standard'}" aria-hidden="true">
+    <img class="hero-img" src="${esc(story.image_url || '')}" alt="${esc(story.image_alt || '')}" onerror="this.style.display='none'">
+    <div class="hero-placeholder-full"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-num">${nStr}</div>
+    ${creditHtml(story)}
+  </div>
+  <div class="story-col">
+    <div class="signal-row">
+      ${badge}
+      <span class="signal-tag">${esc(story.category || '')}</span>
+    </div>
+    <h2 class="story-headline ${isLead ? 'lead' : 'standard'}">
+      <a href="${esc(story.url || '#')}" target="_blank" rel="noopener">${esc(story.headline || '—')}</a>
+    </h2>
+    <div class="story-byline" aria-label="Article byline">
+      ${bylineA}${bylineP}<span>${esc(story.pub_date || '')}</span>
+    </div>
+    ${story.summary_html || '<p class="story-summary">Summary unavailable.</p>'}
+    <div class="why-matters" role="note" aria-label="Why It Matters">
+      <div class="wim-head">
+        <span class="wim-head-label">Why It Matters</span>
+        <span class="wim-head-sub">AI-generated insight</span>
+      </div>
+      <div class="wim-body">
+        <p class="wim-text">${esc(story.why_it_matters || 'Analysis unavailable.')}</p>
+      </div>
+    </div>
+  </div>
+</section>`;
+  }
+
+  /* ── Supabase client (same SDK as index.tsx, works with sb_publishable_ keys) ── */
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  /* ── Fetch edition data from Supabase and render ── */
+  async function loadEdition() {
+    const container = document.getElementById('signals-container');
+    try {
+      const { data, error } = await sb
+        .from('daily_editions')
+        .select('stories')
+        .eq('edition_date', EDITION_DATE)
+        .maybeSingle();
+      if (error) throw error;
+      const stories = (data?.stories || []).sort((a, b) => a.slot - b.slot);
+      if (!stories.length) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">No edition data found.</p>';
+        return;
+      }
+      const [y, m, d] = EDITION_DATE.split('-');
+      const displayDate = `${m}-${d}-${y}`;
+      let html = stories.map((story, i) => buildStory(story, i)).join('');
+      html += `<div class="end-cap" aria-hidden="true"><div class="end-line"></div><span class="end-label">End of Edition · ${displayDate}</span><div class="end-line"></div></div>`;
+      container.style.display   = 'block';
+      container.style.minHeight = '';
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-3);padding:6rem 1rem;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em;">Failed to load edition.</p>';
+      console.error('[ClawBeat] Edition load error:', err);
+    }
+  }
+
+  loadEdition();
+
+  /* ── Mobile menu ── */
   function toggleMenu() {
     const menu      = document.getElementById('mobile-menu');
     const btn       = document.getElementById('hamburger-btn');
