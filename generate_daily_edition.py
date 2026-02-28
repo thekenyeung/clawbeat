@@ -261,72 +261,61 @@ def call_gemini(client, prompt: str, retries: int = 5) -> str:
                 return ""
     return ""
 
-def generate_summary(model, article_text: str, fallback: str = "") -> str:
+def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
     """
-    Generate ~700-character summary as a <p class="story-summary"> HTML block.
-    Falls back to wrapping the existing DB summary if article text is unavailable.
+    Generate both summary and analysis in a SINGLE Gemini call per story.
+    Returns (summary_html, why_it_matters) tuple.
+    Halves API usage vs two separate calls.
     """
     context = article_text or fallback
     if not context:
-        return '<p class="story-summary">Summary unavailable.</p>'
+        return '<p class="story-summary">Summary unavailable.</p>', "Analysis unavailable."
 
     prompt = textwrap.dedent(f"""
-        You are a veteran technology reporter writing for a sharp, discerning publication.
-        Read the article and write a journalist-style summary of approximately 700 characters.
+        You are a veteran technology reporter and senior industry analyst.
+        Read the article below and produce TWO sections, separated by exactly the line: ---ANALYSIS---
 
-        Rules:
+        SECTION 1 — Journalist Summary (~700 characters):
         - Lead with the single most newsworthy development — not background, not context
         - State the real-world impact concisely: who is affected and how
         - Cut all hype, marketing language, and superlatives; use precise, concrete language
         - Avoid passive voice where possible
         - Tell a story: there should be a clear subject doing something with a consequence
         - Do not start with "The article" or restate the headline
-        - Write one flowing paragraph — no bullets, no headers, no em-dashes as list markers
+        - Write one flowing paragraph — no bullets, no headers
+        - Return as: <p class="story-summary">Your summary here.</p>
 
-        Return ONLY a single HTML paragraph in this exact format (no other text):
-        <p class="story-summary">Your summary here.</p>
+        ---ANALYSIS---
 
-        Article:
-        {context}
-    """).strip()
-
-    result = call_gemini(model, prompt)
-    # Ensure it's wrapped correctly
-    if result and '<p class="story-summary">' in result:
-        # Extract just the p tag
-        match = re.search(r'<p class="story-summary">.*?</p>', result, re.DOTALL)
-        if match:
-            return match.group(0)
-    if result:
-        # Wrap whatever was returned
-        text = re.sub(r"<[^>]+>", "", result).strip()
-        return f'<p class="story-summary">{text}</p>'
-    return f'<p class="story-summary">{fallback[:700]}</p>' if fallback else '<p class="story-summary">Summary unavailable.</p>'
-
-
-def generate_analysis(model, article_text: str, fallback: str = "") -> str:
-    """
-    Generate ~500-character 'Why It Matters' analyst insight as plain text.
-    """
-    context = article_text or fallback
-    if not context:
-        return "Analysis unavailable."
-
-    prompt = textwrap.dedent(f"""
-        You are a senior industry analyst covering AI and OpenClaw.
-        Read the article and provide the strategic significance — why this matters beyond
-        the headline, who benefits, what this signals about where the market is heading,
-        and what's missing or underplayed in the coverage.
-        Respond in approximately 500 characters. Plain text only, no bullet points.
+        SECTION 2 — Why It Matters (~500 characters, plain text):
+        As a senior industry analyst covering AI and OpenClaw: explain the strategic significance —
+        why this matters beyond the headline, who benefits, what this signals about where the
+        market is heading, and what's missing or underplayed in the coverage.
+        No bullets. One plain paragraph.
 
         Article:
-        {context}
+        {context[:8000]}
     """).strip()
 
-    result = call_gemini(model, prompt)
-    # Strip any accidental HTML
-    result = re.sub(r"<[^>]+>", "", result).strip()
-    return result or "Analysis unavailable."
+    result = call_gemini(client, prompt)
+
+    if "---ANALYSIS---" in result:
+        parts = result.split("---ANALYSIS---", 1)
+        summary_raw = parts[0].strip()
+        analysis   = re.sub(r"<[^>]+>", "", parts[1]).strip()
+    else:
+        summary_raw = result.strip()
+        analysis   = ""
+
+    # Ensure summary is wrapped in the correct HTML tag
+    match = re.search(r'<p class="story-summary">.*?</p>', summary_raw, re.DOTALL)
+    if match:
+        summary_html = match.group(0)
+    else:
+        text = re.sub(r"<[^>]+>", "", summary_raw).strip()
+        summary_html = f'<p class="story-summary">{text or fallback[:700]}</p>'
+
+    return summary_html, analysis or "Analysis unavailable."
 
 # ─── Infer category from tags / source ───────────────────────────────────────
 
@@ -430,19 +419,18 @@ def main():
             article_text = fetch_article_text(url)
             fallback_text = article.get("summary") or article.get("title") or ""
 
-            if saved.get("summary_html"):
-                summary_html = saved["summary_html"]
-            else:
-                print(f"  Slot {slot}: Generating summary…")
-                summary_html = generate_summary(model, article_text, fallback_text)
-                time.sleep(6)  # Stay safely under 15 RPM free tier limit
+            need_summary  = not saved.get("summary_html")
+            need_analysis = not saved.get("why_it_matters")
 
-            if saved.get("why_it_matters"):
-                why_it_matters = saved["why_it_matters"]
+            if need_summary or need_analysis:
+                print(f"  Slot {slot}: Generating AI content…")
+                gen_summary, gen_analysis = generate_ai_content(model, article_text, fallback_text)
+                time.sleep(10)  # One call per story; 10s keeps us safely under 15 RPM
             else:
-                print(f"  Slot {slot}: Generating analysis…")
-                why_it_matters = generate_analysis(model, article_text, fallback_text)
-                time.sleep(6)
+                gen_summary = gen_analysis = None
+
+            summary_html   = saved.get("summary_html")   or gen_summary  or f'<p class="story-summary">{fallback_text[:700]}</p>'
+            why_it_matters = saved.get("why_it_matters") or gen_analysis or "Analysis unavailable."
 
         story = {
             "slot":           slot,
