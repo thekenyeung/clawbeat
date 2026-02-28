@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-WHLSLX6VL3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <title>Intel Feed Redesign — ClawBeat · Ecosystem Dispatch</title>
+  <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Lock base font size so all rem values are predictable (1rem = 16px) */
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+    :root {
+      --bg:          #08090b;
+      --bg-2:        #0d0f12;
+      --bg-3:        #131619;
+      --border:      rgba(255,255,255,0.05);
+      --border-2:    rgba(255,255,255,0.09);
+      --orange:      #f97316;
+      --orange-dim:  rgba(249,115,22,0.12);
+      --orange-glow: rgba(249,115,22,0.18);
+      --green:       #22c55e;
+      --green-dim:   rgba(34,197,94,0.12);
+      --cyan:        #06b6d4;
+      --cyan-dim:    rgba(6,182,212,0.08);
+      --text:        #e2e4e9;
+      --text-2:      #9097a3;
+      /* --text-mid sits between text-2 and text-3; used for secondary labels */
+      --text-mid:    #7c8494;
+      --text-3:      #525866;
+      --text-4:      #2e333d;
+      --mono:        'JetBrains Mono', monospace;
+      --sans:        'Space Grotesk', sans-serif;
+      /* Minimum readable size — 11px at 16px root */
+      --min-size:    0.6875rem;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: #000;
+      border-bottom: 1px solid var(--border-2);
+      padding: 0.4rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      font-family: var(--mono);
+      /* 11px minimum */
+      font-size: var(--min-size);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .status-bar::-webkit-scrollbar { display: none; }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      /* bumped from text-3 (#525866) for legibility */
+      color: var(--text-mid);
+    }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .dot-green  { background: var(--green);  box-shadow: 0 0 6px var(--green); }
+    .dot-orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+    .status-value { color: var(--text); font-weight: 500; }
+    /* bumped from near-invisible text-4 (#2e333d) */
+    .status-sep { color: var(--text-3); margin-left: auto; }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,12,0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .header-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .brand-img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-text {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      font-style: italic;
+      color: #fff;
+    }
+    .brand-text span { color: var(--orange); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .nav-item {
+      font-family: var(--sans);
+      font-size: 0.625rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.375rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-item svg { width: 16px; height: 16px; }
+    .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+
+    /* ── HAMBURGER / MOBILE MENU ── */
+    .hamburger-btn {
+      display: none;
+      padding: 0.5rem;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fff; }
+    .hamburger-btn svg { width: 24px; height: 24px; }
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 4rem;
+      left: 0;
+      width: 100%;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 60;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-nav-item {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.75rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .mobile-nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── MAIN CONTAINER ── */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+
+    /* ── FEED MASTHEAD ── */
+    .feed-masthead {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-2);
+    }
+    .feed-title-block {}
+    .feed-eyebrow {
+      font-family: var(--mono);
+      /* 11px */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      /* bumped from text-3 */
+      color: var(--text-mid);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .feed-eyebrow::before { content: '//'; color: var(--orange); opacity: 0.7; }
+    .feed-title {
+      font-family: var(--sans);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-style: italic;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: #fff;
+    }
+    .feed-title em { color: var(--orange); font-style: italic; }
+
+    .feed-stats {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--bg-3);
+      border: 1px solid var(--border-2);
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .stat-cell {
+      font-family: var(--mono);
+      /* 11px */
+      font-size: var(--min-size);
+      padding: 0.65rem 1rem;
+      border-right: 1px solid var(--border-2);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .stat-cell:last-child { border-right: none; }
+    /* bumped from text-3 */
+    .stat-label { color: var(--text-mid); }
+    .stat-value { color: var(--text); font-weight: 700; }
+    .stat-value.orange { color: var(--orange); }
+    .stat-value.green  { color: var(--green); }
+
+    /* ── DATE DIVIDER ── */
+    .date-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.75rem 0 1.75rem;
+    }
+    .date-divider:first-child { margin-top: 0; }
+    .date-label {
+      font-family: var(--mono);
+      /* 11px */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: var(--orange);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .date-label::before { content: '//'; opacity: 0.6; }
+    .date-label .date-text { color: #fff; }
+    .date-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(249,115,22,0.4), rgba(249,115,22,0.05), transparent);
+    }
+    .date-count {
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) at text-4 (near-invisible) */
+      font-size: var(--min-size);
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+
+    /* ── LEAD STORY ── */
+    .lead-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-left: 3px solid var(--orange);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 260px;
+    }
+    .lead-body { padding: 1.75rem 2rem; }
+    .lead-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid rgba(249,115,22,0.25);
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    /* triangle — sized to match the 11px text */
+    .lead-flag::before { content: '▶'; font-size: 0.5rem; }
+    .lead-headline {
+      font-family: var(--sans);
+      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .lead-headline a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .lead-headline a:hover { color: var(--orange); }
+
+    .lead-summary {
+      font-size: 0.9375rem; /* 15px */
+      color: var(--text-2);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .story-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .meta-source {
+      font-family: var(--mono);
+      /* 11px — was 0.6rem (9.6px) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-2);
+    }
+    /* bumped from near-invisible text-4 */
+    .meta-sep { color: var(--text-3); font-size: var(--min-size); }
+    .meta-date {
+      font-family: var(--mono);
+      /* 11px — was 0.6rem (9.6px) at text-3 */
+      font-size: var(--min-size);
+      color: var(--text-mid);
+    }
+    .badge-verified {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.25);
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+    }
+    .badge-priority {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-3 */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      /* bumped from text-3 (#525866) to text-2 (#9097a3) */
+      color: var(--text-2);
+      border: 1px solid var(--border-2);
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+    }
+
+    .tags-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tag {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-3 (#525866) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      /* bumped from text-3 to text-mid for legibility */
+      color: var(--text-mid);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+    }
+    .tag.highlight {
+      color: var(--text-mid);
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.09);
+    }
+
+    /* Lead sidebar */
+    .lead-sidebar {
+      background: var(--bg-3);
+      border-left: 1px solid var(--border);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .sidebar-hdr {
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) at text-3 */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      /* bumped from text-3 */
+      color: var(--text-mid);
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.25rem;
+      border-bottom: 1px solid var(--border-2);
+    }
+    .sidebar-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .sidebar-item:last-child { border-bottom: none; }
+    .sidebar-num {
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) with opacity:0.5 (≈ near invisible) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      /* removed opacity:0.5 — use explicit color instead */
+      color: rgba(249,115,22,0.7);
+    }
+    .sidebar-title {
+      /* 13px — left at 0.8125rem (unchanged, was fine) */
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+    }
+    .sidebar-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .sidebar-title a:hover { color: var(--orange); }
+    .sidebar-source {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-3 */
+      font-size: var(--min-size);
+      /* bumped from text-3 (#525866) to text-mid (#7c8494) */
+      color: var(--text-mid);
+    }
+
+    /* ── STORY ITEM ── */
+    .story-item {
+      display: flex;
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 0.875rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .story-item:hover {
+      border-color: rgba(249,115,22,0.3);
+      box-shadow: 0 0 20px rgba(249,115,22,0.05);
+    }
+    .story-item.is-priority {
+      border-left: 2px solid rgba(249,115,22,0.6);
+    }
+
+    /* Numbered gutter */
+    .story-num {
+      background: var(--bg-3);
+      border-right: 1px solid var(--border);
+      padding: 1rem 0.875rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 54px;
+      gap: 0.5rem;
+    }
+    .num-text {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--orange);
+      /* bumped from 0.35 — still decorative but actually visible now */
+      opacity: 0.55;
+      font-style: italic;
+      line-height: 1;
+    }
+    .num-line {
+      width: 1px;
+      flex: 1;
+      min-height: 12px;
+      background: var(--border);
+    }
+
+    /* Story main body */
+    .story-body {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .story-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .story-headline {
+      font-family: var(--sans);
+      /* 17px */
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    .story-headline a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+      display: block;
+    }
+    .story-headline a:hover { color: var(--orange); }
+
+    .story-summary {
+      /* 14px — bumped from 0.825rem (13.2px) */
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Coverage strip */
+    .coverage-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.1rem;
+    }
+    .coverage-label {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-4 (near-invisible) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      /* bumped from text-4 (#2e333d) to text-mid (#7c8494) */
+      color: var(--text-mid);
+      white-space: nowrap;
+    }
+    .coverage-link {
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) at rgba(249,115,22,0.7) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      /* full orange instead of 70% opacity */
+      color: var(--orange);
+      background: rgba(249,115,22,0.10);
+      border: 1px solid rgba(249,115,22,0.25);
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+      white-space: nowrap;
+    }
+    .coverage-link:hover {
+      background: rgba(249,115,22,0.18);
+      color: #fff;
+    }
+
+    /* Story right panel (tags) — desktop only */
+    .story-aside {
+      width: 180px;
+      flex-shrink: 0;
+      background: var(--bg-3);
+      border-left: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    .aside-label {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-4 */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      /* bumped from near-invisible text-4 */
+      color: var(--text-mid);
+    }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .page-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      /* 11px — was 0.6rem (9.6px) */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-2);
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      padding: 0.65rem 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .page-btn:hover {
+      color: var(--orange);
+      border-color: rgba(249,115,22,0.3);
+      background: var(--orange-dim);
+    }
+    .page-btn:disabled {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .page-btn .arrow { font-size: 0.875rem; }
+
+    .page-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .page-info-label {
+      font-family: var(--mono);
+      /* 11px — was 0.5rem (8px) at text-4 */
+      font-size: var(--min-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      /* bumped from near-invisible text-4 */
+      color: var(--text-mid);
+    }
+    .page-info-nums {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+    .page-current {
+      font-family: var(--sans);
+      font-size: 1.35rem;
+      font-weight: 900;
+      font-style: italic;
+      color: #fff;
+    }
+    /* bumped from 0.3 opacity — still a separator but actually visible */
+    .page-sep { color: rgba(249,115,22,0.6); font-size: 0.8125rem; }
+    .page-total {
+      font-family: var(--mono);
+      /* 12px — was 0.7rem at text-3 (#525866) */
+      font-size: 0.75rem;
+      font-weight: 700;
+      /* bumped from text-3 to text-2 */
+      color: var(--text-2);
+    }
+
+    /* Page number pills */
+    .page-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .page-pill {
+      font-family: var(--mono);
+      /* 11px — was 0.6rem (9.6px) at text-3 */
+      font-size: var(--min-size);
+      font-weight: 700;
+      width: 30px; height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      border: 1px solid var(--border-2);
+      /* bumped from text-3 (#525866) */
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .page-pill:hover { color: var(--orange); border-color: rgba(249,115,22,0.3); }
+    .page-pill.active {
+      color: var(--orange);
+      background: var(--orange-dim);
+      border-color: rgba(249,115,22,0.35);
+    }
+    /* bumped from near-invisible text-4 */
+    .page-pill.ellipsis { cursor: default; color: var(--text-3); border-color: transparent; }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border-2);
+      background: var(--bg-2);
+      padding: 1.25rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      font-style: italic;
+      color: #fff;
+    }
+    .footer-brand span { color: var(--orange); }
+    .footer-mono {
+      font-family: var(--mono);
+      /* 11px — was 0.55rem (8.8px) at text-4 (near-invisible) */
+      font-size: var(--min-size);
+      /* bumped from text-4 to text-3 */
+      color: var(--text-3);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .lead-card {
+        grid-template-columns: 1fr;
+      }
+      .lead-sidebar {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 1.5rem;
+        padding: 1.25rem;
+      }
+      .sidebar-hdr { grid-column: 1 / -1; }
+
+      .story-aside { display: none; }
+
+      .feed-stats { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .hamburger-btn { display: flex; }
+    }
+
+    @media (max-width: 640px) {
+      .main { padding: 1.5rem 1rem 5rem; }
+      .header-inner { padding: 0 1rem; }
+
+      .status-bar .status-item:nth-child(3),
+      .status-bar .status-item:nth-child(4) { display: none; }
+      .status-sep { display: none; }
+
+      .feed-masthead { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+
+      .lead-body { padding: 1.25rem; }
+      .lead-sidebar { grid-template-columns: 1fr; }
+      .lead-headline { font-size: clamp(1.15rem, 5vw, 1.5rem); }
+
+      .story-num { min-width: 42px; padding: 0.85rem 0.65rem; }
+      /* 14px on mobile — keep above minimum */
+      .num-text { font-size: 0.875rem; }
+      .story-body { padding: 0.875rem 1rem; }
+      /* 15px on mobile */
+      .story-headline { font-size: 0.9375rem; }
+      /* 13px on mobile — above 11px minimum */
+      .story-summary { font-size: 0.8125rem; -webkit-line-clamp: 2; }
+
+      .date-divider { margin: 2rem 0 1.25rem; }
+      .date-count { display: none; }
+
+      .pagination { flex-wrap: wrap; gap: 0.75rem; }
+      .page-pills { display: none; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+    }
+
+    @media (max-width: 480px) {
+      .story-headline a { min-height: 44px; display: flex; align-items: center; }
+      .lead-headline a  { min-height: 44px; display: flex; align-items: flex-start; }
+      .sidebar-title a  { min-height: 44px; display: flex; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── STATUS BAR ── -->
+<div class="status-bar">
+  <div class="status-item">
+    <div class="status-dot dot-green"></div>
+    <span>feed</span>
+    <span class="status-value">LIVE</span>
+  </div>
+  <div class="status-item">
+    <span>sync</span>
+    <span class="status-value">2026-02-27 · 06:00 UTC</span>
+  </div>
+  <div class="status-item">
+    <span>stories</span>
+    <span class="status-value">47</span>
+  </div>
+  <div class="status-item">
+    <span>sources</span>
+    <span class="status-value">18</span>
+  </div>
+  <div class="status-item">
+    <div class="status-dot dot-orange"></div>
+    <span>page</span>
+    <span class="status-value">1 / 3</span>
+  </div>
+  <span class="status-sep">clawbeat.co</span>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <a href="/?tab=news" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/?tab=news" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- FEED MASTHEAD -->
+  <div class="feed-masthead">
+    <div class="feed-title-block">
+      <div class="feed-eyebrow">Autonomous Intelligence Curation</div>
+      <h1 class="feed-title">Ecosystem <em>Dispatch</em></h1>
+    </div>
+    <div class="feed-stats">
+      <div class="stat-cell">
+        <span class="stat-label">last_sync</span>
+        <span class="stat-value">02-27-2026</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-label">stories</span>
+        <span class="stat-value orange">47</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-label">verified</span>
+        <span class="stat-value green">31</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-label">feed</span>
+        <span class="stat-value green">SYNCED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- DATE GROUP: FEB 27 2026       -->
+  <!-- ══════════════════════════════ -->
+  <div class="date-divider">
+    <span class="date-label">Dispatch: <span class="date-text">FEB 27 2026</span></span>
+    <div class="date-line"></div>
+    <span class="date-count">8 stories</span>
+  </div>
+
+  <!-- STORY 01 — LEAD (priority + verified) -->
+  <div class="lead-card">
+    <div class="lead-body">
+      <div class="lead-flag">Lead Signal</div>
+      <h2 class="lead-headline">
+        <a href="#" target="_blank">Google DeepMind Releases Gemini 2.5 Ultra with Native Multi-Agent Orchestration and 10M Context Window</a>
+      </h2>
+      <p class="lead-summary">
+        The latest iteration of Gemini arrives with a dramatically expanded context window and a built-in orchestration layer that allows multiple specialized agents to share state across a single session — a capability that directly challenges OpenAI's emerging agent framework and signals a shift from model-as-a-tool to model-as-a-platform.
+      </p>
+      <div class="story-meta">
+        <span class="meta-source">VentureBeat</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-27-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="tags-strip">
+        <span class="tag highlight">gemini</span>
+        <span class="tag highlight">multi-agent</span>
+        <span class="tag">deepmind</span>
+        <span class="tag">context-window</span>
+        <span class="tag">orchestration</span>
+        <span class="tag">llm</span>
+      </div>
+    </div>
+    <aside class="lead-sidebar">
+      <div class="sidebar-hdr">// also_today</div>
+      <div class="sidebar-item">
+        <div class="sidebar-num">02 ›</div>
+        <div class="sidebar-title"><a href="#" target="_blank">Mistral Releases Le Chat Pro with Code Execution Sandbox</a></div>
+        <div class="sidebar-source">TechCrunch · verified</div>
+      </div>
+      <div class="sidebar-item">
+        <div class="sidebar-num">03 ›</div>
+        <div class="sidebar-title"><a href="#" target="_blank">Anthropic Publishes ASL-4 Safety Standard Documentation</a></div>
+        <div class="sidebar-source">MIT Tech Review · verified</div>
+      </div>
+      <div class="sidebar-item">
+        <div class="sidebar-num">04 ›</div>
+        <div class="sidebar-title"><a href="#" target="_blank">$2.3B Raised in AI Infra Funding During February — Tracker</a></div>
+        <div class="sidebar-source">The Information</div>
+      </div>
+      <div class="sidebar-item">
+        <div class="sidebar-num">05 ›</div>
+        <div class="sidebar-title"><a href="#" target="_blank">Coding Agents Surpass Junior Engineers on SWE-bench Pro Variant</a></div>
+        <div class="sidebar-source">ArXiv · 02-26-2026</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- STORY 02 -->
+  <div class="story-item is-priority">
+    <div class="story-num">
+      <span class="num-text">02</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">TechCrunch</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-27-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">Mistral Releases Le Chat Pro with Integrated Code Execution Sandbox and File I/O</a>
+      </div>
+      <p class="story-summary">
+        Mistral's consumer and enterprise product now ships with a Python execution environment directly inside the chat interface, enabling persistent data analysis workflows without API setup. The move mirrors what OpenAI deployed with Advanced Data Analysis but extends it with file system access and multi-session memory.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">mistral</span>
+        <span class="tag">le-chat</span>
+        <span class="tag">code-execution</span>
+        <span class="tag">product</span>
+      </div>
+      <div class="coverage-strip">
+        <span class="coverage-label">// more coverage</span>
+        <a href="#" class="coverage-link">The Verge</a>
+        <a href="#" class="coverage-link">Ars Technica</a>
+        <a href="#" class="coverage-link">Business Insider</a>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">mistral</span>
+        <span class="tag">le-chat</span>
+        <span class="tag">code-execution</span>
+        <span class="tag">product</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 03 -->
+  <div class="story-item is-priority">
+    <div class="story-num">
+      <span class="num-text">03</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">MIT Tech Review</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-27-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">Anthropic Publishes ASL-4 Readiness Standards with Mandatory External Audit Requirements</a>
+      </div>
+      <p class="story-summary">
+        As Anthropic prepares to evaluate its next frontier model against ASL-4 thresholds, it has published the first detailed operational standards for systems that meet those criteria — including third-party audits, mandatory deployment restrictions, and a minimum 90-day review period before release.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">anthropic</span>
+        <span class="tag highlight">safety</span>
+        <span class="tag">asl-4</span>
+        <span class="tag">policy</span>
+        <span class="tag">regulation</span>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">anthropic</span>
+        <span class="tag highlight">safety</span>
+        <span class="tag">asl-4</span>
+        <span class="tag">policy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 04 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">04</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">The Information</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-27-2026</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">$2.3B Raised in AI Infrastructure Funding During February — Full Tracker Breakdown</a>
+      </div>
+      <p class="story-summary">
+        A record February for AI infrastructure investment saw $2.3B flow into data center, GPU orchestration, and model serving startups. Twelve deals over $50M were closed, with a notable concentration in inference optimization and memory-efficient training platforms.
+      </p>
+      <div class="tags-strip">
+        <span class="tag">funding</span>
+        <span class="tag">infrastructure</span>
+        <span class="tag">vc</span>
+        <span class="tag">market</span>
+      </div>
+      <div class="coverage-strip">
+        <span class="coverage-label">// more coverage</span>
+        <a href="#" class="coverage-link">Bloomberg</a>
+        <a href="#" class="coverage-link">Reuters</a>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag">funding</span>
+        <span class="tag">infrastructure</span>
+        <span class="tag">vc</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 05 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">05</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">ArXiv</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-26-2026</span>
+        <span class="badge-priority">research</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">Autonomous Coding Agents Outperform Junior Engineers on SWE-bench Pro: A Controlled Study Across 12 Firms</a>
+      </div>
+      <p class="story-summary">
+        Researchers from Stanford and CMU report that top-performing coding agents solved 58% of SWE-bench Pro tasks — 11 points higher than the junior engineer cohort — with the gap widening further on well-documented codebases. Crucially, agents lagged on cross-repository dependency tasks.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">research</span>
+        <span class="tag">coding-agents</span>
+        <span class="tag">swe-bench</span>
+        <span class="tag">benchmark</span>
+        <span class="tag">automation</span>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">research</span>
+        <span class="tag">coding-agents</span>
+        <span class="tag">benchmark</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════ -->
+  <!-- DATE GROUP: FEB 26 2026       -->
+  <!-- ══════════════════════════════ -->
+  <div class="date-divider">
+    <span class="date-label">Dispatch: <span class="date-text">FEB 26 2026</span></span>
+    <div class="date-line"></div>
+    <span class="date-count">7 stories</span>
+  </div>
+
+  <!-- STORY 01 -->
+  <div class="story-item is-priority">
+    <div class="story-num">
+      <span class="num-text">01</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">VentureBeat</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-26-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">OpenAI Operator Hits 1M Active Enterprise Users After 60 Days — Internal Metrics Disclosed</a>
+      </div>
+      <p class="story-summary">
+        OpenAI disclosed that its browser-based agent product, Operator, reached one million monthly active enterprise users within its first 60 days — a faster adoption rate than ChatGPT Enterprise at the same lifecycle stage, driven largely by IT automation use cases in Fortune 500 deployments.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">openai</span>
+        <span class="tag highlight">operator</span>
+        <span class="tag">enterprise</span>
+        <span class="tag">agents</span>
+        <span class="tag">growth</span>
+      </div>
+      <div class="coverage-strip">
+        <span class="coverage-label">// more coverage</span>
+        <a href="#" class="coverage-link">CNBC</a>
+        <a href="#" class="coverage-link">TechCrunch</a>
+        <a href="#" class="coverage-link">WSJ</a>
+        <a href="#" class="coverage-link">The Verge</a>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">openai</span>
+        <span class="tag highlight">operator</span>
+        <span class="tag">enterprise</span>
+        <span class="tag">agents</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 02 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">02</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">The Hill</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-26-2026</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">EU AI Act Enforcement Guidance: What Agentic System Operators Must Comply With by Q3 2026</a>
+      </div>
+      <p class="story-summary">
+        The European AI Office published 47 pages of enforcement guidance clarifying which agentic AI systems qualify as "high-risk" under the Act. Systems handling financial, healthcare, or legal decisions on behalf of users without human review face mandatory audit trails and registration starting July 1.
+      </p>
+      <div class="tags-strip">
+        <span class="tag">eu-ai-act</span>
+        <span class="tag">regulation</span>
+        <span class="tag">compliance</span>
+        <span class="tag">policy</span>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag">eu-ai-act</span>
+        <span class="tag">regulation</span>
+        <span class="tag">policy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 03 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">03</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">Wired</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-26-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">Inside the AI Memory Wars: How Startups Are Racing to Solve Long-Term Agent Recall</a>
+      </div>
+      <p class="story-summary">
+        As context windows grow, the problem of what to remember — and when to forget — has become the defining engineering challenge for production agent deployments. Wired profiles six startups tackling agent memory through vector recall, episodic compression, and structured knowledge graphs.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">memory</span>
+        <span class="tag">agents</span>
+        <span class="tag">startups</span>
+        <span class="tag">infrastructure</span>
+        <span class="tag">rag</span>
+      </div>
+      <div class="coverage-strip">
+        <span class="coverage-label">// more coverage</span>
+        <a href="#" class="coverage-link">MIT Tech Review</a>
+        <a href="#" class="coverage-link">VentureBeat</a>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">memory</span>
+        <span class="tag">agents</span>
+        <span class="tag">startups</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════ -->
+  <!-- DATE GROUP: FEB 25 2026       -->
+  <!-- ══════════════════════════════ -->
+  <div class="date-divider">
+    <span class="date-label">Dispatch: <span class="date-text">FEB 25 2026</span></span>
+    <div class="date-line"></div>
+    <span class="date-count">5 stories</span>
+  </div>
+
+  <!-- STORY 01 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">01</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">CNBC</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-25-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">Microsoft Integrates GitHub Copilot Agent Mode Across Azure DevOps — No Additional Charge for Enterprise Tiers</a>
+      </div>
+      <p class="story-summary">
+        Microsoft extended GitHub Copilot's agent mode to its full Azure DevOps pipeline suite, enabling developers to invoke autonomous code review, issue triage, and deployment validation agents directly from pull request workflows — at no extra cost for customers on E3 and above.
+      </p>
+      <div class="tags-strip">
+        <span class="tag highlight">microsoft</span>
+        <span class="tag highlight">copilot</span>
+        <span class="tag">azure</span>
+        <span class="tag">devops</span>
+        <span class="tag">product</span>
+      </div>
+      <div class="coverage-strip">
+        <span class="coverage-label">// more coverage</span>
+        <a href="#" class="coverage-link">TechCrunch</a>
+        <a href="#" class="coverage-link">The Register</a>
+        <a href="#" class="coverage-link">ZDNet</a>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag highlight">microsoft</span>
+        <span class="tag highlight">copilot</span>
+        <span class="tag">devops</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY 02 -->
+  <div class="story-item">
+    <div class="story-num">
+      <span class="num-text">02</span>
+      <div class="num-line"></div>
+    </div>
+    <div class="story-body">
+      <div class="story-meta">
+        <span class="meta-source">Reuters</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-date">02-25-2026</span>
+        <span class="badge-verified">✓ verified</span>
+      </div>
+      <div class="story-headline">
+        <a href="#" target="_blank">China's Baidu Releases ERNIE 5.0 with Claims of GPT-4o Parity on Chinese Language Benchmarks</a>
+      </div>
+      <p class="story-summary">
+        Baidu's latest foundation model arrives with benchmark claims that position it competitively against western frontier models on Chinese-language tasks, including legal document interpretation and medical consultation. Independent evaluators are beginning tests; early results are mixed.
+      </p>
+      <div class="tags-strip">
+        <span class="tag">baidu</span>
+        <span class="tag">ernie</span>
+        <span class="tag">china</span>
+        <span class="tag">frontier-models</span>
+        <span class="tag">benchmark</span>
+      </div>
+    </div>
+    <div class="story-aside">
+      <span class="aside-label">topics</span>
+      <div class="tags-strip" style="flex-direction:column; align-items:flex-start;">
+        <span class="tag">baidu</span>
+        <span class="tag">china</span>
+        <span class="tag">benchmark</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGINATION ── -->
+  <div class="pagination">
+    <button class="page-btn" disabled>
+      <span class="arrow">←</span> Prev
+    </button>
+
+    <div class="page-pills">
+      <span class="page-pill active">1</span>
+      <span class="page-pill">2</span>
+      <span class="page-pill">3</span>
+    </div>
+
+    <div class="page-info">
+      <span class="page-info-label">Page</span>
+      <div class="page-info-nums">
+        <span class="page-current">1</span>
+        <span class="page-sep">/</span>
+        <span class="page-total">3</span>
+      </div>
+    </div>
+
+    <div class="page-pills">
+      <!-- mirror pills, hidden visually but keeps layout balanced -->
+    </div>
+
+    <button class="page-btn">
+      Next <span class="arrow">→</span>
+    </button>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <div class="footer-mono">intel_feed · autonomous curation · 2026</div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu  = document.getElementById('mobile-menu');
+    const show  = document.getElementById('icon-menu');
+    const hide  = document.getElementById('icon-close');
+    const isOpen = menu.classList.toggle('open');
+    show.style.display = isOpen ? 'none'  : 'inline';
+    hide.style.display = isOpen ? 'inline' : 'none';
+  }
+  lucide.createIcons();
+</script>
+</body>
+</html>
