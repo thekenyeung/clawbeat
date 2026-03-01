@@ -1130,12 +1130,14 @@ def _load_from_supabase() -> dict:
 
 def _save_to_supabase(db: dict) -> None:
     """Upsert all data to Supabase. Only prunes stale items from the current dispatch date;
-    articles from past dispatches are never deleted."""
+    articles from past dispatches are never deleted.
+    Each table is saved independently so a schema error in one table never blocks others."""
     if not _supabase:
         print("⚠️  Supabase client not initialized — skipping DB write.")
         return
+
+    # --- news_items ---
     try:
-        # --- news_items ---
         # Re-fetch admin-locked dates immediately before writing to guard against
         # race conditions where the in-memory snapshot pre-dates an admin edit.
         try:
@@ -1196,8 +1198,11 @@ def _save_to_supabase(db: dict) -> None:
                     print(f"🗑️  Pruned {len(stale)} stale items from current dispatch ({current_dispatch_date}).")
             except Exception as prune_err:
                 print(f"⚠️  Pruning failed (non-fatal): {prune_err}")
+    except Exception as e:
+        print(f"❌ news_items save failed: {e}")
 
-        # --- videos ---
+    # --- videos ---
+    try:
         video_records = [{
             'url':          v['url'],
             'title':        v.get('title', ''),
@@ -1209,8 +1214,11 @@ def _save_to_supabase(db: dict) -> None:
         if video_records:
             _supabase.table('videos').upsert(video_records).execute()
             print(f"✅ Upserted {len(video_records)} videos.")
+    except Exception as e:
+        print(f"❌ videos save failed: {e}")
 
-        # --- github_projects ---
+    # --- github_projects ---
+    try:
         project_records = [{
             'url':               p['url'],
             'name':              p.get('name', ''),
@@ -1230,14 +1238,20 @@ def _save_to_supabase(db: dict) -> None:
         if project_records:
             _supabase.table('github_projects').upsert(project_records).execute()
             print(f"✅ Upserted {len(project_records)} GitHub projects.")
+    except Exception as e:
+        print(f"❌ github_projects save failed: {e}")
 
-        # --- ecosystem_family_stats ---
+    # --- ecosystem_family_stats ---
+    try:
         ecosystem_records = db.get('ecosystemStats', [])
         if ecosystem_records:
             _supabase.table('ecosystem_family_stats').upsert(ecosystem_records).execute()
             print(f"✅ Upserted {len(ecosystem_records)} ecosystem family stats.")
+    except Exception as e:
+        print(f"❌ ecosystem_family_stats save failed: {e}")
 
-        # --- research_papers ---
+    # --- research_papers ---
+    try:
         research_records = [{
             'url':     p['url'],
             'title':   p.get('title', ''),
@@ -1248,12 +1262,14 @@ def _save_to_supabase(db: dict) -> None:
         if research_records:
             _supabase.table('research_papers').upsert(research_records).execute()
             print(f"✅ Upserted {len(research_records)} research papers.")
-
-        # --- feed_metadata ---
-        _supabase.table('feed_metadata').upsert({'id': 1, 'last_updated': db.get('last_updated', '')}).execute()
-
     except Exception as e:
-        print(f"❌ Supabase save failed: {e}")
+        print(f"❌ research_papers save failed: {e}")
+
+    # --- feed_metadata ---
+    try:
+        _supabase.table('feed_metadata').upsert({'id': 1, 'last_updated': db.get('last_updated', '')}).execute()
+    except Exception as e:
+        print(f"❌ feed_metadata save failed: {e}")
 
 
 # --- 8. CLUSTERING & ARCHIVING ---
