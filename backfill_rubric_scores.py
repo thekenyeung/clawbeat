@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
 """
-One-time backfill: scores all existing github_projects rows in Supabase
-using their stored data and writes rubric_score + rubric_tier back.
+Backfill rubric scores for all github_projects rows in Supabase.
+
+Phase 1: Fetch pushed_at for all repos from GitHub Search API (paginated,
+         up to 1,000 results) so Activity scores are accurate.
+Phase 2: Score every Supabase row using enriched data; upsert rubric_score,
+         rubric_tier, and pushed_at back.
 
 Usage:
   export SUPABASE_URL=https://...supabase.co
   export SUPABASE_SERVICE_KEY=eyJ...
+  export GITHUB_TOKEN=ghp_...   # optional but strongly recommended (5,000 req/hr vs 10/min)
   python backfill_rubric_scores.py
 """
 import os
 import sys
+import time
+import requests
 from datetime import datetime
 
 try:
     from supabase import create_client
 except ImportError:
-    print("Run: pip install supabase")
+    print("Run: pip install supabase requests")
     sys.exit(1)
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     print("❌ Set SUPABASE_URL and SUPABASE_SERVICE_KEY env vars")
@@ -27,10 +35,52 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 
 sb = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+GH_HEADERS = {"Accept": "application/vnd.github.v3+json"}
+if GITHUB_TOKEN:
+    GH_HEADERS["Authorization"] = f"token {GITHUB_TOKEN}"
+    print("🔑 Using GITHUB_TOKEN (5,000 req/hr limit)")
+else:
+    print("⚠️  No GITHUB_TOKEN — unauthenticated (10 req/min). Pausing between pages.")
+
+
+def fetch_pushed_at_lookup() -> dict:
+    """Fetch up to 1,000 results from GitHub Search and return url→pushed_at map."""
+    lookup = {}
+    for page in range(1, 11):   # GitHub Search caps at 10 pages × 100 = 1,000
+        try:
+            resp = requests.get(
+                f"https://api.github.com/search/repositories"
+                f"?q=openclaw&sort=updated&order=desc&per_page=100&page={page}",
+                headers=GH_HEADERS, timeout=15,
+            )
+            if resp.status_code == 422:   # page beyond total results
+                break
+            if resp.status_code == 403:
+                print(f"  ⚠️  Rate limited on page {page}. Waiting 60s…")
+                time.sleep(60)
+                resp = requests.get(resp.url, headers=GH_HEADERS, timeout=15)
+            resp.raise_for_status()
+            data  = resp.json()
+            items = data.get('items', [])
+            if not items:
+                break
+            for r in items:
+                lookup[r['html_url']] = r.get('pushed_at', '')
+            total = data.get('total_count', '?')
+            print(f"  Page {page:2d}: {len(items)} repos (total on GitHub: {total:,})")
+            if len(items) < 100:
+                break
+            # Be polite: short pause between pages (mandatory without token)
+            time.sleep(1 if GITHUB_TOKEN else 7)
+        except Exception as e:
+            print(f"  ⚠️  Error on page {page}: {e}")
+            break
+    print(f"  Built pushed_at lookup for {len(lookup)} repos")
+    return lookup
+
 
 def _score_github_project(r: dict) -> tuple:
-    """Compute rubric score and tier using only stored Supabase fields.
-    Mirrors the function in forge.py (OpenClaw Eval Rubric v1.3).
+    """Compute rubric score and tier (OpenClaw Eval Rubric v1.3).
     Returns (score: int, tier: str).
     """
     stars         = r.get('stars', 0) or 0
@@ -125,7 +175,15 @@ def _score_github_project(r: dict) -> tuple:
 
 
 def main():
-    print("🔍 Fetching all github_projects from Supabase…")
+    # ── Phase 1: enrich pushed_at from GitHub Search API ──────────────
+    print("\n📡 Phase 1: Fetching pushed_at from GitHub Search API…")
+    pushed_at_lookup = fetch_pushed_at_lookup()
+
+    enriched = sum(1 for v in pushed_at_lookup.values() if v)
+    print(f"  pushed_at enriched for {enriched} repos")
+
+    # ── Phase 2: fetch all Supabase rows ──────────────────────────────
+    print("\n🔍 Phase 2: Fetching all github_projects from Supabase…")
     all_rows = []
     page_size = 1000
     offset = 0
@@ -138,13 +196,27 @@ def main():
             break
         offset += page_size
 
-    print(f"📊 Scoring {len(all_rows)} repos…")
+    # ── Phase 3: score with enriched pushed_at ────────────────────────
+    print(f"\n📊 Phase 3: Scoring {len(all_rows)} repos…")
     updates = []
+    enriched_count = 0
     for r in all_rows:
+        # Prefer GitHub API pushed_at; fall back to whatever is stored
+        gh_pushed = pushed_at_lookup.get(r.get('url', ''), '')
+        if gh_pushed and gh_pushed != r.get('pushed_at', ''):
+            r['pushed_at'] = gh_pushed
+            enriched_count += 1
         score, tier = _score_github_project(r)
-        updates.append({'url': r['url'], 'rubric_score': score, 'rubric_tier': tier})
+        updates.append({
+            'url':          r['url'],
+            'rubric_score': score,
+            'rubric_tier':  tier,
+            'pushed_at':    r.get('pushed_at', ''),
+        })
+    print(f"  pushed_at updated for {enriched_count} rows via GitHub lookup")
 
-    print("💾 Upserting scores in batches of 200…")
+    # ── Phase 4: upsert ───────────────────────────────────────────────
+    print("\n💾 Phase 4: Upserting scores in batches of 200…")
     batch_size = 200
     for i in range(0, len(updates), batch_size):
         batch = updates[i:i + batch_size]
@@ -155,7 +227,10 @@ def main():
     for u in updates:
         t = u['rubric_tier']
         tiers[t] = tiers.get(t, 0) + 1
-    print("✅ Done. Tier breakdown:", tiers)
+    print("\n✅ Done. Tier breakdown:", tiers)
+    featured = tiers.get('featured', 0)
+    listed   = tiers.get('listed', 0)
+    print(f"   → featured_repo_index will show {featured + listed} repos ({featured} featured + {listed} listed)")
 
 
 if __name__ == '__main__':
