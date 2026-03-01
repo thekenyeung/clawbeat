@@ -1260,7 +1260,7 @@
     /* Fetch repos + ecosystem family stats in parallel */
     const hdrs = { apikey:SUPABASE_ANON, Authorization:`Bearer ${SUPABASE_ANON}` };
     const [reposRes, statsRes] = await Promise.allSettled([
-      fetch(`${SUPABASE_URL}/rest/v1/github_projects?select=*&limit=1000&order=stars.desc`, { headers: hdrs }),
+      fetch(`${SUPABASE_URL}/rest/v1/github_projects?select=*&limit=2000&order=rubric_score.desc.nullslast,stars.desc`, { headers: hdrs }),
       fetch(`${SUPABASE_URL}/rest/v1/ecosystem_family_stats?select=*&order=total_count.desc`, { headers: hdrs }),
     ]);
 

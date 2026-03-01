@@ -43,8 +43,11 @@ else:
     print("⚠️  No GITHUB_TOKEN — unauthenticated (10 req/min). Pausing between pages.")
 
 
-def fetch_pushed_at_lookup() -> dict:
-    """Fetch up to 1,000 results from GitHub Search and return url→pushed_at map."""
+def fetch_github_enrichment() -> dict:
+    """Fetch up to 1,000 results from GitHub Search.
+    Returns url → dict with pushed_at, forks, stars, open_issues_count,
+    license, topics, archived — all the fields the scoring function needs.
+    """
     lookup = {}
     for page in range(1, 11):   # GitHub Search caps at 10 pages × 100 = 1,000
         try:
@@ -65,17 +68,24 @@ def fetch_pushed_at_lookup() -> dict:
             if not items:
                 break
             for r in items:
-                lookup[r['html_url']] = r.get('pushed_at', '')
+                lookup[r['html_url']] = {
+                    'pushed_at':         r.get('pushed_at', ''),
+                    'forks':             r.get('forks_count', 0),
+                    'stars':             r.get('stargazers_count', 0),
+                    'open_issues_count': r.get('open_issues_count', 0),
+                    'license':           (r.get('license') or {}).get('spdx_id') or '',
+                    'topics':            r.get('topics') or [],
+                    'archived':          r.get('archived', False),
+                }
             total = data.get('total_count', '?')
             print(f"  Page {page:2d}: {len(items)} repos (total on GitHub: {total:,})")
             if len(items) < 100:
                 break
-            # Be polite: short pause between pages (mandatory without token)
             time.sleep(1 if GITHUB_TOKEN else 7)
         except Exception as e:
             print(f"  ⚠️  Error on page {page}: {e}")
             break
-    print(f"  Built pushed_at lookup for {len(lookup)} repos")
+    print(f"  Built enrichment lookup for {len(lookup)} repos")
     return lookup
 
 
@@ -175,12 +185,10 @@ def _score_github_project(r: dict) -> tuple:
 
 
 def main():
-    # ── Phase 1: enrich pushed_at from GitHub Search API ──────────────
-    print("\n📡 Phase 1: Fetching pushed_at from GitHub Search API…")
-    pushed_at_lookup = fetch_pushed_at_lookup()
-
-    enriched = sum(1 for v in pushed_at_lookup.values() if v)
-    print(f"  pushed_at enriched for {enriched} repos")
+    # ── Phase 1: enrich all scoring fields from GitHub Search API ─────
+    print("\n📡 Phase 1: Fetching live data from GitHub Search API…")
+    enrichment = fetch_github_enrichment()
+    print(f"  Live data available for {len(enrichment)} repos")
 
     # ── Phase 2: fetch all Supabase rows ──────────────────────────────
     print("\n🔍 Phase 2: Fetching all github_projects from Supabase…")
@@ -196,24 +204,30 @@ def main():
             break
         offset += page_size
 
-    # ── Phase 3: score with enriched pushed_at ────────────────────────
+    # ── Phase 3: merge live data and score ────────────────────────────
     print(f"\n📊 Phase 3: Scoring {len(all_rows)} repos…")
     updates = []
     enriched_count = 0
+    ENRICH_FIELDS = ('pushed_at', 'forks', 'stars', 'open_issues_count',
+                     'license', 'topics', 'archived')
     for r in all_rows:
-        # Prefer GitHub API pushed_at; fall back to whatever is stored
-        gh_pushed = pushed_at_lookup.get(r.get('url', ''), '')
-        if gh_pushed and gh_pushed != r.get('pushed_at', ''):
-            r['pushed_at'] = gh_pushed
+        gh = enrichment.get(r.get('url', ''))
+        if gh:
+            for field in ENRICH_FIELDS:
+                if gh.get(field) not in (None, '', [], 0) or field == 'archived':
+                    r[field] = gh[field]
             enriched_count += 1
         score, tier = _score_github_project(r)
         updates.append({
-            'url':          r['url'],
-            'rubric_score': score,
-            'rubric_tier':  tier,
-            'pushed_at':    r.get('pushed_at', ''),
+            'url':               r['url'],
+            'rubric_score':      score,
+            'rubric_tier':       tier,
+            'pushed_at':         r.get('pushed_at', ''),
+            'forks':             r.get('forks', 0),
+            'stars':             r.get('stars', 0),
+            'open_issues_count': r.get('open_issues_count', 0),
         })
-    print(f"  pushed_at updated for {enriched_count} rows via GitHub lookup")
+    print(f"  Live data applied for {enriched_count} rows")
 
     # ── Phase 4: upsert ───────────────────────────────────────────────
     print("\n💾 Phase 4: Upserting scores in batches of 200…")
