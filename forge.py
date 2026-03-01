@@ -48,7 +48,31 @@ else:
     print("⚠️  SUPABASE_URL / SUPABASE_SERVICE_KEY not set — DB writes disabled.")
 
 CORE_BRANDS = ["openclaw", "moltbot", "clawdbot", "moltbook", "claudbot", "peter steinberger", "steinberger"]
-KEYWORDS = CORE_BRANDS
+
+# Companies / technologies that qualify ONLY when "openclaw" also appears in the same article.
+# Listed in lowercase for case-insensitive matching.
+SECONDARY_BRANDS = [
+    "agent 37", "startclaw", "workany", "donely", "clawhost", "clawhosters",
+    "sunclaw", "clawsimple", "clawi.ai", "manifest", "clawmetry", "openrouter",
+    "litellm", "virustotal", "ironclaw", "kilo code", "togglex", "exoclaw",
+    "agent browser", "clawhub", "open claw city", "rentahuman.ai", "linkzero",
+    "nanobot", "nanoclaw", "picoclaw", "poke",
+]
+
+# OpenClaw ecosystem topic phrases — inherently mention "openclaw" so they are
+# standalone triggers and also used as additional HN search queries.
+OPENCLAW_KEYWORDS = [
+    "openclaw observability",
+    "openclaw security",
+    "openclaw developer tools",
+    "openclaw infrastructure",
+    "openclaw marketplace",
+    "openclaw agents",
+    "openclaw agent social network",
+    "openclaw alternatives",
+]
+
+KEYWORDS = CORE_BRANDS + OPENCLAW_KEYWORDS
 
 WHITELIST_PATH = "./src/whitelist.json"
 OUTPUT_PATH = "./public/data.json"
@@ -250,8 +274,10 @@ def process_article_intel(url):
         if not is_recent: return False, 0, ""
         full_text = (article.title + " " + article.text).lower()
         brand_bonus = 10 if any(b in full_text for b in CORE_BRANDS) else 0
+        # Secondary brands only count when "openclaw" also appears in the article.
+        secondary_matches = sum(1 for b in SECONDARY_BRANDS if b in full_text) if "openclaw" in full_text else 0
         keyword_matches = sum(1 for kw in KEYWORDS if kw.lower() in full_text)
-        density_score = keyword_matches + brand_bonus
+        density_score = keyword_matches + brand_bonus + secondary_matches
         return True, density_score, article.text[:300]
     except: return False, 0, ""
 
@@ -297,10 +323,11 @@ def scan_rss():
                     if not is_english(title + " " + raw_summary):
                         continue
                     brand_bonus = 10 if any(b in rss_text for b in CORE_BRANDS) else 0
+                    secondary_matches = sum(1 for b in SECONDARY_BRANDS if b in rss_text) if "openclaw" in rss_text else 0
                     kw_matches = sum(1 for kw in KEYWORDS if kw.lower() in rss_text)
-                    if brand_bonus > 0 or kw_matches >= 1:
+                    if brand_bonus > 0 or kw_matches >= 1 or secondary_matches >= 1:
                         passes = True
-                        density = kw_matches + brand_bonus
+                        density = kw_matches + brand_bonus + secondary_matches
                         clean_text = raw_summary[:300]
 
                 # Brand mention in title always qualifies; otherwise require density >= 1
@@ -352,7 +379,11 @@ def scan_hackernews(hours_back: int = 48) -> list:
     found    = []
     seen_urls: set = set()
 
-    for brand in ["OpenClaw", "Moltbot", "Clawdbot", "Moltbook"]:
+    # Core brand queries + OpenClaw ecosystem topic phrases.
+    # Secondary brands are NOT queried directly on HN — they qualify only via
+    # co-occurrence with "openclaw" inside process_article_intel().
+    hn_queries = ["OpenClaw", "Moltbot", "Clawdbot", "Moltbook"] + OPENCLAW_KEYWORDS
+    for brand in hn_queries:
         try:
             resp = requests.get(
                 HN_SEARCH_URL,
