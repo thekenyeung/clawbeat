@@ -486,7 +486,7 @@
         <span class="wim-head-sub">AI-generated insight</span>
       </div>
       <div class="wim-body">
-        ${story.why_it_matters || '<p class="wim-text">Analysis unavailable.</p>'}
+        ${(story.why_it_matters || '').trim().startsWith('<') ? story.why_it_matters : `<p class="wim-text">${esc(story.why_it_matters || 'Analysis unavailable.')}</p>`}
       </div>
     </div>
   </div>
