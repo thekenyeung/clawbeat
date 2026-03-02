@@ -450,10 +450,14 @@ def main():
         category = saved.get("category") or infer_category(article)
 
         # --- AI content ---
-        # If admin already saved summary/analysis, use those verbatim
-        if saved.get("summary_html") and saved.get("why_it_matters"):
+        # why_it_matters must be HTML (starts with '<') — plain text means old format, regenerate
+        saved_analysis = saved.get("why_it_matters") or ""
+        analysis_is_html = saved_analysis.strip().startswith("<")
+
+        # If admin already saved both fields in current format, use them verbatim
+        if saved.get("summary_html") and analysis_is_html:
             summary_html   = saved["summary_html"]
-            why_it_matters = saved["why_it_matters"]
+            why_it_matters = saved_analysis
             print(f"  Slot {slot}: Using admin-saved AI content")
         else:
             # Fetch article text for Gemini
@@ -461,7 +465,7 @@ def main():
             fallback_text = article.get("summary") or article.get("title") or ""
 
             need_summary  = not saved.get("summary_html")
-            need_analysis = not saved.get("why_it_matters")
+            need_analysis = not analysis_is_html  # regenerate if plain text or missing
 
             if need_summary or need_analysis:
                 print(f"  Slot {slot}: Generating AI content…")
