@@ -16,6 +16,8 @@ Usage:
 import os
 import sys
 import time
+import base64
+import hashlib
 import requests
 from datetime import datetime
 
@@ -41,6 +43,97 @@ if GITHUB_TOKEN:
     print("🔑 Using GITHUB_TOKEN (5,000 req/hr limit)")
 else:
     print("⚠️  No GITHUB_TOKEN — unauthenticated (10 req/min). Pausing between pages.")
+
+
+# ── OPENCLAW CLONE DETECTION ──────────────────────────────────────────────────
+
+_OPENCLAW_OFFICIAL_META: "dict | None" = None
+
+
+def _get_openclaw_official_meta() -> dict:
+    """Fetch and cache HEAD SHA + size_kb of the official openclaw/openclaw repo."""
+    global _OPENCLAW_OFFICIAL_META
+    if _OPENCLAW_OFFICIAL_META is not None:
+        return _OPENCLAW_OFFICIAL_META
+    try:
+        meta = requests.get(
+            "https://api.github.com/repos/openclaw/openclaw",
+            headers=GH_HEADERS, timeout=10,
+        ).json()
+        branch  = meta.get('default_branch', 'main')
+        size_kb = meta.get('size', 0) or 0
+        sha = requests.get(
+            f"https://api.github.com/repos/openclaw/openclaw/branches/{branch}",
+            headers=GH_HEADERS, timeout=10,
+        ).json().get('commit', {}).get('sha', '')
+        # Also fetch the official README for verbatim content comparison
+        readme_hash = ''
+        try:
+            readme_resp = requests.get(
+                "https://api.github.com/repos/openclaw/openclaw/readme",
+                headers=GH_HEADERS, timeout=10,
+            ).json()
+            b64 = readme_resp.get('content', '')
+            if b64:
+                readme_text = base64.b64decode(b64).decode('utf-8', errors='ignore')
+                readme_hash = hashlib.sha256(readme_text.encode()).hexdigest()
+        except Exception:
+            pass
+        _OPENCLAW_OFFICIAL_META = {'sha': sha, 'size_kb': size_kb, 'readme_hash': readme_hash}
+        print(f"  📌 openclaw/openclaw: size={size_kb:,} KB  sha={sha[:12]}…  readme_hash={readme_hash[:12]}…")
+    except Exception as e:
+        print(f"  ⚠️  Could not fetch openclaw/openclaw metadata: {e}")
+        _OPENCLAW_OFFICIAL_META = {'sha': '', 'size_kb': 0, 'readme_hash': ''}
+    return _OPENCLAW_OFFICIAL_META
+
+
+def _is_openclaw_clone(owner: str, repo: str, size_kb: int, official: dict) -> bool:
+    """Return True if a non-official 'openclaw'-named repo is a clone of the original.
+
+    Signal 1 — size within 15% of the official repo (no extra API call).
+    Signal 2 — HEAD commit SHA matches (1–2 extra API calls).
+    Either alone is sufficient.
+    """
+    off_sha     = official.get('sha', '')
+    off_size_kb = official.get('size_kb', 0)
+
+    if off_size_kb > 0 and size_kb > 0:
+        if abs(size_kb - off_size_kb) / off_size_kb <= 0.15:
+            return True
+
+    if off_sha:
+        try:
+            branch = requests.get(
+                f"https://api.github.com/repos/{owner}/{repo}",
+                headers=GH_HEADERS, timeout=10,
+            ).json().get('default_branch', 'main')
+            sha = requests.get(
+                f"https://api.github.com/repos/{owner}/{repo}/branches/{branch}",
+                headers=GH_HEADERS, timeout=10,
+            ).json().get('commit', {}).get('sha', '')
+            if sha and sha == off_sha:
+                return True
+        except Exception:
+            pass
+
+    # Signal 3: README verbatim match — catches clones where a single commit
+    # was added on top of the original (different HEAD SHA, same README content)
+    off_readme_hash = official.get('readme_hash', '')
+    if off_readme_hash:
+        try:
+            readme_resp = requests.get(
+                f"https://api.github.com/repos/{owner}/{repo}/readme",
+                headers=GH_HEADERS, timeout=10,
+            ).json()
+            b64 = readme_resp.get('content', '')
+            if b64:
+                readme_text = base64.b64decode(b64).decode('utf-8', errors='ignore')
+                if hashlib.sha256(readme_text.encode()).hexdigest() == off_readme_hash:
+                    return True
+        except Exception:
+            pass
+
+    return False
 
 
 def fetch_github_enrichment() -> dict:
@@ -76,6 +169,8 @@ def fetch_github_enrichment() -> dict:
                     'license':           (r.get('license') or {}).get('spdx_id') or '',
                     'topics':            r.get('topics') or [],
                     'archived':          r.get('archived', False),
+                    'size':              r.get('size', 0),
+                    'fork':              r.get('fork', False),
                 }
             total = data.get('total_count', '?')
             print(f"  Page {page:2d}: {len(items)} repos (total on GitHub: {total:,})")
@@ -104,6 +199,9 @@ def _score_github_project(r: dict) -> tuple:
     created_at    = r.get('created_at', '') or ''
     open_issues   = r.get('open_issues_count', 0) or 0
     archived      = r.get('archived', False) or False
+    size          = r.get('size', 0) or 0
+    is_fork       = r.get('fork', False) or False
+    has_no_desc   = not desc or desc == 'no description.'
     fork_ratio    = forks / max(stars, 1)
     today         = datetime.today().date()
 
@@ -123,6 +221,44 @@ def _score_github_project(r: dict) -> tuple:
             return 0, 'skip'
     if last_commit_days >= 548 and open_issues > 5:
         return 0, 'skip'
+    if size < 5:
+        return 0, 'skip'                                   # essentially empty — git init or placeholder only
+    if is_fork and stars < 10:
+        return 0, 'skip'                                   # fork with zero community traction
+    if stars == 0 and forks == 0 and has_no_desc:
+        return 0, 'skip'                                   # no description and no community signal
+    if days_created <= 14 and open_issues > 5 and stars == 0:
+        return 0, 'skip'                                   # new dump: issues imported but zero organic traction
+
+    # ── ENGLISH-ONLY FILTER
+    # Reject repos whose description contains non-Latin-script characters.
+    # Covers CJK, Hiragana/Katakana, Hangul, Arabic, Hebrew, Cyrillic.
+    if desc and len(desc) >= 20:
+        for _c in desc:
+            _cp = ord(_c)
+            if (0x4E00 <= _cp <= 0x9FFF or  # CJK Unified Ideographs
+                    0x3040 <= _cp <= 0x30FF or  # Hiragana / Katakana
+                    0xAC00 <= _cp <= 0xD7AF or  # Hangul
+                    0x0600 <= _cp <= 0x06FF or  # Arabic
+                    0x0590 <= _cp <= 0x05FF or  # Hebrew
+                    0x0400 <= _cp <= 0x04FF):   # Cyrillic
+                return 0, 'skip'
+        if len(desc) >= 40 and sum(1 for _c in desc if ord(_c) > 127) / len(desc) > 0.25:
+            return 0, 'skip'                               # high non-ASCII ratio → non-Latin script
+
+    # ── NON-OFFICIAL "openclaw" REPO GUARDS
+    # Applies to any repo named exactly "openclaw" not owned by the official org.
+    if name == 'openclaw' and owner != 'openclaw':
+        if is_fork:
+            return 0, 'skip'                               # fork of the official repo — always skip
+        if size < 50:
+            return 0, 'skip'                               # near-empty — placeholder or bare clone
+        if stars < 50:
+            return 0, 'skip'                               # insufficient organic traction
+        # Either official phrase alone is enough to confirm a verbatim clone
+        if ('your own personal ai assistant' in desc
+                or 'any os. any platform. the lobster way' in desc):
+            return 0, 'skip'                               # description copied from openclaw/openclaw
 
     # ── 1. ACTIVITY (0–30)
     if   last_commit_days <= 60:  act = 24
@@ -144,17 +280,27 @@ def _score_github_project(r: dict) -> tuple:
                    'skills', 'skill', 'openclaw-skills', 'clawdbot-skill', 'crustacean'}
     topic_str = ' '.join(topics).lower()
     kw_hits   = sum(1 for k in openclaw_kw if k in topic_str)
+    # Topics alone are not sufficient proof of relevance — tag spam is common.
+    # Require that the description also mentions an ecosystem keyword to award
+    # topic-based relevance credit; otherwise fall through to the base score.
+    desc_confirms_oc = any(k in desc for k in ('openclaw', 'clawdbot', 'moltbot', 'moltis', 'clawd'))
 
-    if   owner == 'openclaw' or name == 'openclaw':                          rel = 23
+    # Non-official repos must confirm ecosystem relevance in their description
+    # to earn name-based relevance credit; name alone is not sufficient.
+    if   owner == 'openclaw':                                                  rel = 23
     elif any(k in name for k in ('awesome-openclaw', 'openclaw-skills',
-                                  'openclaw-usecases')):                      rel = 20
-    elif 'openclaw' in name or 'moltis' in name:                             rel = 18
-    elif any(k in name for k in ('skill', 'awesome', 'usecases')):          rel = 16
-    elif any(k in name for k in ('claw', 'molty', 'clawdbot', 'clawd')):    rel = 16
-    elif kw_hits >= 3:                                                        rel = 15
-    elif kw_hits >= 1:                                                        rel = 12
+                                  'openclaw-usecases')):
+        rel = 20 if desc_confirms_oc else 8
+    elif 'openclaw' in name or 'moltis' in name:
+        rel = 18 if desc_confirms_oc else 8
+    elif any(k in name for k in ('skill', 'awesome', 'usecases')):
+        rel = 16 if desc_confirms_oc else 6
+    elif any(k in name for k in ('claw', 'molty', 'clawdbot', 'clawd')):
+        rel = 16 if desc_confirms_oc else 6
+    elif kw_hits >= 3 and desc_confirms_oc:                                  rel = 15
+    elif kw_hits >= 1 and desc_confirms_oc:                                  rel = 12
     elif 'openclaw' in desc or 'clawdbot' in desc or 'moltbot' in desc:     rel = 10
-    else:                                                                     rel =  6
+    else:                                                                     rel =  2   # topic-only / no match — near-zero relevance
     if fork_ratio > 0.20: rel = min(25, rel + 2)
 
     # ── 4. TRACTION (0–15)
@@ -162,7 +308,8 @@ def _score_github_project(r: dict) -> tuple:
     elif stars >= 5000  and forks >= 300:     trac = 10
     elif stars >= 1000  and forks >= 50:      trac = 7
     elif days_created <= 90 and stars >= 200: trac = 4
-    else:                                      trac = 2
+    elif stars >= 1:                           trac = 2
+    else:                                      trac = 0   # zero organic signal — no community validation
     if fork_ratio > 0.20:                     trac = min(15, trac + 2)
     if forks == 0 and stars > 500:            trac = max(0, trac - 3)
 
@@ -181,6 +328,7 @@ def _score_github_project(r: dict) -> tuple:
     elif total >= 50: tier = 'listed'
     elif total >= 25: tier = 'watchlist'
     else:             tier = 'skip'
+
     return total, tier
 
 
@@ -208,13 +356,16 @@ def main():
     print(f"\n📊 Phase 3: Scoring {len(all_rows)} repos…")
     updates = []
     enriched_count = 0
+    # 'archived' and 'fork' use explicit override so False values aren't dropped
+    # by the "not in (None, '', [], 0)" guard (False == 0 in Python).
+    BOOL_FIELDS   = ('archived', 'fork')
     ENRICH_FIELDS = ('pushed_at', 'forks', 'stars', 'open_issues_count',
-                     'license', 'topics', 'archived')
+                     'license', 'topics', 'size') + BOOL_FIELDS
     for r in all_rows:
         gh = enrichment.get(r.get('url', ''))
         if gh:
             for field in ENRICH_FIELDS:
-                if gh.get(field) not in (None, '', [], 0) or field == 'archived':
+                if field in BOOL_FIELDS or gh.get(field) not in (None, '', [], 0):
                     r[field] = gh[field]
             enriched_count += 1
         score, tier = _score_github_project(r)
@@ -226,8 +377,32 @@ def main():
             'forks':             r.get('forks', 0),
             'stars':             r.get('stars', 0),
             'open_issues_count': r.get('open_issues_count', 0),
+            'size':              r.get('size', 0),
+            'is_fork':           r.get('fork', False),
         })
     print(f"  Live data applied for {enriched_count} rows")
+
+    # ── Phase 3b: clone detection for non-official 'openclaw' repos ───
+    # Any repo named exactly "openclaw" by a non-openclaw owner that passed
+    # the scorer's stars≥20 guard is checked against the official repo's
+    # size and HEAD commit SHA. Confirmed clones are forced to 'skip'.
+    clone_candidates = [
+        u for u in updates
+        if u.get('rubric_tier') != 'skip'
+        and next((r for r in all_rows if r['url'] == u['url']), {}).get('name', '').lower() == 'openclaw'
+        and next((r for r in all_rows if r['url'] == u['url']), {}).get('owner', '').lower() != 'openclaw'
+    ]
+    if clone_candidates:
+        print(f"\n🔍 Phase 3b: Clone detection for {len(clone_candidates)} non-official 'openclaw' repo(s)…")
+        official = _get_openclaw_official_meta()
+        url_to_row = {r['url']: r for r in all_rows}
+        for u in clone_candidates:
+            row = url_to_row.get(u['url'], {})
+            if _is_openclaw_clone(row.get('owner', ''), row.get('name', ''),
+                                  row.get('size', 0), official):
+                print(f"  🚫 Clone: {row.get('owner')}/{row.get('name')} → forced skip")
+                u['rubric_score'] = 0
+                u['rubric_tier']  = 'skip'
 
     # ── Phase 4: upsert ───────────────────────────────────────────────
     print("\n💾 Phase 4: Upserting scores in batches of 200…")
