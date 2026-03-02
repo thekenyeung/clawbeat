@@ -209,6 +209,31 @@
     .filter-tab .tab-count { font-size: var(--min-font); color: var(--text-3); margin-left: 0.25rem; font-weight: 400; }
     .filter-tab.active .tab-count { color: rgba(249,115,22,0.6); }
 
+    /* ── PAGE TAB NAVIGATION ── */
+    .page-tab-wrap {
+      border-top: 1px solid var(--border-2); border-bottom: 1px solid var(--border-2);
+      background: var(--bg-2); overflow-x: auto; scrollbar-width: none;
+    }
+    .page-tab-wrap::-webkit-scrollbar { display: none; }
+    .page-tabs {
+      max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: stretch;
+    }
+    .page-tab {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3);
+      padding: 0.7rem 1.25rem; border: none; background: transparent;
+      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+      border-bottom: 2px solid transparent; flex-shrink: 0;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .page-tab svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .page-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .page-tab.active { color: var(--orange); border-bottom-color: var(--orange); background: var(--orange-dim); }
+
+    /* ── TAB PANELS ── */
+    .tab-panel[hidden] { display: none !important; }
+
     /* ── MAIN CONTAINER ── */
     .main-container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem 5rem; }
 
@@ -495,133 +520,157 @@
   </div>
 </div>
 
-<!-- ── LANGUAGE FILTER BAR ── -->
-<div class="filter-bar-wrap">
+<!-- ── PAGE TAB NAVIGATION ── -->
+<div class="page-tab-wrap">
+  <div class="page-tabs" role="tablist" aria-label="Forge sections">
+    <button class="page-tab active" id="tab-btn-analytics" onclick="switchTab('analytics')"
+            role="tab" aria-selected="true" aria-controls="panel-analytics">
+      <i data-lucide="bar-chart-2" aria-hidden="true"></i> Analytics
+    </button>
+    <button class="page-tab" id="tab-btn-repos" onclick="switchTab('repos')"
+            role="tab" aria-selected="false" aria-controls="panel-repos">
+      <i data-lucide="github" aria-hidden="true"></i> Repos
+    </button>
+  </div>
+</div>
+
+<!-- ── LANGUAGE FILTER BAR (repos tab only) ── -->
+<div class="filter-bar-wrap" id="filter-bar-wrap" style="display:none">
   <div class="filter-bar" role="toolbar" aria-label="Filter repositories by language">
     <div class="filter-group-label" aria-hidden="true">lang</div>
     <div id="lang-tabs" style="display:contents"></div>
   </div>
 </div>
 
+<!-- ── PINNED REPO (always visible) ── -->
+<section class="pinned-section" aria-label="Pinned repository" id="pinned-section">
+  <div class="pinned-inner">
+    <div class="pinned-lbl" aria-hidden="true">Pinned · openclaw/openclaw</div>
+    <div class="pinned-card" id="pinned-card">
+      <div class="pinned-left" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Loading…</div>
+    </div>
+  </div>
+</section>
+
 <!-- ── MAIN CONTENT ── -->
 <main class="main-container" id="main-content">
 
-  <!-- Pinned repo -->
-  <section class="pinned-section" aria-label="Pinned repository" id="pinned-section">
-    <div class="pinned-inner">
-      <div class="pinned-lbl" aria-hidden="true">Pinned · openclaw/openclaw</div>
-      <div class="pinned-card" id="pinned-card">
-        <div class="pinned-left" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Loading…</div>
+  <!-- ── ANALYTICS TAB PANEL ── -->
+  <div id="panel-analytics" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-analytics">
+
+    <!-- Analytics -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">ecosystem_intel</span></div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" id="intel-count">— repos indexed</div>
+    </div>
+
+    <div id="metrics-section" aria-live="polite"></div>
+    <div id="family-stats-section" aria-live="polite"></div>
+
+    <!-- openclaw-specific analytics -->
+    <div class="section-divider" style="margin-top:1.75rem" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">openclaw</span> · analytics</div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" style="white-space:nowrap">openclaw repos only</div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-panel" role="figure" aria-label="Stars by repository chart">
+        <div class="cph" aria-hidden="true">Stars by Repository</div>
+        <div style="position:relative;height:280px"><canvas id="chart-stars" aria-label="Horizontal bar chart showing star counts for the top 8 repositories" role="img"></canvas></div>
+      </div>
+      <div class="chart-panel" role="figure" aria-label="Language distribution chart">
+        <div class="cph" aria-hidden="true">Language Split</div>
+        <div style="position:relative;height:280px"><canvas id="chart-lang" aria-label="Doughnut chart showing repository count by programming language" role="img"></canvas></div>
       </div>
     </div>
-  </section>
 
-  <!-- Analytics -->
-  <div class="section-divider" aria-hidden="true">
-    <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">ecosystem_intel</span></div>
-    <div class="sdl-line"></div>
-    <div class="sdl-count" id="intel-count">— repos indexed</div>
-  </div>
-
-  <div id="metrics-section" aria-live="polite"></div>
-  <div id="family-stats-section" aria-live="polite"></div>
-
-  <!-- openclaw-specific analytics -->
-  <div class="section-divider" style="margin-top:1.75rem" aria-hidden="true">
-    <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">openclaw</span> · analytics</div>
-    <div class="sdl-line"></div>
-    <div class="sdl-count" style="white-space:nowrap">openclaw repos only</div>
-  </div>
-
-  <div class="charts-grid">
-    <div class="chart-panel" role="figure" aria-label="Stars by repository chart">
-      <div class="cph" aria-hidden="true">Stars by Repository</div>
-      <div style="position:relative;height:280px"><canvas id="chart-stars" aria-label="Horizontal bar chart showing star counts for the top 8 repositories" role="img"></canvas></div>
+    <div class="chart-panel-full" role="figure" aria-label="Monthly build activity chart">
+      <div class="cph" aria-hidden="true">
+        Monthly Build Activity
+        <div class="win-tabs" role="group" aria-label="Chart time window">
+          <button class="win-tab active" data-days="7"  onclick="setWindow(7)"  aria-pressed="true">7D</button>
+          <button class="win-tab" data-days="30" onclick="setWindow(30)" aria-pressed="false">30D</button>
+          <button class="win-tab" data-days="60" onclick="setWindow(60)" aria-pressed="false">60D</button>
+          <button class="win-tab" data-days="90" onclick="setWindow(90)" aria-pressed="false">90D</button>
+        </div>
+      </div>
+      <div style="position:relative;height:140px"><canvas id="chart-monthly" aria-label="Bar chart showing number of repositories created each month" role="img"></canvas></div>
     </div>
-    <div class="chart-panel" role="figure" aria-label="Language distribution chart">
-      <div class="cph" aria-hidden="true">Language Split</div>
-      <div style="position:relative;height:280px"><canvas id="chart-lang" aria-label="Doughnut chart showing repository count by programming language" role="img"></canvas></div>
-    </div>
-  </div>
 
-  <div class="chart-panel-full" role="figure" aria-label="Monthly build activity chart">
-    <div class="cph" aria-hidden="true">
-      Monthly Build Activity
-      <div class="win-tabs" role="group" aria-label="Chart time window">
-        <button class="win-tab active" data-days="7"  onclick="setWindow(7)"  aria-pressed="true">7D</button>
-        <button class="win-tab" data-days="30" onclick="setWindow(30)" aria-pressed="false">30D</button>
-        <button class="win-tab" data-days="60" onclick="setWindow(60)" aria-pressed="false">60D</button>
-        <button class="win-tab" data-days="90" onclick="setWindow(90)" aria-pressed="false">90D</button>
+    <!-- Daily additions chart -->
+    <div class="chart-panel-full" role="figure" aria-label="Daily new repositories chart with trend line">
+      <div class="cph">
+        Daily New Repos
+        <span class="cph-note" id="daily-win-note">7-day window</span>
+      </div>
+      <div style="position:relative;height:180px"><canvas id="chart-daily" aria-label="Bar chart of daily repository additions with 7-day rolling average and linear growth trend" role="img"></canvas></div>
+      <div class="daily-legend" aria-hidden="true">
+        <div class="daily-leg-item"><div class="daily-leg-bar" style="background:rgba(249,115,22,0.25);border:1px solid #f97316"></div>new repos / day</div>
+        <div class="daily-leg-item"><div class="daily-leg-line" style="background:var(--cyan)"></div>7-day avg</div>
+        <div class="daily-leg-item"><div class="daily-leg-dash" style="border-color:rgba(249,115,22,0.6)"></div>growth trend</div>
       </div>
     </div>
-    <div style="position:relative;height:140px"><canvas id="chart-monthly" aria-label="Bar chart showing number of repositories created each month" role="img"></canvas></div>
-  </div>
 
-  <!-- Daily additions chart -->
-  <div class="chart-panel-full" role="figure" aria-label="Daily new repositories chart with trend line">
-    <div class="cph">
-      Daily New Repos
-      <span class="cph-note" id="daily-win-note">7-day window</span>
-    </div>
-    <div style="position:relative;height:180px"><canvas id="chart-daily" aria-label="Bar chart of daily repository additions with 7-day rolling average and linear growth trend" role="img"></canvas></div>
-    <div class="daily-legend" aria-hidden="true">
-      <div class="daily-leg-item"><div class="daily-leg-bar" style="background:rgba(249,115,22,0.25);border:1px solid #f97316"></div>new repos / day</div>
-      <div class="daily-leg-item"><div class="daily-leg-line" style="background:var(--cyan)"></div>7-day avg</div>
-      <div class="daily-leg-item"><div class="daily-leg-dash" style="border-color:rgba(249,115,22,0.6)"></div>growth trend</div>
-    </div>
-  </div>
+  </div><!-- #panel-analytics -->
 
-  <!-- Repo index table -->
-  <div class="section-divider" aria-hidden="true">
-    <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">featured_repo_index</span></div>
-    <div class="sdl-line"></div>
-    <div class="sdl-count" id="index-count">— featured picks</div>
-  </div>
+  <!-- ── REPOS TAB PANEL ── -->
+  <div id="panel-repos" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-repos" hidden>
 
-  <div class="table-wrap">
-    <div class="table-scroll" role="region" aria-label="Repository index" tabindex="0">
-      <table class="rtable" id="repo-table" aria-describedby="index-count">
-        <caption class="sr-only">OpenClaw GitHub repositories. Click column headers to sort.</caption>
-        <thead>
-          <tr>
-            <th scope="col" class="col-rank"><span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">#</span></th>
-            <th scope="col" class="col-repo">
-              <span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Repository</span>
-            </th>
-            <th scope="col" class="col-stars" aria-sort="descending" id="th-stars">
-              <button class="sort-th-btn active" onclick="sortTable('stars')" aria-label="Sort by stars, currently descending">
-                Stars <span class="sort-arrow" aria-hidden="true" id="arr-stars">↓</span>
-              </button>
-            </th>
-            <th scope="col" class="col-lang" aria-sort="none" id="th-lang">
-              <button class="sort-th-btn" onclick="sortTable('language')" aria-label="Sort by language">
-                Language <span class="sort-arrow" aria-hidden="true" id="arr-language"></span>
-              </button>
-            </th>
-            <th scope="col" class="col-topics" aria-sort="none" id="th-topics">
-              <button class="sort-th-btn" onclick="sortTable('topic')" aria-label="Sort by first topic">
-                Topics <span class="sort-arrow" aria-hidden="true" id="arr-topic"></span>
-              </button>
-            </th>
-            <th scope="col" class="col-date" aria-sort="none" id="th-created">
-              <button class="sort-th-btn" onclick="sortTable('created')" aria-label="Sort by created date">
-                Created <span class="sort-arrow" aria-hidden="true" id="arr-created"></span>
-              </button>
-            </th>
-            <th scope="col" class="col-link"><span class="sr-only">Link</span></th>
-          </tr>
-        </thead>
-        <tbody id="repo-tbody">
-          <tr><td colspan="7" class="empty-state">// loading index…</td></tr>
-        </tbody>
-      </table>
+    <!-- Repo index table -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">featured_repo_index</span></div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" id="index-count">— featured picks</div>
     </div>
-    <nav class="pagination" aria-label="Repository table pages" id="pagination-ctrl">
-      <button class="page-btn" id="btn-prev" onclick="changePage(-1)" aria-label="Previous page" disabled>← Prev</button>
-      <span class="page-info" id="page-info" aria-live="polite">—</span>
-      <button class="page-btn" id="btn-next" onclick="changePage(1)" aria-label="Next page" disabled>Next →</button>
-    </nav>
-  </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll" role="region" aria-label="Repository index" tabindex="0">
+        <table class="rtable" id="repo-table" aria-describedby="index-count">
+          <caption class="sr-only">OpenClaw GitHub repositories. Click column headers to sort.</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="col-rank"><span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">#</span></th>
+              <th scope="col" class="col-repo">
+                <span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Repository</span>
+              </th>
+              <th scope="col" class="col-stars" aria-sort="descending" id="th-stars">
+                <button class="sort-th-btn active" onclick="sortTable('stars')" aria-label="Sort by stars, currently descending">
+                  Stars <span class="sort-arrow" aria-hidden="true" id="arr-stars">↓</span>
+                </button>
+              </th>
+              <th scope="col" class="col-lang" aria-sort="none" id="th-lang">
+                <button class="sort-th-btn" onclick="sortTable('language')" aria-label="Sort by language">
+                  Language <span class="sort-arrow" aria-hidden="true" id="arr-language"></span>
+                </button>
+              </th>
+              <th scope="col" class="col-topics" aria-sort="none" id="th-topics">
+                <button class="sort-th-btn" onclick="sortTable('topic')" aria-label="Sort by first topic">
+                  Topics <span class="sort-arrow" aria-hidden="true" id="arr-topic"></span>
+                </button>
+              </th>
+              <th scope="col" class="col-date" aria-sort="none" id="th-created">
+                <button class="sort-th-btn" onclick="sortTable('created')" aria-label="Sort by created date">
+                  Created <span class="sort-arrow" aria-hidden="true" id="arr-created"></span>
+                </button>
+              </th>
+              <th scope="col" class="col-link"><span class="sr-only">Link</span></th>
+            </tr>
+          </thead>
+          <tbody id="repo-tbody">
+            <tr><td colspan="7" class="empty-state">// loading index…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <nav class="pagination" aria-label="Repository table pages" id="pagination-ctrl">
+        <button class="page-btn" id="btn-prev" onclick="changePage(-1)" aria-label="Previous page" disabled>← Prev</button>
+        <span class="page-info" id="page-info" aria-live="polite">—</span>
+        <button class="page-btn" id="btn-next" onclick="changePage(1)" aria-label="Next page" disabled>Next →</button>
+      </nav>
+    </div>
+
+  </div><!-- #panel-repos -->
 
 </main>
 
@@ -1294,7 +1343,52 @@
     renderLangTabs();
     renderTable();
 
-    requestAnimationFrame(() => { initCharts(); lucide.createIcons(); });
+    /* Handle initial tab from URL — no GA fire (page_view already sent by gtag config) */
+    const initTab = new URLSearchParams(window.location.search).get('tab');
+    if (initTab === 'repos') {
+      switchTab('repos', false);
+      requestAnimationFrame(() => lucide.createIcons());
+    } else {
+      requestAnimationFrame(() => { initCharts(); lucide.createIcons(); });
+    }
+  }
+
+  /* ─────────────────────────────────────────
+   *  TAB SWITCHING
+   * ───────────────────────────────────────── */
+  function switchTab(tab, fireGA = true) {
+    const isAnalytics = tab === 'analytics';
+
+    /* Update tab button states */
+    const btnA = document.getElementById('tab-btn-analytics');
+    const btnR = document.getElementById('tab-btn-repos');
+    btnA.classList.toggle('active', isAnalytics);
+    btnA.setAttribute('aria-selected', isAnalytics ? 'true' : 'false');
+    btnR.classList.toggle('active', !isAnalytics);
+    btnR.setAttribute('aria-selected', isAnalytics ? 'false' : 'true');
+
+    /* Show/hide panels */
+    document.getElementById('panel-analytics').hidden = !isAnalytics;
+    document.getElementById('panel-repos').hidden = isAnalytics;
+
+    /* Show/hide language filter bar (repos tab only) */
+    document.getElementById('filter-bar-wrap').style.display = isAnalytics ? 'none' : '';
+
+    /* Update URL without reloading */
+    history.replaceState(null, '', isAnalytics ? '/forge.html' : '/forge.html?tab=repos');
+
+    /* Fire GA virtual pageview on tab switch */
+    if (fireGA && typeof gtag !== 'undefined') {
+      gtag('event', 'page_view', {
+        page_title: isAnalytics ? 'Forge — Analytics · ClawBeat' : 'Forge — Repos · ClawBeat',
+        page_path:  isAnalytics ? '/forge.html' : '/forge.html?tab=repos',
+      });
+    }
+
+    /* Lazy-init charts when analytics becomes visible */
+    if (isAnalytics && !chartsInited) {
+      requestAnimationFrame(() => initCharts());
+    }
   }
 
   /* ─────────────────────────────────────────
