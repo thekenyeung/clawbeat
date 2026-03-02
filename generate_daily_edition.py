@@ -291,14 +291,21 @@ def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
 
         ---ANALYSIS---
 
-        SECTION 2 — Why It Matters (~500 characters, plain text):
-        You are a senior analyst specializing in the OpenClaw ecosystem.
-        Explain what this development means specifically for OpenClaw — how it affects the platform,
-        its developer community, and the trajectory of OpenClaw technology. Ground your analysis in
-        the OpenClaw context: does this expand or constrain what developers can build with it, does
-        it signal a shift in how OpenClaw competes or evolves, and what should the OpenClaw community
-        be paying attention to as a result? Do not generalize to AI broadly.
-        No bullets. One plain paragraph.
+        SECTION 2 — Why It Matters (4–8 bullet points, HTML only):
+        You are a senior analyst embedded in the OpenClaw ecosystem — a platform for building
+        AI-powered agents and tools. Act like an analyst reviewing this story for the OpenClaw
+        developer community. Write 4–8 concise, pointed bullet points covering:
+        - How this impacts, influences, or benefits the OpenClaw community and ecosystem
+        - What consequences this has for developers actively building OpenClaw agents
+        - Risks, trade-offs, or things developers should watch out for
+        - Any emerging trends this story signals within the space
+        Be critical but also informative and inspiring. Do not generalize to "AI broadly."
+        Ground every point in OpenClaw-specific implications.
+        Return ONLY the following HTML — no preamble, no markdown, no extra text:
+        <ul class="wim-list">
+          <li>First bullet point here.</li>
+          <li>Second bullet point here.</li>
+        </ul>
 
         Article:
         {context[:8000]}
@@ -309,7 +316,7 @@ def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
     if "---ANALYSIS---" in result:
         parts = result.split("---ANALYSIS---", 1)
         summary_raw = parts[0].strip()
-        analysis   = re.sub(r"<[^>]+>", "", parts[1]).strip()
+        analysis   = parts[1].strip()
     else:
         summary_raw = result.strip()
         analysis   = ""

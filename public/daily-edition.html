@@ -302,6 +302,9 @@
     .wim-head-sub  { font-family: var(--mono); font-size: 9px; color: var(--text-3); margin-left: auto; text-transform: uppercase; letter-spacing: 0.1em; }
     .wim-body { padding: 1.1rem 1.25rem; background: rgba(249,115,22,0.03); }
     .wim-text { font-size: 0.9rem; color: var(--text-2); line-height: 1.78; font-style: italic; }
+    .wim-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+    .wim-list li { position: relative; padding-left: 1.1rem; font-size: 0.875rem; color: var(--text-2); line-height: 1.72; font-style: italic; }
+    .wim-list li::before { content: '›'; position: absolute; left: 0; color: var(--orange); font-style: normal; font-weight: 700; line-height: 1.72; }
 
     /* ── STORY DIVIDER ── */
     .signal-divider {
@@ -483,7 +486,7 @@
         <span class="wim-head-sub">AI-generated insight</span>
       </div>
       <div class="wim-body">
-        <p class="wim-text">${esc(story.why_it_matters || 'Analysis unavailable.')}</p>
+        ${story.why_it_matters || '<p class="wim-text">Analysis unavailable.</p>'}
       </div>
     </div>
   </div>
