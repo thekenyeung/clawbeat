@@ -306,6 +306,29 @@
     .wim-list li { position: relative; padding-left: 1.1rem; font-size: 0.875rem; color: var(--text-2); line-height: 1.72; font-style: italic; }
     .wim-list li::before { content: '›'; position: absolute; left: 0; color: var(--orange); font-style: normal; font-weight: 700; line-height: 1.72; }
 
+    /* ── FORGE REPORT SECTION ── */
+    .forge-section { max-width: var(--col-w); margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+    .forge-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .forge-head-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.2em; }
+    .forge-head-label::before { content: '// '; opacity: 0.5; }
+    .forge-head-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(255,255,255,0.06), transparent); }
+    .forge-head-link { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; white-space: nowrap; }
+    .forge-head-link:hover { color: var(--orange); }
+    .forge-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+    .forge-card { background: var(--bg-2); border: 1px solid var(--border-1); border-radius: 6px; padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.3rem; }
+    .forge-card-name { font-size: 0.925rem; font-weight: 600; color: var(--text-1); }
+    .forge-card-name a { color: inherit; text-decoration: none; }
+    .forge-card-name a:hover { color: var(--orange); }
+    .forge-card-owner { font-family: var(--mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .forge-card-desc { font-size: 0.855rem; color: var(--text-2); line-height: 1.65; margin-top: 0.2rem; }
+    .forge-card-meta { display: flex; align-items: center; gap: 0.55rem; margin-top: 0.4rem; }
+    .forge-tier { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.18rem 0.45rem; border-radius: 3px; }
+    .forge-tier-featured  { background: rgba(249,115,22,0.12); color: var(--orange); }
+    .forge-tier-listed    { background: rgba(255,255,255,0.06); color: var(--text-3); }
+    .forge-tier-watchlist { background: rgba(255,255,255,0.04); color: var(--text-4); }
+    .forge-stars { font-family: var(--mono); font-size: 0.58rem; color: var(--text-4); }
+    @media (max-width: 640px) { .forge-section { padding: 2rem 1rem 4rem; } }
+
     /* ── STORY DIVIDER ── */
     .signal-divider {
       max-width: var(--col-w); margin: 3rem auto 0;
@@ -317,7 +340,7 @@
     /* ── END CAP ── */
     .end-cap {
       max-width: var(--col-w); margin: 3.5rem auto 0;
-      padding: 0 1.5rem 6rem;
+      padding: 0 1.5rem 2.5rem;
       display: flex; align-items: center; gap: 1rem;
     }
     .end-line  { flex: 1; height: 1px; background: var(--border-2); }
@@ -408,6 +431,8 @@
       <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;">Loading signals…</span>
     </div>
   </div>
+
+  <div id="repos-section" style="display:none;" aria-label="Forge Report"></div>
 
 </main>
 
@@ -524,7 +549,52 @@
     }
   }
 
+  /* ── Forge repos section ── */
+  async function loadForgeRepos() {
+    const section = document.getElementById('repos-section');
+    try {
+      const [y, m, d] = EDITION_DATE.split('-').map(Number);
+      const nextDay = new Date(Date.UTC(y, m - 1, d + 1)).toISOString().split('T')[0];
+      const { data, error } = await sb
+        .from('github_projects')
+        .select('url,name,owner,description,stars,rubric_score,rubric_tier')
+        .neq('rubric_tier', 'skip')
+        .not('rubric_tier', 'is', null)
+        .gte('inserted_at', `${EDITION_DATE}T00:00:00Z`)
+        .lt('inserted_at', `${nextDay}T00:00:00Z`)
+        .order('rubric_score', { ascending: false })
+        .limit(3);
+      if (error) throw error;
+      if (!data || !data.length) return;
+      const tierClass = { featured: 'forge-tier-featured', listed: 'forge-tier-listed', watchlist: 'forge-tier-watchlist' };
+      const tierLabel = { featured: 'Featured', listed: 'Listed', watchlist: 'Watchlist' };
+      const cards = data.map(repo => `
+        <div class="forge-card">
+          <div class="forge-card-name"><a href="${esc(repo.url)}" target="_blank" rel="noopener">${esc(repo.name || repo.url)}</a></div>
+          <div class="forge-card-owner">${esc(repo.owner || '')}</div>
+          ${repo.description ? `<div class="forge-card-desc">${esc(repo.description)}</div>` : ''}
+          <div class="forge-card-meta">
+            ${repo.rubric_tier && tierLabel[repo.rubric_tier] ? `<span class="forge-tier ${tierClass[repo.rubric_tier] || ''}">${tierLabel[repo.rubric_tier]}</span>` : ''}
+            ${repo.stars ? `<span class="forge-stars">★ ${repo.stars.toLocaleString()}</span>` : ''}
+          </div>
+        </div>`).join('');
+      section.innerHTML = `
+        <div class="forge-section">
+          <div class="forge-head">
+            <span class="forge-head-label">Forge Report</span>
+            <div class="forge-head-line"></div>
+            <a href="/forge.html" class="forge-head-link">View All →</a>
+          </div>
+          <div class="forge-grid">${cards}</div>
+        </div>`;
+      section.style.display = 'block';
+    } catch (err) {
+      console.error('[ClawBeat] Forge repos load error:', err);
+    }
+  }
+
   loadEdition();
+  loadForgeRepos();
 
   /* ── Mobile menu ── */
   function toggleMenu() {
