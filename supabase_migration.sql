@@ -261,6 +261,15 @@ CREATE INDEX IF NOT EXISTS idx_github_projects_rubric_tier
   ON github_projects (rubric_tier, rubric_score DESC NULLS LAST);
 
 -- =============================================================
+-- Add is_fork and size to github_projects (scoring signal fields)
+-- is_fork: true if GitHub marks this as a fork of another repo
+-- size: repo disk size in KB from GitHub API (0 = empty repo)
+-- Run just this block on an existing DB
+-- =============================================================
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS is_fork BOOLEAN DEFAULT false;
+ALTER TABLE github_projects ADD COLUMN IF NOT EXISTS size    INTEGER DEFAULT 0;
+
+-- =============================================================
 -- ecosystem_family_stats table — tracks GitHub total_count per claw family
 -- Updated daily by forge.py via GitHub Search API total_count field.
 -- Rows: 'openclaw' | 'nanobot' | 'picoclaw' | 'nanoclaw' | 'zeroclaw'
