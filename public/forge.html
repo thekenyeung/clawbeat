@@ -568,6 +568,24 @@
     <div id="metrics-section" aria-live="polite"></div>
     <div id="family-stats-section" aria-live="polite"></div>
 
+    <!-- ecosystem comparison -->
+    <div class="section-divider" style="margin-top:1.75rem" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">ecosystem_comparison</span></div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" style="white-space:nowrap">openclaw vs alternatives</div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-panel" role="figure" aria-label="Ecosystem size by family">
+        <div class="cph" aria-hidden="true">Ecosystem Size <span class="cph-note">GitHub total · all repos</span></div>
+        <div style="position:relative;height:280px"><canvas id="chart-ecosystem" aria-label="Horizontal bar chart showing total repository counts per family on GitHub" role="img"></canvas></div>
+      </div>
+      <div class="chart-panel" role="figure" aria-label="Indexed star totals by family">
+        <div class="cph" aria-hidden="true">Indexed Stars <span class="cph-note">from our sample</span></div>
+        <div style="position:relative;height:280px"><canvas id="chart-family-stars" aria-label="Horizontal bar chart comparing total stars across indexed repos per family" role="img"></canvas></div>
+      </div>
+    </div>
+
     <!-- openclaw-specific analytics -->
     <div class="section-divider" style="margin-top:1.75rem" aria-hidden="true">
       <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">openclaw</span> · analytics</div>
@@ -610,6 +628,30 @@
         <div class="daily-leg-item"><div class="daily-leg-bar" style="background:rgba(249,115,22,0.25);border:1px solid #f97316"></div>new repos / day</div>
         <div class="daily-leg-item"><div class="daily-leg-line" style="background:var(--cyan)"></div>7-day avg</div>
         <div class="daily-leg-item"><div class="daily-leg-dash" style="border-color:rgba(249,115,22,0.6)"></div>growth trend</div>
+      </div>
+    </div>
+
+    <!-- impostor signal -->
+    <div class="section-divider" style="margin-top:1.75rem" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">impostor_signal</span></div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" style="white-space:nowrap">copy repo detection</div>
+    </div>
+
+    <div id="impostor-metrics" aria-live="polite"></div>
+
+    <div class="chart-panel-full" role="figure" aria-label="Monthly impostor repo trend">
+      <div class="cph">
+        Copy Repo Signal
+        <span class="cph-note" id="impostor-note">monthly detections</span>
+      </div>
+      <p style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-bottom:0.85rem;line-height:1.6">
+        Heuristic: non-fork repos named <span style="color:var(--purple)">openclaw*</span> · not owned by the <span style="color:var(--orange)">openclaw</span> org · ≤ 2 stars · non-empty. Exact-copy detection (matching description / file tree) requires a live GitHub API scan.
+      </p>
+      <div style="position:relative;height:160px"><canvas id="chart-impostor" aria-label="Bar chart showing monthly count of suspected copy repos with trend line" role="img"></canvas></div>
+      <div class="daily-legend" aria-hidden="true">
+        <div class="daily-leg-item"><div class="daily-leg-bar" style="background:rgba(167,139,250,0.25);border:1px solid #a78bfa"></div>detected / month</div>
+        <div class="daily-leg-item"><div class="daily-leg-dash" style="border-color:rgba(167,139,250,0.6)"></div>growth trend</div>
       </div>
     </div>
 
@@ -723,10 +765,13 @@
   let currentLang = 'ALL';
   let tablePage   = 1;
   let tableSort   = { col: 'stars', dir: 'desc' };
-  let chartsInited = false;
-  let chartWindow  = 7;
-  let chartMonthly = null;
-  let chartDaily   = null;
+  let chartsInited    = false;
+  let chartWindow     = 7;
+  let chartMonthly    = null;
+  let chartDaily      = null;
+  let chartEcosystem  = null;
+  let chartFamilyStar = null;
+  let chartImpostor   = null;
 
   /* ─────────────────────────────────────────
    *  HELPERS
@@ -803,6 +848,144 @@
     return data.map((_, i) => {
       const sl = data.slice(Math.max(0, i-win+1), i+1);
       return +(sl.reduce((s,v)=>s+v,0)/sl.length).toFixed(3);
+    });
+  }
+
+  /* ─────────────────────────────────────────
+   *  ECOSYSTEM COMPARISON CHARTS
+   * ───────────────────────────────────────── */
+  function initComparisonCharts() {
+    /* Build family-keyed maps from familyStats and allRepos */
+    const fsMap = {};
+    for (const f of familyStats) fsMap[f.family] = f.total_count || 0;
+
+    const ecLabels = FAMILIES;
+    const ecColors = FAMILIES.map(f => FAMILY_HEX[f] || '#9097a3');
+    const ecData   = FAMILIES.map(f => fsMap[f] || 0);
+
+    /* ── Ecosystem size (GitHub totals) ── */
+    chartEcosystem = new Chart(document.getElementById('chart-ecosystem'), {
+      type: 'bar',
+      data: {
+        labels: ecLabels,
+        datasets: [{
+          label: 'Total Repos',
+          data: ecData,
+          backgroundColor: ecColors.map(c => c + '33'),
+          borderColor: ecColors,
+          borderWidth: 1.5, borderRadius: 3, barThickness: 18,
+        }],
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...TT, callbacks: { label: c => ` ${c.raw.toLocaleString()} repos on GitHub` } },
+        },
+        scales: {
+          x: { grid: GRID, ticks: { ...TICK_X, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v }, border: BORDER },
+          y: { grid: { display: false }, ticks: { ...TICK_Y }, border: BORDER },
+        },
+      },
+    });
+
+    /* ── Indexed stars per family ── */
+    const starData = FAMILIES.map(f => getFamilyRepos(f).reduce((s,r) => s+(r.stars||0), 0));
+
+    chartFamilyStar = new Chart(document.getElementById('chart-family-stars'), {
+      type: 'bar',
+      data: {
+        labels: ecLabels,
+        datasets: [{
+          label: 'Indexed Stars',
+          data: starData,
+          backgroundColor: ecColors.map(c => c + '33'),
+          borderColor: ecColors,
+          borderWidth: 1.5, borderRadius: 3, barThickness: 18,
+        }],
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...TT, callbacks: { label: c => ` ★ ${c.raw.toLocaleString()} (indexed sample)` } },
+        },
+        scales: {
+          x: { grid: GRID, ticks: { ...TICK_X, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v }, border: BORDER },
+          y: { grid: { display: false }, ticks: { ...TICK_Y }, border: BORDER },
+        },
+      },
+    });
+  }
+
+  /* ─────────────────────────────────────────
+   *  IMPOSTOR SIGNAL CHART
+   * ───────────────────────────────────────── */
+  function initImpostorChart() {
+    renderImpostorMetrics();
+
+    const MONS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const impostors = getImpostors();
+
+    /* Group by YYYY-MM */
+    const byMonth = {};
+    for (const r of impostors) {
+      const dt = parseDate(r.created_at); if (!dt) continue;
+      const k = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      byMonth[k] = (byMonth[k]||0) + 1;
+    }
+
+    let labels = [], data = [];
+    const keys = Object.keys(byMonth).sort();
+    if (keys.length) {
+      const first = new Date(keys[0] + '-01T00:00:00');
+      const today = new Date();
+      const last  = new Date(today.getFullYear(), today.getMonth(), 1);
+      for (let d = new Date(first); d <= last; d.setMonth(d.getMonth()+1)) {
+        const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        labels.push(`${MONS[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`);
+        data.push(byMonth[k] || 0);
+      }
+    } else {
+      /* No data — show last 6 months as zeroes */
+      const today = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(today.getFullYear(), today.getMonth()-i, 1);
+        labels.push(`${MONS[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`);
+        data.push(0);
+      }
+    }
+
+    const trend = linReg(data);
+
+    chartImpostor = new Chart(document.getElementById('chart-impostor'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { type:'bar',  label:'Detected / month', data,
+            backgroundColor:'rgba(167,139,250,0.22)', borderColor:'#a78bfa',
+            borderWidth:1, borderRadius:2, order:2 },
+          { type:'line', label:'Trend', data:trend,
+            borderColor:'rgba(167,139,250,0.6)', backgroundColor:'transparent',
+            borderWidth:1.5, borderDash:[5,4], pointRadius:0, tension:0, order:1 },
+        ],
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{
+          legend:{ display:false },
+          tooltip:{ ...TT, callbacks:{ label: ctx => {
+            if (ctx.dataset.label==='Detected / month') return ` ${ctx.raw} suspected repo${ctx.raw!==1?'s':''}`;
+            return ` trend: ${ctx.raw.toFixed(2)}`;
+          }}},
+        },
+        scales:{
+          x:{ grid:{display:false}, ticks:{...TICK_X,maxTicksLimit:12}, border:BORDER },
+          y:{ grid:GRID, ticks:{...TICK_Y,stepSize:1,precision:0}, border:BORDER, min:0 },
+        },
+      },
     });
   }
 
@@ -964,6 +1147,89 @@
     zeroclaw: 'mv-purple',
   };
 
+  /* Hex equivalents for Chart.js use */
+  const FAMILY_HEX = {
+    openclaw: '#f97316',
+    nanobot:  '#06b6d4',
+    nanoclaw: '#3b82f6',
+    zeroclaw: '#a78bfa',
+    picoclaw: '#22c55e',
+  };
+  const FAMILIES = ['openclaw','nanobot','nanoclaw','zeroclaw','picoclaw'];
+
+  /* Repos in our index attributed to a given family (by topic tag, owner, or name match) */
+  function getFamilyRepos(family) {
+    return allRepos.filter(r => {
+      const topics = getTopics(r);
+      const owner  = (r.owner || '').toLowerCase();
+      const name   = (r.name  || '').toLowerCase();
+      return topics.includes(family) || owner === family || name.includes(family);
+    });
+  }
+
+  /* Repos suspected to be exact-copy impostors of openclaw/openclaw:
+     non-fork · not openclaw org · name starts with 'openclaw' · ≤ 2 stars · non-empty */
+  function getImpostors() {
+    return allRepos.filter(r => {
+      const name  = (r.name  || '').toLowerCase();
+      const owner = (r.owner || '').toLowerCase();
+      return (
+        owner !== 'openclaw'   &&
+        r.is_fork !== true     &&
+        name.includes('openclaw') &&
+        (r.stars || 0) <= 2   &&
+        (r.size == null || r.size > 0)
+      );
+    });
+  }
+
+  /* Render impostor metric chips */
+  function renderImpostorMetrics() {
+    const el = document.getElementById('impostor-metrics');
+    if (!el) return;
+    const impostors = getImpostors();
+    const total = impostors.length;
+    if (total === 0) {
+      el.innerHTML = `
+      <div class="metrics-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:0.75rem" role="list">
+        <div class="metric-chip" role="listitem">
+          <div class="metric-label">// detected</div>
+          <div class="metric-value mv-purple">0</div>
+          <div class="metric-sub">no impostors in indexed sample</div>
+        </div>
+      </div>`;
+      return;
+    }
+    const byMonth = {};
+    for (const r of impostors) {
+      const dt = parseDate(r.created_at); if (!dt) continue;
+      const k = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      byMonth[k] = (byMonth[k]||0) + 1;
+    }
+    const mCount = Object.keys(byMonth).length;
+    const monthlyAvg = mCount ? (total / mCount).toFixed(1) : '—';
+    const sorted = [...impostors].sort((a,b) => (parseDate(b.created_at)||0) - (parseDate(a.created_at)||0));
+    const newest = sorted[0];
+    el.innerHTML = `
+    <div class="metrics-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:0.75rem" role="list">
+      <div class="metric-chip" role="listitem">
+        <div class="metric-label">// total_detected</div>
+        <div class="metric-value mv-purple">${total}</div>
+        <div class="metric-sub">suspected copy repos</div>
+      </div>
+      <div class="metric-chip" role="listitem">
+        <div class="metric-label">// monthly_avg</div>
+        <div class="metric-value mv-purple">${monthlyAvg}</div>
+        <div class="metric-sub">per month (indexed)</div>
+      </div>
+      <div class="metric-chip" role="listitem">
+        <div class="metric-label">// most_recent</div>
+        <div class="metric-value mv-purple" style="font-size:0.95rem;line-height:1.2">${newest ? fmtDate(newest.created_at) : '—'}</div>
+        <div class="metric-sub">${newest ? esc(newest.owner+'/'+newest.name) : 'none found'}</div>
+      </div>
+    </div>`;
+  }
+
   function renderFamilyStats() {
     const el = document.getElementById('family-stats-section');
     if (!el || !familyStats.length) return;
@@ -1108,6 +1374,9 @@
 
     rebuildMonthlyChart();
     rebuildDailyChart();
+
+    initComparisonCharts();
+    initImpostorChart();
   }
 
   /* ─────────────────────────────────────────
