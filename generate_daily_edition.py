@@ -321,6 +321,11 @@ def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
         summary_raw = result.strip()
         analysis   = ""
 
+    # Strip markdown code fences Gemini sometimes wraps around HTML output
+    analysis = re.sub(r'^```(?:html)?\s*', '', analysis, flags=re.IGNORECASE)
+    analysis = re.sub(r'\s*```$', '', analysis)
+    analysis = analysis.strip()
+
     # Ensure summary is wrapped in the correct HTML tag
     match = re.search(r'<p class="story-summary">.*?</p>', summary_raw, re.DOTALL)
     if match:
@@ -475,7 +480,8 @@ def main():
                 gen_summary = gen_analysis = None
 
             summary_html   = saved.get("summary_html")   or gen_summary  or f'<p class="story-summary">{fallback_text[:700]}</p>'
-            why_it_matters = saved.get("why_it_matters") or gen_analysis or "Analysis unavailable."
+            # When need_analysis is True, prefer fresh gen_analysis — saved value is old plain text
+            why_it_matters = (gen_analysis if need_analysis else None) or saved.get("why_it_matters") or gen_analysis or "Analysis unavailable."
 
         story = {
             "slot":           slot,
