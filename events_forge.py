@@ -53,7 +53,9 @@ if SUPABASE_URL and SUPABASE_SERVICE_KEY:
 else:
     print("⚠️  SUPABASE credentials not set — DB writes disabled.")
 
-KEYWORD = "openclaw"
+# All three ecosystem keywords — every search query, filter, and DB cleanup
+# uses this tuple so clawdbot and moltbot events are discovered on equal footing.
+KEYWORDS = ("openclaw", "clawdbot", "moltbot")
 
 # Browser-like headers to reduce bot-detection blocks
 HEADERS = {
@@ -71,20 +73,37 @@ HEADERS = {
 # ---------------------------------------------------------------------------
 
 RSS_FEEDS = {
-    "Google News": (
+    "Google News (openclaw)": (
         "https://news.google.com/rss/search"
         "?q=%22openclaw%22+%22event%22&hl=en-US&gl=US&ceid=US:en"
     ),
-    "Reddit": (
+    "Google News (clawdbot)": (
+        "https://news.google.com/rss/search"
+        "?q=%22clawdbot%22+%22event%22&hl=en-US&gl=US&ceid=US:en"
+    ),
+    "Google News (moltbot)": (
+        "https://news.google.com/rss/search"
+        "?q=%22moltbot%22+%22event%22&hl=en-US&gl=US&ceid=US:en"
+    ),
+    "Reddit (openclaw)": (
         "https://www.reddit.com/search.rss"
         "?q=openclaw+event&sort=new&limit=25"
     ),
+    "Reddit (clawdbot)": (
+        "https://www.reddit.com/search.rss"
+        "?q=clawdbot+event&sort=new&limit=25"
+    ),
+    "Reddit (moltbot)": (
+        "https://www.reddit.com/search.rss"
+        "?q=moltbot+event&sort=new&limit=25"
+    ),
 }
 
-HN_API_URL = (
-    "https://hn.algolia.com/api/v1/search_by_date"
-    "?query=openclaw+event&tags=story&hitsPerPage=20"
-)
+HN_API_URLS = [
+    "https://hn.algolia.com/api/v1/search_by_date?query=openclaw+event&tags=story&hitsPerPage=20",
+    "https://hn.algolia.com/api/v1/search_by_date?query=clawdbot+event&tags=story&hitsPerPage=20",
+    "https://hn.algolia.com/api/v1/search_by_date?query=moltbot+event&tags=story&hitsPerPage=20",
+]
 
 # ---------------------------------------------------------------------------
 # Layer 2 — Platform searches
@@ -99,6 +118,8 @@ EVENTBRITE_SEARCHES = [
 
 LUMA_SEARCHES = [
     "https://lu.ma/search?q=openclaw",
+    "https://lu.ma/search?q=clawdbot",
+    "https://lu.ma/search?q=moltbot",
 ]
 
 # Trusted first-party community calendars on Luma.
@@ -119,11 +140,22 @@ AITINKERERS_URL = "https://aitinkerers.org/p/events"
 
 EVENTSHIP_SEARCHES = [
     "https://eventship.com/search?q=openclaw",
+    "https://eventship.com/search?q=clawdbot",
+    "https://eventship.com/search?q=moltbot",
 ]
 
 MEETUP_SEARCHES = [
     "https://www.meetup.com/find/?q=openclaw&source=EVENTS",
     "https://www.meetup.com/find/?q=openclaw&source=EVENTS&eventType=online",
+    "https://www.meetup.com/find/?q=clawdbot&source=EVENTS",
+    "https://www.meetup.com/find/?q=moltbot&source=EVENTS",
+]
+
+# Maven: cohort courses and Lightning Lessons (one-off live virtual sessions).
+MAVEN_SEARCHES = [
+    "https://maven.com/search?query=openclaw",
+    "https://maven.com/search?query=clawdbot",
+    "https://maven.com/search?query=moltbot",
 ]
 
 # Circle.so communities to scan directly.
@@ -178,16 +210,16 @@ def fetch_html(url: str, timeout: int = 12) -> tuple["BeautifulSoup | None", str
 
 def passes_keyword_filter(title: str, description: str) -> bool:
     """
-    PASS if "openclaw" appears in the event title.
-    PASS if "openclaw" appears in the event description.
+    PASS if any ecosystem keyword (openclaw, clawdbot, moltbot) appears in the
+    event title or description.
     REJECT otherwise.
 
     Note: full page-text is NOT used — Eventbrite and other search-result pages
-    echo the search query ("openclaw") in navigation/sidebar elements, which
-    caused unrelated events to pass the old count-based check.
+    echo the search query in navigation/sidebar elements, which caused unrelated
+    events to pass the old count-based check.
     """
-    kw = KEYWORD.lower()
-    return kw in title.lower() or kw in description.lower()
+    combined = (title + " " + description).lower()
+    return any(kw in combined for kw in KEYWORDS)
 
 
 # ---------------------------------------------------------------------------
@@ -500,29 +532,35 @@ def scan_rss_feeds() -> list[dict]:
 
 def scan_hn_api() -> list[dict]:
     """
-    Query the Hacker News Algolia API for OpenClaw event stories.
+    Query the Hacker News Algolia API for ecosystem event stories.
+    Runs one query per keyword (openclaw, clawdbot, moltbot).
     Checks story URLs directly for event-platform matches.
     """
-    print(f"  📡 HN Algolia API...")
     found = []
-    try:
-        resp = requests.get(HN_API_URL, timeout=12)
-        if resp.status_code != 200:
-            print(f"     ⚠️  HTTP {resp.status_code}")
-            return found
-        hits = resp.json().get("hits", [])
-        print(f"     {len(hits)} hit(s) from HN.")
-    except Exception as ex:
-        print(f"     ⚠️  HN API error: {ex}")
-        return found
-
     candidate_urls: set[str] = set()
-    for hit in hits:
-        blob = f"{hit.get('title', '')} {hit.get('url', '')}"
-        for url in extract_event_urls(blob):
-            candidate_urls.add(url)
 
-    print(f"     {len(candidate_urls)} candidate event URL(s).")
+    for api_url in HN_API_URLS:
+        kw = api_url.split("query=")[1].split("+")[0]
+        print(f"  📡 HN Algolia API ({kw})...")
+        try:
+            resp = requests.get(api_url, timeout=12)
+            if resp.status_code != 200:
+                print(f"     ⚠️  HTTP {resp.status_code}")
+                continue
+            hits = resp.json().get("hits", [])
+            print(f"     {len(hits)} hit(s) from HN.")
+        except Exception as ex:
+            print(f"     ⚠️  HN API error: {ex}")
+            continue
+
+        for hit in hits:
+            blob = f"{hit.get('title', '')} {hit.get('url', '')}"
+            for url in extract_event_urls(blob):
+                candidate_urls.add(url)
+
+        time.sleep(2)
+
+    print(f"     {len(candidate_urls)} unique candidate event URL(s) across all HN queries.")
     for url in candidate_urls:
         time.sleep(1)
         e = extract_event_from_page(url)
@@ -530,7 +568,6 @@ def scan_hn_api() -> list[dict]:
             found.append(e)
             print(f"     ✅ {e['title'][:60]}")
 
-    time.sleep(2)
     return found
 
 
@@ -951,6 +988,76 @@ def scan_circle() -> list[dict]:
     return found
 
 
+def scan_maven() -> list[dict]:
+    """
+    Scan Maven for OpenClaw-related courses and Lightning Lessons.
+
+    Maven hosts two content types relevant to OpenClaw:
+      • Cohort courses  — multi-week structured programs with start/end dates;
+                          JSON-LD EducationEvent schema present on course pages.
+      • Lightning Lessons — one-off live virtual sessions (60-90 min, often free);
+                            no JSON-LD; date extracted from page text / og: meta.
+
+    Discovery: fetch the Maven search page for "openclaw", extract course and
+    lesson URLs from anchor tags and __NEXT_DATA__, then visit each to extract
+    event data via the standard extract_event_from_page() pipeline.
+    Keyword density filter applied on every event.
+    """
+    found = []
+    for search_url in MAVEN_SEARCHES:
+        print(f"  📅 Maven: {search_url}")
+        soup, raw = fetch_html(search_url)
+        if not soup:
+            time.sleep(2)
+            continue
+
+        event_urls: set[str] = set()
+
+        # Primary: anchor tags — match course and Lightning Lesson URL patterns:
+        #   maven.com/{org}/{course-slug}      (cohort course)
+        #   maven.com/p/{hex-hash}/{slug}       (Lightning Lesson)
+        _MAVEN_URL_RE = re.compile(
+            r'^https://maven\.com/(?:p/[0-9a-f]+/[^/?#\s]+|[a-z0-9_-]+/[a-z0-9_-]+)$',
+            re.IGNORECASE,
+        )
+        for a in soup.find_all("a", href=True):
+            href = str(a["href"]).split("?")[0]
+            if not href.startswith("http"):
+                href = f"https://maven.com{href}"
+            if _MAVEN_URL_RE.match(href):
+                event_urls.add(href)
+
+        # Fallback: __NEXT_DATA__ (Next.js app) — richer but requires JSON parse.
+        if not event_urls:
+            m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', raw, re.DOTALL)
+            if m:
+                try:
+                    data_str = json.dumps(json.loads(m.group(1)))
+                    for match in re.finditer(
+                        r'"(?:url|slug)"\s*:\s*"(/(?:p/[0-9a-f]+/[^"]+|[a-z0-9_-]+/[a-z0-9_-]+))"',
+                        data_str,
+                    ):
+                        event_urls.add(f"https://maven.com{match.group(1).split('?')[0]}")
+                except Exception as ex:
+                    print(f"     Could not parse Next.js data: {ex}")
+
+        print(f"     Visiting {len(event_urls)} Maven course/lesson link(s).")
+        for link in list(event_urls)[:20]:
+            time.sleep(1.5)
+            e = extract_event_from_page(link, "Maven")
+            if e:
+                # Maven courses without a parsed start_date are announcements
+                # with no confirmed session date — skip them to avoid clutter.
+                if not e.get("start_date"):
+                    print(f"     ⛔ No date found, skipping: {e['title'][:60]}")
+                    continue
+                found.append(e)
+                print(f"     ✅ {e['title'][:60]}")
+
+        time.sleep(2)
+    return found
+
+
 # ---------------------------------------------------------------------------
 # Supabase I/O
 # ---------------------------------------------------------------------------
@@ -964,8 +1071,9 @@ def cleanup_garbage_events() -> None:
        filter cannot reliably distinguish real OpenClaw events from off-topic ones.
        ALL eventbrite.com URLs are removed until a verified fix exists.
 
-    2. Events with no mention of 'openclaw' in title or description — ingested
-       before the strict keyword filter was introduced.
+    2. Events with no mention of any ecosystem keyword (openclaw, clawdbot, moltbot)
+       in title or description — ingested before the strict keyword filter was
+       introduced.
     """
     if not _supabase:
         return
@@ -974,9 +1082,8 @@ def cleanup_garbage_events() -> None:
         garbage = [
             r["url"] for r in (resp.data or [])
             if "eventbrite.com" in r.get("url", "").lower()
-            or (
-                KEYWORD not in r.get("title", "").lower()
-                and KEYWORD not in r.get("description", "").lower()
+            or not passes_keyword_filter(
+                r.get("title", ""), r.get("description", "")
             )
         ]
         if not garbage:
@@ -1073,12 +1180,13 @@ def save_events(events: list[dict]) -> None:
 
 if __name__ == "__main__":
     print(
-        "🗓️  Events Forge — scanning RSS feeds + platforms for OpenClaw events...\n"
+        "🗓️  Events Forge — scanning RSS feeds + platforms for OpenClaw ecosystem events...\n"
+        "     Keywords: openclaw · clawdbot · moltbot\n"
         "     Seed events: hand-curated OpenClaw URLs (no keyword filter)\n"
-        "     Layer 1 (RSS/API): Google News · Reddit · HN\n"
+        "     Layer 1 (RSS/API): Google News · Reddit · HN  (all 3 keywords)\n"
         "     Layer 2 (scrapers): [Eventbrite DISABLED] · Luma search · lu.ma/claw\n"
-        "                         AI Tinkerers · Eventship · Meetup · Circle.so\n"
-        "     Validation: 'openclaw' must appear in title OR description\n"
+        "                         AI Tinkerers · Eventship · Meetup · Circle.so · Maven\n"
+        "     Validation: any ecosystem keyword must appear in title OR description\n"
         "     Note: lu.ma/claw + seed events skip the keyword filter\n"
     )
 
@@ -1102,6 +1210,7 @@ if __name__ == "__main__":
         + scan_eventship()
         + scan_meetup()
         + scan_circle()
+        + scan_maven()
     )
 
     # Deduplicate by URL within this run
