@@ -189,12 +189,15 @@ const formatLastSyncPacific = (raw: string): string => {
 };
 
 const App: React.FC = () => {
-  const urlTab = new URLSearchParams(window.location.search).get('tab') as Page | null;
+  const urlTab  = new URLSearchParams(window.location.search).get('tab') as Page | null;
+  const urlDate = new URLSearchParams(window.location.search).get('date') || '';
   const [activePage, setActivePage] = useState<Page>(
     urlTab || (sessionStorage.getItem('activePage') as Page) || 'news'
   );
-  
-  const [currentPage, setCurrentPage] = useState(Number(sessionStorage.getItem('newsPage')) || 1);
+
+  const [currentNewsDate, setCurrentNewsDate] = useState<string>(
+    urlDate || sessionStorage.getItem('newsDate') || ''
+  );
   const [currentVideoPage, setCurrentVideoPage] = useState(Number(sessionStorage.getItem('videoPage')) || 1);
   const [currentProjectPage, setCurrentProjectPage] = useState(Number(sessionStorage.getItem('projectPage')) || 1);
   const [currentResearchPage, setCurrentResearchPage] = useState(Number(sessionStorage.getItem('researchPage')) || 1);
@@ -216,8 +219,7 @@ const App: React.FC = () => {
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const newsPerPage = 20;
-  const videosPerPage = 9; 
+  const videosPerPage = 9;
   const projectsPerPage = 20;
   const researchPerPage = 10;
 
@@ -226,21 +228,21 @@ const App: React.FC = () => {
 
   // On mount: set initial history state without pushing a new entry
   useEffect(() => {
-    history.replaceState({ newsPage: currentPage }, '', currentPage > 1 ? `/?page=${currentPage}` : '/');
+    history.replaceState({ newsDate: currentNewsDate }, '', currentNewsDate ? `/?date=${currentNewsDate}` : '/');
   }, []); // eslint-disable-line
 
-  // Push history entry on page changes; skip is consumed and cleared inside the effect
+  // Push history entry on date changes; skip is consumed and cleared inside the effect
   useEffect(() => {
     if (skipHistoryPush.current) { skipHistoryPush.current = false; return; }
-    const url = currentPage > 1 ? `/?page=${currentPage}` : '/';
-    history.pushState({ newsPage: currentPage }, '', url);
-  }, [currentPage]);
+    const url = currentNewsDate ? `/?date=${currentNewsDate}` : '/';
+    history.pushState({ newsDate: currentNewsDate }, '', url);
+  }, [currentNewsDate]);
 
-  // Restore page from browser back/forward
+  // Restore date from browser back/forward
   useEffect(() => {
     const handlePop = (e: PopStateEvent) => {
-      skipHistoryPush.current = true;   // effect will skip push and clear the flag
-      setCurrentPage(e.state?.newsPage ?? 1);
+      skipHistoryPush.current = true;
+      setCurrentNewsDate(e.state?.newsDate ?? '');
     };
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
@@ -270,27 +272,27 @@ const App: React.FC = () => {
   // Consolidation of Logo Click Reset Logic
   const handleLogoClick = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
-    skipHistoryPush.current = true; // effect will skip push and clear the flag
-    setCurrentPage(1);
+    skipHistoryPush.current = true;
+    setCurrentNewsDate('');
     setCurrentVideoPage(1);
     setCurrentProjectPage(1);
     setCurrentResearchPage(1);
     setCurrentEventsPage(1);
     setActivePage('news');
     setIsMobileMenuOpen(false);
-    history.pushState({ newsPage: 1 }, '', '/');
+    history.pushState({ newsDate: '' }, '', '/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
     sessionStorage.setItem('activePage', activePage);
-    sessionStorage.setItem('newsPage', currentPage.toString());
+    sessionStorage.setItem('newsDate', currentNewsDate);
     sessionStorage.setItem('videoPage', currentVideoPage.toString());
     sessionStorage.setItem('projectPage', currentProjectPage.toString());
     sessionStorage.setItem('researchPage', currentResearchPage.toString());
     sessionStorage.setItem('eventsPage', currentEventsPage.toString());
     sessionStorage.setItem('projectSort', sortBy);
-  }, [activePage, currentPage, currentVideoPage, currentProjectPage, currentResearchPage, currentEventsPage, sortBy]);
+  }, [activePage, currentNewsDate, currentVideoPage, currentProjectPage, currentResearchPage, currentEventsPage, sortBy]);
 
   const fetchContent = async () => {
     setLoading(true);
@@ -370,25 +372,35 @@ const App: React.FC = () => {
     },
     [news]
   );
-  const currentNewsItems = sortedNews.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
-  const totalNewsPages = Math.ceil(sortedNews.length / newsPerPage);
-
-  // Determine which dispatch days show their spotlight on the current page:
-  // a day's spotlight only appears on the page where that day's first article lands.
-  const spotlightDays = React.useMemo(() => {
-    const days = new Set<string>();
-    const pageStart = (currentPage - 1) * newsPerPage;
-    const pageEnd = currentPage * newsPerPage;
+  // Unique sorted days (newest first) — one page per day
+  const sortedNewsDays = React.useMemo(() => {
     const seen = new Set<string>();
-    for (let i = 0; i < sortedNews.length; i++) {
-      const day = sortedNews[i]!.date || 'unknown';
-      if (!seen.has(day)) {
-        seen.add(day);
-        if (i >= pageStart && i < pageEnd) days.add(day);
-      }
+    const days: string[] = [];
+    for (const item of sortedNews) {
+      const day = item.date || 'unknown';
+      if (!seen.has(day)) { seen.add(day); days.push(day); }
     }
     return days;
-  }, [sortedNews, currentPage]);
+  }, [sortedNews]);
+
+  // Resolve to a valid day: use currentNewsDate if present and valid, else fall back to latest
+  const activeNewsDate = React.useMemo(
+    () => (currentNewsDate && sortedNewsDays.includes(currentNewsDate))
+      ? currentNewsDate
+      : (sortedNewsDays[0] || ''),
+    [currentNewsDate, sortedNewsDays]
+  );
+
+  const currentNewsItems = React.useMemo(
+    () => sortedNews.filter(item => (item.date || 'unknown') === activeNewsDate),
+    [sortedNews, activeNewsDate]
+  );
+
+  // Spotlight always shows for the active day's page
+  const spotlightDays = React.useMemo(
+    () => activeNewsDate ? new Set([activeNewsDate]) : new Set<string>(),
+    [activeNewsDate]
+  );
 
   const currentVideoItems = videos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
   const totalVideoPages = Math.ceil(videos.length / videosPerPage);
@@ -489,7 +501,7 @@ const App: React.FC = () => {
             {activePage === 'news' && (
               <>
                 <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightDays={spotlightDays} dailyEditionDates={dailyEditionDates} />
-                <Pagination current={currentPage} total={totalNewsPages} onChange={setCurrentPage} />
+                <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
             {activePage === 'research' && (
@@ -585,6 +597,73 @@ const Pagination = ({ current, total, onChange }: { current: number; total: numb
         </div>
       </div>
       <button disabled={current === total} onClick={() => handlePageChange(current + 1)} className="page-btn">
+        Next →
+      </button>
+    </div>
+  );
+};
+
+const DatePagination = ({ days, current, onChange }: { days: string[]; current: string; onChange: (d: string) => void }) => {
+  if (days.length <= 1) return null;
+  const ci = days.indexOf(current);
+  if (ci === -1) return null;
+
+  const handleChange = (day: string) => {
+    onChange(day);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const formatPill = (mdy: string) => {
+    if (mdy === 'unknown') return '???';
+    const parts = mdy.split('-').map(Number);
+    const [m, d] = [parts[0] ?? 1, parts[1] ?? 1];
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    return `${months[(m - 1)]} ${String(d).padStart(2, '0')}`;
+  };
+
+  const formatFull = (mdy: string) => {
+    if (mdy === 'unknown') return 'Unknown';
+    const parts = mdy.split('-').map(Number);
+    const [m, d, y] = [parts[0] ?? 1, parts[1] ?? 1, parts[2] ?? 0];
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    return `${months[(m - 1)]} ${String(d).padStart(2, '0')} ${y}`;
+  };
+
+  const total = days.length;
+  const pills: (number | '…')[] = [];
+  if (total <= 7) {
+    for (let i = 0; i < total; i++) pills.push(i);
+  } else if (ci <= 3) {
+    for (let i = 0; i < 5; i++) pills.push(i);
+    pills.push('…'); pills.push(total - 1);
+  } else if (ci >= total - 4) {
+    pills.push(0); pills.push('…');
+    for (let i = total - 5; i < total; i++) pills.push(i);
+  } else {
+    pills.push(0); pills.push('…');
+    for (let i = ci - 1; i <= ci + 1; i++) pills.push(i);
+    pills.push('…'); pills.push(total - 1);
+  }
+
+  return (
+    <div className="flex justify-center items-center gap-4 mt-16 pt-12 border-t border-white/5 flex-wrap">
+      <button disabled={ci === 0} onClick={() => handleChange(days[ci - 1]!)} className="page-btn">
+        ← Prev
+      </button>
+      <div className="page-pills">
+        {pills.map((p, i) =>
+          p === '…'
+            ? <span key={`e${i}`} className="page-pill ellipsis">…</span>
+            : <button key={days[p as number]} onClick={() => handleChange(days[p as number]!)} className={`page-pill${days[p as number] === current ? ' active' : ''}`}>{formatPill(days[p as number]!)}</button>
+        )}
+      </div>
+      <div className="page-info">
+        <span className="page-info-label">Dispatch</span>
+        <div className="page-info-nums">
+          <span className="page-current">{formatFull(current)}</span>
+        </div>
+      </div>
+      <button disabled={ci === total - 1} onClick={() => handleChange(days[ci + 1]!)} className="page-btn">
         Next →
       </button>
     </div>
