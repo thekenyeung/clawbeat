@@ -184,30 +184,6 @@
     .legend-item { display: flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-2); }
     .legend-pip { width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0; }
 
-    /* ── FILTER BAR (language only) ── */
-    .filter-bar-wrap {
-      border-top: 1px solid var(--border-2); border-bottom: 1px solid var(--border-2);
-      background: var(--bg-2); overflow-x: auto; scrollbar-width: none;
-    }
-    .filter-bar-wrap::-webkit-scrollbar { display: none; }
-    .filter-bar { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: stretch; }
-    .filter-group-label {
-      font-family: var(--mono); font-size: var(--min-font); color: var(--text-3);
-      text-transform: uppercase; letter-spacing: 0.12em;
-      padding: 0 0.75rem; display: flex; align-items: center;
-      border-right: 1px solid var(--border); white-space: nowrap; flex-shrink: 0;
-    }
-    .filter-tab {
-      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
-      padding: 0.6rem 0.9rem; border: none; background: transparent;
-      cursor: pointer; transition: all 0.15s; white-space: nowrap;
-      border-bottom: 2px solid transparent; flex-shrink: 0;
-    }
-    .filter-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-    .filter-tab.active { color: var(--orange); border-bottom-color: var(--orange); background: var(--orange-dim); }
-    .filter-tab .tab-count { font-size: var(--min-font); color: var(--text-3); margin-left: 0.25rem; font-weight: 400; }
-    .filter-tab.active .tab-count { color: rgba(249,115,22,0.6); }
 
     /* ── PAGE TAB NAVIGATION ── */
     .page-tab-wrap {
@@ -534,13 +510,6 @@
   </div>
 </div>
 
-<!-- ── LANGUAGE FILTER BAR (repos tab only) ── -->
-<div class="filter-bar-wrap" id="filter-bar-wrap" style="display:none">
-  <div class="filter-bar" role="toolbar" aria-label="Filter repositories by language">
-    <div class="filter-group-label" aria-hidden="true">lang</div>
-    <div id="lang-tabs" style="display:contents"></div>
-  </div>
-</div>
 
 <!-- ── PINNED REPO (always visible) ── -->
 <section class="pinned-section" aria-label="Pinned repository" id="pinned-section">
@@ -677,9 +646,9 @@
               <th scope="col" class="col-repo">
                 <span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Repository</span>
               </th>
-              <th scope="col" class="col-stars" aria-sort="descending" id="th-stars">
-                <button class="sort-th-btn active" onclick="sortTable('stars')" aria-label="Sort by stars, currently descending">
-                  Stars <span class="sort-arrow" aria-hidden="true" id="arr-stars">↓</span>
+              <th scope="col" class="col-stars" aria-sort="none" id="th-stars">
+                <button class="sort-th-btn" onclick="sortTable('stars')" aria-label="Sort by stars">
+                  Stars <span class="sort-arrow" aria-hidden="true" id="arr-stars"></span>
                 </button>
               </th>
               <th scope="col" class="col-lang" aria-sort="none" id="th-lang">
@@ -692,9 +661,9 @@
                   Topics <span class="sort-arrow" aria-hidden="true" id="arr-topic"></span>
                 </button>
               </th>
-              <th scope="col" class="col-date" aria-sort="none" id="th-created">
-                <button class="sort-th-btn" onclick="sortTable('created')" aria-label="Sort by created date">
-                  Created <span class="sort-arrow" aria-hidden="true" id="arr-created"></span>
+              <th scope="col" class="col-date" aria-sort="descending" id="th-created">
+                <button class="sort-th-btn active" onclick="sortTable('created')" aria-label="Sort by created date, currently descending">
+                  Created <span class="sort-arrow" aria-hidden="true" id="arr-created">↓</span>
                 </button>
               </th>
               <th scope="col" class="col-link"><span class="sr-only">Link</span></th>
@@ -764,7 +733,7 @@
   let pinnedRepo  = null;
   let currentLang = 'ALL';
   let tablePage   = 1;
-  let tableSort   = { col: 'stars', dir: 'desc' };
+  let tableSort   = { col: 'created', dir: 'desc' };
   let chartsInited    = false;
   let chartWindow     = 7;
   let chartMonthly    = null;
@@ -1639,9 +1608,6 @@
     /* Show/hide panels */
     document.getElementById('panel-analytics').hidden = !isAnalytics;
     document.getElementById('panel-repos').hidden = isAnalytics;
-
-    /* Show/hide language filter bar (repos tab only) */
-    document.getElementById('filter-bar-wrap').style.display = isAnalytics ? 'none' : '';
 
     /* Update URL without reloading */
     history.replaceState(null, '', isAnalytics ? '/forge.html' : '/forge.html?tab=repos');
