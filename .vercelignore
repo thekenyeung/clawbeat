@@ -5,4 +5,4 @@ __pycache__/
 *.pyc
 forge.log
 *.log
-requirements.txt
+/requirements.txt
