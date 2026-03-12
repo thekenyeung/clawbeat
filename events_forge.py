@@ -17,6 +17,7 @@ Discovery (RSS-first, per editorial plan):
     • AI Tinkerers     — aitinkerers.org/p/events (keyword filter applied)
     • Eventship        — eventship.com search for "openclaw"
     • Circle.so        — scans configured community event spaces directly
+    • Maven            — search pages for all keywords + MAVEN_SEED_EVENTS (no keyword filter)
 
 Validation (strict keyword rule):
   Every candidate event page is checked before saving:
@@ -55,7 +56,9 @@ else:
 
 # All three ecosystem keywords — every search query, filter, and DB cleanup
 # uses this tuple so clawdbot and moltbot events are discovered on equal footing.
-KEYWORDS = ("openclaw", "clawdbot", "moltbot")
+# "open claw" (spaced) is included as a variant — some Maven/external pages
+# spell it as two words rather than the canonical camelCase "OpenClaw".
+KEYWORDS = ("openclaw", "open claw", "clawdbot", "moltbot")
 
 # Browser-like headers to reduce bot-detection blocks
 HEADERS = {
@@ -156,6 +159,13 @@ MAVEN_SEARCHES = [
     "https://maven.com/search?query=openclaw",
     "https://maven.com/search?query=clawdbot",
     "https://maven.com/search?query=moltbot",
+]
+
+# Hand-curated Maven event/course URLs (seed list).
+# Keyword density filter is skipped — these are manually verified as on-topic.
+# Add specific Maven pages here to guarantee they are ingested on the next run.
+MAVEN_SEED_EVENTS = [
+    "https://maven.com/p/43249a/setting-up-open-claw-in-1-hour-for-p-ms",
 ]
 
 # Circle.so communities to scan directly.
@@ -1004,6 +1014,63 @@ def scan_maven() -> list[dict]:
     Keyword density filter applied on every event.
     """
     found = []
+
+    # Process seed URLs first — keyword filter skipped, manually verified.
+    for url in MAVEN_SEED_EVENTS:
+        print(f"  📌 Maven seed: {url}")
+        time.sleep(1)
+        soup, _ = fetch_html(url)
+        if not soup:
+            print(f"     ⚠️  Could not fetch seed URL.")
+            continue
+
+        added = False
+        schemas = find_event_schemas(extract_json_ld(soup))
+        for s in schemas:
+            e = schema_to_event(s, url)
+            if e:
+                if not e.get("start_date"):
+                    print(f"     ⛔ No date found, skipping: {e['title'][:60]}")
+                else:
+                    found.append(e)
+                    print(f"     ✅ {e['title'][:60]}")
+                added = True
+                break
+
+        if not added:
+            def _og(prop: str) -> str:
+                tag = soup.find("meta", {"property": f"og:{prop}"}) or \
+                      soup.find("meta", {"name": prop})
+                return str(tag["content"]).strip() if tag and tag.get("content") else ""
+
+            title = _og("title") or (soup.title.string.strip() if soup.title else "")
+            if title:
+                page_text = soup.get_text(separator=" ", strip=True)
+                description = clean_text(_og("description"))
+                start_date = _extract_date_from_text(page_text)
+                combined = (title + " " + description + " " + page_text[:500]).lower()
+                event_type = "virtual" if any(
+                    w in combined for w in ("virtual", "online", "zoom", "webinar", "livestream")
+                ) else "unknown"
+                if not start_date:
+                    print(f"     ⛔ No date found, skipping: {title[:60]}")
+                else:
+                    found.append({
+                        "url":              url,
+                        "title":            title,
+                        "organizer":        "Maven",
+                        "event_type":       event_type,
+                        "location_city":    "",
+                        "location_state":   "",
+                        "location_country": "",
+                        "start_date":       start_date,
+                        "end_date":         start_date,
+                        "description":      description,
+                    })
+                    print(f"     ✅ {title[:60]} (og: fallback)")
+            else:
+                print(f"     ⚠️  Could not extract title from seed URL.")
+
     for search_url in MAVEN_SEARCHES:
         print(f"  📅 Maven: {search_url}")
         soup, raw = fetch_html(search_url)
@@ -1181,8 +1248,8 @@ def save_events(events: list[dict]) -> None:
 if __name__ == "__main__":
     print(
         "🗓️  Events Forge — scanning RSS feeds + platforms for OpenClaw ecosystem events...\n"
-        "     Keywords: openclaw · clawdbot · moltbot\n"
-        "     Seed events: hand-curated OpenClaw URLs (no keyword filter)\n"
+        "     Keywords: openclaw · open claw · clawdbot · moltbot\n"
+        "     Seed events: hand-curated Luma + Maven URLs (no keyword filter)\n"
         "     Layer 1 (RSS/API): Google News · Reddit · HN  (all 3 keywords)\n"
         "     Layer 2 (scrapers): [Eventbrite DISABLED] · Luma search · lu.ma/claw\n"
         "                         AI Tinkerers · Eventship · Meetup · Circle.so · Maven\n"
