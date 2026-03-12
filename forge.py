@@ -487,6 +487,8 @@ def scan_hackernews(hours_back: int = 48) -> list:
                     # Allow through only if brand is in the title or HN score signals relevance
                     if not is_brand_title and hn_points < 10:
                         continue
+                    if not is_english(hit.get('title', '')):
+                        continue
                     # Estimate density from HN score when article fetch failed
                     density = max(density, hn_points // 15)
                     clean_text = ''
@@ -1730,7 +1732,7 @@ if __name__ == "__main__":
                     scanned_videos.extend(fetch_youtube_videos_ytdlp(yt_target))
 
     global_videos = fetch_global_openclaw_videos(limit=30)
-    all_new_videos = scanned_videos + global_videos
+    all_new_videos = [v for v in scanned_videos + global_videos if is_english(v.get('title', ''))]
     vid_urls = {v['url'] for v in db.get('videos', [])}
     combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]
 
