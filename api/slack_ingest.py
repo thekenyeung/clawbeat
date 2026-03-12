@@ -183,18 +183,18 @@ class handler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(length)
 
-        # ── 1. Verify Slack signature ─────────────────────────────────────
+        data = json.loads(body)
+
+        # ── 1. URL-verification handshake (one-time setup, no sig check) ──
+        if data.get("type") == "url_verification":
+            self._json(200, {"challenge": data["challenge"]})
+            return
+
+        # ── 2. Verify Slack signature for all real events ─────────────────
         timestamp = self.headers.get("X-Slack-Request-Timestamp", "")
         signature = self.headers.get("X-Slack-Signature", "")
         if not verify_signature(body, timestamp, signature):
             self._respond(403, b"Forbidden")
-            return
-
-        data = json.loads(body)
-
-        # ── 2. URL-verification handshake (one-time setup step) ───────────
-        if data.get("type") == "url_verification":
-            self._json(200, {"challenge": data["challenge"]})
             return
 
         # ── 3. Ignore Slack retries to avoid duplicate saves ──────────────
