@@ -167,6 +167,97 @@ def gemini_summarize(text: str) -> str:
         return ""
 
 
+def fetch_todays_articles() -> list[dict]:
+    """Return today's news_items rows (url, title, source, more_coverage)."""
+    today = datetime.now().strftime("%m-%d-%Y")
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/news_items",
+            params={"date": f"eq.{today}", "select": "url,title,source,more_coverage"},
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+            },
+            timeout=4,
+        )
+        return r.json() if r.status_code == 200 else []
+    except Exception:
+        return []
+
+
+def find_similar_article(new_title: str, articles: list[dict]) -> dict | None:
+    """Ask Gemini whether new_title covers the same story as any article in the list.
+    Returns the matching article dict or None."""
+    if not GEMINI_API_KEY or not articles:
+        return None
+    lines = "\n".join(
+        f"URL: {a['url']}\nTitle: {a['title']}" for a in articles[:20]
+    )
+    prompt = (
+        "You are detecting whether a new news article covers the same story as an "
+        "existing one (different source, same event/topic).\n\n"
+        f"New article title: \"{new_title}\"\n\n"
+        f"Existing articles:\n{lines}\n\n"
+        "If the new article covers the same story as one of the existing articles, "
+        "reply with ONLY that article's exact URL. Otherwise reply with: none"
+    )
+    try:
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+            json={
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"maxOutputTokens": 100, "temperature": 0.0},
+            },
+            timeout=10,
+        )
+        result = r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+        if result.lower() == "none" or not result.startswith("http"):
+            return None
+        for a in articles:
+            if a["url"] == result:
+                return a
+        return None
+    except Exception:
+        return None
+
+
+def add_more_coverage(existing_url: str, new_url: str, new_source: str) -> tuple[bool, str]:
+    """Append new_url to more_coverage on an existing news_items row."""
+    try:
+        # Fetch current more_coverage value
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/news_items",
+            params={"url": f"eq.{existing_url}", "select": "more_coverage"},
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+            },
+            timeout=4,
+        )
+        if r.status_code != 200 or not r.json():
+            return False, "could not fetch existing article"
+        more_coverage = r.json()[0].get("more_coverage") or []
+        if any(m.get("url") == new_url for m in more_coverage):
+            return False, "already_in_coverage"
+        more_coverage.append({"source": new_source, "url": new_url})
+        # Patch the row
+        r = requests.patch(
+            f"{SUPABASE_URL}/rest/v1/news_items",
+            params={"url": f"eq.{existing_url}"},
+            json={"more_coverage": more_coverage},
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+            },
+            timeout=4,
+        )
+        return r.status_code in (200, 204), f"HTTP {r.status_code}"
+    except Exception as e:
+        return False, str(e)[:200]
+
+
 def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bool, str]:
     """Upsert article into news_items (merge on duplicate URL).
     Returns (success, error_detail)."""
@@ -262,14 +353,38 @@ class handler(BaseHTTPRequestHandler):
             slack_reply(channel, "No URL found in that message.")
             return
 
-        # Fetch metadata
+        # Fetch OG tags (title + source needed for all paths below)
         og = fetch_og(url)
         title = og["title"] or url
         source = og["source"]
+
+        # ── Duplicate / similar-story checks ─────────────────────────────
+        articles_today = fetch_todays_articles()
+
+        # 1. Exact URL already in today's feed
+        if any(a["url"] == url for a in articles_today):
+            slack_reply(channel, f"⚠️ Already in today's feed:\n*{title}*\n_{source}_")
+            return
+
+        # 2. Same story, different source → add as more_coverage
+        similar = find_similar_article(title, articles_today)
+        if similar:
+            ok, err = add_more_coverage(similar["url"], url, source)
+            if ok:
+                slack_reply(
+                    channel,
+                    f"📎 Added as more coverage on:\n*{similar['title']}*\n_{similar['source']}_",
+                )
+            elif err == "already_in_coverage":
+                slack_reply(channel, f"⚠️ Already listed as more coverage on:\n*{similar['title']}*")
+            else:
+                slack_reply(channel, f"✗ Failed to add more coverage: {err}")
+            return
+
+        # 3. New story — fetch full content and summarize
         article_text = fetch_jina(url)
         summary = gemini_summarize(article_text) or og["description"]
 
-        # Save
         ok, err = supabase_upsert(url, title, source, summary)
         if ok:
             slack_reply(channel, f"✓ Saved to ClawBeat\n*{title}*\n_{source}_")
