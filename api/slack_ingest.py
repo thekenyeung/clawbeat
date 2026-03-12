@@ -37,6 +37,7 @@ SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET", "")
 SLACK_ALLOWED_USER_ID = os.environ.get("SLACK_ALLOWED_USER_ID", "")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 
 
 # ── helpers ───────────────────────────────────────────────────────────────────
@@ -121,14 +122,47 @@ def fetch_og(url: str) -> dict:
 
 
 def fetch_jina(url: str) -> str:
-    """Pull cleaned article text via Jina Reader; return first 1 500 chars."""
+    """Pull cleaned article text via Jina Reader, stripping metadata headers."""
     try:
         r = requests.get(
             f"https://r.jina.ai/{url}",
             timeout=5,
             headers={"Accept": "text/plain", "User-Agent": "ClawBeat/1.0"},
         )
-        return r.text[:1500].strip()
+        text = r.text
+        # Jina prepends metadata lines (Title:, URL Source:, Published Time:,
+        # Markdown Content:) before the actual article. Skip past them.
+        marker = "Markdown Content:"
+        idx = text.find(marker)
+        if idx != -1:
+            text = text[idx + len(marker):]
+        return text.strip()[:6000]
+    except Exception:
+        return ""
+
+
+def gemini_summarize(text: str) -> str:
+    """Summarize article text with Gemini Flash. Returns 2-3 sentence summary."""
+    if not GEMINI_API_KEY or not text:
+        return ""
+    try:
+        prompt = (
+            "Summarize the following article in 2-3 concise sentences for a tech "
+            "news feed. Be factual and neutral. Do not start with 'This article'.\n\n"
+            + text[:5000]
+        )
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+            json={
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"maxOutputTokens": 120, "temperature": 0.2},
+            },
+            timeout=12,
+        )
+        return (
+            r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+        )
     except Exception:
         return ""
 
@@ -233,7 +267,8 @@ class handler(BaseHTTPRequestHandler):
         og = fetch_og(url)
         title = og["title"] or url
         source = og["source"]
-        summary = fetch_jina(url) or og["description"]
+        article_text = fetch_jina(url)
+        summary = gemini_summarize(article_text) or og["description"]
 
         # Save
         ok, err = supabase_upsert(url, title, source, summary)
