@@ -25,6 +25,7 @@ import re
 import sys
 import json
 import time
+import random
 import datetime
 import textwrap
 from pathlib import Path
@@ -46,8 +47,12 @@ TEMPLATE_PATH = Path(__file__).parent / "public" / "daily-edition.html"
 OUTPUT_DIR    = Path(__file__).parent / "public" / "daily"
 COMPILED_TIME = "17:00 PT"
 
-# Fallback hero image used when no og:image can be scraped
-FALLBACK_IMAGE_URL = "https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg"
+# Fallback hero images (rotated randomly) used when no og:image can be scraped
+FALLBACK_IMAGES = [
+    "https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg",
+    "https://clawbeat.co/images/lobster-two-computer-screen-adobe-firefly-1500x571.jpg",
+    "https://clawbeat.co/images/lobster-ipad-screen-adobe-firefly-1500x571.jpg",
+]
 
 # Gemini model
 GEMINI_MODEL = "gemini-2.5-flash"
@@ -437,13 +442,13 @@ def main():
             pub_date    = saved.get("pub_date") or ""
         else:
             meta        = fetch_article_meta(url)
-            image_url   = meta["image_url"] or FALLBACK_IMAGE_URL
+            image_url   = meta["image_url"] or random.choice(FALLBACK_IMAGES)
             image_alt   = meta["image_alt"] or article["title"]
             author      = meta["author"]
             pub_name    = meta["pub_name"] or article["source"] or ""
             pub_url     = meta["pub_url"]
             pub_date    = meta["pub_date"] or dispatch_mdy
-            if image_url == FALLBACK_IMAGE_URL:
+            if image_url in FALLBACK_IMAGES:
                 # Fallback image: credit Adobe Firefly, not the publication
                 credit_name = "Adobe Firefly"
                 credit_url  = ""
