@@ -181,7 +181,6 @@ def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bo
                 "date": today,
                 "summary": summary,
                 "date_is_manual": True,
-                "source_type": "priority",
             },
             headers={
                 "apikey": SUPABASE_KEY,
