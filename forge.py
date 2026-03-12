@@ -82,6 +82,54 @@ OUTPUT_PATH = "./public/data.json"
 MAX_BATCH_SIZE = 50
 SLEEP_BETWEEN_REQUESTS = 6.5
 
+# --- API USAGE TRACKING ---
+# Counts are loaded from Supabase at startup (to accumulate across hourly runs),
+# incremented in-memory, and upserted back at the end of each run.
+# GitHub Actions ::warning:: / ::error:: annotations fire at 80% / 95% of limit.
+_api_calls = {'text': 0, 'embed': 0}
+_GEMINI_TEXT_LIMIT  = 1500  # generate_content free-tier RPD
+_GEMINI_EMBED_LIMIT = 1500  # embed_content free-tier RPD
+_WARN_PCT = 0.80
+_CRIT_PCT = 0.95
+
+def _load_api_usage():
+    if not _supabase: return
+    try:
+        today = datetime.now().strftime("%Y-%m-%d")
+        resp = _supabase.table('api_usage').select('*').eq('usage_date', today).execute()
+        if resp.data:
+            row = resp.data[0]
+            _api_calls['text']  = row.get('gemini_text_calls', 0) or 0
+            _api_calls['embed'] = row.get('gemini_embed_calls', 0) or 0
+            print(f"📊 API usage (today): text={_api_calls['text']}, embed={_api_calls['embed']}")
+    except Exception as e:
+        print(f"⚠️  Could not load api_usage: {e}")
+
+def _save_api_usage():
+    if not _supabase: return
+    try:
+        today = datetime.now().strftime("%Y-%m-%d")
+        _supabase.table('api_usage').upsert({
+            'usage_date':         today,
+            'gemini_text_calls':  _api_calls['text'],
+            'gemini_embed_calls': _api_calls['embed'],
+            'updated_at':         datetime.now().isoformat(),
+        }).execute()
+    except Exception as e:
+        print(f"⚠️  Could not save api_usage: {e}")
+
+def _check_rate_limits():
+    checks = [
+        ('Gemini text (generate_content)', _api_calls['text'],  _GEMINI_TEXT_LIMIT),
+        ('Gemini embed (embed_content)',   _api_calls['embed'], _GEMINI_EMBED_LIMIT),
+    ]
+    for label, count, limit in checks:
+        pct = count / limit
+        if pct >= _CRIT_PCT:
+            print(f"::error::{label}: {count}/{limit} calls today ({pct:.0%}) — at or near free-tier limit")
+        elif pct >= _WARN_PCT:
+            print(f"::warning::{label}: {count}/{limit} calls today ({pct:.0%}) — approaching free-tier limit")
+
 # Generic newsletter/blog platforms that host whitelisted Creator sources
 PRIORITY_SITES = ['substack.com', 'beehiiv.com']
 
@@ -187,6 +235,7 @@ def get_ai_summary(title, current_summary):
     prompt = f"Rewrite this as a professional 1-sentence tech intel brief. Impact focus. Title: {title}. Context: {current_summary}. Output ONLY the sentence."
     try:
         response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        _api_calls['text'] += 1
         return response.text.strip()
     except: return "Summary pending."
 
@@ -239,11 +288,12 @@ def get_embeddings_batch(texts, batch_size=5):
         batch = texts[i:i + batch_size]
         try:
             result = client.models.embed_content(
-                model="models/gemini-embedding-001", 
+                model="models/gemini-embedding-001",
                 contents=batch,
                 config=types.EmbedContentConfig(task_type="CLUSTERING")
             )
             all_embeddings.extend([e.values for e in result.embeddings])
+            _api_calls['embed'] += 1
             if i + batch_size < len(texts): time.sleep(2)
         except: all_embeddings.extend([None] * len(batch))
     return all_embeddings
@@ -1494,21 +1544,72 @@ def cluster_articles_temporal(new_articles, existing_items):
             anchor['is_minor'] = anchor.get('density', 0) < 8
             anchor['moreCoverage'] = [{"source": a['source'], "url": a['url']} for a in others]
             current_batch_clustered.append(anchor)
+
+    # Cross-batch clustering: compare each new cluster-anchor against existing anchors
+    # within ±1 calendar day. Stories that break late on day N and get follow-up
+    # coverage on day N+1 (or vice versa) are still recognised as the same story.
+    # If similarity > 0.82, merge into the existing anchor's moreCoverage instead of
+    # promoting as a new top-level headline.
+    window = timedelta(days=1)
+    # Collect all existing items within ±1 day of any new anchor's date for embedding.
+    new_anchor_dates_parsed = {
+        a['date']: try_parse_date(a['date'])
+        for a in current_batch_clustered if a.get('vec') is not None
+    }
+    nearby_existing = [
+        item for item in existing_items
+        if any(abs(try_parse_date(item.get('date', '')) - anchor_dt) <= window
+               for anchor_dt in new_anchor_dates_parsed.values())
+    ]
+    # Embed existing nearby items that don't have vectors yet (vecs are not persisted to DB).
+    existing_needs_vec = [item for item in nearby_existing if item.get('vec') is None]
+    if existing_needs_vec:
+        texts = [f"{a['title']} {a.get('summary', '')[:120]}" for a in existing_needs_vec]
+        vecs = get_embeddings_batch(texts)
+        for i, item in enumerate(existing_needs_vec): item['vec'] = vecs[i]
+
+    merged_urls = set()  # new anchors absorbed into an existing headline
+    for new_anchor in current_batch_clustered:
+        if new_anchor.get('vec') is None: continue
+        anchor_dt = try_parse_date(new_anchor['date'])
+        # Only compare against existing items within ±1 day of this anchor's own date.
+        candidates = [
+            item for item in nearby_existing
+            if item.get('vec') is not None
+            and abs(try_parse_date(item.get('date', '')) - anchor_dt) <= window
+        ]
+        for existing in candidates:
+            sim = cosine_similarity(np.array(new_anchor['vec']), np.array(existing['vec']))
+            if sim > 0.82:
+                # Merge new anchor (and its moreCoverage articles) into the existing headline.
+                existing_mc_urls = {mc['url'] for mc in existing.get('moreCoverage', [])}
+                existing_mc_urls.add(existing['url'])
+                if new_anchor['url'] not in existing_mc_urls:
+                    existing.setdefault('moreCoverage', []).append(
+                        {"source": new_anchor['source'], "url": new_anchor['url']}
+                    )
+                    existing_mc_urls.add(new_anchor['url'])
+                for mc in new_anchor.get('moreCoverage', []):
+                    if mc['url'] not in existing_mc_urls:
+                        existing['moreCoverage'].append(mc)
+                        existing_mc_urls.add(mc['url'])
+                # Re-sort moreCoverage by authority then density
+                existing['moreCoverage'].sort(
+                    key=lambda mc: (get_source_authority(mc['url'], mc['source']), 0),
+                    reverse=True
+                )
+                merged_urls.add(new_anchor['url'])
+                print(f"🔗 Cross-batch merge: '{new_anchor['source']}' → existing '{existing['source']}' (sim={sim:.3f})")
+                break
+
     seen_urls = {item['url'] for item in existing_items}
-    unique_new = [a for a in current_batch_clustered if a['url'] not in seen_urls]
+    unique_new = [
+        a for a in current_batch_clustered
+        if a['url'] not in seen_urls and a['url'] not in merged_urls
+    ]
     final = unique_new + existing_items
     final.sort(key=lambda x: try_parse_date(x.get('date', '01-01-2000')), reverse=True)
     final = final[:1000]
-
-    # Cleanup: if an article has become a top-level headline, remove it from any
-    # other headline's moreCoverage list (handles cross-run promotion cases).
-    headline_urls = {item['url'] for item in final}
-    for item in final:
-        if item.get('moreCoverage'):
-            item['moreCoverage'] = [
-                mc for mc in item['moreCoverage']
-                if mc['url'] not in headline_urls
-            ]
 
     return final
 
@@ -1516,6 +1617,7 @@ def cluster_articles_temporal(new_articles, existing_items):
 if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed...")
     db = _load_from_supabase()
+    _load_api_usage()
 
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
@@ -1559,6 +1661,17 @@ if __name__ == "__main__":
         print(f"🔶 HN enriched {hn_enriched} existing articles.")
 
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
+
+    # Cleanup: remove any URL from moreCoverage that is also a top-level headline.
+    # Runs unconditionally every forge run so duplicates don't persist across runs
+    # where cluster_articles_temporal exits early (no new articles).
+    headline_urls = {item['url'] for item in db['items']}
+    for item in db['items']:
+        if item.get('moreCoverage'):
+            item['moreCoverage'] = [
+                mc for mc in item['moreCoverage']
+                if mc['url'] not in headline_urls
+            ]
 
     # Tag backfill: extract named-entity tags for articles that don't have tags yet.
     # Uses spaCy NER (local, no API calls) so there are no rate limits — all
@@ -1630,4 +1743,6 @@ if __name__ == "__main__":
     db['ecosystemStats'] = fetch_ecosystem_counts()
     db['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     _save_to_supabase(db)
+    _save_api_usage()
+    _check_rate_limits()
     print(f"✅ Success. Items in Feed: {len(db['items'])}")

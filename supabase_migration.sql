@@ -291,6 +291,21 @@ CREATE POLICY "Public reads" ON ecosystem_family_stats
 -- Service role writes (forge.py uses service key — no auth policy needed)
 
 -- =============================================================
+-- api_usage table — tracks daily Gemini API call counts for rate-limit monitoring
+-- forge.py loads today's row at startup, increments in-memory counters during the
+-- run, and upserts the final counts at the end. GitHub Actions ::warning:: /
+-- ::error:: annotations fire when counts cross 80% / 95% of the free-tier limit.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS api_usage (
+  usage_date          DATE PRIMARY KEY,
+  gemini_text_calls   INTEGER DEFAULT 0,   -- generate_content RPD (limit: 1500)
+  gemini_embed_calls  INTEGER DEFAULT 0,   -- embed_content RPD   (limit: 1500)
+  updated_at          TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- No public reads needed — accessed only by forge.py via the service key.
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON
