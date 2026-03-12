@@ -32,8 +32,8 @@ from urllib.parse import urlparse
 import requests
 
 # ── env ──────────────────────────────────────────────────────────────────────
-SUPABASE_URL = os.environ.get("ADMIN_SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+SUPABASE_URL = os.environ.get("ADMIN_SUPABASE_URL", "").strip()
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET", "")
 SLACK_ALLOWED_USER_ID = os.environ.get("SLACK_ALLOWED_USER_ID", "")
@@ -133,8 +133,9 @@ def fetch_jina(url: str) -> str:
         return ""
 
 
-def supabase_upsert(url: str, title: str, source: str, summary: str) -> bool:
-    """Upsert article into news_items (merge on duplicate URL)."""
+def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bool, str]:
+    """Upsert article into news_items (merge on duplicate URL).
+    Returns (success, error_detail)."""
     today = datetime.now().strftime("%m-%d-%Y")
     try:
         r = requests.post(
@@ -156,9 +157,11 @@ def supabase_upsert(url: str, title: str, source: str, summary: str) -> bool:
             },
             timeout=4,
         )
-        return r.status_code in (200, 201)
-    except Exception:
-        return False
+        if r.status_code in (200, 201):
+            return True, ""
+        return False, f"HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, str(e)[:200]
 
 
 def slack_reply(channel: str, text: str) -> None:
@@ -233,11 +236,11 @@ class handler(BaseHTTPRequestHandler):
         summary = fetch_jina(url) or og["description"]
 
         # Save
-        ok = supabase_upsert(url, title, source, summary)
+        ok, err = supabase_upsert(url, title, source, summary)
         if ok:
             slack_reply(channel, f"✓ Saved to ClawBeat\n*{title}*\n_{source}_")
         else:
-            slack_reply(channel, "✗ Failed to save — check Supabase logs.")
+            slack_reply(channel, f"✗ Supabase error: {err}")
 
     # ── helpers ───────────────────────────────────────────────────────────
 
