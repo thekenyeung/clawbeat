@@ -1553,8 +1553,8 @@ def cluster_articles_temporal(new_articles, existing_items):
     # coverage on day N+1 (or vice versa) are still recognised as the same story.
     # If similarity > 0.82, merge into the existing anchor's moreCoverage instead of
     # promoting as a new top-level headline.
-    window = timedelta(days=1)
-    # Collect all existing items within ±1 day of any new anchor's date for embedding.
+    window = timedelta(days=0)
+    # Collect all existing items within the same day of any new anchor's date for embedding.
     new_anchor_dates_parsed = {
         a['date']: try_parse_date(a['date'])
         for a in current_batch_clustered if a.get('vec') is not None
