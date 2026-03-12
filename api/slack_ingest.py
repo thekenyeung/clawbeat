@@ -17,6 +17,8 @@ Required environment variables (set in Vercel dashboard):
   SLACK_ALLOWED_USER_ID — your Slack user ID (e.g. U012AB3CD)
 """
 
+from __future__ import annotations
+
 import hashlib
 import hmac
 import json
