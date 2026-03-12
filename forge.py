@@ -140,6 +140,7 @@ DELIST_SITES = [
     '24-7pressrelease.com', 'newswire.com', 'prweb.com',
     'issuewire.com', 'openpr.com', 'releasewire.com', 'send2press.com',
     'marketwired.com', 'webwire.com', 'pressrelease.com',
+    'youtube.com', 'youtu.be',
 ]
 BANNED_SOURCES = [
     "access newswire", "globenewswire", "prnewswire", "business wire",
