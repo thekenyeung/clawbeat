@@ -98,6 +98,8 @@
     .mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
     .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
     @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+    .nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+    .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
 
     /* ── PAGE HERO ── */
     .page-hero { max-width: 72rem; margin: 0 auto; padding: 2rem 1.5rem 1.5rem; }
@@ -185,6 +187,7 @@
       <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
       <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
       <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
     </nav>
     <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
       <span id="icon-menu"><i data-lucide="menu"></i></span>
