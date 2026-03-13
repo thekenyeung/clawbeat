@@ -374,6 +374,13 @@
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
       .footer-mono  { display: none; }
     }
+    .clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+    .clawhub-badge:hover { color: var(--orange); }
+    .clawhub-banner { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; max-width: 1120px; margin: 0 auto; }
+    .cb-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); white-space: nowrap; }
+    .cb-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(249,115,22,0.2), transparent); }
+    .cb-cta { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; white-space: nowrap; transition: color 0.15s; }
+    .cb-cta:hover { color: var(--orange); }
   </style>
 </head>
 <body>
@@ -431,6 +438,12 @@
 <!-- ══ MAIN CONTENT (dynamic — fetched from Supabase on page load) ═ -->
 <main id="main-content">
 
+  <div class="clawhub-banner">
+    <span class="cb-label">// openclaw_skill</span>
+    <div class="cb-line"></div>
+    <a class="cb-cta" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">clawhub install clawbeat u2197</a>
+  </div>
+
   <div id="signals-container" aria-live="polite">
     <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
       <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;">Loading signals…</span>
@@ -447,6 +460,7 @@
     <div class="footer-brand">ClawBeat<span>.co</span></div>
     <!-- ══ DYNAMIC ══ -->
     <div class="footer-mono">The Daily Edition · openclaw intelligence · 03-07-2026</div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
     <div class="footer-back"><a href="/?tab=news">← intel_feed</a></div>
   </div>
 </footer>
