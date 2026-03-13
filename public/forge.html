@@ -1057,7 +1057,8 @@
       html += `<button class="filter-tab" id="lang-${esc(lang)}" onclick="setLang('${esc(lang)}')"
                  aria-pressed="false">${esc(lang)} <span class="tab-count">${n}</span></button>`;
     }
-    document.getElementById('lang-tabs').innerHTML = html;
+    const langTabsEl = document.getElementById('lang-tabs');
+    if (langTabsEl) langTabsEl.innerHTML = html;
   }
 
   function setLang(l) {
