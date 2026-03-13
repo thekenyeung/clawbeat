@@ -28,6 +28,9 @@ import time
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
+
+_PACIFIC = ZoneInfo("America/Los_Angeles")
 
 import requests
 
@@ -169,7 +172,7 @@ def gemini_summarize(text: str) -> str:
 
 def fetch_todays_articles() -> list[dict]:
     """Return today's news_items rows (url, title, source, more_coverage)."""
-    today = datetime.now().strftime("%m-%d-%Y")
+    today = datetime.now(_PACIFIC).strftime("%m-%d-%Y")
     try:
         r = requests.get(
             f"{SUPABASE_URL}/rest/v1/news_items",
@@ -261,7 +264,7 @@ def add_more_coverage(existing_url: str, new_url: str, new_source: str) -> tuple
 def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bool, str]:
     """Upsert article into news_items (merge on duplicate URL).
     Returns (success, error_detail)."""
-    today = datetime.now().strftime("%m-%d-%Y")
+    today = datetime.now(_PACIFIC).strftime("%m-%d-%Y")
     try:
         r = requests.post(
             f"{SUPABASE_URL}/rest/v1/news_items",
