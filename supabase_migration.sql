@@ -303,6 +303,21 @@ CREATE TABLE IF NOT EXISTS api_usage (
   updated_at          TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- channel_vetted: cache of YouTube channel vetting results
+-- Channels are checked once for: age > 30 days, > 1 non-Shorts video,
+-- tech/business keyword presence. Results persist to avoid re-vetting on each run.
+CREATE TABLE IF NOT EXISTS channel_vetted (
+  channel_id    TEXT PRIMARY KEY,
+  channel_name  TEXT,
+  is_vetted     BOOLEAN NOT NULL DEFAULT FALSE,
+  fail_reason   TEXT,
+  checked_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE channel_vetted ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Service role full access" ON channel_vetted
+  USING (TRUE) WITH CHECK (TRUE);
+
 -- No public reads needed — accessed only by forge.py via the service key.
 
 -- =============================================================

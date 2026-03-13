@@ -576,6 +576,109 @@ def _format_yt_date(raw_date):
         return f"{raw_date[4:6]}-{raw_date[6:]}-{raw_date[:4]}"
     return None
 
+# --- CHANNEL VETTING ---
+CHANNEL_TECH_KEYWORDS = [
+    "tech", "technology", "software", "developer", "programming", "coding", "code",
+    "startup", "saas", "ai", "artificial intelligence", "machine learning", "llm",
+    "cloud", "devops", "open source", "product", "venture capital", "vc", "fintech",
+    "crypto", "blockchain", "cybersecurity", "security", "data science", "analytics",
+    "engineering", "product management", "b2b", "entrepreneurship", "business",
+    "enterprise", "marketplace", "platform", "api", "infrastructure", "compute",
+    "gpu", "model", "agent", "automation", "robotics", "hardware", "semiconductor",
+]
+
+# In-memory cache for channel vet results (populated from Supabase at startup)
+_channel_vet_cache: dict = {}
+
+def _load_channel_vet_cache():
+    """Load previously vetted channels from Supabase into the in-memory cache."""
+    global _channel_vet_cache
+    if not _supabase: return
+    try:
+        resp = _supabase.table('channel_vetted').select('channel_id,is_vetted').execute()
+        for row in (resp.data or []):
+            _channel_vet_cache[row['channel_id']] = row['is_vetted']
+        print(f"📋 Loaded {len(_channel_vet_cache)} cached channel vet results.")
+    except Exception as e:
+        print(f"⚠️ Could not load channel vet cache: {e}")
+
+def _save_channel_vet_result(channel_id, channel_name, is_vetted, fail_reason=""):
+    """Persist a channel vetting result to Supabase and the in-memory cache."""
+    _channel_vet_cache[channel_id] = is_vetted
+    if not _supabase: return
+    try:
+        _supabase.table('channel_vetted').upsert({
+            'channel_id':   channel_id,
+            'channel_name': channel_name,
+            'is_vetted':    is_vetted,
+            'fail_reason':  fail_reason or None,
+            'checked_at':   datetime.now().isoformat(),
+        }).execute()
+    except Exception as e:
+        print(f"⚠️ Could not save channel vet result for {channel_id}: {e}")
+
+def _channel_has_tech_keywords(text):
+    text_lower = (text or "").lower()
+    return any(kw in text_lower for kw in CHANNEL_TECH_KEYWORDS)
+
+def vet_channel(channel_id, channel_url, channel_name=""):
+    """Vet a YouTube channel against three criteria:
+    1. Age > 30 days (proxy: oldest visible regular video is > 30 days old)
+    2. > 1 non-Shorts video (duration > 60s, or unknown duration)
+    3. Tech/business keyword presence in channel name, description, or video titles
+    Returns True if all criteria pass. Results are cached in Supabase.
+    """
+    if not channel_id:
+        return False
+    if channel_id in _channel_vet_cache:
+        return _channel_vet_cache[channel_id]
+
+    # Use the /videos sub-page to exclude Shorts from the playlist
+    if channel_url and channel_url.startswith('http'):
+        videos_url = channel_url.rstrip('/') + '/videos'
+    else:
+        videos_url = f"https://www.youtube.com/channel/{channel_id}/videos"
+
+    ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'playlistend': 10}
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(videos_url, download=False)
+        if not info:
+            _save_channel_vet_result(channel_id, channel_name, False, "no_info")
+            return False
+
+        entries = info.get('entries') or []
+        # Non-Shorts: duration > 60s, or duration absent (assume regular video)
+        regular = [e for e in entries if e and ((e.get('duration') or 0) > 60 or e.get('duration') is None)]
+
+        # Criteria 1: must have more than 1 regular video
+        if len(regular) < 2:
+            _save_channel_vet_result(channel_id, channel_name, False, f"too_few_videos:{len(regular)}")
+            return False
+
+        # Criteria 2: oldest regular video in the fetched list must be > 30 days old
+        cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d")
+        dates = [e.get('upload_date') for e in regular if e.get('upload_date')]
+        oldest = min(dates) if dates else None
+        if oldest and oldest > cutoff:
+            _save_channel_vet_result(channel_id, channel_name, False, f"too_new:{oldest}")
+            return False
+
+        # Criteria 3: tech/business keywords in channel name, description, or recent titles
+        ch_name = channel_name or info.get('uploader', '')
+        ch_desc = info.get('description', '') or ''
+        titles  = " ".join(e.get('title', '') for e in regular[:5])
+        if not _channel_has_tech_keywords(ch_name + " " + ch_desc + " " + titles):
+            _save_channel_vet_result(channel_id, channel_name, False, "not_tech_business")
+            return False
+
+        _save_channel_vet_result(channel_id, channel_name, True)
+        return True
+    except Exception as e:
+        print(f"⚠️ Channel vetting failed for {channel_url}: {e}")
+        _save_channel_vet_result(channel_id, channel_name, False, f"error:{str(e)[:80]}")
+        return False
+
 def get_video_upload_date(video_id):
     """Fetch the actual upload date for a single YouTube video ID."""
     try:
@@ -626,17 +729,33 @@ def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot", limit=
             if info and 'entries' in info:
                 for entry in info['entries']:
                     if not entry: continue
+                    title       = entry.get('title') or "Untitled Video"
+                    description = (entry.get('description') or "")[:150]
+
+                    # Strict English filter: exclude if title OR description is non-English
+                    if not is_english(title):
+                        continue
+                    if description and not is_english(description):
+                        continue
+
+                    # Channel vetting: age > 30 days, > 1 non-Shorts video, tech/business topic
+                    channel_id   = entry.get('channel_id') or entry.get('uploader_id') or ''
+                    channel_url  = entry.get('channel_url') or entry.get('uploader_url') or ''
+                    channel_name = entry.get('channel') or entry.get('uploader') or 'Community'
+                    if channel_id and not vet_channel(channel_id, channel_url, channel_name):
+                        continue
+
                     formatted_date = (
                         _format_yt_date(entry.get('upload_date'))
                         or get_video_upload_date(entry.get('id'))
                         or datetime.now().strftime("%m-%d-%Y")
                     )
                     videos.append({
-                        "title": entry.get('title') or "Untitled Video",
-                        "url": f"https://www.youtube.com/watch?v={entry.get('id')}",
-                        "thumbnail": f"https://img.youtube.com/vi/{entry.get('id')}/hqdefault.jpg",
-                        "channel": entry.get('uploader', 'Community'),
-                        "description": (entry.get('description') or "")[:150],
+                        "title":       title,
+                        "url":         f"https://www.youtube.com/watch?v={entry.get('id')}",
+                        "thumbnail":   f"https://img.youtube.com/vi/{entry.get('id')}/hqdefault.jpg",
+                        "channel":     channel_name,
+                        "description": description,
                         "publishedAt": formatted_date
                     })
         return videos
@@ -1621,6 +1740,7 @@ if __name__ == "__main__":
     print(f"🛠️ Forging Intel Feed...")
     db = _load_from_supabase()
     _load_api_usage()
+    _load_channel_vet_cache()
 
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
@@ -1733,7 +1853,9 @@ if __name__ == "__main__":
                     scanned_videos.extend(fetch_youtube_videos_ytdlp(yt_target))
 
     global_videos = fetch_global_openclaw_videos(limit=30)
-    all_new_videos = [v for v in scanned_videos + global_videos if is_english(v.get('title', ''))]
+    # scanned_videos are from explicitly whitelisted channels — no filtering applied
+    # global_videos are already filtered (English + channel vetting) inside the fetch function
+    all_new_videos = scanned_videos + global_videos
     vid_urls = {v['url'] for v in db.get('videos', [])}
     combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]
 
