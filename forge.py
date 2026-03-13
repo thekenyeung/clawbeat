@@ -250,26 +250,47 @@ def _get_spacy():
         _spacy_nlp = spacy.load("en_core_web_sm")
     return _spacy_nlp
 
+# Phrases that spaCy misidentifies as entities, typically from AI-generated
+# summaries of paywalled or bot-blocked pages.
+_TAG_BLOCKLIST = {
+    "please", "please continue", "continue reading", "subscribe", "sign up",
+    "log in", "login", "read more", "click here", "learn more", "access denied",
+    "just a moment", "are you a robot", "forbidden", "not found", "error",
+    "today", "yesterday", "this week", "last week", "this year", "last year",
+    "first", "second", "third", "one", "two", "three", "new", "latest",
+}
+
 def get_nlp_tags(title, summary):
     """Extract up to 4 named-entity tags using spaCy NER (local, no API calls).
 
-    Only retains ORG, PRODUCT, PERSON, GPE, and WORK_OF_ART entities, which
-    map directly to what readers want to filter on in a tech-news feed.
+    Only retains ORG, PRODUCT, PERSON, and GPE entities from the article title.
+    The summary is intentionally excluded: AI-generated summaries of paywalled
+    articles introduce garbage phrases that the small NER model misclassifies.
+    Titles are editorial, clean, and entity-rich — the reliable source.
+
+    Quality guards:
+      - Must start with a capital letter (real named entities always do)
+      - Must not appear in the blocklist of known false positives
+      - Must be 3+ characters and not one of the ClawBeat core brand names
+
     Requires: pip install spacy && python -m spacy download en_core_web_sm
     """
     try:
         nlp = _get_spacy()
-        # Title carries the highest signal; append a short summary window for context.
-        text = title + (" " + summary[:200] if summary else "")
-        doc = nlp(text)
+        doc = nlp(title)
         brand_lower = {b.lower() for b in CORE_BRANDS}
         seen, tags = set(), []
-        KEEP = {"ORG", "PRODUCT", "PERSON", "GPE", "WORK_OF_ART"}
+        KEEP = {"ORG", "PRODUCT", "PERSON", "GPE"}
         for ent in doc.ents:
             if ent.label_ not in KEEP:
                 continue
             tag = ent.text.strip()
+            # Must start with a capital (guards against sentence fragments)
+            if not tag or not tag[0].isupper():
+                continue
             if len(tag) < 3 or tag.lower() in brand_lower:
+                continue
+            if tag.lower() in _TAG_BLOCKLIST:
                 continue
             key = tag.lower()
             if key in seen:
