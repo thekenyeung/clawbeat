@@ -544,6 +544,7 @@ const App: React.FC = () => {
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-brand">ClawBeat<span>.co</span></div>
+          <a className="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
         </div>
       </footer>
     </div>

@@ -19,3 +19,7 @@ photoshop/
 
 # Allow web assets
 !public/images/
+public/media-va.html
+.gitignore
+public/media-vc.html
+public/media-vb.html

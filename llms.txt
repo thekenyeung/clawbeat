@@ -1,0 +1,32 @@
+# ClawBeat
+
+> ClawBeat.co is the intelligence feed for the OpenClaw agentic AI framework ecosystem. It curates news articles, research papers, GitHub projects, events, and daily briefings covering OpenClaw and alternative agentic frameworks (NanoClaw, etc.).
+
+ClawBeat is updated continuously via automated scrapers and a daily AI-generated briefing published each day at 5pm PST. All data is stored in Supabase and accessible via a public read-only API.
+
+## Site Pages
+
+- [Intel Feed](https://clawbeat.co/): Latest news and research articles about OpenClaw and the agentic AI ecosystem
+- [Events Calendar](https://clawbeat.co/events-calendar.html): Upcoming OpenClaw conferences, meetups, and virtual events
+- [Forge](https://clawbeat.co/forge.html): Tracked GitHub projects and repositories in the OpenClaw ecosystem
+- [Daily Edition](https://clawbeat.co/daily/): AI-generated daily briefings summarizing the top OpenClaw stories
+
+## OpenClaw Skill
+
+ClawBeat is available as an installable OpenClaw skill on ClawHub. Agents can query news, events, repos, research papers, and daily briefings directly — no credentials required.
+
+- [ClawBeat on ClawHub](https://clawhub.ai/thekenyeung/clawbeat): Install with `clawhub install clawbeat`
+
+## Data
+
+ClawBeat's live data is queryable via the Supabase REST API using a public read-only key. Available datasets:
+
+- `news_items` — curated news articles with title, url, summary, pub_date, tags
+- `events` — OpenClaw events with title, date, type (virtual/in-person), location
+- `github_projects` — tracked repos with name, description, stars, language, topics
+- `research_papers` — papers with title, authors, pub_date, abstract
+- `daily_editions` — daily briefing stories with headline, summary, analysis, and why-it-matters
+
+## About
+
+ClawBeat is an independent publication. It is not affiliated with or endorsed by the OpenClaw project or its maintainers.
