@@ -15,7 +15,11 @@ from dotenv import load_dotenv, find_dotenv
 from bs4 import BeautifulSoup
 from google import genai
 from google.genai import types
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+_PACIFIC = ZoneInfo("America/Los_Angeles")
+_UTC = timezone.utc
 from urllib.parse import urlparse
 from newspaper import Article
 try:
@@ -409,11 +413,14 @@ def scan_rss():
                 if not passes or (not is_brand_title and density < 1):
                     continue
 
-                # Use actual publication date when available, fall back to today
+                # Use actual publication date when available, fall back to today.
+                # rss_date is naive UTC (from feedparser published_parsed); convert to
+                # Pacific before stamping so articles published after 4 pm PST aren't
+                # incorrectly dated as tomorrow by the frontend's Pacific-time filter.
                 if rss_date:
-                    article_date = rss_date.strftime("%m-%d-%Y")
+                    article_date = datetime(*rss_date.timetuple()[:6], tzinfo=_UTC).astimezone(_PACIFIC).strftime("%m-%d-%Y")
                 else:
-                    article_date = now.strftime("%m-%d-%Y")
+                    article_date = datetime.now(_PACIFIC).strftime("%m-%d-%Y")
 
                 display_source = source_name
                 if display_source == "Medium":
@@ -487,12 +494,13 @@ def scan_hackernews(hours_back: int = 48) -> list:
                 hn_points   = hit.get('points', 0) or 0
                 hn_comments = hit.get('num_comments', 0) or 0
 
-                # Publication date from HN Unix timestamp
+                # Publication date from HN Unix timestamp — use Pacific so articles
+                # submitted after 4 pm PST (past UTC midnight) land on the correct day.
                 created_at_i = hit.get('created_at_i', 0)
                 if created_at_i:
-                    article_date = datetime.fromtimestamp(created_at_i).strftime('%m-%d-%Y')
+                    article_date = datetime.fromtimestamp(created_at_i, tz=_PACIFIC).strftime('%m-%d-%Y')
                 else:
-                    article_date = datetime.now().strftime('%m-%d-%Y')
+                    article_date = datetime.now(_PACIFIC).strftime('%m-%d-%Y')
 
                 # Source name: derive from URL domain (whitelist-aware via get_source_type)
                 try:
@@ -546,7 +554,7 @@ def scan_google_news():
             if passes and density >= 2:
                 found.append({
                     "title": e.title, "url": e.link, "source": "Web Search", 
-                    "summary": clean_text[:250] + "...", "date": datetime.now().strftime("%m-%d-%Y"), 
+                    "summary": clean_text[:250] + "...", "date": datetime.now(_PACIFIC).strftime("%m-%d-%Y"),
                     "density": density, "vec": None
                 })
     except: pass
