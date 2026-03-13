@@ -13,6 +13,7 @@ Discovery (RSS-first, per editorial plan):
     • Eventbrite       — DISABLED (tag-injection bug; see scan_eventbrite docstring)
     • Luma (search)    — keyword search page for "openclaw"
     • Luma (community) — lu.ma/claw calendar directly (trusted, no keyword filter)
+    • claw-con.com     — official ClawCon tour page (trusted, no keyword filter)
     • Meetup           — keyword search pages for "openclaw"
     • AI Tinkerers     — aitinkerers.org/p/events (keyword filter applied)
     • Eventship        — eventship.com search for "openclaw"
@@ -131,6 +132,10 @@ LUMA_COMMUNITY_CALENDARS = [
     "https://luma.com/claw",  # OpenClaw community calendar (canonical)
     "https://lu.ma/claw",     # Same calendar, lu.ma domain alias
 ]
+
+# Official ClawCon world-tour events page.
+# Trusted first-party source — keyword density filter is skipped.
+CLAWCON_EVENTS_URL = "https://www.claw-con.com"
 
 # Hand-curated OpenClaw event URLs (seed list).
 # Add specific event pages here to guarantee they are ingested on the next run.
@@ -757,6 +762,89 @@ def scan_luma_communities() -> list[dict]:
     return found
 
 
+def scan_clawcon() -> list[dict]:
+    """
+    Scrape the official ClawCon world-tour events page (claw-con.com) for Luma
+    event links and ingest each one.
+
+    Trusted first-party source — keyword density filter is skipped.
+    Uses the same JSON-LD / og: meta extraction pipeline as scan_luma_communities().
+    """
+    found = []
+    print(f"  📅 ClawCon: {CLAWCON_EVENTS_URL}")
+    soup, raw = fetch_html(CLAWCON_EVENTS_URL)
+    if not soup:
+        return found
+
+    event_urls: set[str] = set()
+
+    # Collect Luma event links from anchor tags
+    _LUMA_EVENT_RE = re.compile(
+        r'^https?://(?:lu\.ma|(?:www\.)?luma\.com)/[a-z0-9_-]{3,}$',
+        re.IGNORECASE,
+    )
+    for a in soup.find_all("a", href=True):
+        href = str(a["href"]).split("?")[0].split("#")[0]
+        if not href.startswith("http"):
+            href = urljoin(CLAWCON_EVENTS_URL, href)
+        if _LUMA_EVENT_RE.match(href):
+            # Normalise to luma.com domain
+            href = re.sub(r'^https?://lu\.ma/', 'https://luma.com/', href)
+            event_urls.add(href)
+
+    # Regex fallback: scan raw HTML for luma links that might be in JS/data attrs
+    if not event_urls:
+        for m in re.finditer(r'https?://(?:lu\.ma|luma\.com)/([a-z0-9_-]{3,})', raw, re.IGNORECASE):
+            slug = m.group(1).lower()
+            if slug not in ("search", "calendar", "user", "community", "home"):
+                event_urls.add(f"https://luma.com/{slug}")
+
+    print(f"     Found {len(event_urls)} Luma event link(s) on claw-con.com.")
+    for link in sorted(event_urls):
+        time.sleep(1.5)
+        soup2, _ = fetch_html(link)
+        if not soup2:
+            continue
+
+        schemas = find_event_schemas(extract_json_ld(soup2))
+        added = False
+        for s in schemas:
+            e = schema_to_event(s, link)
+            if e:
+                found.append(e)
+                print(f"     ✅ {e['title'][:60]}")
+                added = True
+                break
+
+        if not added:
+            def _og(prop: str) -> str:
+                tag = soup2.find("meta", {"property": f"og:{prop}"}) or \
+                      soup2.find("meta", {"name": prop})
+                return str(tag["content"]).strip() if tag and tag.get("content") else ""
+
+            title = _og("title") or (soup2.title.string.strip() if soup2.title else "")
+            if title:
+                page_text = soup2.get_text(separator=" ", strip=True)
+                description = clean_text(_og("description"))
+                start_date  = _extract_date_from_text(page_text)
+                found.append({
+                    "url":              link,
+                    "title":            title,
+                    "organizer":        "OpenClaw",
+                    "event_type":       "in-person",
+                    "location_city":    "",
+                    "location_state":   "",
+                    "location_country": "",
+                    "start_date":       start_date,
+                    "end_date":         start_date,
+                    "description":      description,
+                })
+                print(f"     ✅ {title[:60]} (og: fallback)")
+
+    time.sleep(2)
+    return found
+
+
 def scan_seed_events() -> list[dict]:
     """
     Directly fetch hand-curated OpenClaw event URLs from LUMA_SEED_EVENTS.
@@ -1252,7 +1340,7 @@ if __name__ == "__main__":
         "     Seed events: hand-curated Luma + Maven URLs (no keyword filter)\n"
         "     Layer 1 (RSS/API): Google News · Reddit · HN  (all 3 keywords)\n"
         "     Layer 2 (scrapers): [Eventbrite DISABLED] · Luma search · lu.ma/claw\n"
-        "                         AI Tinkerers · Eventship · Meetup · Circle.so · Maven\n"
+        "                         claw-con.com · AI Tinkerers · Eventship · Meetup · Circle.so · Maven\n"
         "     Validation: any ecosystem keyword must appear in title OR description\n"
         "     Note: lu.ma/claw + seed events skip the keyword filter\n"
     )
@@ -1273,6 +1361,7 @@ if __name__ == "__main__":
         + scan_eventbrite()
         + scan_luma()
         + scan_luma_communities()
+        + scan_clawcon()
         + scan_aitinkerers()
         + scan_eventship()
         + scan_meetup()
