@@ -424,8 +424,19 @@ const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
 const PER_PAGE = 20;
 const MAIN_CH_THRESHOLD = 10; // channels with > this many videos shown by default
 
+// YouTube-category channels from whitelist.json (Category === "YouTube")
+const YOUTUBE_WHITELIST = new Set([
+  "matthew berman", "alex finn", "corbin", "y combinator", "samin yasar",
+  "lex fridman", "brock mesarich", "nate b jones", "peter yang",
+  "across the rubicon", "tbpn", "the ai daily brief: artificial intelligence news",
+  "universe of ai", "mark kashef", "john hammond", "the ai grid",
+  "ai revolution", "limitless podcast", "chris verzwyvelt",
+  "the neuro futurist with prof joel pearson", "greg isenberg",
+  "samuel gregory", "walter pasquarelli", "brian casel",
+  "duncan rogoff | ai automation", "ai master", "this week in startups"
+]);
+
 let allVideos = [];
-let whitelistChannels = new Set(); // lowercase source_names from whitelist_sources
 let spotlightVids = [];
 let filtered = [];
 let currentPage = 1;
@@ -471,35 +482,29 @@ function closeModal() {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 /* ── SPOTLIGHT ALGORITHM ──
-   1. Filter videos to whitelisted channels (case-insensitive match on source_name).
-   2. Per channel, find the best video: keyword-matching today's Daily Edition first,
-      otherwise the most recently published (allVideos is pre-sorted desc by published_at).
-   3. Sort candidates by keyword score desc, then by position in allVideos (recency proxy).
-   4. Take top 3.
+   1. Group videos by whitelisted YouTube channel.
+   2. Per channel, take up to 5 most recent uploads and pick one at random.
+   3. Sort selected videos by recency, take top 3.
 */
-function computeSpotlight(todayKeywords) {
-  const wl = allVideos.filter(v => v.channel && whitelistChannels.has((v.channel||'').toLowerCase()));
-  if (!wl.length) return [];
+function computeSpotlight() {
+  const channelVideos = new Map(); // lowercase channel → video array (already sorted desc)
 
-  const channelBest = new Map(); // lowercase channel → { video, kwScore, idx }
-
-  wl.forEach((v, listIdx) => {
-    const ch = (v.channel||'').toLowerCase();
-    const text = ((v.title||'') + ' ' + (v.description||'')).toLowerCase();
-    const kwScore = todayKeywords.length
-      ? todayKeywords.reduce((sum, kw) => sum + (text.includes(kw) ? 1 : 0), 0)
-      : 0;
-
-    const existing = channelBest.get(ch);
-    if (!existing || kwScore > existing.kwScore) {
-      channelBest.set(ch, { video: v, kwScore, idx: existing ? existing.idx : listIdx });
-    }
+  allVideos.forEach(v => {
+    const ch = (v.channel || '').toLowerCase();
+    if (!YOUTUBE_WHITELIST.has(ch)) return;
+    if (!channelVideos.has(ch)) channelVideos.set(ch, []);
+    channelVideos.get(ch).push(v);
   });
 
-  return [...channelBest.values()]
-    .sort((a, b) => b.kwScore !== a.kwScore ? b.kwScore - a.kwScore : a.idx - b.idx)
-    .slice(0, 3)
-    .map(c => c.video);
+  const candidates = [];
+  channelVideos.forEach(vids => {
+    const recent = vids.slice(0, 5); // top 5 most recent for this channel
+    const picked = recent[Math.floor(Math.random() * recent.length)];
+    candidates.push(picked);
+  });
+
+  candidates.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+  return candidates.slice(0, 3);
 }
 
 /* ── SIDEBAR ── */
@@ -753,41 +758,14 @@ function changePage(p) {
 async function init() {
   const root = document.getElementById('content-root');
   try {
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-
-    const [vRes, wRes, eRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/videos?select=*&order=published_at.desc&limit=500`, {
-        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
-      }),
-      fetch(`${SUPABASE_URL}/rest/v1/whitelist_sources?select=source_name`, {
-        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
-      }),
-      fetch(`${SUPABASE_URL}/rest/v1/daily_editions?select=stories&edition_date=eq.${today}`, {
-        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
-      })
-    ]);
+    const vRes = await fetch(`${SUPABASE_URL}/rest/v1/videos?select=*&order=published_at.desc&limit=500`, {
+      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
+    });
 
     if (!vRes.ok) throw new Error(`Videos: HTTP ${vRes.status}`);
     allVideos = await vRes.json();
 
-    if (wRes.ok) {
-      const wlData = await wRes.json();
-      wlData.forEach(ws => { if (ws.source_name) whitelistChannels.add(ws.source_name.toLowerCase()); });
-    }
-
-    let todayKeywords = [];
-    if (eRes.ok) {
-      const edData = await eRes.json();
-      if (edData[0]?.stories) {
-        const stopWords = new Set(['that','this','with','have','from','they','will','been','were','their','there','what','when','which','also','into','more','some','than','then','them','these','those','said','says','about','after','before','would','could','should']);
-        edData[0].stories.forEach(s => {
-          const words = ((s.headline||'') + ' ' + (s.category||'')).toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
-          words.filter(w => !stopWords.has(w)).forEach(w => todayKeywords.push(w));
-        });
-      }
-    }
-
-    spotlightVids = computeSpotlight(todayKeywords);
+    spotlightVids = computeSpotlight();
 
   } catch (err) {
     root.innerHTML = `<div class="empty-state">// failed to load — ${esc(String(err))}</div>`;
