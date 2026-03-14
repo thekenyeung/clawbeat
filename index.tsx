@@ -24,7 +24,8 @@ import {
   BookOpen,
   Microscope,
   MapPin,
-  Globe
+  Globe,
+  Layers
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -435,9 +436,17 @@ const App: React.FC = () => {
             <span className="brand-text">ClawBeat<span>.co</span></span>
           </button>
           <nav className="header-nav">
-            <button className={`nav-item${activePage === 'news' ? ' active' : ''}`} onClick={() => handleNavClick('news')}>
-              <Newspaper size={16} />Intel
-            </button>
+            <div className="nav-dropdown">
+              <button className={`nav-item${activePage === 'news' ? ' active' : ''}`} onClick={() => handleNavClick('news')}>
+                <Newspaper size={16} />Intel
+              </button>
+              <div className="nav-dropdown-menu">
+                <a href="/trace/" className="nav-dropdown-item">
+                  <Layers size={14} />
+                  <div><div className="nav-dropdown-label">Trace</div><div className="nav-dropdown-sub">Monthly magazine</div></div>
+                </a>
+              </div>
+            </div>
             <a href="/research.html" className="nav-item"><BookOpen size={16} />Research</a>
             <a href="/media.html" className="nav-item"><Video size={16} />Media</a>
             <a href="/forge.html" className="nav-item"><Github size={16} />Forge</a>
@@ -452,6 +461,7 @@ const App: React.FC = () => {
           <button className={`mobile-nav-item${activePage === 'news' ? ' active' : ''}`} onClick={() => handleNavClick('news')}>
             <Newspaper size={16} />Intel Feed
           </button>
+          <a href="/trace/" className="mobile-subnav-item"><Layers size={14} />Trace Magazine</a>
           <a href="/research.html" className="mobile-nav-item"><BookOpen size={16} />Research</a>
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
