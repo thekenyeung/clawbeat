@@ -16,7 +16,7 @@ Optional:
   EDITION_DATE           Override date in YYYY-MM-DD format (defaults to today PT)
 
 Output:
-  public/daily/YYYY-MM-DD.html
+  public/daily/YYYY-MM-DD/[seo-slug].html
   Supabase daily_editions table row updated
 """
 
@@ -270,6 +270,82 @@ def call_gemini(client, prompt: str, retries: int = 5) -> str:
                 return ""
     return ""
 
+def slugify(text: str, fallback: str = "edition") -> str:
+    """Convert a headline into a URL-safe ASCII slug (max 60 chars)."""
+    text = text.encode("ascii", "ignore").decode("ascii")  # strip non-ASCII
+    text = text.lower()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    text = re.sub(r"-+", "-", text)
+    text = text.strip("-")
+    return text[:60] or fallback
+
+
+def generate_edition_summary(client, stories: list[dict]) -> tuple:
+    """
+    Generate a 2–3 sentence edition overview from all story headlines/summaries.
+    Returns (summary_html, summary_plain) tuple.
+    summary_html  → <p class="edition-summary">…</p>   (baked into page HTML)
+    summary_plain → plain text ≤155 chars              (meta description / JSON-LD)
+    """
+    if not stories:
+        return "", ""
+
+    story_lines = []
+    for s in stories:
+        headline = s.get("headline", "")
+        raw_summary = re.sub(r"<[^>]+>", "", s.get("summary_html", "")).strip()
+        story_lines.append(f"- {headline}: {raw_summary[:300]}")
+
+    prompt = textwrap.dedent(f"""
+        You are an editor at ClawBeat, an intelligence digest covering the OpenClaw
+        agentic AI framework ecosystem.
+
+        Today's edition covers these stories:
+        {chr(10).join(story_lines)}
+
+        Write a 2–3 sentence editorial overview paragraph that:
+        - Summarizes the major themes across today's signals
+        - Is specific — name technologies, companies, or trends where relevant
+        - Reads as a tight lead-in to the stories that follow
+        - Does NOT use phrases like "today's edition", "in this issue", or "we cover"
+        - Uses present tense, authoritative voice
+        - Is suitable as both a full display paragraph AND a ~155-char meta description
+
+        Return ONLY two parts separated by exactly the line: ---PLAIN---
+
+        PART 1 (display HTML):
+        <p class="edition-summary">Your 2–3 sentence paragraph here.</p>
+
+        ---PLAIN---
+
+        PART 2 (plain text, ≤155 characters, no HTML):
+        Your condensed plain-text version here.
+    """).strip()
+
+    result = call_gemini(client, prompt)
+
+    if "---PLAIN---" in result:
+        html_raw, plain_raw = result.split("---PLAIN---", 1)
+        plain = plain_raw.strip()[:155]
+    else:
+        html_raw = result
+        plain = ""
+
+    # Ensure correct HTML wrapper
+    match = re.search(r'<p class="edition-summary">.*?</p>', html_raw, re.DOTALL)
+    if match:
+        summary_html = match.group(0)
+    else:
+        text = re.sub(r"<[^>]+>", "", html_raw).strip()
+        summary_html = f'<p class="edition-summary">{text}</p>'
+
+    if not plain:
+        plain = re.sub(r"<[^>]+>", "", summary_html).strip()[:155]
+
+    return summary_html, plain
+
+
 def generate_ai_content(client, article_text: str, fallback: str = "") -> tuple:
     """
     Generate both summary and analysis in a SINGLE Gemini call per story.
@@ -506,35 +582,53 @@ def main():
         }
         final_stories.append(story)
 
+    # --- Edition summary (one extra Gemini call, baked into HTML for SEO) ---
+    print("[daily-edition] Generating edition summary…")
+    edition_summary_html, edition_summary_plain = generate_edition_summary(model, final_stories)
+    time.sleep(10)
+
+    # --- Build slug from story 1 headline ---
+    s1 = final_stories[0] if final_stories else {}
+    edition_slug = slugify(s1.get("headline", edition_iso), fallback=edition_iso)
+
     # --- Save to Supabase ---
     print("[daily-edition] Saving to Supabase daily_editions…")
     sb.table("daily_editions").upsert({
         "edition_date": edition_iso,
         "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
         "stories":      final_stories,
+        "permalink":    edition_slug,
+        "summary":      edition_summary_plain,
     }, on_conflict="edition_date").execute()
 
     # --- Build template variables ---
-    # Story content is now fetched client-side from Supabase — only global vars
-    # and story-1 fields (for OG/social meta tags) need to be baked into the HTML.
-    s1 = final_stories[0] if final_stories else {}
+    # Global vars + story-1 fields (OG/social meta) + edition summary all baked into HTML.
+    # Story content is fetched client-side from Supabase on page load.
     template_vars: dict[str, str] = {
-        "DATE":             display_date,
-        "EDITION_ISO":      edition_iso,
-        "COMPILED_TIME":    COMPILED_TIME,
-        "SUPABASE_URL":     SUPABASE_URL,
-        "SUPABASE_ANON_KEY": SUPABASE_ANON_KEY,
-        # Story 1 fields needed for OG title + og:image meta tags
-        "STORY_1_HEADLINE":  s1.get("headline", "—"),
-        "STORY_1_IMAGE_URL": s1.get("image_url", ""),
+        "DATE":                  display_date,
+        "EDITION_ISO":           edition_iso,
+        "EDITION_SLUG":          edition_slug,
+        "COMPILED_TIME":         COMPILED_TIME,
+        "SUPABASE_URL":          SUPABASE_URL,
+        "SUPABASE_ANON_KEY":     SUPABASE_ANON_KEY,
+        # Story 1 fields for OG/social meta tags
+        "STORY_1_HEADLINE":      s1.get("headline", "—"),
+        "STORY_1_IMAGE_URL":     s1.get("image_url", ""),
+        # JSON-encoded values safe for embedding in JSON-LD
+        "STORY_1_HEADLINE_JSON": json.dumps(f"The Daily Edition: {s1.get('headline', '')}"),
+        # Edition summary — HTML block and plain text
+        "EDITION_SUMMARY":       edition_summary_html,
+        "EDITION_SUMMARY_PLAIN": edition_summary_plain,
+        "EDITION_SUMMARY_JSON":  json.dumps(edition_summary_plain),
     }
 
     # --- Render & write HTML ---
     template_html = TEMPLATE_PATH.read_text(encoding="utf-8")
     output_html   = render_template(template_html, template_vars)
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = OUTPUT_DIR / f"{edition_iso}.html"
+    edition_dir = OUTPUT_DIR / edition_iso
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    output_path = edition_dir / f"{edition_slug}.html"
     output_path.write_text(output_html, encoding="utf-8")
     print(f"[daily-edition] Written to {output_path}")
     print(f"[daily-edition] Done. Stories: {len(final_stories)}")

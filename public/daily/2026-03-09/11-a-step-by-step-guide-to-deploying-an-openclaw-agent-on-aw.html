@@ -7,27 +7,20 @@
   ║  TEMPLATE VARIABLES (baked at generation time)                   ║
   ║                                                                  ║
   ║  GLOBAL                                                          ║
-  ║    {{DATE}}                 Edition date display, MM-DD-YYYY     ║
-  ║    {{EDITION_ISO}}          Edition date ISO, YYYY-MM-DD         ║
-  ║    {{EDITION_SLUG}}         SEO slug from story 1 headline       ║
-  ║    {{COMPILED_TIME}}        Compilation time, e.g. "17:00 PT"   ║
-  ║    {{SUPABASE_URL}}         Supabase project URL                 ║
-  ║    {{SUPABASE_ANON_KEY}}    Supabase anon (public read) key      ║
+  ║    03-09-2026            Edition date display, MM-DD-YYYY          ║
+  ║    2026-03-09     Edition date ISO, YYYY-MM-DD              ║
+  ║    17:00 PT   Compilation time, e.g. "17:00 PT"        ║
+  ║    https://twouuiapzrkezwbtylij.supabase.co    Supabase project URL                      ║
+  ║    sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG Supabase anon (public read) key        ║
   ║                                                                  ║
-  ║  STORY 1 (for OG / social meta tags)                             ║
-  ║    {{STORY_1_HEADLINE}}     Lead headline (plain text)           ║
-  ║    {{STORY_1_HEADLINE_JSON}} Lead headline (JSON-encoded)        ║
-  ║    {{STORY_1_IMAGE_URL}}    Lead hero image URL (og:image)       ║
-  ║                                                                  ║
-  ║  EDITION SUMMARY (AI-generated overview, baked for SEO/GEO)     ║
-  ║    {{EDITION_SUMMARY}}      HTML paragraph for display           ║
-  ║    {{EDITION_SUMMARY_PLAIN}} Plain text (≤155 chars)            ║
-  ║    {{EDITION_SUMMARY_JSON}} JSON-encoded plain text             ║
+  ║  STORY 1 ONLY (for OG / social meta tags)                        ║
+  ║    #11 A Step-by-Step Guide to Deploying an OpenClaw Agent on AWS Lightsail with LINE   Lead headline                          ║
+  ║    https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg  Lead hero image URL (og:image)         ║
   ║                                                                  ║
   ║  NOTES                                                           ║
   ║  · All 4 story signals are fetched client-side from Supabase    ║
   ║    daily_editions table and rendered on page load.               ║
-  ║  · OG/social tags + edition summary are baked at gen time.      ║
+  ║  · OG/social tags are baked at generation time from story 1.    ║
   ║  · Admin edits in Supabase appear on next page refresh.         ║
   ╚══════════════════════════════════════════════════════════════════╝
 -->
@@ -49,44 +42,15 @@
   <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
 
   <!-- ══ DYNAMIC: SEO & social meta ══ -->
-  <title>The Daily Edition: {{STORY_1_HEADLINE}} — ClawBeat · {{DATE}}</title>
-  <meta name="description" content="{{EDITION_SUMMARY_PLAIN}}">
-  <meta property="og:title" content="The Daily Edition: {{STORY_1_HEADLINE}} | ClawBeat">
-  <meta property="og:description" content="{{EDITION_SUMMARY_PLAIN}}">
-  <meta property="og:image" content="{{STORY_1_IMAGE_URL}}">
-  <meta property="og:url" content="https://clawbeat.co/daily/{{EDITION_ISO}}/{{EDITION_SLUG}}.html">
+  <title>The Daily Edition: #11 A Step-by-Step Guide to Deploying an OpenClaw Agent on AWS Lightsail with LINE — ClawBeat · 03-09-2026</title>
+  <meta name="description" content="#11 A Step-by-Step Guide to Deploying an OpenClaw Agent on AWS Lightsail with LINE and more — AI-powered analysis of today's top OpenClaw stories, compiled at 17:00 PT.">
+  <meta property="og:title" content="The Daily Edition: #11 A Step-by-Step Guide to Deploying an OpenClaw Agent on AWS Lightsail with LINE | ClawBeat">
+  <meta property="og:description" content="#11 A Step-by-Step Guide to Deploying an OpenClaw Agent on AWS Lightsail with LINE and more — AI-powered analysis of today's top OpenClaw and AI stories.">
+  <meta property="og:image" content="https://clawbeat.co/images/lobster-adobe-firefly-paper-1500x571.jpg">
+  <meta property="og:url" content="https://clawbeat.co/daily/2026-03-09/11-a-step-by-step-guide-to-deploying-an-openclaw-agent-on-aw.html">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ClawBeat">
-  <meta property="article:published_time" content="{{EDITION_ISO}}">
-  <meta property="article:author" content="ClawBeat">
-  <meta property="article:section" content="Technology">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Daily Edition: {{STORY_1_HEADLINE}} | ClawBeat">
-  <meta name="twitter:description" content="{{EDITION_SUMMARY_PLAIN}}">
-  <meta name="twitter:image" content="{{STORY_1_IMAGE_URL}}">
-  <link rel="canonical" href="https://clawbeat.co/daily/{{EDITION_ISO}}/{{EDITION_SLUG}}.html">
-
-  <!-- ══ STRUCTURED DATA ══ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": {{STORY_1_HEADLINE_JSON}},
-    "description": {{EDITION_SUMMARY_JSON}},
-    "image": ["{{STORY_1_IMAGE_URL}}"],
-    "datePublished": "{{EDITION_ISO}}",
-    "dateModified": "{{EDITION_ISO}}",
-    "author": { "@type": "Organization", "name": "ClawBeat", "url": "https://clawbeat.co" },
-    "publisher": {
-      "@type": "Organization",
-      "name": "ClawBeat",
-      "url": "https://clawbeat.co",
-      "logo": { "@type": "ImageObject", "url": "https://clawbeat.co/images/clawbeat-icon-claw-logo-32x32.ico" }
-    },
-    "url": "https://clawbeat.co/daily/{{EDITION_ISO}}/{{EDITION_SLUG}}.html",
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://clawbeat.co/daily/{{EDITION_ISO}}/{{EDITION_SLUG}}.html" }
-  }
-  </script>
+  <link rel="canonical" href="https://clawbeat.co/daily/2026-03-09/11-a-step-by-step-guide-to-deploying-an-openclaw-agent-on-aw.html">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -396,28 +360,6 @@
     .footer-brand span { color: var(--orange); }
     .footer-mono  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
     .footer-back a { font-family: var(--mono); font-size: var(--min-font); color: var(--orange); }
-    .clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
-    .clawhub-badge:hover { color: var(--orange); }
-    .clawhub-banner { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; max-width: 1120px; margin: 0 auto; }
-    .cb-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); white-space: nowrap; }
-    .cb-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(249,115,22,0.2), transparent); }
-    .cb-cta { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; white-space: nowrap; transition: color 0.15s; }
-    .cb-cta:hover { color: var(--orange); }
-
-    /* ── EDITION SUMMARY ── */
-    .edition-summary-block {
-      max-width: var(--col-w); margin: 0 auto;
-      padding: 1.25rem 1.5rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .edition-summary {
-      font-size: 0.975rem; line-height: 1.75;
-      color: var(--text-2); font-style: italic;
-    }
-    @media (max-width: 640px) {
-      .edition-summary-block { padding: 1rem 1rem 1.25rem; }
-      .edition-summary { font-size: 0.9rem; }
-    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
@@ -434,6 +376,13 @@
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
       .footer-mono  { display: none; }
     }
+    .clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+    .clawhub-badge:hover { color: var(--orange); }
+    .clawhub-banner { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1.5rem; max-width: 1120px; margin: 0 auto; }
+    .cb-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); white-space: nowrap; }
+    .cb-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(249,115,22,0.2), transparent); }
+    .cb-cta { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; white-space: nowrap; transition: color 0.15s; }
+    .cb-cta:hover { color: var(--orange); }
   </style>
 </head>
 <body>
@@ -480,9 +429,9 @@
   </h1>
   <div class="masthead-date-bar" role="complementary" aria-label="Edition metadata">
     <!-- ══ DYNAMIC ══ -->
-    <div class="date-chip highlight"><strong>{{DATE}}</strong></div>
+    <div class="date-chip highlight"><strong>03-09-2026</strong></div>
     <div class="date-divider" aria-hidden="true"></div>
-    <div class="date-chip"><span>compiled</span>&nbsp;<strong>{{COMPILED_TIME}}</strong></div>
+    <div class="date-chip"><span>compiled</span>&nbsp;<strong>17:00 PT</strong></div>
     <div class="date-divider" aria-hidden="true"></div>
     <div class="date-chip"><span>signals</span>&nbsp;<strong>4</strong></div>
     <div class="date-divider" aria-hidden="true"></div>
@@ -496,11 +445,7 @@
   <div class="clawhub-banner">
     <span class="cb-label">// openclaw_skill</span>
     <div class="cb-line"></div>
-    <a class="cb-cta" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">clawhub install clawbeat ↗</a>
-  </div>
-
-  <div class="edition-summary-block">
-    {{EDITION_SUMMARY}}
+    <a class="cb-cta" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">clawhub install clawbeat u2197</a>
   </div>
 
   <div id="signals-container" aria-live="polite">
@@ -518,17 +463,17 @@
   <div class="footer-inner">
     <div class="footer-brand">ClawBeat<span>.co</span></div>
     <!-- ══ DYNAMIC ══ -->
-    <div class="footer-mono">The Daily Edition · openclaw intelligence · {{DATE}}</div>
-    <div class="footer-back"><a href="/?tab=news">← intel_feed</a></div>
+    <div class="footer-mono">The Daily Edition · openclaw intelligence · 03-09-2026</div>
     <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+    <div class="footer-back"><a href="/?tab=news">← intel_feed</a></div>
   </div>
 </footer>
 
 <script>
   /* ══ Edition config — values baked in at generation time ══ */
-  const EDITION_DATE  = '{{EDITION_ISO}}';
-  const SUPABASE_URL  = '{{SUPABASE_URL}}';
-  const SUPABASE_ANON = '{{SUPABASE_ANON_KEY}}';
+  const EDITION_DATE  = '2026-03-09';
+  const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
 
   /* ── HTML text-escape helper (prevent XSS in plain-text fields) ── */
   function esc(s) {
