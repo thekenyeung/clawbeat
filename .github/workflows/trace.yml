@@ -1,0 +1,51 @@
+name: Trace Monthly Issue
+
+on:
+  schedule:
+    # 06:00 UTC on the 1st of every month
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      trace_month:
+        description: 'Month to generate (YYYY-MM). Leave blank to use previous month.'
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    name: Generate Trace Issue
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 supabase google-genai
+
+      - name: Run generation script
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_ANON_KEY:    ${{ secrets.SUPABASE_ANON_KEY }}
+          GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
+          TRACE_MONTH:          ${{ inputs.trace_month }}
+        run: python generate_trace.py
+
+      - name: Commit and push generated HTML
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "GitHub Actions"
+          git add public/trace/
+          # Only commit if there are staged changes
+          git diff --staged --quiet || git commit -m "Trace: $(python -c "import os,datetime,calendar; ym=os.environ.get('TRACE_MONTH','').strip() or ((datetime.date.today().replace(day=1)-datetime.timedelta(days=1)).strftime('%Y-%m')); y,m=int(ym[:4]),int(ym[5:7]); print(f'{calendar.month_name[m]} {y}')")"
+          git push
+        env:
+          TRACE_MONTH: ${{ inputs.trace_month }}

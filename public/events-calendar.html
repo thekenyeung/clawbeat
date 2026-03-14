@@ -187,6 +187,17 @@
     }
     .nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
     .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; }
+    .nav-dropdown-item:hover { background: var(--orange-dim); }
+    .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+    .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+    .nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+    .mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+    .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+    .mobile-subnav-item svg { width: 14px; height: 14px; }
 
     /* ── PAGE HERO ── */
     .page-hero {
@@ -586,7 +597,15 @@
       <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
     <nav class="header-nav">
-      <a href="/?tab=news" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+      <div class="nav-dropdown">
+        <a href="/?tab=news" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+        </div>
+      </div>
       <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
       <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
       <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
@@ -603,6 +622,7 @@
 <!-- ── MOBILE MENU ── -->
 <div class="mobile-menu" id="mobile-menu">
   <a href="/?tab=news" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
   <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
