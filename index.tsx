@@ -705,8 +705,26 @@ const feedScore = (item: NewsItem): number => {
 // Score an article for spotlight selection (higher = more prominent)
 const scoreArticle = (item: NewsItem): number => {
   let score = (item.moreCoverage?.length || 0) * 3;
+
+  // Priority publisher boost (Substack, Beehiiv newsletters)
   if (item.source_type === 'priority') score += 2;
-  if (checkIfVerified(item)) score += 1;
+
+  // Whitelist source boost — medium.com gets partial credit over other whitelisted sources
+  if (checkIfVerified(item)) {
+    score += item.url?.toLowerCase().includes('medium.com') ? 1 : 3;
+  }
+
+  // OpenClaw-specific boost — news articles only (not GitHub repos, YouTube, or "Show HN" posts)
+  const isNewsArticle =
+    !item.url?.toLowerCase().includes('github.com') &&
+    !item.url?.toLowerCase().includes('youtube.com') &&
+    !item.url?.toLowerCase().includes('youtu.be') &&
+    !item.title?.toLowerCase().startsWith('show hn:');
+  if (isNewsArticle) {
+    if (item.d1_tier === 1) score += 5;       // Direct OpenClaw/Moltbot/Clawdbot coverage
+    else if (item.d1_tier === 2) score += 3;  // Moltbook coverage
+  }
+
   return score;
 };
 

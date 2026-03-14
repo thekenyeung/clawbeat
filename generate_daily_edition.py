@@ -43,8 +43,10 @@ SUPABASE_ANON_KEY    = os.environ.get("SUPABASE_ANON_KEY", "")   # public read k
 GEMINI_API_KEY       = os.environ["GEMINI_API_KEY"]
 EDITION_DATE_OVERRIDE = os.environ.get("EDITION_DATE", "").strip()  # YYYY-MM-DD
 
-TEMPLATE_PATH = Path(__file__).parent / "public" / "daily-edition.html"
-OUTPUT_DIR    = Path(__file__).parent / "public" / "daily"
+TEMPLATE_PATH  = Path(__file__).parent / "public" / "daily-edition.html"
+OUTPUT_DIR     = Path(__file__).parent / "public" / "daily"
+_WHITELIST_PATH = Path(__file__).parent / "src" / "whitelist.json"
+_WHITELIST: list[dict] = json.loads(_WHITELIST_PATH.read_text()) if _WHITELIST_PATH.exists() else []
 COMPILED_TIME = "17:00 PT"
 
 # Fallback hero images (rotated randomly) used when no og:image can be scraped
@@ -90,9 +92,47 @@ def fmt_display_date(iso: str) -> str:
 def get_supabase() -> Client:
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def _is_whitelisted(url: str, source: str) -> bool:
+    """Return True if the article's URL or source name matches a whitelist entry."""
+    url_lower    = (url    or "").lower()
+    source_lower = (source or "").lower().strip()
+    for w in _WHITELIST:
+        wname = str(w.get("Source Name", "") or "").lower().strip()
+        if wname and wname == source_lower:
+            return True
+        wurl = (str(w.get("Website URL", "") or "")
+                .lower()
+                .replace("https://", "")
+                .replace("http://", "")
+                .replace("www.", ""))
+        if wurl and wurl in url_lower:
+            return True
+    return False
+
+
 def score_article(item: dict) -> int:
     """Replicate frontend scoring for algorithmic spotlight selection."""
-    return len(item.get("more_coverage") or []) * 3
+    score = len(item.get("more_coverage") or []) * 3
+
+    # Priority publisher boost (Substack, Beehiiv newsletters)
+    if item.get("source_type") == "priority":
+        score += 2
+
+    # Whitelist source boost — medium.com gets partial credit over other whitelisted sources
+    url = (item.get("url") or "").lower()
+    if _is_whitelisted(item.get("url", ""), item.get("source", "")):
+        score += 1 if "medium.com" in url else 3
+
+    # OpenClaw-specific boost — news_items are already news articles; only exclude "Show HN" posts
+    title = (item.get("title") or "").lower()
+    if not title.startswith("show hn:"):
+        d1_tier = item.get("d1_tier")
+        if d1_tier == 1:
+            score += 5   # Direct OpenClaw/Moltbot/Clawdbot coverage
+        elif d1_tier == 2:
+            score += 3   # Moltbook coverage
+
+    return score
 
 def get_spotlight_articles(sb: Client, dispatch_date_mdy: str) -> list[dict]:
     """
@@ -102,7 +142,7 @@ def get_spotlight_articles(sb: Client, dispatch_date_mdy: str) -> list[dict]:
     """
     # Load all articles for this date
     articles_res = sb.table("news_items") \
-        .select("url,title,source,summary,date,more_coverage,tags") \
+        .select("url,title,source,summary,date,more_coverage,tags,d1_tier,source_type") \
         .eq("date", dispatch_date_mdy) \
         .execute()
     articles = articles_res.data or []
