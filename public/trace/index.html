@@ -1,22 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ╔══════════════════════════════════════════════════════════════════╗
-  ║  CLAWBEAT · TRACE — MAGAZINE CATALOG LANDING PAGE               ║
-  ║  Loads all published issues dynamically from Supabase           ║
-  ║  (trace_issues table) and renders them as issue covers.         ║
-  ╠══════════════════════════════════════════════════════════════════╣
-  ║  Supabase table: trace_issues                                   ║
-  ║    issue_ym       TEXT PRIMARY KEY  "2026-03"                   ║
-  ║    issue_number   TEXT              "001"                        ║
-  ║    month_label    TEXT              "March 2026"                 ║
-  ║    editorial      TEXT              AI-generated brief          ║
-  ║    cover_image    TEXT              URL of story 1 image        ║
-  ║    cover_headline TEXT              Story 1 headline            ║
-  ║    cover_slug     TEXT              Story 1 slug                ║
-  ║    story_count    INTEGER           Number of stories (20)      ║
-  ║    published_at   TIMESTAMPTZ       Generation timestamp        ║
-  ╚══════════════════════════════════════════════════════════════════╝
--->
 <html lang="en">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
@@ -29,8 +11,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#08090b">
-<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
-<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
 <title>Trace — Signal Intelligence Monthly · ClawBeat</title>
 <meta name="description" content="Trace is ClawBeat's monthly magazine curating the top 20 signals from the OpenClaw ecosystem. Deep analysis, curated intelligence, delivered monthly.">
 <meta property="og:title" content="Trace — Signal Intelligence Monthly | ClawBeat">
@@ -43,7 +25,6 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
 <style>
@@ -86,8 +67,8 @@ img { display: block; }
 .brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
 .brand-text span { color: var(--orange); }
 .header-nav { display: flex; align-items: center; gap: 0.25rem; }
-.nav-item { font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; }
-.nav-item svg { width: 15px; height: 15px; }
+.nav-item { font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
+.nav-item svg { width: 16px; height: 16px; }
 .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
 .nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
 .nav-dropdown { position: relative; }
@@ -107,7 +88,7 @@ img { display: block; }
 .mobile-menu.open { display: flex; }
 .mobile-nav-item { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
 .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
-.mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); }
+.mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 8px rgba(249,115,22,0.08); }
 .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
 .mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; background: var(--orange-dim); }
 .mobile-subnav-item svg { width: 14px; height: 14px; }
@@ -120,7 +101,6 @@ img { display: block; }
   border-bottom: 1px solid var(--border-2);
   padding: 5rem 1.5rem 4.5rem;
 }
-/* Animated scan-line grid */
 .catalog-hero::before {
   content: '';
   position: absolute; inset: 0; pointer-events: none;
@@ -128,7 +108,6 @@ img { display: block; }
     repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.014) 39px, rgba(255,255,255,0.014) 40px),
     repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.007) 79px, rgba(255,255,255,0.007) 80px);
 }
-/* Orange glow at top */
 .catalog-hero::after {
   content: '';
   position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
@@ -243,17 +222,6 @@ img { display: block; }
 .archive-section { max-width: 72rem; margin: 3rem auto 0; padding: 0 1.5rem; }
 .archive-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 
-/* Skeleton */
-.skeleton-card { border-radius: 0.75rem; border: 1px solid var(--border); background: var(--bg-2); overflow: hidden; animation: pulse 1.8s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-.skeleton-img { width: 100%; aspect-ratio: 16 / 9; background: var(--bg-3); }
-.skeleton-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
-.skeleton-line { height: 0.7rem; border-radius: 2px; background: var(--bg-3); }
-.skeleton-line.w-20 { width: 20%; }
-.skeleton-line.w-70 { width: 70%; }
-.skeleton-line.w-90 { width: 90%; }
-.skeleton-line.w-55 { width: 55%; }
-
 /* Issue card */
 .issue-card {
   border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden;
@@ -354,9 +322,9 @@ img { display: block; }
 <!-- ── HEADER ── -->
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="/" class="brand">
+    <a href="/?tab=news" class="brand">
       <div class="brand-img">
-        <img src="/images/clawbeat-icon-claw-logo-32x32.ico" alt="ClawBeat">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat">
       </div>
       <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
@@ -380,19 +348,20 @@ img { display: block; }
       <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
     </nav>
     <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu">
-      <i data-lucide="menu"></i>
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
     </button>
   </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="/?tab=news" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
-    <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
-    <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
-    <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
-    <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
-    <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
-    <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
-  </div>
 </header>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/?tab=news" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+</div>
 
 <!-- ── CATALOG HERO ── -->
 <section class="catalog-hero">
@@ -402,14 +371,14 @@ img { display: block; }
     <p class="catalog-hero-sub">
       The OpenClaw ecosystem, distilled. Every month, 20 top signals curated from the noise — each with deep AI analysis and a clear-eyed take on why it matters.
     </p>
-    <div class="catalog-stats" id="catalog-stats">
+    <div class="catalog-stats">
       <div class="stat-item">
-        <span class="stat-num" id="stat-issues">—</span>
+        <span class="stat-num">1</span>
         <span class="stat-label">Issues</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num" id="stat-signals">—</span>
+        <span class="stat-num">20</span>
         <span class="stat-label">Signals</span>
       </div>
       <div class="stat-divider"></div>
@@ -422,24 +391,26 @@ img { display: block; }
 </section>
 
 <!-- ── LATEST ISSUE ── -->
-<section class="latest-section" id="latest-section">
-  <!-- Rendered by JS -->
+<section class="latest-section">
   <div class="section-rule">
     <div class="section-rule-label"><span class="sl">//</span> Latest Issue <span class="badge">New</span></div>
     <div class="section-rule-line"></div>
   </div>
-  <div id="latest-card-container">
-    <!-- Skeleton -->
-    <div class="skeleton-card" style="min-height:400px;display:flex">
-      <div style="flex:1;padding:2.5rem 2.75rem;display:flex;flex-direction:column;gap:1rem;justify-content:center">
-        <div class="skeleton-line w-20"></div>
-        <div class="skeleton-line w-70" style="height:1.4rem"></div>
-        <div class="skeleton-line w-90"></div>
-        <div class="skeleton-line w-55"></div>
+  <a href="/trace/2026-02/" class="latest-card">
+      <div class="latest-card-content">
+        <div class="latest-kicker">Latest Issue</div>
+        <div class="latest-issue-num">Trace No. 001 · February 2026</div>
+        <div class="latest-headline">OpenClaw creator's advice to AI builders is to be more playful and allow yourself time to improve</div>
+        <div class="latest-editorial">The past month cast a stark light on OpenClaw's dual nature: immensely powerful, yet undeniably volatile. On one hand, the creator's call for playfulness resonated with the innovative spirit, exemplified by agents automating jobs and replacing SaaS subscriptions, signaling a push towards practical, production-ready applications, notably with Kilo's KiloClaw. Yet, this same autonomy manifested in chaotic ways, from a Meta AI researcher's inbox overrun to an agent nuking its own mail client in a misguided attempt to delete an email. These incidents, alongside findings of six deep-seated flaws in OpenClaw's plumbing and the potential for agents to take orders from malicious sites or even launch DoS attacks, underscore a critical tension. While efforts like Perplexity's Computer aim for safer execution, the core question remains: can the ecosystem mature responsibly without sacrificing the very agentic freedom that defines OpenClaw? The next phase will hinge on whether builders prioritize robust guardrails as aggressively as they pursue capability.</div>
+        <span class="latest-cta">Read Issue <i data-lucide="arrow-right"></i></span>
       </div>
-      <div class="skeleton-img" style="flex:0 0 44%;aspect-ratio:unset"></div>
-    </div>
-  </div>
+      <div class="latest-card-img-wrap">
+        <img class="latest-card-img" src="https://techcrunch.com/wp-content/uploads/2026/02/openclaw-creator-Peter-Steinberger.jpg?resize=1200,564" alt="OpenClaw creator's advice to AI builders is to be more playful and allow yourself time to improve" onerror="this.style.display='none'">
+        <div class="latest-img-placeholder"></div>
+        <div class="latest-img-overlay"></div>
+        <div class="latest-img-issue-num">001</div>
+      </div>
+    </a>
 </section>
 
 <!-- ── ARCHIVE ── -->
@@ -448,10 +419,8 @@ img { display: block; }
     <div class="section-rule-label"><span class="sl">//</span> Archive</div>
     <div class="section-rule-line"></div>
   </div>
-  <div class="archive-grid" id="archive-grid">
-    <!-- Skeletons -->
-    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w-20"></div><div class="skeleton-line w-70"></div><div class="skeleton-line w-90"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w-20"></div><div class="skeleton-line w-70"></div><div class="skeleton-line w-90"></div></div></div>
+  <div class="archive-grid">
+    <div style="grid-column:1/-1"><p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4);padding:1rem 0;letter-spacing:0.1em;text-transform:uppercase;">No past issues yet — archive builds month by month.</p></div>
   </div>
 </section>
 
@@ -495,120 +464,16 @@ img { display: block; }
 </footer>
 
 <script>
-// ── SUPABASE CONFIG ──
-// Replace with actual keys at deploy time (or bake via generator)
-const SUPABASE_URL = 'https://twouuiapzrkezwbtylij.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function renderLatestCard(issue) {
-  const url = `/trace/${esc(issue.issue_ym)}/`;
-  const hasImg = issue.cover_image && issue.cover_image.trim();
-  document.getElementById('latest-card-container').innerHTML = `
-    <a href="${url}" class="latest-card">
-      <div class="latest-card-content">
-        <div class="latest-kicker">Latest Issue</div>
-        <div class="latest-issue-num">Trace No. ${esc(issue.issue_number)} · ${esc(issue.month_label)}</div>
-        <div class="latest-headline">${esc(issue.cover_headline)}</div>
-        <div class="latest-editorial">${esc(issue.editorial)}</div>
-        <span class="latest-cta">Read Issue <i data-lucide="arrow-right"></i></span>
-      </div>
-      <div class="latest-card-img-wrap">
-        ${hasImg ? `<img class="latest-card-img" src="${esc(issue.cover_image)}" alt="${esc(issue.cover_headline)}" onerror="this.style.display='none'">` : ''}
-        <div class="latest-img-placeholder"></div>
-        <div class="latest-img-overlay"></div>
-        <div class="latest-img-issue-num">${esc(issue.issue_number)}</div>
-      </div>
-    </a>`;
-  lucide.createIcons();
-}
-
-function renderArchiveCard(issue) {
-  const url = `/trace/${esc(issue.issue_ym)}/`;
-  const hasImg = issue.cover_image && issue.cover_image.trim();
-  return `
-    <a href="${url}" class="issue-card">
-      <div class="issue-card-img-wrap">
-        ${hasImg ? `<img class="issue-card-img" src="${esc(issue.cover_image)}" alt="${esc(issue.cover_headline)}" loading="lazy" onerror="this.style.display='none'">` : ''}
-        <div class="issue-card-img-placeholder"></div>
-        <div class="issue-card-img-overlay"></div>
-        <span class="issue-card-tag">No. ${esc(issue.issue_number)}</span>
-        <span class="issue-card-num-ghost">${esc(issue.issue_number)}</span>
-      </div>
-      <div class="issue-card-body">
-        <div class="issue-card-meta-row">
-          <span class="issue-card-number">Trace No. ${esc(issue.issue_number)}</span>
-          <span class="issue-card-month">${esc(issue.month_label)}</span>
-        </div>
-        <div class="issue-card-headline">${esc(issue.cover_headline)}</div>
-        <div class="issue-card-editorial">${esc(issue.editorial)}</div>
-        <div class="issue-card-footer">
-          <span class="issue-card-story-count">${issue.story_count || 20} Signals</span>
-          <span class="issue-card-cta">Read Issue <i data-lucide="arrow-right"></i></span>
-        </div>
-      </div>
-    </a>`;
-}
-
-async function loadIssues() {
-  try {
-    const { data, error } = await supabase
-      .from('trace_issues')
-      .select('*')
-      .order('issue_ym', { ascending: false });
-
-    if (error) throw error;
-    if (!data || !data.length) {
-      document.getElementById('latest-card-container').innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon"><i data-lucide="layers"></i></div>
-          <div class="empty-state-title">First issue coming soon</div>
-          <div class="empty-state-body">Trace is compiled monthly. Check back at the end of the month.</div>
-        </div>`;
-      document.getElementById('archive-grid').innerHTML = '';
-      lucide.createIcons();
-      return;
-    }
-
-    // Stats
-    document.getElementById('stat-issues').textContent = data.length;
-    document.getElementById('stat-signals').textContent = data.reduce((a, i) => a + (i.story_count || 20), 0);
-
-    // Latest issue (first in desc order)
-    renderLatestCard(data[0]);
-
-    // Archive: all but the latest
-    const archive = data.slice(1);
-    if (archive.length) {
-      document.getElementById('archive-grid').innerHTML = archive.map(renderArchiveCard).join('');
-    } else {
-      document.getElementById('archive-grid').innerHTML = `<div style="grid-column:1/-1"><p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4);padding:1rem 0;letter-spacing:0.1em;text-transform:uppercase;">No past issues yet — archive builds month by month.</p></div>`;
-    }
-    lucide.createIcons();
-
-  } catch (err) {
-    console.error('Failed to load Trace issues:', err);
-    document.getElementById('latest-card-container').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon"><i data-lucide="alert-circle"></i></div>
-        <div class="empty-state-title">Could not load issues</div>
-        <div class="empty-state-body">Check back shortly.</div>
-      </div>`;
-    document.getElementById('archive-grid').innerHTML = '';
-    lucide.createIcons();
-  }
-}
-
-// Init
 lucide.createIcons();
-loadIssues();
-
-document.getElementById('hamburger-btn').addEventListener('click', () => {
-  document.getElementById('mobile-menu').classList.toggle('open');
-});
+function toggleMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const iconMenu = document.getElementById('icon-menu');
+  const iconClose = document.getElementById('icon-close');
+  const isOpen = menu.classList.toggle('open');
+  iconMenu.style.display = isOpen ? 'none' : 'inline';
+  iconClose.style.display = isOpen ? 'inline' : 'none';
+}
+document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
 </script>
 </body>
 </html>

@@ -654,6 +654,556 @@ def build_daily_section(daily_editions: list[dict], ym: str) -> str:
     </div>
   </div>"""
 
+def render_archive_index(all_issues: list[dict]) -> str:
+    """
+    Build a fully static /trace/index.html from all trace_issues rows.
+    all_issues must be sorted newest-first (by issue_ym desc).
+    Returns complete HTML string — no Supabase JS dependency.
+    """
+    issue_count  = len(all_issues)
+    signal_count = sum(i.get("story_count", 20) for i in all_issues)
+
+    # ── Latest issue hero card ──────────────────────────────────────────────
+    if all_issues:
+        latest  = all_issues[0]
+        l_url   = f"/trace/{esc(latest['issue_ym'])}/"
+        l_img   = (latest.get("cover_image") or "").strip()
+        l_img_html = (
+            f'<img class="latest-card-img" src="{esc(l_img)}" '
+            f'alt="{esc(latest.get("cover_headline",""))}" onerror="this.style.display=\'none\'">'
+            if l_img else ""
+        )
+        latest_card_html = f"""<a href="{l_url}" class="latest-card">
+      <div class="latest-card-content">
+        <div class="latest-kicker">Latest Issue</div>
+        <div class="latest-issue-num">Trace No. {esc(latest['issue_number'])} · {esc(latest['month_label'])}</div>
+        <div class="latest-headline">{esc(latest.get('cover_headline',''))}</div>
+        <div class="latest-editorial">{esc(latest.get('editorial',''))}</div>
+        <span class="latest-cta">Read Issue <i data-lucide="arrow-right"></i></span>
+      </div>
+      <div class="latest-card-img-wrap">
+        {l_img_html}
+        <div class="latest-img-placeholder"></div>
+        <div class="latest-img-overlay"></div>
+        <div class="latest-img-issue-num">{esc(latest['issue_number'])}</div>
+      </div>
+    </a>"""
+    else:
+        latest_card_html = """<div class="empty-state">
+      <div class="empty-state-icon"><i data-lucide="layers"></i></div>
+      <div class="empty-state-title">First issue coming soon</div>
+      <div class="empty-state-body">Trace is compiled monthly. Check back at the end of the month.</div>
+    </div>"""
+
+    # ── Archive cards (all but latest) ─────────────────────────────────────
+    archive_issues = all_issues[1:]
+    if archive_issues:
+        cards = []
+        for issue in archive_issues:
+            a_url = f"/trace/{esc(issue['issue_ym'])}/"
+            a_img = (issue.get("cover_image") or "").strip()
+            a_img_html = (
+                f'<img class="issue-card-img" src="{esc(a_img)}" '
+                f'alt="{esc(issue.get("cover_headline",""))}" loading="lazy" onerror="this.style.display=\'none\'">'
+                if a_img else ""
+            )
+            cards.append(f"""<a href="{a_url}" class="issue-card">
+      <div class="issue-card-img-wrap">
+        {a_img_html}
+        <div class="issue-card-img-placeholder"></div>
+        <div class="issue-card-img-overlay"></div>
+        <span class="issue-card-tag">No. {esc(issue['issue_number'])}</span>
+        <span class="issue-card-num-ghost">{esc(issue['issue_number'])}</span>
+      </div>
+      <div class="issue-card-body">
+        <div class="issue-card-meta-row">
+          <span class="issue-card-number">Trace No. {esc(issue['issue_number'])}</span>
+          <span class="issue-card-month">{esc(issue['month_label'])}</span>
+        </div>
+        <div class="issue-card-headline">{esc(issue.get('cover_headline',''))}</div>
+        <div class="issue-card-editorial">{esc(issue.get('editorial',''))}</div>
+        <div class="issue-card-footer">
+          <span class="issue-card-story-count">{issue.get('story_count', 20)} Signals</span>
+          <span class="issue-card-cta">Read Issue <i data-lucide="arrow-right"></i></span>
+        </div>
+      </div>
+    </a>""")
+        archive_grid_html = "\n".join(cards)
+    else:
+        archive_grid_html = (
+            '<div style="grid-column:1/-1">'
+            '<p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4);'
+            'padding:1rem 0;letter-spacing:0.1em;text-transform:uppercase;">'
+            'No past issues yet — archive builds month by month.</p></div>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{ window.dataLayer.push(arguments); }}
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<title>Trace — Signal Intelligence Monthly · ClawBeat</title>
+<meta name="description" content="Trace is ClawBeat's monthly magazine curating the top 20 signals from the OpenClaw ecosystem. Deep analysis, curated intelligence, delivered monthly.">
+<meta property="og:title" content="Trace — Signal Intelligence Monthly | ClawBeat">
+<meta property="og:description" content="The monthly magazine for the OpenClaw ecosystem. Deep-read analysis of the 20 top stories every month.">
+<meta property="og:url" content="https://clawbeat.co/trace/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ClawBeat">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://clawbeat.co/trace/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+/* ── RESET ── */
+*, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+html {{ -webkit-text-size-adjust: 100%; font-size: 16px; }}
+
+/* ── TOKENS ── */
+:root {{
+  --bg:          #08090b;
+  --bg-2:        #0d0f12;
+  --bg-3:        #131619;
+  --border:      rgba(255,255,255,0.05);
+  --border-2:    rgba(255,255,255,0.09);
+  --orange:      #f97316;
+  --orange-dim:  rgba(249,115,22,0.10);
+  --orange-glow: rgba(249,115,22,0.18);
+  --text:        #e2e4e9;
+  --text-2:      #9097a3;
+  --text-3:      #525866;
+  --text-4:      #2e333d;
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'Space Grotesk', sans-serif;
+}}
+
+body {{ font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }}
+::-webkit-scrollbar {{ width: 6px; }}
+::-webkit-scrollbar-track {{ background: var(--bg); }}
+::-webkit-scrollbar-thumb {{ background: #27272a; border-radius: 3px; }}
+a {{ color: inherit; text-decoration: none; }}
+img {{ display: block; }}
+:focus-visible {{ outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }}
+
+/* ── HEADER ── */
+.header {{ position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border); background: rgba(8,9,11,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }}
+.header-inner {{ max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }}
+.brand {{ display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }}
+.brand-img {{ width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }}
+.brand-img img {{ width: 100%; height: 100%; object-fit: cover; }}
+.brand-text {{ font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }}
+.brand-text span {{ color: var(--orange); }}
+.header-nav {{ display: flex; align-items: center; gap: 0.25rem; }}
+.nav-item {{ font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }}
+.nav-item svg {{ width: 16px; height: 16px; }}
+.nav-item:hover {{ color: #cbd5e1; background: rgba(255,255,255,0.05); }}
+.nav-item.active {{ background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }}
+.nav-dropdown {{ position: relative; }}
+.nav-dropdown-menu {{ position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }}
+.nav-dropdown:hover .nav-dropdown-menu {{ opacity: 1; visibility: visible; transform: translateY(0); }}
+.nav-dropdown-item {{ display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; }}
+.nav-dropdown-item.active-item {{ background: var(--orange-dim); }}
+.nav-dropdown-item:hover {{ background: var(--orange-dim); }}
+.nav-dropdown-item svg {{ width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }}
+.nav-dropdown-label {{ font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }}
+.nav-dropdown-sub {{ font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }}
+.nav-skill-chip {{ font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }}
+.nav-skill-chip:hover {{ background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }}
+.hamburger-btn {{ display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }}
+.hamburger-btn svg {{ width: 24px; height: 24px; }}
+.mobile-menu {{ display: none; position: absolute; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }}
+.mobile-menu.open {{ display: flex; }}
+.mobile-nav-item {{ font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }}
+.mobile-nav-item:hover {{ color: #cbd5e1; background: rgba(255,255,255,0.05); }}
+.mobile-nav-item.active {{ background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 8px rgba(249,115,22,0.08); }}
+.mobile-nav-item svg {{ width: 16px; height: 16px; flex-shrink: 0; }}
+.mobile-subnav-item {{ font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; background: var(--orange-dim); }}
+.mobile-subnav-item svg {{ width: 14px; height: 14px; }}
+@media (max-width: 768px) {{ .header-nav {{ display: none; }} .hamburger-btn {{ display: flex; }} }}
+
+/* ── PAGE HERO ── */
+.catalog-hero {{
+  position: relative; overflow: hidden;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-2);
+  padding: 5rem 1.5rem 4.5rem;
+}}
+.catalog-hero::before {{
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.014) 39px, rgba(255,255,255,0.014) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.007) 79px, rgba(255,255,255,0.007) 80px);
+}}
+.catalog-hero::after {{
+  content: '';
+  position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 200px;
+  background: radial-gradient(ellipse, rgba(249,115,22,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}}
+.catalog-hero-inner {{ max-width: 72rem; margin: 0 auto; position: relative; }}
+.catalog-hero-kicker {{
+  font-family: var(--mono); font-size: 0.65rem; color: var(--orange);
+  letter-spacing: 0.3em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;
+}}
+.catalog-hero-kicker::before,
+.catalog-hero-kicker::after {{ content: '──────'; color: var(--text-4); letter-spacing: -0.1em; }}
+.catalog-hero-title {{
+  font-family: var(--sans);
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 900; letter-spacing: -0.05em; line-height: 0.85;
+  color: #fff; text-transform: uppercase; font-style: italic;
+  margin-bottom: 1.5rem;
+}}
+.catalog-hero-title em {{ color: var(--orange); font-style: inherit; }}
+.catalog-hero-sub {{
+  font-size: 1.05rem; color: var(--text-2); line-height: 1.6;
+  max-width: 48ch; margin-bottom: 2rem;
+}}
+.catalog-stats {{
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+}}
+.stat-item {{
+  display: flex; align-items: baseline; gap: 0.5rem;
+}}
+.stat-num {{ font-family: var(--sans); font-size: 2rem; font-weight: 800; color: var(--orange); line-height: 1; }}
+.stat-label {{ font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.15em; text-transform: uppercase; }}
+.stat-divider {{ width: 1px; height: 28px; background: var(--border-2); }}
+
+/* ── LATEST ISSUE FEATURE ── */
+.latest-section {{ max-width: 72rem; margin: 3.5rem auto 0; padding: 0 1.5rem; }}
+.section-rule {{
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;
+}}
+.section-rule-label {{
+  font-family: var(--mono); font-size: 0.6rem; color: var(--text-3);
+  letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap;
+  display: flex; align-items: center; gap: 0.5rem;
+}}
+.section-rule-label .sl {{ color: var(--orange); }}
+.section-rule-label .badge {{
+  background: var(--orange); color: #000;
+  border-radius: 2px; padding: 0.15rem 0.5rem;
+  font-size: 0.5rem; letter-spacing: 0.12em;
+}}
+.section-rule-line {{ flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }}
+
+/* Latest issue hero card */
+.latest-card {{
+  display: grid; grid-template-columns: 1fr 44%; gap: 0;
+  border: 1px solid var(--border-2); border-radius: 0.75rem; overflow: hidden;
+  background: var(--bg-2); transition: border-color 0.2s;
+  min-height: 420px;
+}}
+.latest-card:hover {{ border-color: rgba(249,115,22,0.2); }}
+.latest-card-content {{ padding: 2.5rem 2.75rem; display: flex; flex-direction: column; justify-content: center; gap: 1.25rem; }}
+.latest-kicker {{
+  font-family: var(--mono); font-size: 0.55rem; color: var(--orange);
+  letter-spacing: 0.25em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.5rem;
+}}
+.latest-kicker::before {{ content: '//'; opacity: 0.6; }}
+.latest-issue-num {{
+  font-family: var(--mono); font-size: 0.65rem; color: var(--text-3);
+  letter-spacing: 0.15em; text-transform: uppercase;
+}}
+.latest-headline {{
+  font-family: var(--sans); font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 800; line-height: 1.15; letter-spacing: -0.035em; color: #fff;
+}}
+.latest-editorial {{
+  font-size: 0.9rem; line-height: 1.7; color: var(--text-2);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}}
+.latest-cta {{
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: var(--mono); font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em; color: #000;
+  background: var(--orange); border-radius: 0.35rem;
+  padding: 0.65rem 1.25rem; transition: background 0.15s; align-self: flex-start;
+}}
+.latest-cta:hover {{ background: #fb923c; }}
+.latest-cta svg {{ width: 14px; height: 14px; }}
+.latest-card-img-wrap {{ position: relative; overflow: hidden; background: var(--bg-3); }}
+.latest-card-img {{ width: 100%; height: 100%; object-fit: cover; opacity: 0.78; transition: opacity 0.3s, transform 0.3s; }}
+.latest-card:hover .latest-card-img {{ opacity: 0.92; transform: scale(1.02); }}
+.latest-img-overlay {{
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(13,15,18,0.5) 0%, transparent 50%);
+}}
+.latest-img-issue-num {{
+  position: absolute; bottom: 1.5rem; right: 1.75rem;
+  font-family: var(--mono); font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700; font-style: italic;
+  color: rgba(255,255,255,0.07); line-height: 1;
+  user-select: none; pointer-events: none;
+}}
+.latest-img-placeholder {{
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}}
+.latest-img-placeholder::after {{ content: '[ COVER ]'; font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.2em; }}
+
+/* ── BACK ISSUES ── */
+.archive-section {{ max-width: 72rem; margin: 3rem auto 0; padding: 0 1.5rem; }}
+.archive-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }}
+
+/* Issue card */
+.issue-card {{
+  border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden;
+  background: var(--bg-2); transition: border-color 0.2s, transform 0.2s;
+  display: flex; flex-direction: column;
+}}
+.issue-card:hover {{ border-color: var(--border-2); transform: translateY(-3px); }}
+.issue-card-img-wrap {{ position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-3); }}
+.issue-card-img {{ width: 100%; height: 100%; object-fit: cover; opacity: 0.72; transition: opacity 0.3s, transform 0.3s; }}
+.issue-card:hover .issue-card-img {{ opacity: 0.88; transform: scale(1.03); }}
+.issue-card-img-overlay {{
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(8,9,11,0.8) 100%);
+}}
+.issue-card-num-ghost {{
+  position: absolute; bottom: 0.75rem; right: 1rem;
+  font-family: var(--mono); font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700; font-style: italic;
+  color: rgba(255,255,255,0.07); line-height: 1; pointer-events: none; user-select: none;
+}}
+.issue-card-tag {{
+  position: absolute; top: 0.875rem; left: 0.875rem;
+  font-family: var(--mono); font-size: 0.5rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  background: rgba(8,9,11,0.8); color: var(--text-3);
+  backdrop-filter: blur(4px); border: 1px solid var(--border-2);
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+}}
+.issue-card-img-placeholder {{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }}
+.issue-card-img-placeholder::after {{ content: '[ ISSUE COVER ]'; font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.2em; }}
+
+.issue-card-body {{ padding: 1.375rem 1.5rem 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }}
+.issue-card-meta-row {{ display: flex; align-items: center; justify-content: space-between; }}
+.issue-card-number {{ font-family: var(--mono); font-size: 0.6rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }}
+.issue-card-month {{ font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; }}
+.issue-card-headline {{
+  font-family: var(--sans); font-size: 0.95rem; font-weight: 700;
+  line-height: 1.3; letter-spacing: -0.025em; color: var(--text);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}}
+.issue-card:hover .issue-card-headline {{ color: #fff; }}
+.issue-card-editorial {{
+  font-size: 0.8rem; line-height: 1.55; color: var(--text-3);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}}
+.issue-card-footer {{
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border); padding-top: 0.875rem; margin-top: auto;
+}}
+.issue-card-story-count {{ font-family: var(--mono); font-size: 0.5rem; color: var(--text-4); letter-spacing: 0.1em; text-transform: uppercase; }}
+.issue-card-cta {{
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--mono); font-size: 0.55rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange);
+  transition: gap 0.15s;
+}}
+.issue-card-cta:hover {{ gap: 0.65rem; }}
+.issue-card-cta svg {{ width: 12px; height: 12px; }}
+
+/* Empty state */
+.empty-state {{
+  text-align: center; padding: 4rem 1.5rem;
+  border: 1px dashed var(--border-2); border-radius: 0.75rem;
+}}
+.empty-state-icon {{ color: var(--text-4); margin: 0 auto 1rem; }}
+.empty-state-icon svg {{ width: 40px; height: 40px; }}
+.empty-state-title {{ font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }}
+.empty-state-body {{ font-size: 0.85rem; color: var(--text-4); }}
+
+/* ── ABOUT TRACE ── */
+.about-section {{
+  max-width: 72rem; margin: 4rem auto 0; padding: 0 1.5rem;
+}}
+.about-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-2); border: 1px solid var(--border-2); border-radius: 0.75rem; overflow: hidden; }}
+.about-cell {{ background: var(--bg-2); padding: 1.5rem; }}
+.about-cell-icon {{ color: var(--orange); margin-bottom: 0.875rem; }}
+.about-cell-icon svg {{ width: 22px; height: 22px; }}
+.about-cell-title {{ font-family: var(--mono); font-size: 0.6rem; color: var(--orange); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }}
+.about-cell-title::before {{ content: '//'; opacity: 0.5; }}
+.about-cell-body {{ font-size: 0.85rem; line-height: 1.6; color: var(--text-3); }}
+
+/* ── FOOTER ── */
+.trace-footer {{ max-width: 72rem; margin: 4rem auto 0; padding: 2.5rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }}
+.footer-brand {{ font-family: var(--sans); font-size: 0.75rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.03em; color: var(--text-3); }}
+.footer-brand span {{ color: var(--orange); }}
+.footer-meta {{ font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.08em; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }}
+.footer-meta a {{ color: var(--text-4); }}
+.footer-meta a:hover {{ color: var(--text-3); }}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {{ .latest-card {{ grid-template-columns: 1fr; }} .latest-card-img-wrap {{ aspect-ratio: 16 / 9; }} .about-grid {{ grid-template-columns: 1fr; gap: 1px; }} }}
+@media (max-width: 768px) {{ .archive-grid {{ grid-template-columns: 1fr; }} .latest-card-content {{ padding: 1.75rem; }} .catalog-hero {{ padding: 3rem 1rem 3rem; }} }}
+@media (max-width: 640px) {{ .latest-section, .archive-section, .about-section {{ padding: 0 1rem; }} .catalog-stats {{ gap: 1.25rem; }} }}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="/?tab=news" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/?tab=news" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item active-item">
+            <i data-lucide="layers"></i>
+            <div>
+              <div class="nav-dropdown-label">Trace</div>
+              <div class="nav-dropdown-sub">Monthly magazine</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/?tab=news" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+</div>
+
+<!-- ── CATALOG HERO ── -->
+<section class="catalog-hero">
+  <div class="catalog-hero-inner">
+    <div class="catalog-hero-kicker">Signal Intelligence · Monthly Edition</div>
+    <h1 class="catalog-hero-title">TR<em>A</em>CE</h1>
+    <p class="catalog-hero-sub">
+      The OpenClaw ecosystem, distilled. Every month, 20 top signals curated from the noise — each with deep AI analysis and a clear-eyed take on why it matters.
+    </p>
+    <div class="catalog-stats">
+      <div class="stat-item">
+        <span class="stat-num">{issue_count}</span>
+        <span class="stat-label">Issues</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">{signal_count}</span>
+        <span class="stat-label">Signals</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">Monthly</span>
+        <span class="stat-label">Cadence</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LATEST ISSUE ── -->
+<section class="latest-section">
+  <div class="section-rule">
+    <div class="section-rule-label"><span class="sl">//</span> Latest Issue <span class="badge">New</span></div>
+    <div class="section-rule-line"></div>
+  </div>
+  {latest_card_html}
+</section>
+
+<!-- ── ARCHIVE ── -->
+<section class="archive-section" style="margin-top:3rem">
+  <div class="section-rule">
+    <div class="section-rule-label"><span class="sl">//</span> Archive</div>
+    <div class="section-rule-line"></div>
+  </div>
+  <div class="archive-grid">
+    {archive_grid_html}
+  </div>
+</section>
+
+<!-- ── ABOUT TRACE ── -->
+<section class="about-section">
+  <div class="section-rule" style="margin-bottom:1.25rem">
+    <div class="section-rule-label"><span class="sl">//</span> About Trace</div>
+    <div class="section-rule-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-cell">
+      <div class="about-cell-icon"><i data-lucide="layers"></i></div>
+      <div class="about-cell-title">20 Signals</div>
+      <div class="about-cell-body">Each issue surfaces the 20 most significant stories from the OpenClaw ecosystem — ranked by signal strength and relevance, not recency.</div>
+    </div>
+    <div class="about-cell">
+      <div class="about-cell-icon"><i data-lucide="brain"></i></div>
+      <div class="about-cell-title">AI Analysis</div>
+      <div class="about-cell-body">Every story receives a deep AI-generated summary and a rigorous "Why It Matters" breakdown — connecting the dots the original article doesn't.</div>
+    </div>
+    <div class="about-cell">
+      <div class="about-cell-icon"><i data-lucide="calendar"></i></div>
+      <div class="about-cell-title">Monthly Cadence</div>
+      <div class="about-cell-body">Trace is compiled once per month — giving context and arc to the signal stream that daily editions can't. A record of the ecosystem, month by month.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="trace-footer">
+  <div class="footer-brand">ClawBeat<span>.co</span></div>
+  <div class="footer-meta">
+    <a href="/">Intel Feed</a>
+    <span>·</span>
+    <a href="/events-calendar.html">Events</a>
+    <span>·</span>
+    <a href="/forge.html">Forge</a>
+    <span>·</span>
+    <a href="/">ClawBeat.co</a>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+function toggleMenu() {{
+  const menu = document.getElementById('mobile-menu');
+  const iconMenu = document.getElementById('icon-menu');
+  const iconClose = document.getElementById('icon-close');
+  const isOpen = menu.classList.toggle('open');
+  iconMenu.style.display = isOpen ? 'none' : 'inline';
+  iconClose.style.display = isOpen ? 'inline' : 'none';
+}}
+document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
+</script>
+</body>
+</html>"""
+
+
 def build_repo_section(repos: list[dict]) -> str:
     """Build repo signals HTML block."""
     if not repos:
@@ -921,17 +1471,7 @@ def main():
         story_path.write_text(article_html, encoding="utf-8")
         print(f"[trace] Story {story['rank']:02d} written: {story_path}")
 
-    # 8. Bake Supabase credentials into the archive index
-    archive_path = OUTPUT_BASE / "index.html"
-    if archive_path.exists():
-        archive_html = archive_path.read_text(encoding="utf-8")
-        archive_html = archive_html \
-            .replace("{{SUPABASE_URL}}", SUPABASE_URL) \
-            .replace("{{SUPABASE_ANON_KEY}}", SUPABASE_ANON_KEY)
-        archive_path.write_text(archive_html, encoding="utf-8")
-        print("[trace] Archive index credentials baked.")
-
-    # 9. Upsert to trace_issues Supabase table
+    # 8. Upsert to trace_issues Supabase table
     print("[trace] Upserting to trace_issues…")
     sb.table("trace_issues").upsert({
         "issue_ym":       ym,
@@ -944,6 +1484,18 @@ def main():
         "story_count":    len(stories),
         "published_at":   datetime.datetime.utcnow().isoformat() + "Z",
     }, on_conflict="issue_ym").execute()
+
+    # 9. Render static archive index (no Supabase JS dependency)
+    print("[trace] Fetching all issues for archive index…")
+    all_issues_res = sb.table("trace_issues") \
+        .select("issue_ym,issue_number,month_label,editorial,cover_image,cover_headline,cover_slug,story_count") \
+        .order("issue_ym", desc=True) \
+        .execute()
+    all_issues = all_issues_res.data or []
+    archive_html = render_archive_index(all_issues)
+    archive_path = OUTPUT_BASE / "index.html"
+    archive_path.write_text(archive_html, encoding="utf-8")
+    print(f"[trace] Static archive index written: {archive_path} ({len(all_issues)} issues)")
 
     print(f"[trace] Done. Issue No. {issue_number} — {month_lbl} — {len(stories)} stories.")
 
