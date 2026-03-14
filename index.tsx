@@ -442,7 +442,7 @@ const App: React.FC = () => {
             <a href="/media.html" className="nav-item"><Video size={16} />Media</a>
             <a href="/forge.html" className="nav-item"><Github size={16} />Forge</a>
             <a href="/events-calendar.html" className="nav-item"><Calendar size={16} />Events</a>
-            <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+            <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onClick={() => (window as any).gtag?.('event','click',{event_category:'outbound',event_label:'clawhub_skill'})} >// skill</a>
           </nav>
           <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -456,7 +456,7 @@ const App: React.FC = () => {
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
           <a href="/events-calendar.html" className="mobile-nav-item"><Calendar size={16} />Events</a>
-          <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+          <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onClick={() => (window as any).gtag?.('event','click',{event_category:'outbound',event_label:'clawhub_skill'})} >// skill</a>
         </div>
       </header>
 

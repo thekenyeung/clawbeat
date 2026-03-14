@@ -1,7 +1,7 @@
 ---
 name: clawbeat
 description: Query live OpenClaw ecosystem intelligence from ClawBeat.co — news, research papers, events, repos, and daily briefings for the OpenClaw agentic framework and alternatives.
-metadata: {"openclaw": {"homepage": "https://clawbeat.co", "emoji": "📡"}}
+metadata: {"openclaw": {"homepage": "https://clawbeat.co/?utm_source=clawhub&utm_medium=skill&utm_campaign=openclaw", "emoji": "📡"}}
 ---
 
 # ClawBeat: OpenClaw News, Research & Events
