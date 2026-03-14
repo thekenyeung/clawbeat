@@ -2,17 +2,17 @@
 <!--
   ╔══════════════════════════════════════════════════════════════════╗
   ║  CLAWBEAT · TRACE — MONTHLY ISSUE COVER TEMPLATE               ║
-  ║  All {{VARIABLE}} blocks are replaced at generation time        ║
+  ║  All [VARIABLE] blocks below are replaced at generation time    ║
   ╠══════════════════════════════════════════════════════════════════╣
   ║  TEMPLATE VARIABLES                                             ║
-  ║    {{ISSUE_NUMBER}}       Zero-padded issue number "001"        ║
-  ║    {{MONTH_LABEL}}        "February 2026"                       ║
-  ║    {{MONTH_YM}}           "2026-02"                             ║
-  ║    {{OG_IMAGE}}           Story 1 image URL for og:image        ║
-  ║    {{META_DESCRIPTION}}   Plain-text editorial (≤155 chars)     ║
-  ║    {{COMPILED_TIME}}      "17:00 PT"                            ║
-  ║    {{EDITORIAL_TEXT}}     AI-generated editorial paragraph      ║
-  ║    {{STORY_SECTIONS_HTML}} All story+daily+repo sections HTML   ║
+  ║    [ISSUE_NUMBER]       Zero-padded issue number "001"          ║
+  ║    [MONTH_LABEL]        "February 2026"                         ║
+  ║    [MONTH_YM]           "2026-02"                               ║
+  ║    [OG_IMAGE]           Story 1 image URL for og:image          ║
+  ║    [META_DESCRIPTION]   Plain-text editorial (≤155 chars)       ║
+  ║    [COMPILED_TIME]      "17:00 PT"                              ║
+  ║    [EDITORIAL_TEXT]     AI-generated editorial paragraph        ║
+  ║    [STORY_SECTIONS_HTML] All story+daily+repo sections HTML     ║
   ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
@@ -27,8 +27,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#08090b">
-<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
-<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
 <title>Trace No. {{ISSUE_NUMBER}} · {{MONTH_LABEL}} — ClawBeat</title>
 <meta name="description" content="{{META_DESCRIPTION}}">
 <meta property="og:title" content="Trace No. {{ISSUE_NUMBER}} · {{MONTH_LABEL}} | ClawBeat">
@@ -144,17 +144,17 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .cover-credit a { color: rgba(249,115,22,0.6); }
 .cover-credit a:hover { color: var(--orange); }
 .cover-content { position: relative; z-index: 10; max-width: var(--col-w); margin: 0 auto; width: 100%; padding: 0 var(--gutter) 3rem; }
-.cover-source-line { font-family: var(--mono); font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+.cover-source-line { font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
 .cover-source-line a { color: rgba(249,115,22,0.7); }
 .cover-source-line a:hover { color: var(--orange); }
 .cover-headline { font-family: var(--sans); font-size: clamp(2rem, 5.5vw, 4.5rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.92; color: #fff; max-width: 20ch; margin-bottom: 1.25rem; text-shadow: 0 2px 40px rgba(0,0,0,0.5); }
 .cover-headline a:hover { color: var(--orange); }
 .cover-deck { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.65; color: rgba(255,255,255,0.7); max-width: 60ch; margin-bottom: 1.5rem; }
 .cover-footer { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
-.cover-read-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; transition: gap 0.15s, border-color 0.15s; }
+.cover-read-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; transition: gap 0.15s, border-color 0.15s; }
 .cover-read-link:hover { gap: 0.75rem; border-color: var(--orange); }
 .cover-read-link svg { width: 14px; height: 14px; }
-.cover-byline { font-family: var(--mono); font-size: 0.55rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+.cover-byline { font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
 
 /* ── WRAP / SECTION SCAFFOLD ── */
 .wrap { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); }
@@ -179,13 +179,13 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .card-cat { font-family: var(--mono); font-size: 0.5rem; color: var(--text-3); background: var(--bg-3); border: 1px solid var(--border); padding: 0.12rem 0.4rem; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; }
 .card-headline { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; }
 .card:hover .card-headline { color: #fff; }
-.card-source { font-family: var(--mono); font-size: 0.53rem; color: var(--text-3); letter-spacing: 0.07em; }
+.card-source { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.07em; }
 .card-source a { color: inherit; }
 .card-source a:hover { color: var(--text-2); }
-.card-summary { font-size: 0.78rem; line-height: 1.55; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.card-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: auto; font-family: var(--mono); font-size: 0.53rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); transition: color 0.15s; }
+.card-summary { font-size: 0.8rem; line-height: 1.55; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: auto; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); transition: color 0.15s; }
 .card-link:hover { color: var(--orange); }
-.card-link svg { width: 11px; height: 11px; }
+.card-link svg { width: 12px; height: 12px; }
 
 /* GRID layouts */
 .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
@@ -205,28 +205,29 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .wide-feature .card-img-wrap img { opacity: 0.75; transition: opacity 0.3s, transform 0.3s; }
 .wide-feature:hover .card-img-wrap img { opacity: 0.9; transform: scale(1.02); }
 .wide-feature-content { padding: 2rem 2.25rem; display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
-.wide-feature-rank { font-family: var(--mono); font-size: 0.55rem; color: var(--orange); letter-spacing: 0.15em; text-transform: uppercase; }
+.wide-feature-rank { font-family: var(--mono); font-size: 0.69rem; color: var(--orange); letter-spacing: 0.15em; text-transform: uppercase; }
 .wide-feature-headline { font-family: var(--sans); font-size: clamp(1.15rem, 2vw, 1.6rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: #fff; }
-.wide-feature-summary { font-size: 0.875rem; line-height: 1.65; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.wide-feature-summary { font-size: 0.9rem; line-height: 1.65; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .wide-feature-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: auto; }
-.wide-feature-source { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; }
-.wide-feature-link { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); transition: gap 0.15s; }
+.wide-feature-source { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.08em; }
+.wide-feature-link { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); transition: gap 0.15s; }
 .wide-feature-link:hover { gap: 0.65rem; }
 .wide-feature-link svg { width: 13px; height: 13px; }
 .grid-two-two { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
 .grid-two-two .card-img-wrap { aspect-ratio: 16 / 9; }
 .grid-two-two .card-rank-ghost { font-size: 3rem; }
 .grid-compact { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-.compact-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.125rem 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; transition: border-color 0.2s, transform 0.15s; }
+.compact-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.125rem 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.625rem; transition: border-color 0.2s, transform 0.15s; }
 .compact-card:hover { border-color: rgba(249,115,22,0.2); transform: translateY(-1px); }
-.compact-rank { font-family: var(--mono); font-size: 0.5rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
-.compact-headline { font-family: var(--sans); font-size: 0.82rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.compact-rank { font-family: var(--mono); font-size: 0.69rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
+.compact-headline { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .compact-card:hover .compact-headline { color: #fff; }
-.compact-summary { font-size: 0.72rem; line-height: 1.5; color: var(--text-4); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.compact-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-.compact-source { font-family: var(--mono); font-size: 0.5rem; color: var(--text-4); letter-spacing: 0.07em; }
-.compact-arrow { color: var(--text-4); transition: color 0.15s; }
-.compact-card:hover .compact-arrow { color: var(--orange); }
+.compact-summary { font-size: 0.8rem; line-height: 1.5; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.compact-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 0.25rem; }
+.compact-source { font-family: var(--mono); font-size: 0.69rem; color: var(--text-4); letter-spacing: 0.07em; }
+.compact-cta { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); transition: gap 0.15s; }
+.compact-cta:hover { gap: 0.55rem; }
+.compact-cta svg { width: 12px; height: 12px; }
 .grid-final { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
 .grid-final .card-img-wrap { aspect-ratio: 4 / 3; }
 .grid-final .card-rank-ghost { font-size: 2.5rem; }

@@ -502,7 +502,7 @@ def build_compact_card(story: dict, ym: str, rank: int) -> str:
       {summary_html}
       <div class="compact-footer">
         <span class="compact-source">{pub_name}</span>
-        <i data-lucide="arrow-right" class="compact-arrow" style="width:12px;height:12px"></i>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>"""
 
@@ -582,36 +582,22 @@ def build_story_sections(stories: list[dict], ym: str) -> str:
                 parts.append(build_card(stories[i], ym, i + 1))
         parts.append('</div>')
 
-    # Story 9: wide feature break
+    # Story 9: wide feature break (no section header)
     if len(stories) >= 9:
-        parts.append(section_rule("Deep Signal"))
         parts.append(build_wide_feature(stories[8], ym, 9))
 
-    # Stories 10–13: 2x2
-    if len(stories) >= 13:
-        parts.append(section_rule("Intel Roundup", "10–13"))
+    # Stories 10–13: 2x2 with summaries (no section header)
+    if len(stories) >= 10:
         parts.append('<div class="grid-two-two">')
-        for i in range(9, 13):
-            if i < len(stories):
-                parts.append(build_card(stories[i], ym, i + 1, show_summary=False))
+        for i in range(9, min(13, len(stories))):
+            parts.append(build_card(stories[i], ym, i + 1, show_summary=True))
         parts.append('</div>')
 
-    # Stories 14–17: compact digest (no images)
-    if len(stories) >= 17:
-        parts.append(section_rule("Quick Signals", "14–17"))
+    # Stories 14–20: compact digest, no images, no section headers
+    if len(stories) >= 14:
         parts.append('<div class="grid-compact">')
-        for i in range(13, 17):
-            if i < len(stories):
-                parts.append(build_compact_card(stories[i], ym, i + 1))
-        parts.append('</div>')
-
-    # Stories 18–20: closing three
-    if len(stories) >= 20:
-        parts.append(section_rule("Closing Signals", "18–20"))
-        parts.append('<div class="grid-final">')
-        for i in range(17, 20):
-            if i < len(stories):
-                parts.append(build_card(stories[i], ym, i + 1))
+        for i in range(13, min(20, len(stories))):
+            parts.append(build_compact_card(stories[i], ym, i + 1))
         parts.append('</div>')
 
     parts.append('</div><!-- /wrap -->')
