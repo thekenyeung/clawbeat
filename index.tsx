@@ -456,6 +456,7 @@ const App: React.FC = () => {
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
           <a href="/events-calendar.html" className="mobile-nav-item"><Calendar size={16} />Events</a>
+          <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
         </div>
       </header>
 
