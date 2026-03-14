@@ -921,7 +921,17 @@ def main():
         story_path.write_text(article_html, encoding="utf-8")
         print(f"[trace] Story {story['rank']:02d} written: {story_path}")
 
-    # 8. Upsert to trace_issues Supabase table
+    # 8. Bake Supabase credentials into the archive index
+    archive_path = OUTPUT_BASE / "index.html"
+    if archive_path.exists():
+        archive_html = archive_path.read_text(encoding="utf-8")
+        archive_html = archive_html \
+            .replace("{{SUPABASE_URL}}", SUPABASE_URL) \
+            .replace("{{SUPABASE_ANON_KEY}}", SUPABASE_ANON_KEY)
+        archive_path.write_text(archive_html, encoding="utf-8")
+        print("[trace] Archive index credentials baked.")
+
+    # 9. Upsert to trace_issues Supabase table
     print("[trace] Upserting to trace_issues…")
     sb.table("trace_issues").upsert({
         "issue_ym":       ym,
