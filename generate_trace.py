@@ -164,9 +164,9 @@ def fetch_github_repos(sb: Client, ym: str, limit: int = 3) -> list[dict]:
     start_ts = f"{ym}-01T00:00:00+00:00"
     end_ts   = f"{ym}-{last_day:02d}T23:59:59+00:00"
     res = sb.table("github_projects") \
-        .select("full_name,html_url,description,language,stargazers_count,rubric_score") \
-        .gte("updated_at", start_ts) \
-        .lte("updated_at", end_ts) \
+        .select("name,owner,url,description,language,stars,rubric_score") \
+        .gte("inserted_at", start_ts) \
+        .lte("inserted_at", end_ts) \
         .order("rubric_score", desc=True) \
         .limit(limit) \
         .execute()
@@ -660,11 +660,13 @@ def build_repo_section(repos: list[dict]) -> str:
         return ""
     cards = []
     for repo in repos:
-        name    = esc(repo.get("full_name", ""))
-        url     = esc(repo.get("html_url", "#"))
+        owner   = repo.get("owner", "")
+        rname   = repo.get("name", "")
+        name    = esc(f"{owner}/{rname}" if owner else rname)
+        url     = esc(repo.get("url", "#"))
         desc    = esc(repo.get("description", ""))
         lang    = esc(repo.get("language", ""))
-        stars   = repo.get("stargazers_count", 0)
+        stars   = repo.get("stars", 0)
         stars_fmt = f"{stars:,}" if isinstance(stars, int) else str(stars)
         desc_html = f'<div class="repo-desc">{desc}</div>' if desc else ""
         lang_html = f'<span class="repo-lang">{lang}</span>' if lang else ""
