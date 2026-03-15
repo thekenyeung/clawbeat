@@ -403,9 +403,31 @@
 
       const handleDelete = async () => {
         if (!selected || !confirm('Delete this article?')) return;
+
+        // Orphan sublinks for reclustering on next forge run
+        const subs = form.more_coverage || [];
+        if (subs.length > 0) {
+          const today = new Date()
+            .toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })
+            .replace(/\//g, '-');
+          await supabase.from('news_items').upsert(
+            subs.map(mc => ({
+              url:             mc.url,
+              source:          mc.source || '',
+              title:           '',
+              summary:         '',
+              density:         0,
+              more_coverage:   [],
+              needs_reprocess: true,
+              date:            today,
+            })),
+            { onConflict: 'url', ignoreDuplicates: true }
+          );
+        }
+
         const { error } = await supabase.from('news_items').delete().eq('url', selected);
         if (error) { showToast('Error: ' + error.message, 'error'); return; }
-        showToast('Article deleted');
+        showToast(subs.length > 0 ? `Article deleted · ${subs.length} sublink(s) queued for reclustering` : 'Article deleted');
         resetForm();
         await load();
       };
@@ -786,6 +808,7 @@
       const [fetchedData,    setFetchedData]    = useState(null);
       const [fetching,       setFetching]       = useState(false);
       const [saving,         setSaving]         = useState(false);
+      const [excludedUrls,   setExcludedUrls]   = useState(new Set()); // URLs excluded from all algo spotlight slots for selectedDate
       // Daily Edition panel state
       const [dailyEdSlot,    setDailyEdSlot]    = useState(null);  // slot number or null
       const [dailyEdForm,    setDailyEdForm]    = useState({});    // {image_url,image_alt,credit_name,credit_url,summary_html,why_it_matters}
@@ -821,15 +844,18 @@
         setReplacing(null);
         setFetchedData(null);
         setReplaceUrl('');
+        setExcludedUrls(new Set());
         setLoadingDate(true);
-        const [articlesRes, overridesRes] = await Promise.all([
+        const [articlesRes, overridesRes, excludedRes] = await Promise.all([
           supabase.from('news_items').select('*').eq('date', date),
           supabase.from('spotlight_overrides').select('*').eq('dispatch_date', date),
+          supabase.from('spotlight_excluded').select('url').eq('dispatch_date', date),
         ]);
         setDateArticles(articlesRes.data || []);
         const bySlot = {};
         for (const ov of (overridesRes.data || [])) bySlot[ov.slot] = ov;
         setOverrides(bySlot);
+        setExcludedUrls(new Set((excludedRes.data || []).map(r => r.url)));
         setLoadingDate(false);
       };
 
@@ -838,9 +864,9 @@
         const overriddenUrls = new Set(Object.values(overrides).map(ov => ov.url));
         const queue = [...dateArticles]
           .sort((a, b) => scoreArticle(b) - scoreArticle(a))
-          .filter(a => !overriddenUrls.has(a.url));
+          .filter(a => !overriddenUrls.has(a.url) && !excludedUrls.has(a.url));
         return [1, 2, 3, 4].map(slot => overrides[slot] ? null : (queue.shift() || null));
-      }, [dateArticles, overrides]);
+      }, [dateArticles, overrides, excludedUrls]);
 
       const getSlotData = (slot) => {
         if (overrides[slot]) return { ...overrides[slot], isOverride: true };
@@ -873,6 +899,33 @@
       const saveOverride = async (slot) => {
         if (!fetchedData || !replaceUrl) return;
         setSaving(true);
+
+        // Displace current occupant: exclude from all algo slots and orphan its sublinks
+        const currentSlot = getSlotData(slot);
+        if (currentSlot) {
+          const xUrl = currentSlot.url;
+          await supabase.from('spotlight_excluded')
+            .upsert({ dispatch_date: selectedDate, url: xUrl },
+                     { onConflict: 'dispatch_date,url', ignoreDuplicates: true });
+          setExcludedUrls(prev => new Set([...prev, xUrl]));
+
+          const xArticle = dateArticles.find(a => a.url === xUrl);
+          const subs = xArticle?.more_coverage || [];
+          if (subs.length > 0) {
+            const today = new Date()
+              .toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })
+              .replace(/\//g, '-');
+            await supabase.from('news_items').update({ more_coverage: [] }).eq('url', xUrl);
+            await supabase.from('news_items').upsert(
+              subs.map(mc => ({
+                url: mc.url, source: mc.source || '', title: '', summary: '',
+                density: 0, more_coverage: [], needs_reprocess: true, date: today,
+              })),
+              { onConflict: 'url', ignoreDuplicates: true }
+            );
+          }
+        }
+
         const record = {
           dispatch_date: selectedDate,
           slot,

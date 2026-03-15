@@ -730,6 +730,12 @@ def fetch_youtube_videos_ytdlp(channel_url):
                     if not entry: continue
                     full_text = (str(entry.get('title', '')) + " " + str(entry.get('description', ''))).lower()
                     if any(b.lower() in full_text or b.lower().replace(" ","") in full_text.replace(" ","") for b in CORE_BRANDS):
+                        title = entry.get('title', '')
+                        description = str(entry.get('description', ''))[:150]
+                        if not is_english(title):
+                            continue
+                        if description and not is_english(description):
+                            continue
                         formatted_date = (
                             _format_yt_date(entry.get('upload_date'))
                             or get_video_upload_date(entry['id'])
@@ -1474,6 +1480,7 @@ def _load_from_supabase() -> dict:
                 'hn_points':     row.get('hn_points'),
                 'hn_comments':   row.get('hn_comments'),
                 'd5_score':      row.get('d5_score'),
+                'needs_reprocess': row.get('needs_reprocess', False),
                 'vec':           None,
             })
 
@@ -1545,10 +1552,14 @@ def _save_to_supabase(db: dict) -> None:
             'hn_points':     item.get('hn_points'),
             'hn_comments':   item.get('hn_comments'),
             'd5_score':      item.get('d5_score'),
+            'needs_reprocess': False,
         } for item in db.get('items', [])]
         if news_records:
             _supabase.table('news_items').upsert(news_records).execute()
             print(f"✅ Upserted {len(news_records)} news items.")
+            # Clean up any orphan rows that were not re-discovered this run
+            # (articles too old to reappear in live feeds).
+            _supabase.table('news_items').delete().eq('needs_reprocess', True).execute()
 
         # Prune stale items from the CURRENT dispatch only.
         # Past dispatches are sealed once a new dispatch has begun — their articles
@@ -1771,6 +1782,15 @@ if __name__ == "__main__":
     _load_api_usage()
     _load_channel_vet_cache()
 
+    # Release orphaned sublinks (flagged when admin deleted their anchor).
+    # Removing them from db['items'] means their URLs won't be in existing_urls,
+    # so if they still appear in RSS/HN/Google they're treated as newly discovered.
+    # Any that aren't re-discovered are cleaned up in _save_to_supabase.
+    orphan_count = sum(1 for item in db.get('items', []) if item.get('needs_reprocess'))
+    if orphan_count:
+        db['items'] = [item for item in db['items'] if not item.get('needs_reprocess')]
+        print(f"♻️  {orphan_count} orphaned sublink(s) released for reclustering.")
+
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
     new_summaries_count = 0
@@ -1882,8 +1902,7 @@ if __name__ == "__main__":
                     scanned_videos.extend(fetch_youtube_videos_ytdlp(yt_target))
 
     global_videos = fetch_global_openclaw_videos(limit=30)
-    # scanned_videos are from explicitly whitelisted channels — no filtering applied
-    # global_videos are already filtered (English + channel vetting) inside the fetch function
+    # Both scanned_videos and global_videos are English-filtered inside their fetch functions
     all_new_videos = scanned_videos + global_videos
     vid_urls = {v['url'] for v in db.get('videos', [])}
     combined_vids = db.get('videos', []) + [v for v in all_new_videos if v['url'] not in vid_urls]

@@ -321,6 +321,34 @@ CREATE POLICY "Service role full access" ON channel_vetted
 -- No public reads needed — accessed only by forge.py via the service key.
 
 -- =============================================================
+-- needs_reprocess flag on news_items
+-- Set to true when an anchor article is deleted via the admin panel and its
+-- more_coverage sublinks are orphaned for possible reclustering on the next
+-- forge run. forge.py strips these rows from existing_urls so they can be
+-- re-discovered from live feeds, then deletes any that weren't re-found.
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS needs_reprocess BOOLEAN DEFAULT false;
+
+-- =============================================================
+-- spotlight_excluded table — tracks articles manually displaced from spotlight
+-- When the admin replaces article X in a spotlight slot, X is excluded from
+-- all algo-filled spotlight slots for that date (but stays in the news feed).
+-- X can be manually re-added to spotlight via the override UI at any time.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS spotlight_excluded (
+  dispatch_date  TEXT NOT NULL,
+  url            TEXT NOT NULL,
+  PRIMARY KEY (dispatch_date, url)
+);
+ALTER TABLE spotlight_excluded ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public reads" ON spotlight_excluded
+  FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Admin writes" ON spotlight_excluded
+  FOR ALL TO authenticated
+  USING     (auth.email() = 'ADMIN_EMAIL_HERE')
+  WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON

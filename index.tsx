@@ -216,6 +216,7 @@ const App: React.FC = () => {
   const [research, setResearch] = useState<ResearchItem[]>([]);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [spotlightOverrides, setSpotlightOverrides] = useState<SpotlightOverride[]>([]);
+  const [spotlightExcluded, setSpotlightExcluded]   = useState<{dispatch_date:string; url:string}[]>([]);
   const [dailyEditionDates, setDailyEditionDates]   = useState<Set<string>>(new Set()); // YYYY-MM-DD
 
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -298,7 +299,7 @@ const App: React.FC = () => {
   const fetchContent = async () => {
     setLoading(true);
     try {
-      const [newsRes, videosRes, projectsRes, researchRes, eventsRes, metaRes, spotlightRes, dailyEdRes] = await Promise.all([
+      const [newsRes, videosRes, projectsRes, researchRes, eventsRes, metaRes, spotlightRes, dailyEdRes, excludedRes] = await Promise.all([
         supabase.from('news_items').select('*').order('inserted_at', { ascending: false }).limit(1000),
         supabase.from('videos').select('*').limit(300),
         supabase.from('github_projects').select('*').limit(100),
@@ -307,6 +308,7 @@ const App: React.FC = () => {
         supabase.from('feed_metadata').select('*').eq('id', 1).maybeSingle(),
         supabase.from('spotlight_overrides').select('*'),
         supabase.from('daily_editions').select('edition_date'),
+        supabase.from('spotlight_excluded').select('dispatch_date,url'),
       ]);
 
       if (newsRes.error) throw newsRes.error;
@@ -339,6 +341,7 @@ const App: React.FC = () => {
       setResearch(researchRes.data || []);
       setEvents(eventsRes.data || []);
       setSpotlightOverrides(spotlightRes.data || []);
+      setSpotlightExcluded(excludedRes.data || []);
       setDailyEditionDates(new Set((dailyEdRes.data || []).map((r: any) => r.edition_date)));
     } catch (err: any) {
       setError("Intelligence feed is currently updating...");
@@ -512,7 +515,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightDays={spotlightDays} dailyEditionDates={dailyEditionDates} />
+                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditionDates={dailyEditionDates} />
                 <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
@@ -728,11 +731,12 @@ const scoreArticle = (item: NewsItem): number => {
   return score;
 };
 
-const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightDays, dailyEditionDates }: {
+const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightExcluded, spotlightDays, dailyEditionDates }: {
   items: NewsItem[];
   allNews: NewsItem[];
   onTrackClick: (t: string, s: string) => void;
   spotlightOverrides: SpotlightOverride[];
+  spotlightExcluded: {dispatch_date: string; url: string}[];
   spotlightDays: Set<string>;
   dailyEditionDates: Set<string>;
 }) => {
@@ -782,6 +786,15 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
     return byDay;
   }, [allNews]);
 
+  // Build excluded lookup: { "MM-DD-YYYY": Set<url> }
+  const excludedLookup = React.useMemo(() => {
+    const m: Record<string, Set<string>> = {};
+    for (const ex of spotlightExcluded) {
+      (m[ex.dispatch_date] ??= new Set()).add(ex.url);
+    }
+    return m;
+  }, [spotlightExcluded]);
+
   // Build override lookup: { "MM-DD-YYYY": { 1: override, 2: override, ... } }
   const overrideLookup: Record<string, Record<number, SpotlightOverride>> = {};
   for (const ov of spotlightOverrides) {
@@ -809,10 +822,11 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightD
         const overriddenUrls = new Set(
           Object.values(dayOverrides).map(ov => ov.url)
         );
-        // Score-sorted queue for algorithm, excluding any URLs already manually placed
+        // Score-sorted queue for algorithm, excluding manually placed or excluded URLs
+        const dayExcluded = excludedLookup[day];
         const algoQueue = [...dayItems]
           .sort((a, b) => scoreArticle(b) - scoreArticle(a))
-          .filter(item => !overriddenUrls.has(item.url));
+          .filter(item => !overriddenUrls.has(item.url) && !(dayExcluded?.has(item.url)));
         let queueIdx = 0;
 
         const spotlightSlots: (NewsItem | null)[] = [1, 2, 3, 4].map(slot => {
