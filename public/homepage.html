@@ -431,23 +431,24 @@ img { display: block; max-width: 100%; }
       <span class="brand-text" aria-hidden="true">ClawBeat<span>.co</span></span>
     </a>
     <nav class="header-nav" aria-label="Primary navigation">
-      <a href="/" class="nav-item active" aria-current="page"><i data-lucide="home" aria-hidden="true"></i>Home</a>
-      <div class="nav-dropdown" role="navigation" aria-label="Intel submenu">
-        <a href="/intel.html" class="nav-item" aria-haspopup="true"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
-        <div class="nav-dropdown-menu" role="menu">
-          <a href="/trace/" class="nav-dropdown-item" role="menuitem">
+      <div class="nav-dropdown">
+        <a href="/" class="nav-item active" aria-current="page" aria-haspopup="true"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
             <i data-lucide="layers" aria-hidden="true"></i>
             <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
           </a>
-          <a href="/guide/openclaw-comparison.html" class="nav-dropdown-item" role="menuitem">
+          <a href="/guide/openclaw-comparison.html" class="nav-dropdown-item">
             <i data-lucide="file-text" aria-hidden="true"></i>
             <div><div class="nav-dropdown-label">Guide</div><div class="nav-dropdown-sub">OpenClaw comparison</div></div>
           </a>
         </div>
       </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video" aria-hidden="true"></i>Media</a>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github" aria-hidden="true"></i>Forge</a>
       <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
-      <a href="/forge.html" class="nav-item"><i data-lucide="git-branch" aria-hidden="true"></i>Repos</a>
-      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener noreferrer" aria-label="OpenClaw skill on ClaWhub (opens in new tab)">// openclaw_skill ↗</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
     </nav>
     <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
       <i data-lucide="menu" id="icon-menu" aria-hidden="true"></i>
@@ -458,13 +459,14 @@ img { display: block; max-width: 100%; }
 
 <!-- ══════════════════════════ MOBILE MENU ══════════════════════════ -->
 <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
-  <a href="/" class="mobile-nav-item active" aria-current="page"><i data-lucide="home" aria-hidden="true"></i>Home</a>
-  <a href="/intel.html" class="mobile-nav-item"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
-  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers" aria-hidden="true"></i>Trace</a>
-  <a href="/guide/openclaw-comparison.html" class="mobile-subnav-item"><i data-lucide="file-text" aria-hidden="true"></i>Guide</a>
+  <a href="/" class="mobile-nav-item active" aria-current="page"><i data-lucide="newspaper" aria-hidden="true"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers" aria-hidden="true"></i>Trace Magazine</a>
+  <a href="/guide/openclaw-comparison.html" class="mobile-subnav-item"><i data-lucide="file-text" aria-hidden="true"></i>OpenClaw Guide</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video" aria-hidden="true"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github" aria-hidden="true"></i>The Forge</a>
   <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
-  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="git-branch" aria-hidden="true"></i>Repos</a>
-  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener noreferrer" style="margin-left:0; margin-top:0.5rem;">// openclaw_skill ↗</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
 </nav>
 
 <!-- ══════════════════════════ MAIN CONTENT ══════════════════════════ -->
