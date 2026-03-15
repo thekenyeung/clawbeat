@@ -1,12 +1,29 @@
 node_modules/
+dist/
 .env
 .env.admin
 .DS_Store
+__pycache__/
+.claude/
 
 # Admin panel — generated at build time from admin.template.html
 # Never commit the generated file (it contains injected secrets)
 public/admin.html
 .tsbuildinfo
+
+# TypeScript compiler output (tsc emits these; Vite handles bundling)
+/index.js
+/index.js.map
+/index.d.ts
+/index.d.ts.map
+/vite.config.js
+/vite.config.js.map
+/vite.config.d.ts
+/vite.config.d.ts.map
+src/*.js
+src/*.js.map
+src/*.d.ts
+src/*.d.ts.map
 docs/
 forge.log
 *.log
