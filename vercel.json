@@ -11,9 +11,5 @@
       "destination": "/news.html",
       "permanent": false
     }
-  ],
-  "rewrites": [
-    { "source": "/news.html", "destination": "/index.html" },
-    { "source": "/", "destination": "/homepage.html" }
   ]
 }
