@@ -198,7 +198,7 @@ const App: React.FC = () => {
   );
 
   const [currentNewsDate, setCurrentNewsDate] = useState<string>(
-    urlDate || sessionStorage.getItem('newsDate') || ''
+    urlDate || ''
   );
   const [currentVideoPage, setCurrentVideoPage] = useState(Number(sessionStorage.getItem('videoPage')) || 1);
   const [currentProjectPage, setCurrentProjectPage] = useState(Number(sessionStorage.getItem('projectPage')) || 1);
