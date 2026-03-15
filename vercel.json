@@ -4,7 +4,16 @@
       "maxDuration": 30
     }
   },
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "query", "key": "tab", "value": "news" }],
+      "destination": "/news.html",
+      "permanent": false
+    }
+  ],
   "rewrites": [
+    { "source": "/news.html", "destination": "/index.html" },
     { "source": "/", "destination": "/homepage.html" }
   ]
 }

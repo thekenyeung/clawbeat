@@ -1,1017 +1,722 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- ── GOOGLE ANALYTICS ── -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ window.dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-WHLSLX6VL3');
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    // IMPORTANT: Use your actual ID here too
+    gtag('config', 'G-WHLSLX6VL3', { 
+        send_page_view: false 
+    });
 </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>ClawBeat.co | OpenClaw AI Intel Feed</title>
+    <meta name="title" content="ClawBeat News | OpenClaw AI Intel Feed">
+    <meta name="description" content="The autonomous intelligence feed for the OpenClaw ecosystem. Curating the latest news, media, and GitHub projects for Clawdbot, Moltbot, and OpenClaw and agentic AI.">
+    <meta name="keywords" content="OpenClaw, Moltbot, AI agents, OpenClaw Foundation, AI News, GitHub Projects, Moltbook">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ken Yeung">
 
-<!-- ── CORE META ── -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#08090b">
-<meta name="color-scheme" content="dark">
-<meta name="robots" content="index, follow">
-<meta name="author" content="ClawBeat">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ClawBeat">
-<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
-<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://clawbeat.co">
+    <meta property="og:title" content="ClawBeat | OpenClaw Ecosystem Intel">
+    <meta property="og:description" content="The definitive news river for OpenClaw and autonomous agent development.">
+    <meta property="og:image" content="https://clawbeat.co/images/og-image.png">
 
-<!-- ── PAGE TITLE + SEO ── -->
-<title>ClawBeat — OpenClaw AI Intelligence Hub</title>
-<meta name="description" content="ClawBeat tracks the OpenClaw agentic AI ecosystem: breaking news, research signals, GitHub repo activity, events, and monthly deep analysis via Trace magazine.">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://clawbeat.co/">
+    <meta property="twitter:title" content="ClawBeat | OpenClaw Ecosystem Intel">
+    <meta property="twitter:description" content="The definitive news river for OpenClaw and autonomous agent development.">
+    <meta property="twitter:image" content="https://clawbeat.co//og-image.jpg">
 
-<!-- ── OPEN GRAPH / SOCIAL PREVIEW ── -->
-<meta property="og:title" content="ClawBeat — OpenClaw AI Intelligence Hub">
-<meta property="og:description" content="Live intelligence on the OpenClaw ecosystem — news, research, events, repos, and monthly magazine analysis.">
-<meta property="og:url" content="https://clawbeat.co/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="ClawBeat">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://clawbeat.co/images/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ClawBeat — OpenClaw AI Intelligence Hub">
 
-<!-- ── TWITTER / X CARD ── -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ClawBeat — OpenClaw AI Intelligence Hub">
-<meta name="twitter:description" content="Live intelligence on the OpenClaw ecosystem — news, research, events, repos, and monthly magazine analysis.">
-<meta name="twitter:image" content="https://clawbeat.co/images/og-image.png">
-<meta name="twitter:image:alt" content="ClawBeat — OpenClaw AI Intelligence Hub">
-<link rel="canonical" href="https://clawbeat.co/">
-
-<!-- ── STRUCTURED DATA (JSON-LD) ── -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
+    <script type="application/ld+json">
     {
-      "@type": "WebSite",
-      "@id": "https://clawbeat.co/#website",
-      "url": "https://clawbeat.co/",
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
       "name": "ClawBeat",
-      "description": "OpenClaw agentic AI intelligence hub covering news, research, events, GitHub repos, and monthly deep analysis.",
-      "publisher": { "@id": "https://clawbeat.co/#org" },
-      "inLanguage": "en-US",
-      "potentialAction": {
-        "@type": "ReadAction",
-        "target": "https://clawbeat.co/"
-      }
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://clawbeat.co/#webpage",
-      "url": "https://clawbeat.co/",
-      "name": "ClawBeat — OpenClaw AI Intelligence Hub",
-      "description": "Live intelligence on the OpenClaw ecosystem: daily news, research signals, GitHub activity, events, and Trace monthly analysis.",
-      "isPartOf": { "@id": "https://clawbeat.co/#website" },
-      "about": { "@id": "https://clawbeat.co/#org" },
-      "inLanguage": "en-US",
-      "speakable": {
-        "@type": "SpeakableSpecification",
-        "cssSelector": [".geo-summary-text", ".hero-lead-headline", ".daily-banner-headline"]
-      }
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://clawbeat.co/#org",
-      "name": "ClawBeat",
-      "url": "https://clawbeat.co/",
-      "description": "ClawBeat is an intelligence platform tracking the OpenClaw agentic AI ecosystem — breaking news, research, GitHub repositories, events, and monthly analysis via Trace magazine.",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://clawbeat.co/images/clawbeat-icon-claw-logo-512x512.jpg"
-      },
-      "sameAs": ["https://clawhub.ai/thekenyeung/clawbeat"]
+      "url": "https://clawbeat.co//",
+      "logo": "https://clawbeat.co//logo.png",
+      "sameAs": [
+        "https://github.com/thekenyeung/clawbeat"
+      ]
     }
-  ]
-}
-</script>
+    </script>
 
-<!-- ── FONTS ── -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap');
 
-<style>
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; font-size: 16px; }
+        *, *::before, *::after { box-sizing: border-box; }
 
-/* ── TOKENS ── */
-:root {
-  --bg:          #08090b;
-  --bg-2:        #0d0f12;
-  --bg-3:        #131619;
-  --border:      rgba(255,255,255,0.05);
-  --border-2:    rgba(255,255,255,0.09);
-  --orange:      #f97316;
-  --orange-dim:  rgba(249,115,22,0.10);
-  --orange-glow: rgba(249,115,22,0.18);
-  --green:       #22c55e;
-  --green-dim:   rgba(34,197,94,0.08);
-  --cyan:        #06b6d4;
-  --cyan-dim:    rgba(6,182,212,0.08);
-  --text:        #e2e4e9;
-  --text-2:      #9097a3;
-  --text-3:      #525866;
-  --text-4:      #2e333d;
-  --mono:        'JetBrains Mono', monospace;
-  --sans:        'Space Grotesk', sans-serif;
-  --col-w:       1152px;
-  --gutter:      1.5rem;
-  /* Minimum readable font size = 11px at 16px base */
-  --min-font:    0.6875rem;
-}
+        :root {
+            --bg: #08090b;
+            --bg-2: #0d0f12;
+            --bg-3: #131619;
+            --border: rgba(255,255,255,0.05);
+            --border-2: rgba(255,255,255,0.09);
+            --orange: #f97316;
+            --orange-bright: #fb923c;
+            --orange-dim: rgba(249,115,22,0.10);
+            --orange-glow: rgba(249,115,22,0.15);
+            --text: #e2e4e9;
+            --text-2: #9097a3;
+            --text-3: #525866;
+            --text-4: #2e333d;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Space Grotesk', sans-serif;
+        }
 
-body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
-a { color: inherit; text-decoration: none; }
-img { display: block; max-width: 100%; }
-:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+        body {
+            font-family: var(--sans);
+            margin: 0;
+            background-color: #0a0a0c;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
 
-/* Respect prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0c; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
 
-/* ── SKIP LINK ── */
-.skip-link {
-  position: absolute;
-  top: -100%;
-  left: 1rem;
-  z-index: 1000;
-  padding: 0.75rem 1.25rem;
-  background: var(--orange);
-  color: #000;
-  font-family: var(--mono);
-  font-size: var(--min-font);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-radius: 0 0 0.375rem 0.375rem;
-  transition: top 0.15s;
-}
-.skip-link:focus { top: 0; outline: 2px solid #000; outline-offset: 2px; }
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+        .animate-shimmer {
+          background: linear-gradient(to right, #111114 8%, #1a1a1e 18%, #111114 33%);
+          background-size: 1000px 100%;
+          animation: shimmer 2s infinite linear;
+        }
 
-/* ── HEADER ── */
-.header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border); background: rgba(8,9,11,0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
-.header-inner { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; min-height: 44px; }
-.brand-img { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0; }
-.brand-img img { width: 100%; height: 100%; object-fit: cover; }
-.brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
-.brand-text span { color: var(--orange); }
-.header-nav { display: flex; align-items: center; gap: 0.25rem; }
-.nav-item { font-family: var(--sans); font-size: var(--min-font); font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.5rem 1rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
-.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-.nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
-.nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
-.nav-dropdown { position: relative; }
-.nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
-.nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown:focus-within .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-.nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; min-height: 44px; }
-.nav-dropdown-item:hover { background: var(--orange-dim); }
-.nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
-.nav-dropdown-label { font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
-.nav-dropdown-sub { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
-.nav-skill-chip { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.375rem 0.6rem; min-height: 44px; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; display: flex; align-items: center; }
-.nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
-.hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: 0.375rem; }
-.hamburger-btn:hover { color: #fff; }
-.hamburger-btn svg { width: 24px; height: 24px; }
-.mobile-menu { display: none; position: fixed; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
-.mobile-menu.open { display: flex; }
-.mobile-nav-item { font-family: var(--sans); font-size: 0.8125rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-.mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
-.mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
-.mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-.mobile-subnav-item { font-family: var(--mono); font-size: var(--min-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
-.mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
-@media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+        /* ── HEADER ── */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(10,10,12,0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .header-inner {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .brand-img {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-text {
+            font-family: var(--sans);
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            font-style: italic;
+            color: #fff;
+        }
+        .brand-text span { color: var(--orange); }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .nav-item {
+            font-family: var(--sans);
+            font-size: 0.625rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748b;
+            padding: 0.375rem 1rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            line-height: inherit;
+        }
+        .nav-item svg { width: 16px; height: 16px; }
+        .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--orange);
+            box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+        }
 
-/* ── LAYOUT ── */
-.page-wrap { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); }
+        /* ── HAMBURGER / MOBILE MENU ── */
+        .hamburger-btn {
+            display: none;
+            padding: 0.5rem;
+            color: #94a3b8;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .hamburger-btn:hover { color: #fff; }
+        .hamburger-btn svg { width: 24px; height: 24px; }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 4rem;
+            left: 0;
+            width: 100%;
+            background: rgba(10,10,12,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 60;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-nav-item {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748b;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            line-height: inherit;
+        }
+        .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+        .mobile-nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--orange);
+            box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+        }
+        .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+        @media (max-width: 768px) {
+            .header-nav { display: none; }
+            .hamburger-btn { display: flex; }
+        }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+        .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
+        .nav-dropdown-item:hover { background: rgba(249,115,22,0.10); }
+        .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+        .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #e2e4e9; line-height: 1; }
+        .nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: #6e7680; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+        .mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6e7680; padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; background: none; border: none; cursor: pointer; }
+        .mobile-subnav-item:hover { color: var(--orange); background: rgba(249,115,22,0.10); }
+        .mobile-subnav-item svg { width: 14px; height: 14px; }
 
-/* ── SECTION DIVIDERS ── */
-.section-divider { display: flex; align-items: center; gap: 1.25rem; margin: 3.5rem 0 2rem; }
-.section-divider-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.18em; white-space: nowrap; }
-.section-divider-label::before { content: '// '; opacity: 0.6; }
-.section-divider-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+        /* ── FOOTER ── */
+        .footer {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: var(--bg-2);
+        }
+        .footer-inner {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-brand {
+            font-family: var(--sans);
+            font-size: 0.875rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            font-style: italic;
+            color: #fff;
+        }
+        .footer-brand span { color: var(--orange); }
+        .footer-mono {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--text-3);
+        }
+        .clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+        .clawhub-badge:hover { color: var(--orange); }
+        .nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+        .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
 
-/* ── HERO ── */
-.hero { position: relative; overflow: hidden; padding: 4rem var(--gutter) 0; background: var(--bg); }
-.hero::before {
-  content: '';
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.012) 39px, rgba(255,255,255,0.012) 40px),
-    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.006) 79px, rgba(255,255,255,0.006) 80px);
-}
-.hero::after {
-  content: '';
-  position: absolute; top: -80px; left: 40%; transform: translateX(-50%);
-  width: 700px; height: 300px;
-  background: radial-gradient(ellipse, rgba(249,115,22,0.07) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-inner { max-width: var(--col-w); margin: 0 auto; position: relative; }
-.hero-eyebrow { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
-.hero-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s ease-in-out infinite; flex-shrink: 0; }
-@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-.hero-live-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.18em; text-transform: uppercase; }
-.hero-live-label strong { color: var(--green); }
-.hero-grid { display: grid; grid-template-columns: 1fr 360px; gap: 2px; border: 1px solid var(--border-2); border-radius: 0.75rem; overflow: hidden; background: var(--border); }
-@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+        /* ── INTEL FEED REDESIGN ── */
+        :root {
+            --text-mid: #7c8494;
+            --min-size: 0.6875rem;
+            --green: #22c55e;
+            --green-dim: rgba(34,197,94,0.12);
+        }
 
-/* Lead story */
-.hero-lead { position: relative; background: var(--bg-2); padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; min-height: 380px; justify-content: flex-end; overflow: hidden; cursor: pointer; transition: background 0.2s; }
-.hero-lead:hover { background: var(--bg-3); }
-.hero-lead-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.2), transparent); }
-.hero-lead-number { position: absolute; top: 2rem; right: 2rem; font-family: var(--mono); font-size: 5rem; font-weight: 700; color: rgba(255,255,255,0.03); line-height: 1; letter-spacing: -0.06em; user-select: none; aria-hidden: true; }
-.hero-lead-badges { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.badge-signal { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; background: var(--orange); color: #000; padding: 0.25rem 0.6rem; border-radius: 2px; }
-.badge-cat { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); border: 1px solid var(--border-2); padding: 0.25rem 0.6rem; border-radius: 2px; }
-.hero-lead-headline { font-family: var(--sans); font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: #fff; max-width: 24ch; }
-.hero-lead-summary { font-size: 0.9375rem; color: var(--text-2); line-height: 1.65; max-width: 56ch; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.hero-lead-meta { display: flex; align-items: center; gap: 1rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
-.hero-lead-meta .source { color: var(--orange); }
-.hero-lead-meta .source:hover { color: #fff; }
-.hero-lead-cta { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.15em; color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.25); padding: 0.5rem 0.85rem; min-height: 44px; border-radius: 0.25rem; transition: all 0.15s; align-self: flex-start; }
-.hero-lead-cta:hover { background: rgba(249,115,22,0.18); border-color: rgba(249,115,22,0.4); }
-.hero-lead-cta svg { width: 12px; height: 12px; }
+        /* Date dividers */
+        .date-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2.75rem 0 1.75rem;
+        }
+        .date-divider:first-child { margin-top: 0; }
+        .date-label {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            color: var(--orange);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .date-label::before { content: '//'; opacity: 0.6; }
+        .date-text { color: #fff; }
+        .date-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(249,115,22,0.4), rgba(249,115,22,0.05), transparent);
+        }
+        .date-count {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            color: var(--text-3);
+            white-space: nowrap;
+        }
 
-/* Side stories */
-.hero-side { display: flex; flex-direction: column; gap: 2px; background: var(--border); }
-.hero-side-card { background: var(--bg-2); padding: 1.75rem; display: flex; flex-direction: column; gap: 0.75rem; flex: 1; cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden; }
-.hero-side-card:hover { background: var(--bg-3); }
-.hero-side-num { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); letter-spacing: 0.12em; }
-.hero-side-headline { font-family: var(--sans); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; color: var(--text); }
-.hero-side-meta { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: auto; }
-.hero-side-meta .source { color: var(--text-2); }
+        /* Lead story */
+        .lead-card {
+            background: var(--bg-2);
+            border: 1px solid var(--border-2);
+            border-left: 3px solid var(--orange);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 260px;
+        }
+        .lead-body { padding: 1.75rem 2rem; }
+        .lead-flag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--orange);
+            background: var(--orange-dim);
+            border: 1px solid rgba(249,115,22,0.25);
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .lead-flag::before { content: '▶'; font-size: 0.5rem; margin-right: 0.2rem; }
+        .lead-headline {
+            font-family: var(--sans);
+            font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .lead-headline a { color: inherit; text-decoration: none; transition: color 0.15s; }
+        .lead-headline a:hover { color: var(--orange); }
+        .lead-summary {
+            font-size: 0.9375rem;
+            color: var(--text-2);
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+            margin-top: 0;
+        }
 
-/* ── AI / GEO SUMMARY ── */
-.geo-summary { margin: 3rem 0; padding: 1.5rem 2rem; border: 1px solid var(--border); border-left: 2px solid rgba(249,115,22,0.35); border-radius: 0.5rem; background: var(--bg-2); display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; }
-.geo-summary-icon { font-family: var(--mono); font-size: var(--min-font); color: var(--orange); text-transform: uppercase; letter-spacing: 0.15em; white-space: nowrap; padding-top: 0.15rem; }
-.geo-summary-text { font-size: 0.9375rem; line-height: 1.75; color: var(--text-2); }
-.geo-summary-text strong { color: var(--text); font-weight: 600; }
+        /* Story meta row */
+        .story-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        .meta-source {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-2);
+        }
+        .meta-sep { color: var(--text-3); font-size: var(--min-size); }
+        .meta-date { font-family: var(--mono); font-size: var(--min-size); color: var(--text-mid); }
+        .badge-verified {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #22c55e;
+            background: rgba(34,197,94,0.12);
+            border: 1px solid rgba(34,197,94,0.25);
+            padding: 0.2rem 0.55rem;
+            border-radius: 3px;
+        }
+        .badge-priority {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-2);
+            border: 1px solid var(--border-2);
+            padding: 0.2rem 0.55rem;
+            border-radius: 3px;
+        }
 
-/* ── INTEL FEED CARDS ── */
-.feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; background: var(--border); }
-@media (max-width: 900px) { .feed-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 540px) { .feed-grid { grid-template-columns: 1fr; } }
+        /* Tags */
+        .tags-strip { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .tag {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-mid);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            padding: 0.25rem 0.6rem;
+            border-radius: 3px;
+        }
 
-.feed-card { background: var(--bg-2); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.625rem; cursor: pointer; transition: background 0.18s; position: relative; overflow: hidden; }
-.feed-card:hover { background: var(--bg-3); }
-.feed-card-rank { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-4); letter-spacing: 0.1em; text-transform: uppercase; }
-.feed-card-headline { font-family: var(--sans); font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; color: var(--text); }
-.feed-card-summary { font-size: 0.8125rem; color: var(--text-3); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.feed-card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--border); }
-.feed-card-source { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
-.feed-card-date { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); letter-spacing: 0.06em; }
+        /* Lead sidebar */
+        .lead-sidebar {
+            background: var(--bg-3);
+            border-left: 1px solid var(--border);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-hdr {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--text-mid);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.25rem;
+            border-bottom: 1px solid var(--border-2);
+        }
+        .sidebar-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .sidebar-item:last-child { border-bottom: none; }
+        .sidebar-num {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            color: rgba(249,115,22,0.7);
+        }
+        .sidebar-title { font-size: 0.8125rem; font-weight: 600; color: var(--text); line-height: 1.35; }
+        .sidebar-title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+        .sidebar-title a:hover { color: var(--orange); }
+        .sidebar-source { font-family: var(--mono); font-size: var(--min-size); color: var(--text-mid); }
 
-.feed-load-more { display: flex; align-items: center; justify-content: center; padding: 1rem; min-height: 44px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; margin-top: 1rem; cursor: pointer; font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-3); transition: all 0.15s; gap: 0.5rem; }
-.feed-load-more:hover { background: var(--bg-3); color: var(--text); border-color: var(--border-2); }
-.feed-load-more svg { width: 12px; height: 12px; }
+        /* Regular story cards */
+        .story-item {
+            display: flex;
+            background: var(--bg-2);
+            border: 1px solid var(--border-2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.875rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .story-item:hover { border-color: rgba(249,115,22,0.3); box-shadow: 0 0 20px rgba(249,115,22,0.05); }
+        .story-item.is-priority { border-left: 2px solid rgba(249,115,22,0.6); }
+        .story-num {
+            background: var(--bg-3);
+            border-right: 1px solid var(--border);
+            padding: 1rem 0.875rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-width: 54px;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        .num-text {
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--orange);
+            opacity: 0.55;
+            font-style: italic;
+            line-height: 1;
+        }
+        .num-line { width: 1px; flex: 1; min-height: 12px; background: var(--border); }
+        .story-body {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            min-width: 0;
+        }
+        .story-headline {
+            font-family: var(--sans);
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+        .story-headline a { color: inherit; text-decoration: none; transition: color 0.15s; display: block; }
+        .story-headline a:hover { color: var(--orange); }
+        .story-summary {
+            font-size: 0.875rem;
+            color: var(--text-2);
+            line-height: 1.75;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin: 0;
+        }
 
-/* ── DAILY EDITION BANNER ── */
-.daily-banner { border: 1px solid var(--border-2); border-radius: 0.75rem; overflow: hidden; background: var(--bg-2); display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 0; transition: background 0.2s; cursor: pointer; }
-.daily-banner:hover { background: var(--bg-3); }
-.daily-banner-left { padding: 2rem 2.5rem; }
-.daily-banner-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.875rem; }
-.daily-banner-chip { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; background: var(--orange); color: #000; padding: 0.25rem 0.55rem; border-radius: 2px; }
-.daily-banner-date { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; }
-.daily-banner-headline { font-family: var(--sans); font-size: 1.25rem; font-weight: 700; letter-spacing: -0.03em; color: #fff; line-height: 1.25; max-width: 52ch; }
-.daily-banner-summary { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin-top: 0.625rem; max-width: 58ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.daily-banner-right { padding: 2rem 2.5rem; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; min-width: 160px; text-align: center; }
-.daily-banner-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-2); display: flex; align-items: center; justify-content: center; color: var(--orange); }
-.daily-banner-arrow svg { width: 18px; height: 18px; }
-.daily-banner-cta { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.12em; }
-@media (max-width: 640px) { .daily-banner { grid-template-columns: 1fr; } .daily-banner-right { display: none; } }
+        /* More coverage */
+        .coverage-strip {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding-top: 0.65rem;
+            border-top: 1px solid var(--border);
+        }
+        .coverage-label {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-mid);
+            white-space: nowrap;
+        }
+        .coverage-link {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            color: var(--orange);
+            background: rgba(249,115,22,0.10);
+            border: 1px solid rgba(249,115,22,0.25);
+            padding: 0.25rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            transition: background 0.12s, color 0.12s;
+            white-space: nowrap;
+        }
+        .coverage-link:hover { background: rgba(249,115,22,0.18); color: #fff; }
 
-/* ── DASHBOARD: EVENTS + REPOS ── */
-.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-@media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
-.dash-panel { border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; background: var(--bg-2); }
-.dash-panel-header { padding: 1.125rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.dash-panel-title { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: var(--orange); }
-.dash-panel-title::before { content: '// '; opacity: 0.6; }
-.dash-panel-link { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); display: flex; align-items: center; gap: 0.3rem; transition: color 0.15s; padding: 0.25rem; min-height: 44px; }
-.dash-panel-link:hover { color: var(--orange); }
-.dash-panel-link svg { width: 10px; height: 10px; }
-.dash-panel-body { padding: 0.5rem 0; }
+        /* Pagination */
+        .page-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-2);
+            background: var(--bg-2);
+            border: 1px solid var(--border-2);
+            padding: 0.65rem 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .page-btn:hover { color: var(--orange); border-color: rgba(249,115,22,0.3); background: var(--orange-dim); }
+        .page-btn:disabled { opacity: 0.25; pointer-events: none; }
+        .page-pills { display: flex; align-items: center; gap: 0.3rem; }
+        .page-pill {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            width: 30px; height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 1px solid var(--border-2);
+            color: var(--text-2);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.12s;
+        }
+        .page-pill:hover { color: var(--orange); border-color: rgba(249,115,22,0.3); }
+        .page-pill.active { color: var(--orange); background: var(--orange-dim); border-color: rgba(249,115,22,0.35); }
+        .page-pill.ellipsis { cursor: default; color: var(--text-3); border-color: transparent; pointer-events: none; background: transparent; }
+        .page-info { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+        .page-info-label {
+            font-family: var(--mono);
+            font-size: var(--min-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            color: var(--text-mid);
+        }
+        .page-info-nums { display: flex; align-items: baseline; gap: 0.35rem; }
+        .page-current { font-family: var(--sans); font-size: 1.35rem; font-weight: 900; font-style: italic; color: #fff; }
+        .page-sep { color: rgba(249,115,22,0.6); font-size: 0.8125rem; }
+        .page-total { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--text-2); }
 
-/* Events list */
-.event-item { padding: 0.875rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; align-items: flex-start; cursor: pointer; transition: background 0.15s; min-height: 60px; }
-.event-item:last-child { border-bottom: none; }
-.event-item:hover { background: var(--bg-3); }
-.event-date-block { flex-shrink: 0; width: 40px; text-align: center; }
-.event-date-m { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); }
-.event-date-d { font-family: var(--sans); font-size: 1.25rem; font-weight: 800; color: var(--text); line-height: 1; }
-.event-info { flex: 1; min-width: 0; }
-.event-title { font-size: 0.875rem; font-weight: 600; color: var(--text); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.event-meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; flex-wrap: wrap; }
-.event-type-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.event-type-dot.in-person { background: var(--orange); }
-.event-type-dot.virtual { background: var(--cyan); }
-.event-type-dot.unknown { background: var(--text-4); }
-.event-type-label { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); }
-.event-location { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
-.event-countdown { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border-radius: 2px; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.2); flex-shrink: 0; align-self: center; }
+        /* Daily Edition link — full-width footer strip on each lead card */
+        .daily-edition-link {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 2rem;
+            border-top: 1px solid rgba(249,115,22,0.25);
+            background: rgba(249,115,22,0.06);
+            font-family: var(--mono);
+            font-size: 0.70rem;
+            font-weight: 600;
+            color: #c2753a;
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
+            letter-spacing: 0.04em;
+        }
+        .daily-edition-link:hover {
+            color: var(--orange);
+            background: rgba(249,115,22,0.11);
+            border-top-color: rgba(249,115,22,0.5);
+        }
+        .daily-edition-label {
+            color: var(--orange);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.60rem;
+            opacity: 0.85;
+        }
+        .daily-edition-link:hover .daily-edition-label { opacity: 1; }
+        .daily-edition-arrow {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--orange);
+            opacity: 0.5;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .daily-edition-link:hover .daily-edition-arrow {
+            opacity: 1;
+            transform: translateX(3px);
+        }
 
-/* Repo cards */
-.repo-item { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem; cursor: pointer; transition: background 0.15s; }
-.repo-item:last-child { border-bottom: none; }
-.repo-item:hover { background: var(--bg-3); }
-.repo-item-header { display: flex; align-items: center; justify-content: space-between; }
-.repo-name { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--orange); letter-spacing: -0.01em; }
-.repo-stars { display: flex; align-items: center; gap: 0.3rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
-.repo-stars svg { width: 10px; height: 10px; color: var(--orange); }
-.repo-desc { font-size: 0.8125rem; color: var(--text-3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.repo-foot { display: flex; align-items: center; gap: 0.75rem; }
-.repo-lang { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
-.repo-tier { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border-radius: 2px; }
-.repo-tier.tier-a { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
-.repo-tier.tier-b { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-.repo-tier.tier-c { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid var(--border); }
+        /* Responsive — intel feed */
+        @media (max-width: 900px) {
+            .lead-card { grid-template-columns: 1fr; }
+            .lead-sidebar {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 1.5rem;
+                padding: 1.25rem;
+            }
+            .sidebar-hdr { grid-column: 1 / -1; }
+        }
+        @media (max-width: 640px) {
+            .lead-body { padding: 1.25rem; }
+            .lead-sidebar { grid-template-columns: 1fr; }
+            .lead-headline { font-size: clamp(1.15rem, 5vw, 1.5rem); }
+            .story-num { min-width: 42px; padding: 0.85rem 0.65rem; }
+            .num-text { font-size: 0.875rem; }
+            .story-body { padding: 0.875rem 1rem; }
+            .story-headline { font-size: 0.9375rem; }
+            .story-summary { font-size: 0.8125rem; -webkit-line-clamp: 2; line-clamp: 2; }
+            .date-divider { margin: 2rem 0 1.25rem; }
+            .date-count { display: none; }
+            .page-pills { display: none; }
+        }
+    </style>
 
-/* ── PROMO STRIP: TRACE + GUIDE ── */
-.promo-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-@media (max-width: 640px) { .promo-strip { grid-template-columns: 1fr; } }
-
-.promo-card { border: 1px solid var(--border); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; position: relative; overflow: hidden; transition: border-color 0.2s; cursor: pointer; }
-.promo-card:hover { border-color: var(--border-2); }
-.promo-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-.promo-card.promo-trace::before { background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.15), transparent); }
-.promo-card.promo-guide::before { background: linear-gradient(to right, var(--cyan), rgba(6,182,212,0.15), transparent); }
-.promo-card-eyebrow { display: flex; align-items: center; gap: 0.625rem; }
-.promo-card-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.2rem 0.5rem; border-radius: 2px; }
-.promo-card.promo-trace .promo-card-label { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
-.promo-card.promo-guide .promo-card-label { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(6,182,212,0.2); }
-.promo-card-issue { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
-.promo-card-title { font-family: var(--sans); font-size: 1.375rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; color: #fff; }
-.promo-card-desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; }
-.promo-card-footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-.promo-card-stat { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
-.promo-card-go { display: flex; align-items: center; gap: 0.3rem; font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; transition: color 0.15s; }
-.promo-card.promo-trace .promo-card-go { color: var(--orange); }
-.promo-card.promo-guide .promo-card-go { color: var(--cyan); }
-.promo-card-go svg { width: 11px; height: 11px; }
-.promo-card:hover .promo-card-go { text-decoration: underline; }
-
-/* ── SKELETON LOADING ── */
-.skeleton { background: linear-gradient(90deg, var(--bg-3) 25%, rgba(30,34,40,0.8) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; border-radius: 4px; }
-@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-.skeleton-text { height: 0.875rem; margin-bottom: 0.5rem; }
-.skeleton-text.wide { width: 90%; }
-.skeleton-text.med { width: 65%; }
-.skeleton-text.short { width: 40%; }
-.skeleton-hero { min-height: 380px; background: var(--bg-2); border-radius: 0.75rem; display: flex; align-items: flex-end; padding: 2.5rem; }
-.skeleton-hero-content { width: 100%; }
-
-/* ── FOOTER ── */
-.footer { margin-top: 5rem; border-top: 1px solid var(--border-2); background: var(--bg-2); padding-bottom: env(safe-area-inset-bottom, 0); }
-.footer-inner { max-width: var(--col-w); margin: 0 auto; padding: 1.75rem var(--gutter); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-.footer-brand { font-family: var(--sans); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
-.footer-brand span { color: var(--orange); }
-.clawhub-badge { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.375rem 0.6rem; min-height: 44px; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; display: flex; align-items: center; }
-.clawhub-badge:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
-
-/* ── ECOSYSTEM ANALYTICS PANEL ── */
-.analytics-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
-.analytics-stat { background: var(--bg-2); padding: 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.25rem; }
-.analytics-stat-val { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; color: var(--orange); letter-spacing: -0.04em; line-height: 1; }
-.analytics-stat-label { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); }
-
-.family-list { padding: 0.5rem 0; }
-.family-row { padding: 0.75rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; border-bottom: 1px solid var(--border); }
-.family-row:last-child { border-bottom: none; }
-.family-row-top { display: flex; align-items: center; justify-content: space-between; }
-.family-name { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text); }
-.family-count { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
-.family-count strong { color: var(--orange); }
-.family-bar-track { height: 3px; background: var(--border-2); border-radius: 2px; overflow: hidden; }
-.family-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.4)); transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-/* ── EMPTY / ERROR STATES ── */
-.empty-state { padding: 2rem 1.5rem; text-align: center; font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; }
-
-/* ── BOTTOM SPACER ── */
-.pb { padding-bottom: 4rem; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 640px) {
-  .page-wrap { padding-left: 1rem; padding-right: 1rem; }
-  .hero { padding-left: 1rem; padding-right: 1rem; }
-  .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .geo-summary { grid-template-columns: 1fr; gap: 0.5rem; }
-}
-</style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.4",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.564.0",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2"
+      }
+    }
+    </script>
+    <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+    <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
 </head>
 <body>
+    <div id="root"></div>
 
-<!-- ── SKIP TO MAIN CONTENT (ACCESSIBILITY) ── -->
-<a href="#main-content" class="skip-link">Skip to main content</a>
-
-<!-- ══════════════════════════ HEADER ══════════════════════════ -->
-<header class="header" role="banner">
-  <div class="header-inner">
-    <a class="brand" href="/" aria-label="ClawBeat home">
-      <div class="brand-img"><img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="" role="presentation" loading="eager" width="40" height="40"></div>
-      <span class="brand-text" aria-hidden="true">ClawBeat<span>.co</span></span>
-    </a>
-    <nav class="header-nav" aria-label="Primary navigation">
-      <div class="nav-dropdown">
-        <a href="/news.html" class="nav-item"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
-        <div class="nav-dropdown-menu">
-          <a href="/trace/" class="nav-dropdown-item">
-            <i data-lucide="layers" aria-hidden="true"></i>
-            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
-          </a>
-          <a href="/guide/openclaw-comparison.html" class="nav-dropdown-item">
-            <i data-lucide="file-text" aria-hidden="true"></i>
-            <div><div class="nav-dropdown-label">Guide</div><div class="nav-dropdown-sub">OpenClaw comparison</div></div>
-          </a>
-        </div>
-      </div>
-      <a href="/research.html" class="nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-      <a href="/media.html" class="nav-item"><i data-lucide="video" aria-hidden="true"></i>Media</a>
-      <a href="/forge.html" class="nav-item"><i data-lucide="github" aria-hidden="true"></i>Forge</a>
-      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
-      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
-    </nav>
-    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
-      <i data-lucide="menu" id="icon-menu" aria-hidden="true"></i>
-      <i data-lucide="x" id="icon-close" style="display:none" aria-hidden="true"></i>
-    </button>
-  </div>
-</header>
-
-<!-- ══════════════════════════ MOBILE MENU ══════════════════════════ -->
-<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
-  <a href="/news.html" class="mobile-nav-item"><i data-lucide="newspaper" aria-hidden="true"></i>Intel Feed</a>
-  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers" aria-hidden="true"></i>Trace Magazine</a>
-  <a href="/guide/openclaw-comparison.html" class="mobile-subnav-item"><i data-lucide="file-text" aria-hidden="true"></i>OpenClaw Guide</a>
-  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video" aria-hidden="true"></i>Media Lab</a>
-  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github" aria-hidden="true"></i>The Forge</a>
-  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
-  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
-</nav>
-
-<!-- ══════════════════════════ MAIN CONTENT ══════════════════════════ -->
-<main id="main-content">
-
-<!-- ══════════════════════════ HERO ══════════════════════════ -->
-<section class="hero" aria-label="Top intelligence signals">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <div class="hero-live-dot" aria-hidden="true"></div>
-      <span class="hero-live-label"><strong>Live</strong> — OpenClaw Intelligence Feed</span>
-    </div>
-    <div id="hero-root" aria-live="polite" aria-atomic="false" aria-label="Top signals loading">
-      <!-- skeleton -->
-      <div class="hero-grid" role="status" aria-label="Loading top signals">
-        <div class="hero-lead">
-          <div class="hero-lead-accent" aria-hidden="true"></div>
-          <div class="hero-lead-number" aria-hidden="true">01</div>
-          <div><div class="skeleton skeleton-text short" style="height:1rem;width:120px;margin-bottom:0"></div></div>
-          <div class="skeleton skeleton-text wide" style="height:2.5rem;"></div>
-          <div class="skeleton skeleton-text wide"></div>
-          <div class="skeleton skeleton-text med"></div>
-          <div class="skeleton skeleton-text short" style="height:1rem;width:80px;margin-bottom:0"></div>
-        </div>
-        <div class="hero-side">
-          <div class="hero-side-card">
-            <div class="skeleton skeleton-text short" style="height:0.75rem;width:40px;margin-bottom:0"></div>
-            <div class="skeleton skeleton-text wide" style="height:1.1rem;"></div>
-            <div class="skeleton skeleton-text med" style="height:1.1rem;"></div>
-          </div>
-          <div class="hero-side-card">
-            <div class="skeleton skeleton-text short" style="height:0.75rem;width:40px;margin-bottom:0"></div>
-            <div class="skeleton skeleton-text wide" style="height:1.1rem;"></div>
-            <div class="skeleton skeleton-text med" style="height:1.1rem;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════ GEO / AI SUMMARY ══════════════════════════ -->
-<div class="page-wrap">
-  <div class="geo-summary" style="margin-top:2.5rem;" role="complementary" aria-label="About ClawBeat">
-    <span class="geo-summary-icon" aria-hidden="true">// about</span>
-    <p class="geo-summary-text">
-      <strong>ClawBeat</strong> is an intelligence hub tracking the <strong>OpenClaw agentic AI ecosystem</strong> — covering breaking news, research papers, GitHub repo activity, live events, and comparative analysis. Updated daily via automated pipeline using Google Gemini. The <strong>Daily Edition</strong> distills the most significant signal of the day, while <strong>Trace</strong> delivers monthly deep analysis of the top 20 stories shaping agentic AI development through OpenClaw, NanoClaw, NemoBot, and adjacent frameworks.
-    </p>
-  </div>
-</div>
-
-<!-- ══════════════════════════ INTEL FEED ══════════════════════════ -->
-<div class="page-wrap">
-  <div class="section-divider" role="separator" aria-label="Intelligence feed section">
-    <span class="section-divider-label" aria-hidden="true">intelligence_feed</span>
-    <div class="section-divider-line" aria-hidden="true"></div>
-    <a href="/intel.html" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;transition:color 0.15s;padding:0.25rem 0;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--text-3)'" aria-label="View all intelligence signals">All Intel ↗</a>
-  </div>
-
-  <div id="feed-root" aria-live="polite" aria-atomic="false">
-    <div class="feed-grid" role="status" aria-label="Loading intelligence feed">
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-      <div class="feed-card"><div class="skeleton skeleton-text med" style="height:0.75rem;"></div><div class="skeleton skeleton-text wide" style="height:1rem;"></div><div class="skeleton skeleton-text wide"></div><div class="skeleton skeleton-text short"></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ DAILY EDITION ══════════════════════════ -->
-<div class="page-wrap">
-  <div class="section-divider" role="separator" aria-label="Today's signal section">
-    <span class="section-divider-label" aria-hidden="true">today's_signal</span>
-    <div class="section-divider-line" aria-hidden="true"></div>
-  </div>
-  <div id="daily-root" aria-live="polite" aria-atomic="true">
-    <div class="daily-banner" style="cursor:default;" role="status" aria-label="Loading today's daily edition">
-      <div class="daily-banner-left">
-        <div class="daily-banner-eyebrow">
-          <div class="skeleton" style="height:1.25rem;width:80px;"></div>
-          <div class="skeleton" style="height:0.75rem;width:100px;"></div>
-        </div>
-        <div class="skeleton skeleton-text wide" style="height:1.5rem;"></div>
-        <div class="skeleton skeleton-text wide" style="height:0.875rem;margin-top:0.5rem;"></div>
-        <div class="skeleton skeleton-text med" style="height:0.875rem;"></div>
-      </div>
-      <div class="daily-banner-right">
-        <div class="daily-banner-arrow" style="border-color:var(--border-2);"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ DASHBOARD ══════════════════════════ -->
-<div class="page-wrap">
-  <div class="section-divider" role="separator" aria-label="Signal dashboard section">
-    <span class="section-divider-label" aria-hidden="true">signal_dashboard</span>
-    <div class="section-divider-line" aria-hidden="true"></div>
-  </div>
-  <div class="dashboard-grid">
-
-    <!-- EVENTS PANEL -->
-    <section class="dash-panel" aria-labelledby="events-panel-title">
-      <div class="dash-panel-header">
-        <span class="dash-panel-title" id="events-panel-title">upcoming_events</span>
-        <a href="/events-calendar.html" class="dash-panel-link" aria-label="View full events calendar">Calendar <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
-      </div>
-      <div class="dash-panel-body" id="events-list" aria-live="polite" aria-atomic="false">
-        <div class="event-item" role="status" aria-label="Loading events">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
-        <div class="event-item">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
-        <div class="event-item" style="border-bottom:none;">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- REPOS ANALYTICS PANEL -->
-    <section class="dash-panel" aria-labelledby="repos-panel-title">
-      <div class="dash-panel-header">
-        <span class="dash-panel-title" id="repos-panel-title">ecosystem_analytics</span>
-        <a href="/forge.html" class="dash-panel-link" aria-label="View Forge repository browser">Forge <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
-      </div>
-      <div id="repos-analytics" aria-live="polite" aria-atomic="true">
-        <!-- stats row skeleton -->
-        <div class="analytics-stats" role="status" aria-label="Loading ecosystem analytics">
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:60px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:80px;"></div></div>
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:60px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:80px;"></div></div>
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:40px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:70px;"></div></div>
-        </div>
-        <!-- family skeleton -->
-        <div class="family-list">
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:80px;"></div><div class="skeleton" style="height:0.75rem;width:60px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:70px;"></div><div class="skeleton" style="height:0.75rem;width:50px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:60px;"></div><div class="skeleton" style="height:0.75rem;width:50px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row" style="border-bottom:none;"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:65px;"></div><div class="skeleton" style="height:0.75rem;width:45px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-        </div>
-      </div>
-    </section>
-
-  </div>
-</div>
-
-<!-- ══════════════════════════ TRACE + GUIDE PROMO ══════════════════════════ -->
-<div class="page-wrap">
-  <div class="section-divider" role="separator" aria-label="Deep intelligence section">
-    <span class="section-divider-label" aria-hidden="true">deep_intel</span>
-    <div class="section-divider-line" aria-hidden="true"></div>
-  </div>
-  <div class="promo-strip" role="list" aria-label="Featured publications">
-
-    <a href="/trace/" class="promo-card promo-trace" role="listitem" aria-label="Trace — Signal Intelligence Monthly magazine">
-      <div class="promo-card-eyebrow">
-        <span class="promo-card-label">Trace</span>
-        <span class="promo-card-issue" id="trace-issue-label">// Monthly magazine</span>
-      </div>
-      <div class="promo-card-title">Signal Intelligence Monthly</div>
-      <p class="promo-card-desc">The top 20 stories from the OpenClaw ecosystem — curated, analysed, and delivered monthly. AI editorial, deep summaries, and the "Why It Matters" breakdown for every signal.</p>
-      <div class="promo-card-footer">
-        <span class="promo-card-stat" id="trace-stat">20 signals / issue</span>
-        <span class="promo-card-go">Read Trace <i data-lucide="arrow-right" aria-hidden="true"></i></span>
-      </div>
-    </a>
-
-    <a href="/guide/openclaw-comparison.html" class="promo-card promo-guide" role="listitem" aria-label="Guide — OpenClaw vs the Field comparison">
-      <div class="promo-card-eyebrow">
-        <span class="promo-card-label">Guide</span>
-        <span class="promo-card-issue">// Comparison infographic</span>
-      </div>
-      <div class="promo-card-title">OpenClaw vs. the Field</div>
-      <p class="promo-card-desc">A detailed side-by-side comparison of OpenClaw, NanoClaw, NemoBot, and adjacent agentic AI frameworks — architecture, performance, ecosystem fit, and community momentum.</p>
-      <div class="promo-card-footer">
-        <span class="promo-card-stat">Updated 2026</span>
-        <span class="promo-card-go">View Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
-      </div>
-    </a>
-
-  </div>
-</div>
-
-<div class="pb"></div>
-
-</main><!-- /#main-content -->
-
-<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
-<footer class="footer" role="contentinfo">
-  <div class="footer-inner">
-    <div class="footer-brand" aria-label="ClawBeat">ClawBeat<span>.co</span></div>
-    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener noreferrer" aria-label="OpenClaw skill on ClaWhub (opens in new tab)">// openclaw_skill ↗</a>
-  </div>
-</footer>
-
-<script>
-(function () {
-  'use strict';
-
-  /* ── SUPABASE ── */
-  const SB_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
-  const SB_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
-  const hdrs    = { apikey: SB_ANON, Authorization: `Bearer ${SB_ANON}` };
-
-  function sbFetch(path) {
-    return fetch(`${SB_URL}/rest/v1/${path}`, { headers: hdrs }).then(r => r.ok ? r.json() : []);
-  }
-
-  /* ── UTILS ── */
-  function esc(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function parseEventDate(str) {
-    if (!str) return null;
-    const parts = str.split('/');
-    if (parts.length !== 3) return null;
-    const [m, d, y] = parts;
-    return new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
-  }
-
-  function formatEventDate(str) {
-    const d = parseEventDate(str);
-    if (!d) return { month: '?', day: '?' };
-    return {
-      month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
-      day: d.getDate()
-    };
-  }
-
-  function daysUntil(str) {
-    const d = parseEventDate(str);
-    if (!d) return null;
-    const today = new Date(); today.setHours(0,0,0,0);
-    return Math.ceil((d - today) / 86400000);
-  }
-
-  function formatNewsDate(str) {
-    if (!str) return '';
-    // MM-DD-YYYY
-    const parts = str.split('-');
-    if (parts.length !== 3) return str;
-    const d = new Date(parseInt(parts[2], 10), parseInt(parts[0], 10) - 1, parseInt(parts[1], 10));
-    return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
-  }
-
-  function formatAnyDate(str) {
-    if (!str) return '';
-    let d;
-    if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
-      d = new Date(str + 'T12:00:00');
-    } else {
-      const parts = str.split('-');
-      if (parts.length === 3) {
-        d = new Date(parseInt(parts[2], 10), parseInt(parts[0], 10) - 1, parseInt(parts[1], 10));
-      }
-    }
-    if (!d || isNaN(d.getTime())) return str;
-    return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
-  }
-
-  /* ── RENDER: HERO ── */
-  // leadUrl: where "Read Signal" on card 1 links to (daily edition page, not raw article)
-  function renderHero(items, leadUrl) {
-    const heroRoot = document.getElementById('hero-root');
-    if (!items || items.length === 0) {
-      heroRoot.innerHTML = '<div class="empty-state">No signals loaded</div>';
-      return;
-    }
-    const lead = items[0];
-    const s2   = items[1] || null;
-    const s3   = items[2] || null;
-
-    const sideCards = [s2, s3].filter(Boolean).map((item, i) => `
-      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="hero-side-card" aria-label="Signal ${i + 2}: ${esc(item.title)}">
-        <div class="hero-side-num" aria-hidden="true">// signal_0${i + 2}</div>
-        <div class="hero-side-headline">${esc(item.title)}</div>
-        <div class="hero-side-meta"><span class="source">${esc(item.source || 'Source')}</span> · ${formatAnyDate(item.date)}</div>
-      </a>
-    `).join('');
-
-    heroRoot.innerHTML = `
-      <div class="hero-grid">
-        <a href="${esc(leadUrl || lead.url)}" class="hero-lead" aria-label="Top signal: ${esc(lead.title)}">
-          <div class="hero-lead-accent" aria-hidden="true"></div>
-          <div class="hero-lead-number" aria-hidden="true">01</div>
-          <div class="hero-lead-badges">
-            <span class="badge-signal" aria-hidden="true">// signal_01</span>
-            ${lead.source ? `<span class="badge-cat">${esc(lead.source)}</span>` : ''}
-          </div>
-          <div class="hero-lead-headline">${esc(lead.title)}</div>
-          ${lead.summary ? `<div class="hero-lead-summary">${esc(lead.summary)}</div>` : ''}
-          <div class="hero-lead-meta">
-            <span class="source">${esc(lead.source || 'Source')}</span>
-            <span aria-hidden="true">·</span>
-            <span>${formatAnyDate(lead.date)}</span>
-          </div>
-          <span class="hero-lead-cta">Read Signal <i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
-        </a>
-        <div class="hero-side">
-          ${sideCards}
-        </div>
-      </div>
-    `;
-    lucide.createIcons();
-  }
-
-  /* ── RENDER: INTEL FEED ── */
-  function renderFeed(items) {
-    const feedRoot = document.getElementById('feed-root');
-    if (!items || items.length === 0) {
-      feedRoot.innerHTML = '<div class="empty-state">No feed items</div>';
-      return;
-    }
-    const slice = items.slice(0, 9);
-    const cards = slice.map((item, i) => `
-      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + 4}: ${esc(item.title)}">
-        <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + 4).padStart(2, '0')}</div>
-        <div class="feed-card-headline">${esc(item.title)}</div>
-        ${item.summary ? `<div class="feed-card-summary">${esc(item.summary)}</div>` : ''}
-        <div class="feed-card-foot">
-          <span class="feed-card-source">${esc(item.source || '—')}</span>
-          <span class="feed-card-date"><time>${formatAnyDate(item.date)}</time></span>
-        </div>
-      </a>
-    `).join('');
-
-    feedRoot.innerHTML = `
-      <div class="feed-grid" role="list" aria-label="Intelligence feed signals">${cards}</div>
-      <a href="/intel.html" class="feed-load-more" aria-label="View more intelligence signals">
-        <i data-lucide="chevron-down" aria-hidden="true"></i>
-        More signals
-      </a>
-    `;
-    lucide.createIcons();
-  }
-
-  /* ── RENDER: DAILY EDITION ── */
-  function renderDaily(editions) {
-    const dailyRoot = document.getElementById('daily-root');
-    if (!editions || editions.length === 0) {
-      dailyRoot.innerHTML = '<div class="empty-state">No daily editions loaded</div>';
-      return;
-    }
-    const ed = editions[0];
-    const stories = Array.isArray(ed.stories) ? ed.stories : [];
-    const lead = stories.find(s => s.slot === 1) || stories[0] || null;
-    const headline = lead ? (lead.headline || 'Today\'s Intelligence Briefing') : 'Today\'s Intelligence Briefing';
-    const summary  = ed.summary || (lead ? lead.summary_html || '' : '');
-    // strip basic HTML tags for display
-    const summaryText = summary.replace(/<[^>]+>/g, '').trim().slice(0, 200);
-    const date = ed.edition_date || '';
-    const dateLabel = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }) : '';
-    const permalink = ed.permalink || `/daily/${date}/`;
-
-    dailyRoot.innerHTML = `
-      <a href="${esc(permalink)}" class="daily-banner" aria-label="Today's Daily Edition: ${esc(headline)}">
-        <div class="daily-banner-left">
-          <div class="daily-banner-eyebrow">
-            <span class="daily-banner-chip">Daily Edition</span>
-            ${dateLabel ? `<time class="daily-banner-date" datetime="${esc(date)}">${esc(dateLabel)}</time>` : ''}
-          </div>
-          <div class="daily-banner-headline">${esc(headline)}</div>
-          ${summaryText ? `<div class="daily-banner-summary">${esc(summaryText)}${summary.length > 200 ? '…' : ''}</div>` : ''}
-        </div>
-        <div class="daily-banner-right" aria-hidden="true">
-          <div class="daily-banner-arrow"><i data-lucide="arrow-right"></i></div>
-          <span class="daily-banner-cta">Read Edition</span>
-        </div>
-      </a>
-    `;
-    lucide.createIcons();
-  }
-
-  /* ── RENDER: EVENTS ── */
-  function renderEvents(events) {
-    const listEl = document.getElementById('events-list');
-    const today  = new Date(); today.setHours(0, 0, 0, 0);
-
-    const upcoming = (events || [])
-      .filter(e => {
-        const end = parseEventDate(e.end_date) || parseEventDate(e.start_date);
-        return end && end >= today;
-      })
-      .sort((a, b) => (parseEventDate(a.start_date) || 0) - (parseEventDate(b.start_date) || 0))
-      .slice(0, 6);
-
-    if (upcoming.length === 0) {
-      listEl.innerHTML = '<div class="empty-state">No upcoming events</div>';
-      return;
-    }
-
-    listEl.innerHTML = upcoming.map((ev, idx) => {
-      const { month, day } = formatEventDate(ev.start_date);
-      const days = daysUntil(ev.start_date);
-      const type = (ev.event_type || 'unknown').toLowerCase();
-      const dotClass = type === 'in-person' ? 'in-person' : type === 'virtual' ? 'virtual' : 'unknown';
-      const typeLabel = type === 'in-person' ? 'In-Person' : type === 'virtual' ? 'Virtual' : 'Event';
-      const location = ev.location_city ? `${ev.location_city}${ev.location_state ? ', ' + ev.location_state : ''}` : '';
-      const countdownHtml = days !== null && days <= 14 && days >= 0
-        ? `<span class="event-countdown" aria-label="${days} days until event">T-${days}D</span>` : '';
-
-      return `
-        <a href="${esc(ev.url || '#')}" target="_blank" rel="noopener noreferrer" class="event-item" style="${idx === upcoming.length - 1 ? 'border-bottom:none;' : ''}" aria-label="${esc(ev.title)}${typeLabel ? ', ' + typeLabel : ''}${location ? ', ' + esc(location) : ''}">
-          <div class="event-date-block" aria-hidden="true">
-            <div class="event-date-m">${esc(month)}</div>
-            <div class="event-date-d">${day}</div>
-          </div>
-          <div class="event-info">
-            <div class="event-title">${esc(ev.title)}</div>
-            <div class="event-meta" aria-hidden="true">
-              <div class="event-type-dot ${dotClass}"></div>
-              <span class="event-type-label">${typeLabel}</span>
-              ${location ? `<span class="event-location">· ${esc(location)}</span>` : ''}
-              ${countdownHtml}
-            </div>
-          </div>
-        </a>
-      `;
-    }).join('');
-  }
-
-  /* ── RENDER: ECOSYSTEM ANALYTICS ── */
-  function renderRepos(repos, familyStats) {
-    const root = document.getElementById('repos-analytics');
-
-    // Aggregate stats from indexed repos
-    const totalStars  = (repos || []).reduce((s, r) => s + (r.stars || 0), 0);
-    const totalIndexed = (repos || []).length;
-    const langs       = new Set((repos || []).map(r => r.language).filter(Boolean));
-
-    // Ecosystem total from family_stats (openclaw family = primary signal)
-    const fsMap = {};
-    for (const f of (familyStats || [])) fsMap[f.family] = f;
-    const ocTotal = fsMap['openclaw'] ? fsMap['openclaw'].total_count : totalIndexed;
-
-    // Build family rows — use family_stats rows, sorted by total_count desc
-    const families = (familyStats || [])
-      .filter(f => f.total_count > 0)
-      .sort((a, b) => (b.total_count || 0) - (a.total_count || 0));
-
-    const maxCount = families.length ? families[0].total_count : 1;
-
-    const statsHtml = `
-      <div class="analytics-stats" role="group" aria-label="Ecosystem statistics">
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${ocTotal.toLocaleString()} ecosystem repositories">${ocTotal.toLocaleString()}</div>
-          <div class="analytics-stat-label">ecosystem repos</div>
-        </div>
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${totalStars.toLocaleString()} indexed stars">${totalStars >= 1000 ? (totalStars / 1000).toFixed(1) + 'k' : totalStars.toLocaleString()}</div>
-          <div class="analytics-stat-label">indexed stars</div>
-        </div>
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${langs.size || 0} languages">${langs.size || '—'}</div>
-          <div class="analytics-stat-label">languages</div>
-        </div>
-      </div>
-    `;
-
-    const familyHtml = families.length === 0
-      ? '<div class="empty-state">No family data</div>'
-      : `<div class="family-list" role="list" aria-label="Framework families">${families.map((f, i) => {
-          const pct = maxCount > 0 ? Math.round((f.total_count / maxCount) * 100) : 0;
-          const name = f.display_name || f.family || '—';
-          return `
-            <div class="family-row" role="listitem" style="${i === families.length - 1 ? 'border-bottom:none;' : ''}">
-              <div class="family-row-top">
-                <span class="family-name">${esc(name)}</span>
-                <span class="family-count"><strong>${f.total_count.toLocaleString()}</strong> repos</span>
-              </div>
-              <div class="family-bar-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(name)}: ${f.total_count} repos">
-                <div class="family-bar-fill" style="width:${pct}%"></div>
-              </div>
-            </div>
-          `;
-        }).join('')}</div>`;
-
-    root.innerHTML = statsHtml + familyHtml;
-  }
-
-  /* ── MOBILE MENU TOGGLE ── */
-  function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const hamburger = document.getElementById('hamburger-btn');
-    const iconMenu = document.getElementById('icon-menu');
-    const iconClose = document.getElementById('icon-close');
-    const open = menu.classList.toggle('open');
-    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
-    hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    iconMenu.style.display  = open ? 'none' : '';
-    iconClose.style.display = open ? ''     : 'none';
-  }
-  document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
-
-  /* ── INIT ── */
-  Promise.all([
-    sbFetch('news_items?select=*&order=inserted_at.desc&limit=12'),
-    sbFetch('events?select=*&limit=500'),
-    sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
-    sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
-    sbFetch('ecosystem_family_stats?select=*&order=total_count.desc')
-  ]).then(([news, events, repos, daily, familyStats]) => {
-    // Hero signals 1-3: pull from daily edition slots 1-3 (curated), fallback to news_items
-    let heroItems = news.slice(0, 3).map(n => ({ url: n.url, title: n.title, source: n.source, date: n.date, summary: n.summary }));
-    let heroLeadUrl = heroItems[0] ? heroItems[0].url : '#';
-
-    if (daily && daily.length > 0 && Array.isArray(daily[0].stories) && daily[0].stories.length > 0) {
-      const ed = daily[0];
-      const sorted = ed.stories.slice().sort((a, b) => (a.slot || 99) - (b.slot || 99));
-      const top3 = [1, 2, 3].map(slot => sorted.find(s => s.slot === slot)).filter(Boolean);
-      if (top3.length > 0) {
-        heroItems = top3.map(s => ({
-          url: s.url || '#',
-          title: s.headline || '',
-          source: s.pub_name || '',
-          date: s.pub_date || '',
-          summary: s.summary_html ? s.summary_html.replace(/<[^>]+>/g, '').trim().slice(0, 300) : '',
-        }));
-        // Signal 1 "Read Signal" links to the daily edition page, not the raw article
-        heroLeadUrl = ed.permalink || `/daily/${ed.edition_date}/`;
-      }
-    }
-
-    renderHero(heroItems, heroLeadUrl);
-    renderFeed(news);
-    renderDaily(daily);
-    renderEvents(events);
-    renderRepos(repos, familyStats);
-    lucide.createIcons();
-  }).catch(err => {
-    console.error('ClawBeat load error:', err);
-    lucide.createIcons();
-  });
-
-  // Initial icon creation for static nav/header elements
-  lucide.createIcons();
-})();
-</script>
-
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
