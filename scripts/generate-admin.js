@@ -60,10 +60,10 @@ const REQUIRED = [
 
 const missing = REQUIRED.filter(k => !process.env[k]);
 if (missing.length) {
-  console.error('\n[generate-admin] Missing required environment variables:');
-  missing.forEach(k => console.error(`  - ${k}`));
-  console.error('\nSet them in Vercel dashboard or in a local .env.admin file.\n');
-  process.exit(1);
+  console.warn('\n[generate-admin] Missing required environment variables — skipping admin.html generation:');
+  missing.forEach(k => console.warn(`  - ${k}`));
+  console.warn('\nSet them in Vercel dashboard or in a local .env.admin file.\n');
+  process.exit(0);
 }
 
 // ── Replace placeholders ──────────────────────────────────────────────────────
