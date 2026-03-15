@@ -425,6 +425,14 @@
       font-size: 0.975rem; line-height: 1.75;
       color: var(--text-2); font-style: italic;
     }
+    .edition-ai-badge {
+      display: inline-block; margin-top: 0.75rem;
+      font-family: var(--mono); font-size: 0.55rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--text-3); background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-2);
+      padding: 0.2rem 0.6rem; border-radius: 3px;
+    }
     @media (max-width: 640px) {
       .edition-summary-block { padding: 1rem 1rem 1.25rem; }
       .edition-summary { font-size: 0.9rem; }
@@ -466,6 +474,10 @@
             <i data-lucide="layers"></i>
             <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
           </a>
+          <a href="/guide/openclaw-comparison.html" class="nav-dropdown-item">
+            <i data-lucide="file-text"></i>
+            <div><div class="nav-dropdown-label">Guide</div><div class="nav-dropdown-sub">OpenClaw comparison</div></div>
+          </a>
         </div>
       </div>
       <a href="/research.html"        class="nav-item"><i data-lucide="book-open"></i>Research</a>
@@ -485,6 +497,7 @@
 <div class="mobile-menu" id="mobile-menu">
   <a href="/?tab=news"            class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
   <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/openclaw-comparison.html" class="mobile-subnav-item"><i data-lucide="file-text"></i>OpenClaw Guide</a>
   <a href="/research.html"        class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html"           class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html"           class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
@@ -507,6 +520,8 @@
     <div class="date-chip"><span>signals</span>&nbsp;<strong>4</strong></div>
     <div class="date-divider" aria-hidden="true"></div>
     <div class="date-chip"><span>source</span>&nbsp;<strong>Spotlight</strong></div>
+    <div class="date-divider" aria-hidden="true"></div>
+    <div class="date-chip"><span>analysis by</span>&nbsp;<strong>AI</strong></div>
   </div>
 </div>
 
@@ -521,6 +536,7 @@
 
   <div class="edition-summary-block">
     {{EDITION_SUMMARY}}
+    <div class="edition-ai-badge">// ai-generated · gemini 2.5 flash</div>
   </div>
 
   <div id="signals-container" aria-live="polite">

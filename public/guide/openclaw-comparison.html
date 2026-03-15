@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#08090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+
+  <!-- ── PRIMARY SEO ─────────────────────────────────────────────────── -->
+  <title>OpenClaw Comparison: NanoClaw vs PicoClaw vs Nanobot (2026) | ClawBeat</title>
+  <meta name="description" content="An authoritative OpenClaw comparison covering NanoClaw, PicoClaw, and Nanobot. Every fact sourced directly from official GitHub repositories and TechCrunch. Updated March 2026." />
+  <meta name="keywords" content="OpenClaw comparison, NanoClaw, PicoClaw, Nanobot, AI agent framework, OpenClaw alternatives 2026, personal AI assistant" />
+  <meta name="author" content="ClawBeat" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://clawbeat.co/guide/openclaw-comparison.html" />
+
+  <!-- ── OPEN GRAPH ──────────────────────────────────────────────────── -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="OpenClaw Comparison: NanoClaw vs PicoClaw vs Nanobot (2026)" />
+  <meta property="og:description" content="Every fact sourced directly from official GitHub repos and TechCrunch. The most authoritative OpenClaw comparison available." />
+  <meta property="og:url" content="https://clawbeat.co/guide/openclaw-comparison.html" />
+  <meta property="og:site_name" content="ClawBeat" />
+  <meta property="article:published_time" content="2026-03-14" />
+  <meta property="article:modified_time" content="2026-03-15" />
+
+  <!-- ── TWITTER CARD ────────────────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OpenClaw Comparison: NanoClaw vs PicoClaw vs Nanobot (2026)" />
+  <meta name="twitter:description" content="Authoritative comparison sourced from official GitHub repos and TechCrunch. ClawBeat." />
+  <meta name="twitter:site" content="@clawbeat" />
+
+  <!-- ── SCHEMA.ORG: ARTICLE ────────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenClaw Comparison: NanoClaw vs PicoClaw vs Nanobot (2026)",
+    "description": "An authoritative OpenClaw comparison covering NanoClaw, PicoClaw, and Nanobot. Every fact sourced directly from official GitHub repositories and TechCrunch.",
+    "url": "https://clawbeat.co/guide/openclaw-comparison.html",
+    "datePublished": "2026-03-14",
+    "dateModified": "2026-03-15",
+    "author": {
+      "@type": "Organization",
+      "name": "ClawBeat",
+      "url": "https://clawbeat.co"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ClawBeat",
+      "url": "https://clawbeat.co"
+    },
+    "about": [
+      { "@type": "SoftwareApplication", "name": "OpenClaw", "url": "https://github.com/openclaw/openclaw" },
+      { "@type": "SoftwareApplication", "name": "NanoClaw", "url": "https://github.com/qwibitai/nanoclaw" },
+      { "@type": "SoftwareApplication", "name": "PicoClaw", "url": "https://github.com/sipeed/picoclaw" },
+      { "@type": "SoftwareApplication", "name": "Nanobot", "url": "https://github.com/HKUDS/nanobot" }
+    ]
+  }
+  </script>
+
+  <!-- ── SCHEMA.ORG: FAQ ────────────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is OpenClaw?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "OpenClaw is an open-source personal AI assistant you run on your own devices. It connects to messaging platforms including WhatsApp, Telegram, Slack, Discord, Signal, iMessage, and others, and runs an always-on agent that can execute tools, run scripts, and automate workflows. It requires Node.js 22 or later and is written in TypeScript. Source: github.com/openclaw/openclaw"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is NanoClaw and how does it differ from OpenClaw?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "NanoClaw is a security-focused alternative to OpenClaw built by Gavriel and Lazer Cohen of Qwibit AI. Unlike OpenClaw's application-level security, NanoClaw runs each agent in its own OS-level container (Apple Container or Docker), preventing data leakage between contexts. It runs on Anthropic's Claude Agent SDK. Source: github.com/qwibitai/nanoclaw and TechCrunch (March 13, 2026)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is PicoClaw?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PicoClaw is a Go-based AI agent built by Sipeed, an embedded hardware company, designed to run on ultra-low-resource hardware including $10 RISC-V and ARM boards. It compiles to a single self-contained binary and targets devices with under 10MB of available RAM. Source: github.com/sipeed/picoclaw"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Nanobot in the OpenClaw ecosystem?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nanobot is an ultra-lightweight Python implementation of the OpenClaw concept, developed by the HKUDS Data Intelligence Lab at the University of Hong Kong. It delivers core agent functionality in approximately 4,000 lines of code — 99% smaller than OpenClaw — and is designed for readability, research, and hackability. Source: github.com/HKUDS/nanobot README."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which OpenClaw variant is most secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "NanoClaw uses OS-level container isolation per chat context, which provides stronger security guarantees than OpenClaw's application-level allowlists. Each agent in NanoClaw runs in its own sandboxed container with an isolated filesystem. Source: github.com/qwibitai/nanoclaw"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which OpenClaw variant uses the least memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PicoClaw targets a memory footprint under 10MB, making it suitable for routers, IP cameras, and $10 embedded boards. OpenClaw uses approximately 1.5GB of RAM. Source: github.com/sipeed/picoclaw and nemoclaw.bot/claw-ecosystem-overview.html (competitor-published, disclosed)."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ── SCHEMA.ORG: COMPARISON TABLE ──────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Table",
+    "about": "OpenClaw ecosystem comparison: RAM, language, security, and messaging platforms",
+    "url": "https://clawbeat.co/guide/openclaw-comparison.html#comparison-table"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ── RESET ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    /* ── TOKENS ──────────────────────────────────────────────────── */
+    :root {
+      --bg:       #08090b;
+      --bg-2:     #0d0f12;
+      --bg-3:     #131619;
+      --border:   rgba(255,255,255,0.05);
+      --border-2: rgba(255,255,255,0.09);
+      --orange:        #f97316;
+      --orange-bright: #fb923c;
+      --orange-dim:    rgba(249,115,22,0.10);
+      --orange-glow:   rgba(249,115,22,0.15);
+      --green:     #22c55e;
+      --green-dim: rgba(34,197,94,0.08);
+      --cyan:      #06b6d4;
+      --cyan-dim:  rgba(6,182,212,0.08);
+      --text:      #e2e4e9;
+      --text-2:    #9097a3;
+      --text-3:    #525866;
+      --text-4:    #2e333d;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Space Grotesk', sans-serif;
+
+      /* aliases for guide-specific CSS */
+      --surface:   #0d0f12;
+      --border2:   rgba(255,255,255,0.09);
+      --muted:     #9097a3;
+      --faint:     #525866;
+      --accent:    #f97316;
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+
+      /* project brand colors */
+      --c-open:  #f97316;
+      --c-nano:  #00c4a0;
+      --c-pico:  #9b7bff;
+      --c-bot:   #f5b731;
+
+      --radius:  10px;
+      --max:     860px;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────────────────── */
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    /* ── HEADER (site-standard) ──────────────────────────────────── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,12,0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .header-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .brand-img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-text {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      font-style: italic;
+      color: #fff;
+    }
+    .brand-text span { color: var(--orange); }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .nav-item {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.375rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-item svg { width: 16px; height: 16px; }
+    .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .hamburger-btn {
+      display: none;
+      padding: 0.5rem;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fff; }
+    .hamburger-btn svg { width: 24px; height: 24px; }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 4rem;
+      left: 0;
+      width: 100%;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 60;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-nav-item {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.75rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .mobile-nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .mobile-subnav-item { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+    .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+    .mobile-subnav-item svg { width: 14px; height: 14px; }
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .hamburger-btn { display: flex; }
+    }
+    .nav-skill-chip { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+    .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
+    .nav-dropdown-item:hover { background: var(--orange-dim); }
+    .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+    .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+    .nav-dropdown-sub { font-family: var(--mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+
+    /* ── FOOTER (site-standard) ──────────────────────────────────── */
+    .footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border-2);
+      margin-top: 4rem;
+    }
+    .footer-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .footer-brand {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 900;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      color: #fff;
+    }
+    .footer-brand span { color: var(--orange); }
+    .clawhub-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-3);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.15s;
+    }
+    .clawhub-badge:hover { color: var(--orange); }
+
+    /* ── HERO ────────────────────────────────────────────────────── */
+    .hero {
+      padding: 48px 0 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 20px;
+      letter-spacing: -0.04em;
+      font-style: italic;
+      text-transform: uppercase;
+    }
+    h1 em { color: var(--accent); font-style: italic; }
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text-2);
+      max-width: 620px;
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-3);
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .meta-strip strong { color: var(--text-2); font-weight: 600; }
+
+    /* ── SOURCING NOTICE ─────────────────────────────────────────── */
+    .source-notice {
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.15);
+      border-left: 3px solid var(--green);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 32px 0;
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+    .source-notice strong { color: var(--text); }
+
+    /* ── SECTION HEADINGS ────────────────────────────────────────── */
+    h2 {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 52px 0 20px;
+      letter-spacing: 0.04em;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-2);
+      text-transform: uppercase;
+    }
+    h3 {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.3px;
+    }
+
+    /* ── COMPARISON TABLE ────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 24px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-2);
+      white-space: nowrap;
+      background: var(--surface);
+    }
+    thead th:first-child { color: var(--muted); }
+    thead th:nth-child(2) { color: var(--c-open); }
+    thead th:nth-child(3) { color: var(--c-nano); }
+    thead th:nth-child(4) { color: var(--c-pico); }
+    thead th:nth-child(5) { color: var(--c-bot);  }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--bg-2); }
+    tbody td {
+      padding: 11px 16px;
+      vertical-align: top;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    tbody td:first-child {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .src-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: middle;
+      text-transform: uppercase;
+      background: var(--bg-3);
+      color: var(--text-3);
+      text-decoration: none;
+      border: 1px solid var(--border-2);
+      white-space: nowrap;
+    }
+    .src-tag:hover { border-color: var(--orange); color: var(--orange); }
+    .src-tag.competitor { background: rgba(245,183,49,0.07); color: #c4a050; border-color: rgba(245,183,49,0.25); }
+
+    /* ── PROJECT CARDS ───────────────────────────────────────────── */
+    .projects { margin: 8px 0; }
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: var(--border-2); }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 22px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .card-header::-webkit-details-marker { display: none; }
+    .card-icon { font-size: 26px; flex-shrink: 0; }
+    .card-title-group { flex: 1; }
+    .card-name {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .card-tagline { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.05em; }
+    .card-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+      color: #000;
+      flex-shrink: 0;
+    }
+    .chevron {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--faint);
+      transition: transform 0.25s ease, color 0.2s;
+    }
+    details[open] .chevron { transform: rotate(180deg); }
+    details[open] .card-header { border-bottom-color: var(--border-2); }
+    .card-body { padding: 0; }
+
+    /* ── ACCORDION SECTIONS ──────────────────────────────────────── */
+    .acc-section { border-bottom: 1px solid var(--border); }
+    .acc-section:last-child { border-bottom: none; }
+    .acc-trigger {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+      text-align: left;
+    }
+    .acc-trigger:hover { color: var(--text); }
+    .acc-trigger[aria-expanded="true"] { color: var(--text); }
+    .acc-trigger svg {
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+      color: var(--faint);
+    }
+    .acc-trigger[aria-expanded="true"] svg { transform: rotate(180deg); color: var(--text); }
+
+    /* GEO-CRITICAL: content always in DOM, height transition for UX */
+    .acc-content {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+    .acc-content.open { max-height: 1000px; }
+    .acc-inner { padding: 4px 22px 20px; }
+    .acc-inner p {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .acc-inner p:last-child { margin-bottom: 0; }
+    .acc-inner ul {
+      padding-left: 20px;
+      margin-bottom: 8px;
+    }
+    .acc-inner li {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    /* ── INLINE SOURCE LINKS ─────────────────────────────────────── */
+    .src {
+      font-family: inherit;
+      font-size: inherit;
+      color: var(--text-3);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--text-4);
+      margin-left: 4px;
+      white-space: nowrap;
+    }
+    .src:hover { color: var(--orange); border-bottom-color: var(--orange); }
+    .src.comp { color: #8a7040; border-bottom-color: #5a4820; }
+    .src.comp:hover { color: #c4a050; }
+
+    /* ── RAM CHART ───────────────────────────────────────────────── */
+    .ram-chart {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin: 24px 0;
+    }
+    .ram-row { margin-bottom: 14px; }
+    .ram-row:last-child { margin-bottom: 0; }
+    .ram-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .ram-name { font-family: var(--font-head); font-weight: 700; font-size: 13px; }
+    .ram-val { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+    .ram-track {
+      height: 8px;
+      background: var(--border-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .ram-fill { height: 100%; border-radius: 99px; }
+    .ram-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--faint);
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── MESSAGING TAGS ──────────────────────────────────────────── */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+
+    /* ── FAQ SECTION ─────────────────────────────────────────────── */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-family: var(--font-head);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.75;
+    }
+
+    /* ── SOURCES LIST ────────────────────────────────────────────── */
+    .sources-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sources-list li {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      align-items: flex-start;
+    }
+    .sources-list li:last-child { border-bottom: none; }
+    .src-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--orange);
+      flex-shrink: 0;
+      width: 24px;
+      margin-top: 2px;
+    }
+    .src-info { flex: 1; }
+    .src-label { color: var(--text); font-weight: 500; }
+    .src-type {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+    .src-type.competitor { color: #a08040; }
+    .src-link {
+      color: var(--c-nano);
+      text-decoration: none;
+      font-family: inherit;
+      font-size: inherit;
+      margin-top: 2px;
+      display: block;
+    }
+    .src-link:hover { text-decoration: underline; }
+
+    /* ── UTILITIES ───────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus {
+      left: 8px; top: 8px;
+      width: auto; height: auto;
+      padding: 8px 16px;
+      background: var(--orange);
+      color: #fff;
+      border-radius: 6px;
+      z-index: 999;
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 36px 0 28px; }
+      h1 { font-size: 26px; letter-spacing: -0.03em; }
+      .card-header { padding: 14px 16px; gap: 10px; }
+      .card-name { font-size: 16px; }
+      thead th, tbody td { padding: 9px 12px; }
+      .acc-inner, .acc-trigger { padding-left: 16px; padding-right: 16px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ── HEADER ────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="/?tab=news" class="brand">
+        <div class="brand-img">
+          <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+        </div>
+        <span class="brand-text">ClawBeat<span>.co</span></span>
+      </a>
+      <nav class="header-nav">
+        <div class="nav-dropdown">
+          <a href="/?tab=news" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+          <div class="nav-dropdown-menu">
+            <a href="/trace/" class="nav-dropdown-item">
+              <i data-lucide="layers"></i>
+              <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+            </a>
+            <a href="/guide/openclaw-comparison.html" class="nav-dropdown-item">
+              <i data-lucide="file-text"></i>
+              <div><div class="nav-dropdown-label">Guide</div><div class="nav-dropdown-sub">OpenClaw comparison</div></div>
+            </a>
+          </div>
+        </div>
+        <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+        <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+        <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+        <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+        <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+      </nav>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+        <span id="icon-menu"><i data-lucide="menu"></i></span>
+        <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/?tab=news" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+    <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+    <a href="/guide/openclaw-comparison.html" class="mobile-subnav-item"><i data-lucide="file-text"></i>OpenClaw Guide</a>
+    <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+    <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+    <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+    <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+    <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+  </div>
+
+  <!-- ── MAIN ────────────────────────────────────────────────────── -->
+  <main id="main" role="main">
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="page-title">
+      <div class="wrap">
+        <p class="eyebrow">ClawBeat Guide · Updated March 15, 2026</p>
+        <h1 id="page-title">OpenClaw <em>Comparison</em>:<br>NanoClaw, PicoClaw &amp; Nanobot</h1>
+        <p class="hero-desc">
+          On January 30, 2026, OpenClaw launched on GitHub and created a new category of personal AI agents.
+          Within six weeks, three significant variants emerged. This guide compares all four —
+          every fact linked to its primary source.
+        </p>
+        <div class="meta-strip">
+          <span><strong>Published:</strong> March 14, 2026</span>
+          <span><strong>Updated:</strong> March 15, 2026</span>
+          <span><strong>Sources:</strong> GitHub (official repos), TechCrunch</span>
+          <span><strong>By:</strong> <a href="https://clawbeat.co" style="color:var(--orange);text-decoration:none">ClawBeat</a></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <!-- SOURCING NOTICE -->
+      <div class="source-notice" role="note" aria-label="Editorial sourcing policy">
+        <strong>Editorial sourcing policy:</strong> Every factual claim on this page is hyperlinked to its primary source —
+        the official GitHub repository for that project, or TechCrunch for reported facts about NanoClaw.
+        RAM figures come from a comparison table published by
+        <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src comp">nemoclaw.bot</a>,
+        which is a competitor product (NemoClaw); this is disclosed inline wherever those figures appear.
+        No facts are sourced from Medium, personal blogs, or community forums.
+      </div>
+
+      <!-- ── WHAT IS OPENCLAW? ───────────────────────────────────── -->
+      <section aria-labelledby="what-is-openclaw">
+        <h2 id="what-is-openclaw">What Is the OpenClaw Ecosystem?</h2>
+        <p style="font-size:0.9375rem;color:var(--text-2);line-height:1.8;margin-bottom:16px;">
+          <a href="https://github.com/openclaw/openclaw" class="src">OpenClaw (github.com/openclaw/openclaw)</a>
+          is a self-hosted personal AI assistant written in TypeScript that connects a persistent local gateway
+          to the messaging apps you already use. The creator, Peter Steinberger, describes it as
+          "your own personal AI assistant — any OS, any platform."
+          <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">Source: OpenClaw README</a>
+        </p>
+        <p style="font-size:0.9375rem;color:var(--text-2);line-height:1.8;">
+          The project triggered three notable variants, each attacking a different limitation of the original:
+          security architecture, hardware resource requirements, and codebase complexity.
+          This OpenClaw comparison covers all four.
+        </p>
+      </section>
+
+      <!-- ── RAM CHART ──────────────────────────────────────────── -->
+      <section aria-labelledby="ram-heading">
+        <h2 id="ram-heading">Memory Footprint at a Glance</h2>
+        <div class="ram-chart" role="img" aria-label="RAM usage comparison chart">
+          <div class="ram-row">
+            <div class="ram-label">
+              <span class="ram-name" style="color:var(--c-open)">🦞 OpenClaw</span>
+              <span class="ram-val">~1.5 GB</span>
+            </div>
+            <div class="ram-track"><div class="ram-fill" style="width:100%;background:var(--c-open)"></div></div>
+          </div>
+          <div class="ram-row">
+            <div class="ram-label">
+              <span class="ram-name" style="color:var(--c-nano)">🔒 NanoClaw</span>
+              <span class="ram-val">~400 MB</span>
+            </div>
+            <div class="ram-track"><div class="ram-fill" style="width:26%;background:var(--c-nano)"></div></div>
+          </div>
+          <div class="ram-row">
+            <div class="ram-label">
+              <span class="ram-name" style="color:var(--c-bot)">🧬 Nanobot</span>
+              <span class="ram-val">Not officially stated</span>
+            </div>
+            <div class="ram-track"><div class="ram-fill" style="width:0%;background:var(--c-bot)"></div></div>
+          </div>
+          <div class="ram-row">
+            <div class="ram-label">
+              <span class="ram-name" style="color:var(--c-pico)">⚡ PicoClaw</span>
+              <span class="ram-val">&lt;10 MB</span>
+            </div>
+            <div class="ram-track"><div class="ram-fill" style="width:0.7%;background:var(--c-pico)"></div></div>
+          </div>
+          <p class="ram-note">
+            RAM figures for OpenClaw, NanoClaw, and PicoClaw sourced from
+            <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" style="color:#a08040;font-size:11px;">nemoclaw.bot/claw-ecosystem-overview.html</a>
+            — a competitor-published comparison table (NemoClaw). Treat as indicative, not independently benchmarked.
+            Nanobot does not publish an official RAM figure in its README.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── COMPARISON TABLE ────────────────────────────────────── -->
+      <section aria-labelledby="table-heading">
+        <h2 id="table-heading" style="scroll-margin-top:20px">Side-by-Side OpenClaw Comparison</h2>
+        <div class="table-wrap" role="region" aria-label="OpenClaw comparison table" tabindex="0">
+          <table id="comparison-table">
+            <thead>
+              <tr>
+                <th scope="col">Metric</th>
+                <th scope="col">🦞 OpenClaw</th>
+                <th scope="col">🔒 NanoClaw</th>
+                <th scope="col">⚡ PicoClaw</th>
+                <th scope="col">🧬 Nanobot</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Language</td>
+                <td>TypeScript <a href="https://github.com/openclaw/openclaw" class="src-tag">GitHub</a></td>
+                <td>TypeScript <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>Go <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>Python <a href="https://github.com/HKUDS/nanobot" class="src-tag">GitHub</a></td>
+              </tr>
+              <tr>
+                <td>Runtime req.</td>
+                <td>Node.js ≥ 22 <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src-tag">README</a></td>
+                <td>Docker or Apple Container <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>Single binary, no deps <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>Python env <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>RAM usage</td>
+                <td>~1.5 GB <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src-tag competitor">Competitor¹</a></td>
+                <td>~400 MB <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src-tag competitor">Competitor¹</a></td>
+                <td>&lt;10 MB <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src-tag competitor">Competitor¹</a></td>
+                <td>Not stated <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>Codebase</td>
+                <td>Large (TypeScript monorepo) <a href="https://github.com/openclaw/openclaw" class="src-tag">GitHub</a></td>
+                <td>Small — auditable <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>Single Go binary <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>~4,000 lines <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>License</td>
+                <td>MIT <a href="https://github.com/openclaw/openclaw" class="src-tag">GitHub</a></td>
+                <td>MIT <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>View license <a href="https://github.com/sipeed/picoclaw/blob/main/LICENSE" class="src-tag">GitHub</a></td>
+                <td>MIT <a href="https://github.com/HKUDS/nanobot" class="src-tag">GitHub</a></td>
+              </tr>
+              <tr>
+                <td>Security model</td>
+                <td>Application-level <a href="https://github.com/openclaw/openclaw" class="src-tag">GitHub</a></td>
+                <td>OS-level container isolation <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>Not specified <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>Minimal — no built-in sandbox <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>Target hardware</td>
+                <td>Mac Mini / capable server <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src-tag competitor">Competitor¹</a></td>
+                <td>Laptop / VPS <a href="https://github.com/qwibitai/nanoclaw" class="src-tag">GitHub</a></td>
+                <td>$10 RISC-V / ARM boards <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>Raspberry Pi / any Linux <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>Origin</td>
+                <td>Peter Steinberger <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src-tag">README</a></td>
+                <td>Gavriel &amp; Lazer Cohen, Qwibit AI <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src-tag">TechCrunch</a></td>
+                <td>Sipeed <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>HKUDS Lab, Univ. of Hong Kong <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+              <tr>
+                <td>Launched</td>
+                <td>Jan 30, 2026 <a href="https://github.com/openclaw/openclaw" class="src-tag">GitHub</a></td>
+                <td>Jan 31, 2026 <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src-tag">TechCrunch</a></td>
+                <td>Feb 9, 2026 <a href="https://github.com/sipeed/picoclaw" class="src-tag">GitHub</a></td>
+                <td>Feb 2, 2026 <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-tag">README</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:8px;">
+          ¹ RAM figures from <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" style="color:#a08040">nemoclaw.bot</a> — a competitor-published table. Treat as indicative only.
+        </p>
+      </section>
+
+      <!-- ── PROJECT CARDS ──────────────────────────────────────── -->
+      <section aria-labelledby="projects-heading">
+        <h2 id="projects-heading">Each Project in Depth</h2>
+        <p style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-bottom:24px;letter-spacing:0.05em;">
+          Tap any card to expand. All facts are linked to their source inline.
+        </p>
+
+        <div class="projects">
+
+          <!-- ── OPENCLAW ── -->
+          <article class="project-card" aria-label="OpenClaw project details">
+            <details>
+              <summary class="card-header">
+                <span class="card-icon" aria-hidden="true">🦞</span>
+                <div class="card-title-group">
+                  <div class="card-name" style="color:var(--c-open)">OpenClaw</div>
+                  <div class="card-tagline">The original · TypeScript · Jan 30, 2026</div>
+                </div>
+                <span class="card-badge" style="background:var(--c-open)">Original</span>
+                <svg class="chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="card-body">
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="true" aria-controls="oc-def" onclick="toggleAcc(this)">
+                    What is it?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content open" id="oc-def" role="region">
+                    <div class="acc-inner">
+                      <p>OpenClaw is an open-source personal AI assistant you run on your own devices.
+                        <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">OpenClaw README</a>
+                        It connects to the messaging platforms you already use — including WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Google Chat, Microsoft Teams, Matrix, IRC, LINE, and others —
+                        <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a>
+                        and runs a persistent local gateway that acts as the intelligence layer between those channels and an LLM.</p>
+                      <p>It requires Node.js 22 or later and is written in TypeScript.
+                        <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a>
+                        The project was built for Molty, a space lobster AI assistant, by Peter Steinberger and the community.
+                        <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="oc-why" onclick="toggleAcc(this)">
+                    Why was it created?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="oc-why" role="region">
+                    <div class="acc-inner">
+                      <p>OpenClaw was created to give individuals a personal AI assistant that runs on their own hardware rather than in the cloud, integrates natively with messaging platforms, and operates autonomously 24/7.
+                        <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">OpenClaw README</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="oc-use" onclick="toggleAcc(this)">
+                    Use cases
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="oc-use" role="region">
+                    <div class="acc-inner">
+                      <ul>
+                        <li>Personal assistant via WhatsApp, Telegram, iMessage, and 20+ other platforms <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a></li>
+                        <li>Voice interaction on macOS, iOS, and Android <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a></li>
+                        <li>Automation via the ClawHub community skills registry <a href="https://github.com/openclaw/clawhub" class="src">ClawHub repo</a></li>
+                        <li>Canvas rendering for live, interactive outputs <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">README</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="oc-msg" onclick="toggleAcc(this)">
+                    Messaging platforms
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="oc-msg" role="region">
+                    <div class="acc-inner">
+                      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Source: <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">OpenClaw README</a></p>
+                      <div class="tags">
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">WhatsApp</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Telegram</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Slack</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Discord</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Signal</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">iMessage</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Google Chat</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">MS Teams</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Matrix</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">IRC</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">LINE</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">Feishu</span>
+                        <span class="tag" style="color:var(--c-open);border-color:var(--c-open)40">+ more</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="oc-latest" onclick="toggleAcc(this)">
+                    Latest update
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="oc-latest" role="region">
+                    <div class="acc-inner">
+                      <p>18,372 commits as of mid-March 2026, with active development continuing.
+                        <a href="https://github.com/openclaw/openclaw/commits/main/" class="src">GitHub commits</a>
+                        Recent releases have addressed security hardening in device pairing and plugin auto-load.
+                        <a href="https://github.com/openclaw/openclaw/releases" class="src">Release notes</a>
+                      </p>
+                      <p><a href="https://github.com/openclaw/openclaw" style="color:var(--c-open);font-size:13px;font-weight:600;">→ github.com/openclaw/openclaw</a></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </details>
+          </article>
+
+          <!-- ── NANOCLAW ── -->
+          <article class="project-card" aria-label="NanoClaw project details">
+            <details>
+              <summary class="card-header">
+                <span class="card-icon" aria-hidden="true">🔒</span>
+                <div class="card-title-group">
+                  <div class="card-name" style="color:var(--c-nano)">NanoClaw</div>
+                  <div class="card-tagline">Security-first · TypeScript · Jan 31, 2026</div>
+                </div>
+                <span class="card-badge" style="background:var(--c-nano)">Security</span>
+                <svg class="chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="card-body">
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="true" aria-controls="nc-def" onclick="toggleAcc(this)">
+                    What is it?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content open" id="nc-def" role="region">
+                    <div class="acc-inner">
+                      <p>NanoClaw is a lightweight alternative to OpenClaw that runs agents in containers for security.
+                        <a href="https://github.com/qwibitai/nanoclaw" class="src">NanoClaw GitHub</a>
+                        It connects to WhatsApp, Telegram, Slack, Discord, and Gmail, and runs directly on
+                        Anthropic's Claude Agent SDK (Claude Code).
+                        <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a>
+                      </p>
+                      <p>Each chat group or context runs in its own isolated OS-level container — Apple Container on macOS,
+                        or Docker on macOS/Linux — with a separate memory and filesystem.
+                        This prevents data leakage between contexts and limits the blast radius if something goes wrong.
+                        <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nc-why" onclick="toggleAcc(this)">
+                    Why was it created?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nc-why" role="region">
+                    <div class="acc-inner">
+                      <p>Creator Gavriel Cohen built NanoClaw after discovering OpenClaw had downloaded and stored
+                        his personal WhatsApp messages — not just work-related ones — in plain unencrypted text on his computer.
+                        <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src">TechCrunch, Mar 13 2026</a>
+                      </p>
+                      <p>He spent approximately 48 hours coding it over a weekend, then shared it on Hacker News.
+                        AI researcher Andrej Karpathy's public endorsement on X drove significant adoption.
+                        Cohen subsequently closed his AI marketing startup to found NanoCo and focus on NanoClaw full-time.
+                        <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src">TechCrunch, Mar 13 2026</a>
+                      </p>
+                      <p>On March 13, 2026, NanoClaw announced a partnership with Docker to integrate Docker Sandboxes.
+                        <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src">TechCrunch, Mar 13 2026</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nc-use" onclick="toggleAcc(this)">
+                    Use cases
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nc-use" role="region">
+                    <div class="acc-inner">
+                      <ul>
+                        <li>Multi-channel personal assistant with container-level isolation per context <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a></li>
+                        <li>Scheduled tasks that run Claude and can message you back <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a></li>
+                        <li>Web access — search and fetch content <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a></li>
+                        <li>Bespoke personal tooling — fork and have Claude Code modify to exact needs <a href="https://github.com/qwibitai/nanoclaw" class="src">GitHub</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nc-msg" onclick="toggleAcc(this)">
+                    Messaging platforms
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nc-msg" role="region">
+                    <div class="acc-inner">
+                      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Source: <a href="https://github.com/qwibitai/nanoclaw" class="src">NanoClaw GitHub</a></p>
+                      <div class="tags">
+                        <span class="tag" style="color:var(--c-nano);border-color:var(--c-nano)40">WhatsApp</span>
+                        <span class="tag" style="color:var(--c-nano);border-color:var(--c-nano)40">Telegram</span>
+                        <span class="tag" style="color:var(--c-nano);border-color:var(--c-nano)40">Slack</span>
+                        <span class="tag" style="color:var(--c-nano);border-color:var(--c-nano)40">Discord</span>
+                        <span class="tag" style="color:var(--c-nano);border-color:var(--c-nano)40">Gmail</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nc-latest" onclick="toggleAcc(this)">
+                    Latest update
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nc-latest" role="region">
+                    <div class="acc-inner">
+                      <p>Docker partnership announced March 13, 2026.
+                        <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src">TechCrunch</a>
+                        100 commits as of mid-March 2026.
+                        <a href="https://github.com/qwibitai/nanoclaw/commits/main/" class="src">GitHub commits</a>
+                      </p>
+                      <p><a href="https://github.com/qwibitai/nanoclaw" style="color:var(--c-nano);font-size:13px;font-weight:600;">→ github.com/qwibitai/nanoclaw</a></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </details>
+          </article>
+
+          <!-- ── PICOCLAW ── -->
+          <article class="project-card" aria-label="PicoClaw project details">
+            <details>
+              <summary class="card-header">
+                <span class="card-icon" aria-hidden="true">⚡</span>
+                <div class="card-title-group">
+                  <div class="card-name" style="color:var(--c-pico)">PicoClaw</div>
+                  <div class="card-tagline">Ultra-lightweight · Go · Feb 9, 2026</div>
+                </div>
+                <span class="card-badge" style="background:var(--c-pico)">Edge</span>
+                <svg class="chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="card-body">
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="true" aria-controls="pc-def" onclick="toggleAcc(this)">
+                    What is it?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content open" id="pc-def" role="region">
+                    <div class="acc-inner">
+                      <p>PicoClaw is a tiny, fast AI agent deployable anywhere — built by Sipeed, an embedded hardware company.
+                        <a href="https://github.com/sipeed/picoclaw" class="src">PicoClaw GitHub</a>
+                        It is written in Go and compiles to a single self-contained binary with no external runtime dependencies,
+                        targeting devices with under 10MB of RAM including $10 RISC-V and ARM development boards, routers, and IP cameras.
+                        <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="pc-why" onclick="toggleAcc(this)">
+                    Why was it created?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="pc-why" role="region">
+                    <div class="acc-inner">
+                      <p>Sipeed — known for low-cost RISC-V hardware — built PicoClaw to bring AI agents to the
+                        embedded hardware they sell, where existing OpenClaw variants could not run.
+                        <a href="https://github.com/sipeed/picoclaw" class="src">PicoClaw GitHub</a>
+                        The project launched February 9, 2026.
+                        <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="pc-use" onclick="toggleAcc(this)">
+                    Use cases
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="pc-use" role="region">
+                    <div class="acc-inner">
+                      <ul>
+                        <li>Always-on assistant on ultra-low-cost embedded boards <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a></li>
+                        <li>Docker Compose deployment for self-hosting on any Linux device <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a></li>
+                        <li>Browser-based web console for configuration and chat at localhost:18800 <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a></li>
+                        <li>Raspberry Pi Zero 2 W support via ARM binary builds <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="pc-latest" onclick="toggleAcc(this)">
+                    Latest update
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="pc-latest" role="region">
+                    <div class="acc-inner">
+                      <p>23 commits as of mid-March 2026.
+                        <a href="https://github.com/sipeed/picoclaw/commits/main/" class="src">GitHub commits</a>
+                        1,300+ forks. Community maintainer recruitment is open.
+                        <a href="https://github.com/sipeed/picoclaw" class="src">GitHub</a>
+                      </p>
+                      <p><a href="https://github.com/sipeed/picoclaw" style="color:var(--c-pico);font-size:13px;font-weight:600;">→ github.com/sipeed/picoclaw</a></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </details>
+          </article>
+
+          <!-- ── NANOBOT ── -->
+          <article class="project-card" aria-label="Nanobot project details">
+            <details>
+              <summary class="card-header">
+                <span class="card-icon" aria-hidden="true">🧬</span>
+                <div class="card-title-group">
+                  <div class="card-name" style="color:var(--c-bot)">Nanobot</div>
+                  <div class="card-tagline">Ultra-lightweight · Python · Feb 2, 2026</div>
+                </div>
+                <span class="card-badge" style="background:var(--c-bot)">Research</span>
+                <svg class="chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="card-body">
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="true" aria-controls="nb-def" onclick="toggleAcc(this)">
+                    What is it?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content open" id="nb-def" role="region">
+                    <div class="acc-inner">
+                      <p>Nanobot is an ultra-lightweight personal AI assistant inspired by OpenClaw,
+                        delivering core agent functionality with 99% fewer lines of code.
+                        <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a>
+                        It is developed by the HKUDS Data Intelligence Lab at the University of Hong Kong,
+                        written in Python, and designed to be readable, research-ready, and easy to extend.
+                        <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a>
+                      </p>
+                      <p>The core agent code is approximately 4,000 lines — verifiable at any time by running
+                        the included <code style="font-family:var(--mono);font-size:0.8em;color:var(--c-bot);background:var(--bg-3);padding:1px 5px;border-radius:3px;">core_agent_lines.sh</code> script.
+                        <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nb-why" onclick="toggleAcc(this)">
+                    Why was it created?
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nb-why" role="region">
+                    <div class="acc-inner">
+                      <p>Nanobot was created to provide a clean, readable implementation of the OpenClaw concept
+                        that researchers and Python developers could understand, modify, and extend without needing
+                        to work in TypeScript or Go.
+                        <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a>
+                        It positions itself as a "skeleton" framework — research-ready rather than production-complete.
+                        <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nb-use" onclick="toggleAcc(this)">
+                    Use cases
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nb-use" role="region">
+                    <div class="acc-inner">
+                      <ul>
+                        <li>7×24 always-on personal assistant operation <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a></li>
+                        <li>Tool calling and memory across sessions <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a></li>
+                        <li>Natural language cron jobs for scheduled tasks <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a></li>
+                        <li>MCP tool server support <a href="https://github.com/HKUDS/nanobot/releases" class="src">Release notes</a></li>
+                        <li>Multi-provider LLM support including local models via Ollama <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">README</a></li>
+                        <li>Docker Compose one-command deployment <a href="https://github.com/HKUDS/nanobot/releases" class="src">Release notes</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nb-msg" onclick="toggleAcc(this)">
+                    Messaging platforms
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nb-msg" role="region">
+                    <div class="acc-inner">
+                      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Source: <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a> and <a href="https://github.com/HKUDS/nanobot/releases" class="src">release notes</a></p>
+                      <div class="tags">
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Telegram</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">WhatsApp</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Discord</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Slack</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">DingTalk</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">QQ</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Feishu/Lark</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Matrix</span>
+                        <span class="tag" style="color:var(--c-bot);border-color:var(--c-bot)40">Email (IMAP/SMTP)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="acc-section">
+                  <button class="acc-trigger" aria-expanded="false" aria-controls="nb-latest" onclick="toggleAcc(this)">
+                    Latest update
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="acc-content" id="nb-latest" role="region">
+                    <div class="acc-inner">
+                      <p>v0.1.4.post4 released March 8, 2026 — safer defaults, better multi-instance support,
+                        sturdier MCP, and major channel and provider improvements.
+                        <a href="https://github.com/HKUDS/nanobot/releases" class="src">Release notes</a>
+                      </p>
+                      <p><a href="https://github.com/HKUDS/nanobot" style="color:var(--c-bot);font-size:13px;font-weight:600;">→ github.com/HKUDS/nanobot</a></p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </details>
+          </article>
+
+        </div><!-- /projects -->
+      </section>
+
+      <!-- ── FAQ ──────────────────────────────────────────────────── -->
+      <section aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Frequently Asked Questions</h2>
+        <div itemscope itemtype="https://schema.org/FAQPage">
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-q" itemprop="name">What is the difference between OpenClaw and NanoClaw?</div>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <div itemprop="text">
+                OpenClaw is a large, feature-rich TypeScript framework requiring Node.js 22 and approximately 1.5 GB of RAM.
+                <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src">OpenClaw README</a>
+                NanoClaw is a minimal alternative that keeps the codebase small enough for a single developer to audit,
+                and runs every agent context in its own OS-level container for security isolation.
+                <a href="https://github.com/qwibitai/nanoclaw" class="src">NanoClaw GitHub</a>
+                NanoClaw was built the day after OpenClaw launched, specifically in response to its security model.
+                <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src">TechCrunch</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-q" itemprop="name">Which OpenClaw variant uses the least memory?</div>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <div itemprop="text">
+                PicoClaw targets under 10 MB of RAM, making it suitable for routers, IP cameras, and $10 embedded boards.
+                <a href="https://github.com/sipeed/picoclaw" class="src">PicoClaw GitHub</a>
+                For context, OpenClaw uses approximately 1.5 GB of RAM.
+                <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src comp">nemoclaw.bot (competitor)</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-q" itemprop="name">What is Nanobot and is it the same as NanoClaw?</div>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <div itemprop="text">
+                They are separate projects with similar names. Nanobot is a Python implementation from the HKUDS Lab
+                at the University of Hong Kong, focused on educational clarity and research — approximately 4,000 lines of code.
+                <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a>
+                NanoClaw is a TypeScript project from Qwibit AI, focused on security through container isolation.
+                <a href="https://github.com/qwibitai/nanoclaw" class="src">NanoClaw GitHub</a>
+                They serve different purposes and have different authors.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-q" itemprop="name">Does NanoClaw work with Claude / Anthropic?</div>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <div itemprop="text">
+                Yes. NanoClaw runs directly on Anthropic's Claude Agent SDK (Claude Code).
+                <a href="https://github.com/qwibitai/nanoclaw" class="src">NanoClaw GitHub</a>
+                Nanobot also supports Anthropic as one of multiple LLM providers, alongside OpenAI, DeepSeek, Gemini, Groq,
+                and local models via Ollama.
+                <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-q" itemprop="name">Can PicoClaw run on a Raspberry Pi?</div>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <div itemprop="text">
+                Yes. PicoClaw provides ARM binary builds specifically for Raspberry Pi, including the Raspberry Pi Zero 2 W.
+                <a href="https://github.com/sipeed/picoclaw" class="src">PicoClaw GitHub</a>
+                Nanobot also runs on Raspberry Pi.
+                <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src">Nanobot README</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── SOURCES ─────────────────────────────────────────────── -->
+      <section aria-labelledby="sources-heading">
+        <h2 id="sources-heading">Sources</h2>
+        <p style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-bottom:20px;letter-spacing:0.05em;">
+          Every fact on this page is sourced from one of the following. No Medium articles, blogs, or community forums were used.
+        </p>
+        <ul class="sources-list">
+          <li>
+            <span class="src-num">1</span>
+            <div class="src-info">
+              <div class="src-label">OpenClaw — Official GitHub Repository</div>
+              <div class="src-type">Primary source · Official project repo</div>
+              <a href="https://github.com/openclaw/openclaw" class="src-link">github.com/openclaw/openclaw</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">2</span>
+            <div class="src-info">
+              <div class="src-label">OpenClaw README — github.com/openclaw/openclaw/blob/main/README.md</div>
+              <div class="src-type">Primary source · Creator-written documentation</div>
+              <a href="https://github.com/openclaw/openclaw/blob/main/README.md" class="src-link">github.com/openclaw/openclaw/blob/main/README.md</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">3</span>
+            <div class="src-info">
+              <div class="src-label">OpenClaw Release Notes</div>
+              <div class="src-type">Primary source · Official changelog</div>
+              <a href="https://github.com/openclaw/openclaw/releases" class="src-link">github.com/openclaw/openclaw/releases</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">4</span>
+            <div class="src-info">
+              <div class="src-label">NanoClaw — Official GitHub Repository</div>
+              <div class="src-type">Primary source · Official project repo</div>
+              <a href="https://github.com/qwibitai/nanoclaw" class="src-link">github.com/qwibitai/nanoclaw</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">5</span>
+            <div class="src-info">
+              <div class="src-label">TechCrunch — "The wild six weeks for NanoClaw's creator that led to a deal with Docker"</div>
+              <div class="src-type">Primary source · Reported journalism · Julie Bort · March 13, 2026</div>
+              <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/" class="src-link">techcrunch.com · March 13, 2026</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">6</span>
+            <div class="src-info">
+              <div class="src-label">PicoClaw — Official GitHub Repository (Sipeed)</div>
+              <div class="src-type">Primary source · Official project repo</div>
+              <a href="https://github.com/sipeed/picoclaw" class="src-link">github.com/sipeed/picoclaw</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">7</span>
+            <div class="src-info">
+              <div class="src-label">Nanobot — Official GitHub Repository (HKUDS, University of Hong Kong)</div>
+              <div class="src-type">Primary source · Official project repo</div>
+              <a href="https://github.com/HKUDS/nanobot" class="src-link">github.com/HKUDS/nanobot</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">8</span>
+            <div class="src-info">
+              <div class="src-label">Nanobot README — github.com/HKUDS/nanobot/blob/main/README.md</div>
+              <div class="src-type">Primary source · Creator-written documentation</div>
+              <a href="https://github.com/HKUDS/nanobot/blob/main/README.md" class="src-link">github.com/HKUDS/nanobot/blob/main/README.md</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">9</span>
+            <div class="src-info">
+              <div class="src-label">Nanobot Release Notes</div>
+              <div class="src-type">Primary source · Official changelog</div>
+              <a href="https://github.com/HKUDS/nanobot/releases" class="src-link">github.com/HKUDS/nanobot/releases</a>
+            </div>
+          </li>
+          <li>
+            <span class="src-num">10</span>
+            <div class="src-info">
+              <div class="src-label">NemoClaw Ecosystem Comparison Table — RAM figures only</div>
+              <div class="src-type competitor">⚠️ Competitor-published · NemoClaw is a competing product · Figures are indicative only</div>
+              <a href="https://nemoclaw.bot/claw-ecosystem-overview.html" class="src-link" style="color:#a08040">nemoclaw.bot/claw-ecosystem-overview.html</a>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+    </div><!-- /wrap -->
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">ClawBeat<span>.co</span></div>
+      <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+    </div>
+  </footer>
+
+  <script>
+    // Init Lucide icons
+    lucide.createIcons();
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const iconMenu = document.getElementById('icon-menu');
+      const iconClose = document.getElementById('icon-close');
+      const isOpen = menu.classList.toggle('open');
+      iconMenu.style.display = isOpen ? 'none' : 'inline';
+      iconClose.style.display = isOpen ? 'inline' : 'none';
+    }
+
+    // Accordion toggle — content always in DOM for crawlers
+    function toggleAcc(btn) {
+      const content = document.getElementById(btn.getAttribute('aria-controls'));
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !isOpen);
+      content.classList.toggle('open', !isOpen);
+    }
+
+    // Open first section of each card by default
+    document.querySelectorAll('.acc-trigger[aria-expanded="true"]').forEach(btn => {
+      const content = document.getElementById(btn.getAttribute('aria-controls'));
+      if (content) content.classList.add('open');
+    });
+  </script>
+
+</body>
+</html>
