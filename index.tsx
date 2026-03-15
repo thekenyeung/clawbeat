@@ -231,13 +231,13 @@ const App: React.FC = () => {
 
   // On mount: set initial history state without pushing a new entry
   useEffect(() => {
-    history.replaceState({ newsDate: currentNewsDate }, '', currentNewsDate ? `/?date=${currentNewsDate}` : '/');
+    history.replaceState({ newsDate: currentNewsDate }, '', currentNewsDate ? `/news.html?date=${currentNewsDate}` : '/news.html');
   }, []); // eslint-disable-line
 
   // Push history entry on date changes; skip is consumed and cleared inside the effect
   useEffect(() => {
     if (skipHistoryPush.current) { skipHistoryPush.current = false; return; }
-    const url = currentNewsDate ? `/?date=${currentNewsDate}` : '/';
+    const url = currentNewsDate ? `/news.html?date=${currentNewsDate}` : '/news.html';
     history.pushState({ newsDate: currentNewsDate }, '', url);
   }, [currentNewsDate]);
 
