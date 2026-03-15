@@ -719,8 +719,24 @@ img { display: block; max-width: 100%; }
     return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  function formatAnyDate(str) {
+    if (!str) return '';
+    let d;
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+      d = new Date(str + 'T12:00:00');
+    } else {
+      const parts = str.split('-');
+      if (parts.length === 3) {
+        d = new Date(parseInt(parts[2], 10), parseInt(parts[0], 10) - 1, parseInt(parts[1], 10));
+      }
+    }
+    if (!d || isNaN(d.getTime())) return str;
+    return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+  }
+
   /* ── RENDER: HERO ── */
-  function renderHero(items) {
+  // leadUrl: where "Read Signal" on card 1 links to (daily edition page, not raw article)
+  function renderHero(items, leadUrl) {
     const heroRoot = document.getElementById('hero-root');
     if (!items || items.length === 0) {
       heroRoot.innerHTML = '<div class="empty-state">No signals loaded</div>';
@@ -734,13 +750,13 @@ img { display: block; max-width: 100%; }
       <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="hero-side-card" aria-label="Signal ${i + 2}: ${esc(item.title)}">
         <div class="hero-side-num" aria-hidden="true">// signal_0${i + 2}</div>
         <div class="hero-side-headline">${esc(item.title)}</div>
-        <div class="hero-side-meta"><span class="source">${esc(item.source || 'Source')}</span> · ${formatNewsDate(item.date)}</div>
+        <div class="hero-side-meta"><span class="source">${esc(item.source || 'Source')}</span> · ${formatAnyDate(item.date)}</div>
       </a>
     `).join('');
 
     heroRoot.innerHTML = `
       <div class="hero-grid">
-        <a href="${esc(lead.url)}" target="_blank" rel="noopener noreferrer" class="hero-lead" aria-label="Top signal: ${esc(lead.title)}">
+        <a href="${esc(leadUrl || lead.url)}" class="hero-lead" aria-label="Top signal: ${esc(lead.title)}">
           <div class="hero-lead-accent" aria-hidden="true"></div>
           <div class="hero-lead-number" aria-hidden="true">01</div>
           <div class="hero-lead-badges">
@@ -752,7 +768,7 @@ img { display: block; max-width: 100%; }
           <div class="hero-lead-meta">
             <span class="source">${esc(lead.source || 'Source')}</span>
             <span aria-hidden="true">·</span>
-            <span>${formatNewsDate(lead.date)}</span>
+            <span>${formatAnyDate(lead.date)}</span>
           </div>
           <span class="hero-lead-cta">Read Signal <i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
         </a>
@@ -767,11 +783,11 @@ img { display: block; max-width: 100%; }
   /* ── RENDER: INTEL FEED ── */
   function renderFeed(items) {
     const feedRoot = document.getElementById('feed-root');
-    if (!items || items.length < 4) {
+    if (!items || items.length === 0) {
       feedRoot.innerHTML = '<div class="empty-state">No feed items</div>';
       return;
     }
-    const slice = items.slice(3, 12); // positions 4-12
+    const slice = items.slice(0, 9);
     const cards = slice.map((item, i) => `
       <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + 4}: ${esc(item.title)}">
         <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + 4).padStart(2, '0')}</div>
@@ -779,7 +795,7 @@ img { display: block; max-width: 100%; }
         ${item.summary ? `<div class="feed-card-summary">${esc(item.summary)}</div>` : ''}
         <div class="feed-card-foot">
           <span class="feed-card-source">${esc(item.source || '—')}</span>
-          <span class="feed-card-date"><time>${formatNewsDate(item.date)}</time></span>
+          <span class="feed-card-date"><time>${formatAnyDate(item.date)}</time></span>
         </div>
       </a>
     `).join('');
@@ -960,7 +976,28 @@ img { display: block; max-width: 100%; }
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc')
   ]).then(([news, events, repos, daily, familyStats]) => {
-    renderHero(news);
+    // Hero signals 1-3: pull from daily edition slots 1-3 (curated), fallback to news_items
+    let heroItems = news.slice(0, 3).map(n => ({ url: n.url, title: n.title, source: n.source, date: n.date, summary: n.summary }));
+    let heroLeadUrl = heroItems[0] ? heroItems[0].url : '#';
+
+    if (daily && daily.length > 0 && Array.isArray(daily[0].stories) && daily[0].stories.length > 0) {
+      const ed = daily[0];
+      const sorted = ed.stories.slice().sort((a, b) => (a.slot || 99) - (b.slot || 99));
+      const top3 = [1, 2, 3].map(slot => sorted.find(s => s.slot === slot)).filter(Boolean);
+      if (top3.length > 0) {
+        heroItems = top3.map(s => ({
+          url: s.url || '#',
+          title: s.headline || '',
+          source: s.pub_name || '',
+          date: s.pub_date || '',
+          summary: s.summary_html ? s.summary_html.replace(/<[^>]+>/g, '').trim().slice(0, 300) : '',
+        }));
+        // Signal 1 "Read Signal" links to the daily edition page, not the raw article
+        heroLeadUrl = ed.permalink || `/daily/${ed.edition_date}/`;
+      }
+    }
+
+    renderHero(heroItems, heroLeadUrl);
     renderFeed(news);
     renderDaily(daily);
     renderEvents(events);
