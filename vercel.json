@@ -3,5 +3,8 @@
     "api/slack_ingest.py": {
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/homepage.html" }
+  ]
 }
