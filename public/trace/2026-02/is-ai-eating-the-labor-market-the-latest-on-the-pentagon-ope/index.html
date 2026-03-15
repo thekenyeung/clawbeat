@@ -228,12 +228,13 @@ img { display: block; }
 .issue-pill svg { width: 13px; height: 13px; }
 
 /* ── FOOTER ── */
-.page-footer { max-width: 72rem; margin: 4rem auto 0; padding: 2.5rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.footer-brand { font-family: var(--sans); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.03em; color: var(--text-3); }
+.footer { border-top: 1px solid var(--border-2); background: var(--bg-2); padding: 1.25rem 1.5rem; margin-top: 4rem; }
+.footer-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.footer-brand { font-family: var(--sans); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff; }
 .footer-brand span { color: var(--orange); }
-.footer-links { font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.08em; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.footer-links a { color: var(--text-4); transition: color 0.15s; }
-.footer-links a:hover { color: var(--text-3); }
+.clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+.clawhub-badge:hover { color: var(--orange); }
+@media (max-width: 640px) { .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; } }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
@@ -385,16 +386,10 @@ To fulfill your request, I need the full text of the article. Please provide the
 </div>
 
 <!-- ── FOOTER ── -->
-<footer class="page-footer">
-  <div class="footer-brand">ClawBeat<span>.co</span></div>
-  <div class="footer-links">
-    <span>Trace No. 001 · February 2026</span>
-    <span>·</span>
-    <a href="/trace/2026-02/">Issue Index</a>
-    <span>·</span>
-    <a href="/trace/">All Issues</a>
-    <span>·</span>
-    <a href="/">ClawBeat.co</a>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
   </div>
 </footer>
 
