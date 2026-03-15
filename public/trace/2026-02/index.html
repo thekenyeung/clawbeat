@@ -155,14 +155,14 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .card:hover .card-img-wrap img { opacity: 0.92; transform: scale(1.03); }
 .card-body { padding: 1rem 1.125rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.55rem; }
 .card-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.card-rank { font-family: var(--mono); font-size: 0.5rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
-.card-cat { font-family: var(--mono); font-size: 0.5rem; color: var(--text-3); background: var(--bg-3); border: 1px solid var(--border); padding: 0.12rem 0.4rem; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; }
-.card-headline { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; }
+.card-rank { font-family: var(--mono); font-size: 0.625rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
+.card-cat { font-family: var(--mono); font-size: 0.625rem; color: var(--text-3); background: var(--bg-3); border: 1px solid var(--border); padding: 0.12rem 0.4rem; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; }
+.card-headline { font-family: var(--sans); font-size: 1rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; }
 .card:hover .card-headline { color: #fff; }
 .card-source { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.07em; }
 .card-source a { color: inherit; }
 .card-source a:hover { color: var(--text-2); }
-.card-summary { font-size: 0.8rem; line-height: 1.55; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-summary { font-size: 0.875rem; line-height: 1.55; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .card-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: auto; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); transition: color 0.15s; }
 .card-link:hover { color: var(--orange); }
 .card-link svg { width: 11px; height: 11px; }
@@ -392,7 +392,10 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
       </div>
     </a>
 </div>
-<div class="grid-asym-inner">
+</div>
+
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
 <a href="/trace/2026-02/six-flaws-found-hiding-in-openclaws-plumbing/" class="card">
       <div class="card-img-wrap">
         <img src="https://www.csoonline.com/wp-content/uploads/2026/02/4134540-0-20280700-1771503276-shutterstock_2732937827.png?w=1024" alt="Six flaws found hiding in OpenClaw&#39;s plumbing" loading="lazy">
@@ -406,7 +409,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
         <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>
-<a href="/trace/2026-02/an-openclaw-ai-agent-asked-to-delete-a-confidential-email-nu/" class="card card-small">
+<a href="/trace/2026-02/an-openclaw-ai-agent-asked-to-delete-a-confidential-email-nu/" class="card">
       <div class="card-img-wrap">
         <img src="https://the-decoder.com/wp-content/uploads/2026/02/openclaw_malware.jpeg" alt="An OpenClaw AI agent asked to delete a confidential email nuked its own mail client and called it fixed" loading="lazy">
         <span class="card-rank-ghost">05</span>
@@ -420,7 +423,10 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
       </div>
     </a>
 </div>
-<div class="grid-three">
+</div>
+
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
 <a href="/trace/2026-02/i-built-an-openclaw-ai-agent-to-do-my-job-for-me-the-results/" class="card">
       <div class="card-img-wrap">
         <img src="https://images.fastcompany.com/image/upload/f_webp,q_auto,c_fit,w_1024/wp-cms-2/2026/02/p-91495511-openclaw-AI-agent.jpg" alt="I built an OpenClaw AI agent to do my job for me. The results were surprising—and a little scary" loading="lazy">
@@ -447,6 +453,11 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
         <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>
+</div>
+</div>
+
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
 <a href="/trace/2026-02/openclaw-was-just-the-beginning-a-400-box-replaces-900-in-sa/" class="card">
       <div class="card-img-wrap">
         <img src="https://www.implicator.ai/content/images/2026/02/2026-02-23-20.39.04-hypervisor_longform@2x.webp" alt="OpenClaw Was Just the Beginning. A $400 Box Replaces $900 in SaaS." loading="lazy">
@@ -460,80 +471,56 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
         <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>
-</div>
-
-<a href="/trace/2026-02/your-personal-openclaw-agent-may-also-be-taking-orders-from-/" class="wide-feature">
-    <div class="card-img-wrap">
-      <img src="https://www.csoonline.com/wp-content/uploads/2026/03/4138431-0-03572900-1772731803-shutterstock_680078968.jpg?quality=50&amp;strip=all&amp;w=1024" alt="Your personal OpenClaw agent may also be taking orders from malicious websites" loading="lazy">
-      <span class="card-rank-ghost" style="font-size:5rem;bottom:1rem;left:1.25rem">09</span>
-    </div>
-    <div class="wide-feature-content">
-      <div class="wide-feature-rank">Signal 09 · Oasis Security</div>
-      <h3 class="wide-feature-headline">Your personal OpenClaw agent may also be taking orders from malicious websites</h3>
-      <p class="wide-feature-summary">CSO Online has published a headline that raises a significant security concern for the OpenClaw agentic AI ecosystem, indicating that &quot;Your personal OpenClaw agent may also be taking orders from malic</p>
-      <div class="wide-feature-footer">
-        <span class="wide-feature-source">CSO</span>
-        <span class="wide-feature-link">Read Analysis <i data-lucide="arrow-right"></i></span>
-      </div>
-    </div>
-  </a>
-
-<div class="grid-two-two">
-<a href="/trace/2026-02/destroyed-servers-and-dos-attacks-what-can-happen-when-openc/" class="card">
+<a href="/trace/2026-02/your-personal-openclaw-agent-may-also-be-taking-orders-from-/" class="card">
       <div class="card-img-wrap">
-        <img src="https://www.zdnet.com/a/img/resize/b9474660a377f48ae7fd5175a14d8008fa851fbf/2026/03/06/26bbbbc6-7276-49b0-a239-81481235a6cd/gettyimages-2169851272.jpg?auto=webp&amp;fit=crop&amp;height=675&amp;width=1200" alt="Destroyed servers and DoS attacks: What can happen when OpenClaw AI agents interact" loading="lazy">
-        <span class="card-rank-ghost">10</span>
+        <img src="https://www.csoonline.com/wp-content/uploads/2026/03/4138431-0-03572900-1772731803-shutterstock_680078968.jpg?quality=50&amp;strip=all&amp;w=1024" alt="Your personal OpenClaw agent may also be taking orders from malicious websites" loading="lazy">
+        <span class="card-rank-ghost">09</span>
       </div>
       <div class="card-body">
-        <div class="card-meta"><span class="card-rank">Signal 10</span><span class="card-cat">Dos</span></div>
-        <div class="card-headline">Destroyed servers and DoS attacks: What can happen when OpenClaw AI agents interact</div>
-        <div class="card-source">ZDNet</div>
-        
-        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
-      </div>
-    </a>
-<a href="/trace/2026-02/microsoft-says-openclaw-is-not-appropriate-to-run-on-a-stand/" class="card">
-      <div class="card-img-wrap">
-        <img src="https://cdn.mos.cms.futurecdn.net/DTZvZXmPaA8zMJoW733ZVa-1920-80.png" alt="Microsoft says OpenClaw is &quot;not appropriate to run on a standard personal or enterprise workstation&quot; — so should you be worried?" loading="lazy">
-        <span class="card-rank-ghost">11</span>
-      </div>
-      <div class="card-body">
-        <div class="card-meta"><span class="card-rank">Signal 11</span><span class="card-cat">Microsoft</span></div>
-        <div class="card-headline">Microsoft says OpenClaw is &quot;not appropriate to run on a standard personal or enterprise workstation&quot; — so should you be worried?</div>
-        <div class="card-source">TechRadar</div>
-        
-        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
-      </div>
-    </a>
-<a href="/trace/2026-02/the-best-mini-pc-deals-for-running-openclaw-save-on-apple-ma/" class="card">
-      <div class="card-img-wrap">
-        <img src="https://helios-i.mashable.com/imagery/articles/00nzl6pS2DnFGNyCYfZvg89/hero-image.fill.size_1200x675.v1772035100.jpg" alt="The best mini PC deals for running OpenClaw: Save on Apple Mac mini, Kamuri Pinova P2, and Beelink Mini" loading="lazy">
-        <span class="card-rank-ghost">12</span>
-      </div>
-      <div class="card-body">
-        <div class="card-meta"><span class="card-rank">Signal 12</span><span class="card-cat">Apple Mac · Kamuri Pinova P2</span></div>
-        <div class="card-headline">The best mini PC deals for running OpenClaw: Save on Apple Mac mini, Kamuri Pinova P2, and Beelink Mini</div>
-        <div class="card-source">Mashable</div>
-        
-        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
-      </div>
-    </a>
-<a href="/trace/2026-02/ai-tool-openclaw-wipes-the-inbox-of-metas-ai-alignment-direc/" class="card">
-      <div class="card-img-wrap">
-        <img src="https://cdn.mos.cms.futurecdn.net/sGepQkJ6peph6Vkaoemmim-2048-80.jpg" alt="AI tool OpenClaw wipes the inbox of Meta's AI Alignment director despite repeated commands to stop — executive had to manually terminate the AI to stop the bot from continuing to erase data" loading="lazy">
-        <span class="card-rank-ghost">13</span>
-      </div>
-      <div class="card-body">
-        <div class="card-meta"><span class="card-rank">Signal 13</span><span class="card-cat">Meta · Ai Alignment</span></div>
-        <div class="card-headline">AI tool OpenClaw wipes the inbox of Meta's AI Alignment director despite repeated commands to stop — executive had to manually terminate the AI to stop the bot from continuing to erase data</div>
-        <div class="card-source">Tom's Hardware</div>
-        
+        <div class="card-meta"><span class="card-rank">Signal 09</span><span class="card-cat">Oasis Security</span></div>
+        <div class="card-headline">Your personal OpenClaw agent may also be taking orders from malicious websites</div>
+        <div class="card-source">CSO</div>
+        <p class="card-summary">CSO Online reports a significant security concern for the OpenClaw agentic AI ecosystem: personal OpenClaw agents can be covertly hijacked by malicious websites to execute unauthorized commands, revealing critical trust vulnerabilities in open AI agent architectures.</p>
         <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>
 </div>
+</div>
 
-<div class="grid-compact" style="margin-top:2rem">
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-compact">
+<a href="/trace/2026-02/destroyed-servers-and-dos-attacks-what-can-happen-when-openc/" class="compact-card">
+      <div class="compact-rank">Signal 10 · Dos</div>
+      <div class="compact-headline">Destroyed servers and DoS attacks: What can happen when OpenClaw AI agents interact</div>
+      <div class="compact-footer">
+        <span class="compact-source">ZDNet</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-02/microsoft-says-openclaw-is-not-appropriate-to-run-on-a-stand/" class="compact-card">
+      <div class="compact-rank">Signal 11 · Microsoft</div>
+      <div class="compact-headline">Microsoft says OpenClaw is &quot;not appropriate to run on a standard personal or enterprise workstation&quot; — so should you be worried?</div>
+      <div class="compact-footer">
+        <span class="compact-source">TechRadar</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-02/the-best-mini-pc-deals-for-running-openclaw-save-on-apple-ma/" class="compact-card">
+      <div class="compact-rank">Signal 12 · Apple Mac · Kamuri Pinova P2</div>
+      <div class="compact-headline">The best mini PC deals for running OpenClaw: Save on Apple Mac mini, Kamuri Pinova P2, and Beelink Mini</div>
+      <div class="compact-footer">
+        <span class="compact-source">Mashable</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-02/ai-tool-openclaw-wipes-the-inbox-of-metas-ai-alignment-direc/" class="compact-card">
+      <div class="compact-rank">Signal 13 · Meta · Ai Alignment</div>
+      <div class="compact-headline">AI tool OpenClaw wipes the inbox of Meta&#39;s AI Alignment director despite repeated commands to stop — executive had to manually terminate the AI to stop the bot from continuing to erase data</div>
+      <div class="compact-footer">
+        <span class="compact-source">Tom&#39;s Hardware</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
 <a href="/trace/2026-02/google-clamps-down-on-antigravity-malicious-usage-cutting-of/" class="compact-card">
       <div class="compact-rank">Signal 14 · Tos · Google</div>
       <div class="compact-headline">Google clamps down on Antigravity 'malicious usage', cutting off OpenClaw users in sweeping ToS enforcement move</div>
@@ -563,7 +550,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
     </a>
 <a href="/trace/2026-02/after-months-of-quiet-perplexitys-ceo-steps-into-the-opencla/" class="compact-card">
       <div class="compact-rank">Signal 17 · Perplexity · Aravind Srinivas</div>
-      <div class="compact-headline">After months of quiet, Perplexity’s CEO steps into the OpenClaw moment</div>
+      <div class="compact-headline">After months of quiet, Perplexity's CEO steps into the OpenClaw moment</div>
       <div class="compact-summary">Perplexity CEO Aravind Srinivas has announced the unveiling of an &quot;OpenClaw-like Computer,&quot; marking the company's direct and aggressive entry into the AI hardware sector. This move signals a significa</div>
       <div class="compact-footer">
         <span class="compact-source">Fortune</span>
@@ -591,14 +578,14 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 <a href="/trace/2026-02/mastering-openclaw-a-quick-guide-to-integrating-openclaw-cla/" class="compact-card">
       <div class="compact-rank">Signal 20 · A Quick Guide</div>
       <div class="compact-headline">Mastering OpenClaw | A Quick Guide to Integrating OpenClaw (Clawdbot) into iMessage on the Cloud</div>
-      <div class="compact-summary">A comprehensive practical guide detailing the integration of OpenClaw, an agentic AI, with Apple&apos;s iMessage on a cloud-based setup using Tencent Cloud&apos;s Lighthouse infrastructure.</div>
+      <div class="compact-summary">A comprehensive practical guide detailing the integration of OpenClaw, an agentic AI, with Apple&apos;s iMessage on a cloud-based setup using Tencent Cloud's Lighthouse infrastructure.</div>
       <div class="compact-footer">
         <span class="compact-source">Tencent Cloud Compute, Medium</span>
         <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
       </div>
     </a>
 </div>
-<!-- /wrap -->
+</div>
   <div class="wrap">
     <div class="section-rule" style="margin-top:3.5rem">
       <div class="section-rule-label"><span class="sl">//</span> Daily Transmissions</div>
