@@ -117,7 +117,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 /* ── COVER STORY ── */
 .cover-section { position: relative; width: 100%; }
-.cover-hero { position: relative; max-height: 860px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; background: #0d1320; }
+.cover-hero { position: relative; min-height: 56vh; max-height: 860px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(160deg, #1c0a00 0%, #0d1320 45%, #06090e 100%); }
 .cover-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.55; transition: opacity 0.5s, transform 0.5s; }
 .cover-hero:hover .cover-bg { opacity: 0.65; transform: scale(1.01); }
 .cover-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(8,9,11,0.05) 0%, rgba(8,9,11,0.15) 30%, rgba(8,9,11,0.6) 60%, rgba(8,9,11,0.97) 100%); }
@@ -260,7 +260,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .repo-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .cover-content { padding-top: 3rem; }
+  .cover-hero { min-height: 44vh; }
   .masthead { padding: 3rem 1rem 3rem; }
   .editorial { grid-template-columns: 1fr; gap: 0.75rem; }
   .editorial-text { border-left: none; padding-left: 0; border-top: 2px solid rgba(249,115,22,0.3); padding-top: 0.875rem; }
