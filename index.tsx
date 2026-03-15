@@ -457,7 +457,8 @@ const App: React.FC = () => {
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        <div className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
+      </header>
+      <div className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
           <button className={`mobile-nav-item${activePage === 'news' ? ' active' : ''}`} onClick={() => handleNavClick('news')}>
             <Newspaper size={16} />Intel Feed
           </button>
@@ -468,7 +469,6 @@ const App: React.FC = () => {
           <a href="/events-calendar.html" className="mobile-nav-item"><Calendar size={16} />Events</a>
           <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onClick={() => (window as any).gtag?.('event','click',{event_category:'outbound',event_label:'clawhub_skill'})} >// skill</a>
         </div>
-      </header>
 
       <main className="max-w-6xl mx-auto px-6 pt-8 pb-0">
         <div className="flex justify-between items-end pb-6">
