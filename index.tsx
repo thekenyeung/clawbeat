@@ -433,12 +433,12 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-[#0a0a0c] text-slate-200 font-sans selection:bg-orange-500/30 selection:text-orange-200">
       <header className="header">
         <div className="header-inner">
-          <button className="brand" onClick={handleLogoClick}>
+          <a className="brand" href="/">
             <div className="brand-img">
               <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" />
             </div>
             <span className="brand-text">ClawBeat<span>.co</span></span>
-          </button>
+          </a>
           <nav className="header-nav">
             <div className="nav-dropdown">
               <button className={`nav-item${activePage === 'news' ? ' active' : ''}`} onClick={() => handleNavClick('news')}>
