@@ -826,7 +826,7 @@ img { display: block; max-width: 100%; }
     const summaryText = summary.replace(/<[^>]+>/g, '').trim().slice(0, 200);
     const date = ed.edition_date || '';
     const dateLabel = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }) : '';
-    const permalink = ed.permalink || `/daily/${date}/`;
+    const permalink = ed.permalink ? `/daily/${date}/${ed.permalink}.html` : `/daily/${date}/`;
 
     dailyRoot.innerHTML = `
       <a href="${esc(permalink)}" class="daily-banner" aria-label="Today's Daily Edition: ${esc(headline)}">
