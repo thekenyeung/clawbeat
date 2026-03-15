@@ -268,6 +268,7 @@ const App: React.FC = () => {
   };
 
   const handleNavClick = (page: Page) => {
+    if (page === 'news') setCurrentNewsDate('');
     setActivePage(page);
     setIsMobileMenuOpen(false);
   };
