@@ -348,7 +348,7 @@ def process_article_intel(url):
                 if (datetime.now() - datetime(year, month, day)).days > 2:
                     is_recent = False
             else:
-                is_recent = False 
+                pass  # No date in URL path — defer recency judgement to RSS date in caller
         if not is_recent: return False, 0, ""
         full_text = (article.title + " " + article.text).lower()
         brand_bonus = 10 if any(b in full_text for b in CORE_BRANDS) else 0
