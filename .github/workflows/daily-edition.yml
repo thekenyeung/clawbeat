@@ -39,11 +39,55 @@ jobs:
           EDITION_DATE:         ${{ inputs.edition_date }}
         run: python generate_daily_edition.py
 
+      - name: Regenerate sitemap
+        run: |
+          python - <<'EOF'
+          import glob, os
+
+          BASE = "https://clawbeat.co"
+
+          STATIC = [
+            ("/",                         "daily",   "1.0"),
+            ("/events-calendar.html",     "weekly",  "0.8"),
+            ("/forge.html",               "weekly",  "0.8"),
+            ("/trace/index.html",         "monthly", "0.8"),
+          ]
+
+          lines = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            '',
+            '  <!-- ── Core pages ── -->',
+          ]
+          for path, freq, pri in STATIC:
+            lines.append(f'  <url><loc>{BASE}{path}</loc><changefreq>{freq}</changefreq><priority>{pri}</priority></url>')
+
+          lines += ['', '  <!-- ── Trace magazine ── -->']
+          trace_pages = sorted(glob.glob("public/trace/**/*.html", recursive=True))
+          for p in trace_pages:
+            url_path = "/" + p.replace("public/", "")
+            lines.append(f'  <url><loc>{BASE}{url_path}</loc><changefreq>never</changefreq><priority>0.6</priority></url>')
+
+          lines += ['', '  <!-- ── Daily Editions ── -->']
+          daily_pages = sorted(glob.glob("public/daily/????-??-??/*.html"))
+          for p in daily_pages:
+            url_path = "/" + p.replace("public/", "")
+            date = os.path.basename(os.path.dirname(p))
+            lines.append(f'  <url><loc>{BASE}{url_path}</loc><lastmod>{date}</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>')
+
+          lines += ['', '</urlset>']
+
+          with open("public/sitemap.xml", "w") as f:
+            f.write("\n".join(lines) + "\n")
+
+          print(f"Sitemap updated: {len(daily_pages)} daily editions, {len(trace_pages)} trace pages.")
+          EOF
+
       - name: Commit and push generated HTML
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name  "GitHub Actions"
-          git add public/daily/
+          git add public/daily/ public/sitemap.xml
           # Only commit if there are staged changes
           git diff --staged --quiet || git commit -m "Daily Edition: $(date -u +%Y-%m-%d)"
           git push
