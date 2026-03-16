@@ -551,9 +551,35 @@ def scan_google_news():
         feed = feedparser.parse(gn_url)
         for e in feed.entries[:30]:
             passes, density, clean_text = process_article_intel(e.link)
-            if passes and density >= 2:
+
+            if not passes:
+                # Fallback: article was blocked/unavailable but Google indexed it for the OpenClaw query.
+                # Score from the entry title + summary, then resolve the redirect to get the real URL.
+                rss_text = (e.title + " " + strip_html(getattr(e, 'summary', '') or '')).lower()
+                brand_bonus = 10 if any(b in rss_text for b in CORE_BRANDS) else 0
+                kw_matches = sum(1 for kw in KEYWORDS if kw.lower() in rss_text)
+                if not (brand_bonus > 0 or kw_matches >= 1):
+                    continue
+                try:
+                    r = requests.get(e.link, allow_redirects=True, timeout=5,
+                                     headers={'User-Agent': 'Mozilla/5.0'}, stream=True)
+                    resolved_url = r.url
+                    r.close()
+                except Exception:
+                    resolved_url = e.link
+                density = kw_matches + brand_bonus
+                raw_summary = strip_html(getattr(e, 'summary', '') or '')
                 found.append({
-                    "title": e.title, "url": e.link, "source": "Web Search", 
+                    "title": e.title, "url": resolved_url, "source": "Web Search",
+                    "summary": raw_summary[:250] + "..." if raw_summary else "",
+                    "date": datetime.now(_PACIFIC).strftime("%m-%d-%Y"),
+                    "density": density, "vec": None
+                })
+                continue
+
+            if density >= 2:
+                found.append({
+                    "title": e.title, "url": e.link, "source": "Web Search",
                     "summary": clean_text[:250] + "...", "date": datetime.now(_PACIFIC).strftime("%m-%d-%Y"),
                     "density": density, "vec": None
                 })
