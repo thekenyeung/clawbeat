@@ -474,42 +474,6 @@ img { display: block; max-width: 100%; }
 <!-- ══════════════════════════ MAIN CONTENT ══════════════════════════ -->
 <main id="main-content">
 
-<!-- ══════════════════════════ HERO ══════════════════════════ -->
-<section class="hero" aria-label="Top intelligence signals">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <div class="hero-live-dot" aria-hidden="true"></div>
-      <span class="hero-live-label"><strong>Live</strong> — OpenClaw Intelligence Feed</span>
-    </div>
-    <div id="hero-root" aria-live="polite" aria-atomic="false" aria-label="Top signals loading">
-      <!-- skeleton -->
-      <div class="hero-grid" role="status" aria-label="Loading top signals">
-        <div class="hero-lead">
-          <div class="hero-lead-accent" aria-hidden="true"></div>
-          <div class="hero-lead-number" aria-hidden="true">01</div>
-          <div><div class="skeleton skeleton-text short" style="height:1rem;width:120px;margin-bottom:0"></div></div>
-          <div class="skeleton skeleton-text wide" style="height:2.5rem;"></div>
-          <div class="skeleton skeleton-text wide"></div>
-          <div class="skeleton skeleton-text med"></div>
-          <div class="skeleton skeleton-text short" style="height:1rem;width:80px;margin-bottom:0"></div>
-        </div>
-        <div class="hero-side">
-          <div class="hero-side-card">
-            <div class="skeleton skeleton-text short" style="height:0.75rem;width:40px;margin-bottom:0"></div>
-            <div class="skeleton skeleton-text wide" style="height:1.1rem;"></div>
-            <div class="skeleton skeleton-text med" style="height:1.1rem;"></div>
-          </div>
-          <div class="hero-side-card">
-            <div class="skeleton skeleton-text short" style="height:0.75rem;width:40px;margin-bottom:0"></div>
-            <div class="skeleton skeleton-text wide" style="height:1.1rem;"></div>
-            <div class="skeleton skeleton-text med" style="height:1.1rem;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════════════════════ GEO / AI SUMMARY ══════════════════════════ -->
 <div class="page-wrap">
   <div class="geo-summary" style="margin-top:2.5rem;" role="complementary" aria-label="About ClawBeat">
@@ -739,51 +703,6 @@ img { display: block; max-width: 100%; }
     return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
   }
 
-  /* ── RENDER: HERO ── */
-  function renderHero(items) {
-    const heroRoot = document.getElementById('hero-root');
-    if (!items || items.length === 0) {
-      heroRoot.innerHTML = '<div class="empty-state">No signals loaded</div>';
-      return;
-    }
-    const lead = items[0];
-    const s2   = items[1] || null;
-    const s3   = items[2] || null;
-
-    const sideCards = [s2, s3].filter(Boolean).map((item, i) => `
-      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="hero-side-card" aria-label="Signal ${i + 2}: ${esc(item.title)}">
-        <div class="hero-side-num" aria-hidden="true">// signal_0${i + 2}</div>
-        <div class="hero-side-headline">${esc(item.title)}</div>
-        <div class="hero-side-meta"><span class="source">${esc(item.source || 'Source')}</span> · ${formatAnyDate(item.date)}</div>
-      </a>
-    `).join('');
-
-    heroRoot.innerHTML = `
-      <div class="hero-grid">
-        <a href="${esc(lead.url)}" target="_blank" rel="noopener noreferrer" class="hero-lead" aria-label="Top signal: ${esc(lead.title)}">
-          <div class="hero-lead-accent" aria-hidden="true"></div>
-          <div class="hero-lead-number" aria-hidden="true">01</div>
-          <div class="hero-lead-badges">
-            <span class="badge-signal" aria-hidden="true">// signal_01</span>
-            ${lead.source ? `<span class="badge-cat">${esc(lead.source)}</span>` : ''}
-          </div>
-          <div class="hero-lead-headline">${esc(lead.title)}</div>
-          ${lead.summary ? `<div class="hero-lead-summary">${esc(lead.summary)}</div>` : ''}
-          <div class="hero-lead-meta">
-            <span class="source">${esc(lead.source || 'Source')}</span>
-            <span aria-hidden="true">·</span>
-            <span>${formatAnyDate(lead.date)}</span>
-          </div>
-          <span class="hero-lead-cta">Read Signal <i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
-        </a>
-        <div class="hero-side">
-          ${sideCards}
-        </div>
-      </div>
-    `;
-    lucide.createIcons();
-  }
-
   /* ── RENDER: INTEL FEED ── */
   function renderFeed(items) {
     const feedRoot = document.getElementById('feed-root');
@@ -791,10 +710,10 @@ img { display: block; max-width: 100%; }
       feedRoot.innerHTML = '<div class="empty-state">No feed items</div>';
       return;
     }
-    const slice = items.slice(0, 9);
+    const slice = items.slice(0, 12);
     const cards = slice.map((item, i) => `
-      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + 4}: ${esc(item.title)}">
-        <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + 4).padStart(2, '0')}</div>
+      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + 1}: ${esc(item.title)}">
+        <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + 1).padStart(2, '0')}</div>
         <div class="feed-card-headline">${esc(item.title)}</div>
         ${item.summary ? `<div class="feed-card-summary">${esc(item.summary)}</div>` : ''}
         <div class="feed-card-foot">
@@ -972,7 +891,7 @@ img { display: block; max-width: 100%; }
   }
   document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
 
-  /* ── Spotlight scoring helpers (mirrors index.tsx scoreArticle + checkIfVerified) ── */
+  /* ── Feed scoring helpers ── */
   const _WL_NAMES = new Set(["404 media","across the rubicon","ai blog","ai master","ai revolution","ai side notes with sharon goldman","ai supremacy","alex finn","alex mcfarland","android authority","ars technica","artificial intelligence made simple","autonomous ai architect","axios","ben's bites","big technology","brian casel","brock mesarich","business insider","chris verzwyvelt","cnbc","cnet","computerworld","constellation research","corbin","creativebloq","cso","dark reading","duncan rogoff | ai automation","engadget","every","fast company","flipboard openclaw topic","flipboard: artificial intelligence","forbes","fortune","futurism","gizmodo","greg isenberg","human in the loop","ieee spectrum","implicator","interconnects","john hammond","latent spaces","learn agentic ai","lenny's newsletter","lex fridman","limitless podcast","macstories","marcus on ai","mark kashef","mashable","matthew berman","medium","mit technology review","nate b jones","nate's newsletter","nbc news","one useful thing","openclaw","pcmag","peter yang","platformer","rest of world","reuters","samin yasar","samuel gregory","semianalysis","sherwood news","silicon angle","simon willison's weblog","sources","stratechery","tbpn","tech talks","techcrunch","techradar","the ai corner","the ai daily brief: artificial intelligence news","the ai economy","the ai grid","the decoder","the deep view","the economist","the financial times","the guardian","the hacker news","the information","the neuro futurist with prof joel pearson","the new stack","the new york times","the register","the rundown","the verge","the wall street journal","this week in startups","tl;dr tech newsletter","tom's guide","tom's hardware","universe of ai","upstarts media","venturebeat","walter pasquarelli","wired","y combinator","zdnet"]);
   const _WL_URLS = ["404media.co","ai-supremacy.com/","alexmcfarland.substack.com/","androidauthority.com/","arstechnica.com","artificial-intelligence.blog/","artificialintelligencemadesimple.com/","axios.com","bdtechtalks.substack.com/","bensbites.com/","bigtechnology.com/","businessinsider.com/","cnbc.com","cnet.com","computerworld.com/","constellationr.com/insights","creativebloq.com/","csoonline.com/","darkreading.com","economist.com","engadget.com","every.to","fastcompany.com","flipboard.com/topic/artificialintelligence","flipboard.com/topic/openclaw","forbes.com","fortune.com","ft.com","futurism.com/","garymarcus.substack.com/","gizmodo.com/","humanintheloop.online/","implicator.ai","interconnects.ai/","kanishkpatel.substack.com/","latent.space/","lennysnewsletter.com/","macstories.com","mashable.com","natesnewsletter.substack.com/","nbcnews.com","nytimes.com","oneusefulthing.org/","openclaw.substack.com/","pcmag.com/","platformer.news/","restofworld.org/","reuters.com","semianalysis.com/","sharongoldman.substack.com/","sherwood.news/","siliconangle.com","simonwillison.net/","sources.news/","spectrum.ieee.org/","stratechery.com","sumantthakur.substack.com/","techcrunch.com","technologyreview.com","techradar.com","the-ai-corner.com/","the-decoder.com/","theaieconomy.news","thedeepview.com/","theguardian.com/","thehackernews.com/","theinformation.com","thenewstack.io/","theregister.com/","therundown.ai/","theverge.com","tldr.tech/","tomsguide.com/","tomshardware.com","upstartsmedia.com/","venturebeat.com","wired.com","wsj.com","youtube.com/@0x5am5","youtube.com/@_johnhammond","youtube.com/@aidailybrief","youtube.com/@airevolutionx","youtube.com/@alexfinnofficial","youtube.com/@briancasel","youtube.com/@brockmesarich","youtube.com/@corbin_brown","youtube.com/@crosstherubicon","youtube.com/@duncanrogoff","youtube.com/@gregisenberg","youtube.com/@iamaimaster","youtube.com/@lexfridman","youtube.com/@limitless-ft","youtube.com/@mark_kashef","youtube.com/@matthew_berman","youtube.com/@natebjones","youtube.com/@peteryangyt","youtube.com/@profjoelpearson","youtube.com/@rawcontentdaily","youtube.com/@saminyasar_","youtube.com/@startups","youtube.com/@tbpnlive","youtube.com/@theaigrid","youtube.com/@universeofaiz","youtube.com/@walterpasquarelli","youtube.com/@ycombinator","zdnet.com"];
   function _parseMDYVal(d) {
@@ -984,7 +903,7 @@ img { display: block; max-width: 100%; }
     const url = (item.url||'').toLowerCase();
     return _WL_URLS.some(d => url.includes(d));
   }
-  function _scoreSpotlight(item) {
+  function _scoreItem(item) {
     let s = (item.moreCoverage?.length||0)*3;
     if (item.source_type==='priority') s+=2;
     if (_checkVerified(item)) s += (item.url||'').toLowerCase().includes('medium.com') ? 1 : 3;
@@ -1002,40 +921,14 @@ img { display: block; max-width: 100%; }
     sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
-    sbFetch('spotlight_overrides?order=dispatch_date.desc,slot.asc&limit=40'),
-    sbFetch('spotlight_excluded?select=dispatch_date,url'),
-  ]).then(([news, events, repos, daily, familyStats, spotOvr, spotExcl]) => {
-    // Hero signals 1-3: same spotlight logic as /news.html for the current day
-    // Current day = most recent date value in news_items (mirrors sortedNewsDays[0] in index.tsx)
-    const newsAll = news || [];
-    let currentDay = null, bestVal = 0;
-    for (const item of newsAll) {
-      const v = _parseMDYVal(item.date);
-      if (v > bestVal) { bestVal = v; currentDay = item.date; }
-    }
-    let heroItems = [];
-    if (currentDay) {
-      const dayItems = newsAll.filter(item => item.date === currentDay);
-      // Overrides for current day
-      const dayOvr = {};
-      for (const ov of (spotOvr||[])) { if (ov.dispatch_date===currentDay) dayOvr[ov.slot]=ov; }
-      // Excluded URLs for current day
-      const dayExcl = new Set((spotExcl||[]).filter(e=>e.dispatch_date===currentDay).map(e=>e.url));
-      const ovrUrls = new Set(Object.values(dayOvr).map(o=>o.url));
-      // Algo queue: score-sorted, excluding overridden + excluded items
-      const queue = [...dayItems]
-        .filter(item=>!ovrUrls.has(item.url)&&!dayExcl.has(item.url))
-        .sort((a,b)=>_scoreSpotlight(b)-_scoreSpotlight(a));
-      let qi = 0;
-      heroItems = [1,2,3].map(slot => {
-        if (dayOvr[slot]) return {url:dayOvr[slot].url,title:dayOvr[slot].title,source:dayOvr[slot].source,date:currentDay,summary:dayOvr[slot].summary};
-        const item = queue[qi++];
-        return item ? {url:item.url,title:item.title,source:item.source,date:item.date,summary:item.summary} : null;
-      }).filter(Boolean);
-    }
-
-    renderHero(heroItems);
-    renderFeed(news);
+  ]).then(([news, events, repos, daily, familyStats]) => {
+    // River: most recent date first, then algo score DESC within same date
+    const sorted = [...(news||[])].sort((a, b) => {
+      const dA = _parseMDYVal(a.date), dB = _parseMDYVal(b.date);
+      if (dA !== dB) return dB - dA;
+      return _scoreItem(b) - _scoreItem(a);
+    });
+    renderFeed(sorted);
     renderDaily(daily);
     renderEvents(events);
     renderRepos(repos, familyStats);
