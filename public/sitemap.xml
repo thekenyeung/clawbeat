@@ -13,6 +13,27 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://clawbeat.co/research.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clawbeat.co/media.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://clawbeat.co/guide/openclaw-comparison.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://clawbeat.co/sitemap.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
     <loc>https://clawbeat.co/forge.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

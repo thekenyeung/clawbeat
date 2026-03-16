@@ -47,10 +47,14 @@ jobs:
           BASE = "https://clawbeat.co"
 
           STATIC = [
-            ("/",                         "daily",   "1.0"),
-            ("/events-calendar.html",     "weekly",  "0.8"),
-            ("/forge.html",               "weekly",  "0.8"),
-            ("/trace/index.html",         "monthly", "0.8"),
+            ("/",                              "daily",   "1.0"),
+            ("/events-calendar.html",          "weekly",  "0.8"),
+            ("/forge.html",                    "weekly",  "0.8"),
+            ("/research.html",                 "weekly",  "0.8"),
+            ("/media.html",                    "weekly",  "0.8"),
+            ("/guide/openclaw-comparison.html","weekly",  "0.7"),
+            ("/sitemap.html",                  "daily",   "0.5"),
+            ("/trace/index.html",              "monthly", "0.8"),
           ]
 
           trace_pages = sorted(glob.glob("public/trace/**/*.html", recursive=True))
