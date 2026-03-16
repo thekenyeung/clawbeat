@@ -39,10 +39,10 @@ jobs:
           EDITION_DATE:         ${{ inputs.edition_date }}
         run: python generate_daily_edition.py
 
-      - name: Regenerate sitemap
+      - name: Regenerate sitemaps
         run: |
           python - <<'EOF'
-          import glob, os
+          import glob, os, re
 
           BASE = "https://clawbeat.co"
 
@@ -53,41 +53,90 @@ jobs:
             ("/trace/index.html",         "monthly", "0.8"),
           ]
 
-          lines = [
+          trace_pages = sorted(glob.glob("public/trace/**/*.html", recursive=True))
+          daily_pages = sorted(glob.glob("public/daily/????-??-??/*.html"), reverse=True)
+
+          # ── sitemap.xml ──────────────────────────────────────────────
+          xml = [
             '<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
             '',
             '  <!-- ── Core pages ── -->',
           ]
           for path, freq, pri in STATIC:
-            lines.append(f'  <url><loc>{BASE}{path}</loc><changefreq>{freq}</changefreq><priority>{pri}</priority></url>')
+            xml.append(f'  <url><loc>{BASE}{path}</loc><changefreq>{freq}</changefreq><priority>{pri}</priority></url>')
 
-          lines += ['', '  <!-- ── Trace magazine ── -->']
-          trace_pages = sorted(glob.glob("public/trace/**/*.html", recursive=True))
+          xml += ['', '  <!-- ── Trace magazine ── -->']
           for p in trace_pages:
             url_path = "/" + p.replace("public/", "")
-            lines.append(f'  <url><loc>{BASE}{url_path}</loc><changefreq>never</changefreq><priority>0.6</priority></url>')
+            xml.append(f'  <url><loc>{BASE}{url_path}</loc><changefreq>never</changefreq><priority>0.6</priority></url>')
 
-          lines += ['', '  <!-- ── Daily Editions ── -->']
-          daily_pages = sorted(glob.glob("public/daily/????-??-??/*.html"))
+          xml += ['', '  <!-- ── Daily Editions ── -->']
           for p in daily_pages:
             url_path = "/" + p.replace("public/", "")
             date = os.path.basename(os.path.dirname(p))
-            lines.append(f'  <url><loc>{BASE}{url_path}</loc><lastmod>{date}</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>')
+            xml.append(f'  <url><loc>{BASE}{url_path}</loc><lastmod>{date}</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>')
 
-          lines += ['', '</urlset>']
-
+          xml += ['', '</urlset>']
           with open("public/sitemap.xml", "w") as f:
-            f.write("\n".join(lines) + "\n")
+            f.write("\n".join(xml) + "\n")
 
-          print(f"Sitemap updated: {len(daily_pages)} daily editions, {len(trace_pages)} trace pages.")
+          # ── sitemap.html — daily editions section only ────────────────
+          # Read the current sitemap.html and replace the daily-grid block
+          with open("public/sitemap.html", "r", encoding="utf-8") as f:
+            html = f.read()
+
+          def make_daily_title(slug):
+            """Best-effort title from filename slug."""
+            name = os.path.splitext(os.path.basename(slug))[0]
+            # Strip leading digits+dash (e.g. "11-a-step..." → "a-step...")
+            name = re.sub(r'^\d+-', '', name)
+            return name.replace('-', ' ').capitalize()
+
+          rows = []
+          for p in daily_pages:
+            url_path = "/" + p.replace("public/", "")
+            date = os.path.basename(os.path.dirname(p))
+            title = make_daily_title(p)
+            rows.append(
+              f'      <a class="daily-row" href="{url_path}">\n'
+              f'        <span class="daily-date">{date}</span>\n'
+              f'        <span class="daily-title">{title}</span>\n'
+              f'      </a>'
+            )
+
+          new_grid = (
+            f'      <span class="section-count">{len(daily_pages)} editions</span>\n'
+            '    </div>\n'
+            '    <p style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-bottom:1rem;">\n'
+            '      AI-curated daily intelligence on the OpenClaw ecosystem. Published weekdays at 5 pm PT.\n'
+            '    </p>\n'
+            '    <div class="daily-grid">\n'
+            + "\n".join(rows) + "\n"
+            '    </div>\n'
+            '  </section>'
+          )
+
+          # Replace everything from section-count to </section> in the daily block
+          html = re.sub(
+            r'<span class="section-count">\d+ editions</span>.*?</section>',
+            new_grid,
+            html,
+            count=1,
+            flags=re.DOTALL,
+          )
+
+          with open("public/sitemap.html", "w", encoding="utf-8") as f:
+            f.write(html)
+
+          print(f"Sitemaps updated: {len(daily_pages)} daily editions, {len(trace_pages)} trace pages.")
           EOF
 
       - name: Commit and push generated HTML
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name  "GitHub Actions"
-          git add public/daily/ public/sitemap.xml
+          git add public/daily/ public/sitemap.xml public/sitemap.html
           # Only commit if there are staged changes
           git diff --staged --quiet || git commit -m "Daily Edition: $(date -u +%Y-%m-%d)"
           git push
