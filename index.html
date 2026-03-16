@@ -981,13 +981,18 @@ img { display: block; max-width: 100%; }
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
   ]).then(([news, events, repos, daily, familyStats]) => {
     const recentDate = news[0]?.date || '';
-    return sbFetch(`spotlight_overrides?dispatch_date=eq.${recentDate}&order=slot.asc`)
+    return sbFetch('spotlight_overrides?order=dispatch_date.desc,slot.asc&limit=12')
       .then(spotlight => {
-        // Hero signals 1-3: only explicitly set spotlight_overrides slots — no algo fallback
+        // Hero signals 1-3: explicitly set spotlight_overrides only — no algo fallback.
+        // Use today's overrides if set, else fall back to the most recent date that has any.
+        const rows = spotlight || [];
+        const todayRows = rows.filter(ov => ov.dispatch_date === recentDate);
+        const activeRows = todayRows.length ? todayRows : rows.slice(0, 4);
+        const activeDate = activeRows[0]?.dispatch_date || recentDate;
         const heroItems = [1, 2, 3]
-          .map(slot => (spotlight || []).find(ov => ov.slot === slot))
+          .map(slot => activeRows.find(ov => ov.slot === slot))
           .filter(Boolean)
-          .map(ov => ({ url: ov.url, title: ov.title, source: ov.source, date: recentDate, summary: ov.summary }));
+          .map(ov => ({ url: ov.url, title: ov.title, source: ov.source, date: activeDate, summary: ov.summary }));
 
         renderHero(heroItems);
         renderFeed(news);
