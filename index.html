@@ -974,7 +974,7 @@ img { display: block; max-width: 100%; }
 
   /* ── INIT ── */
   Promise.all([
-    sbFetch('news_items?select=*&order=inserted_at.desc&limit=12'),
+    sbFetch('news_items?select=*&order=inserted_at.desc&limit=100'),
     sbFetch('events?select=*&limit=500'),
     sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
@@ -988,9 +988,10 @@ img { display: block; max-width: 100%; }
         const ovLookup = {};
         for (const ov of (spotlight || [])) ovLookup[ov.slot] = ov;
         const usedUrls = new Set(Object.values(ovLookup).map(ov => ov.url));
+        const scoreItem = n => (n.more_coverage?.length || 0) * 3 + (n.d1_tier === 1 ? 5 : n.d1_tier === 2 ? 3 : 0) + (n.source_type === 'priority' ? 2 : 0);
         const algoQueue = news
           .filter(n => n.date === recentDate && !usedUrls.has(n.url))
-          .sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+          .sort((a, b) => scoreItem(b) - scoreItem(a));
         let qi = 0;
         let heroItems = [1, 2, 3].map(slot => {
           if (ovLookup[slot]) return { url: ovLookup[slot].url, title: ovLookup[slot].title, source: ovLookup[slot].source, date: recentDate, summary: ovLookup[slot].summary };
