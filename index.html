@@ -972,53 +972,30 @@ img { display: block; max-width: 100%; }
   }
   document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
 
-  /* ── WHITELIST (mirrors src/whitelist.json — used for spotlight scoring) ─── */
-  const _WL = [["techcrunch","techcrunch.com"],["venturebeat","venturebeat.com"],["the verge","theverge.com"],["axios","axios.com"],["engadget","engadget.com"],["wired","wired.com"],["the new york times","nytimes.com"],["the wall street journal","wsj.com"],["the economist","economist.com"],["the financial times","ft.com"],["404 media","404media.co"],["silicon angle","siliconangle.com"],["nbc news","nbcnews.com"],["cnbc","cnbc.com"],["cnet","cnet.com"],["mashable","mashable.com"],["dark reading","darkreading.com"],["macstories","macstories.com"],["zdnet","zdnet.com"],["ars technica","arstechnica.com"],["fortune","fortune.com"],["the information","theinformation.com"],["mit technology review","technologyreview.com"],["tom's hardware","tomshardware.com"],["techradar","techradar.com"],["implicator","implicator.ai"],["reuters","reuters.com"],["tl;dr tech newsletter","tldr.tech/"],["fast company","fastcompany.com"],["forbes","forbes.com"],["nate's newsletter","natesnewsletter.substack.com/"],["autonomous ai architect","sumantthakur.substack.com/"],["ai supremacy","ai-supremacy.com/"],["learn agentic ai","kanishkpatel.substack.com/"],["openclaw","openclaw.substack.com/"],["upstarts media","upstartsmedia.com/"],["alex mcfarland","alexmcfarland.substack.com/"],["sources","sources.news/"],["interconnects","interconnects.ai/"],["big technology","bigtechnology.com/"],["tech talks","bdtechtalks.substack.com/"],["ai side notes with sharon goldman","sharongoldman.substack.com/"],["marcus on ai","garymarcus.substack.com/"],["one useful thing","oneusefulthing.org/"],["simon willison's weblog","simonwillison.net/"],["ai blog","artificial-intelligence.blog/"],["the rundown","therundown.ai/"],["platformer","platformer.news/"],["stratechery","stratechery.com"],["the ai economy","theaieconomy.news"],["flipboard: artificial intelligence","flipboard.com/topic/artificialintelligence"],["android authority","androidauthority.com/"],["the deep view","thedeepview.com/"],["the register","theregister.com/"],["the ai corner","the-ai-corner.com/"],["ben's bites","bensbites.com/"],["constellation research","constellationr.com/insights"],["human in the loop","humanintheloop.online/"],["artificial intelligence made simple","artificialintelligencemadesimple.com/"],["pcmag","pcmag.com/"],["computerworld","computerworld.com/"],["semianalysis","semianalysis.com/"],["sherwood news","sherwood.news/"],["mashable","mashable.com/"],["gizmodo","gizmodo.com/"],["business insider","businessinsider.com/"],["the new stack","thenewstack.io/"],["ieee spectrum","spectrum.ieee.org/"],["the decoder","the-decoder.com/"],["lenny's newsletter","lennysnewsletter.com/"],["the hacker news","thehackernews.com/"],["creativebloq","creativebloq.com/"],["tom's guide","tomsguide.com/"],["cso","csoonline.com/"],["medium",""],["the guardian","theguardian.com/"],["matthew berman","youtube.com/@matthew_berman"],["alex finn","youtube.com/@alexfinnofficial"],["corbin","youtube.com/@corbin_brown"],["y combinator","youtube.com/@ycombinator"],["samin yasar","youtube.com/@saminyasar_"],["lex fridman","youtube.com/@lexfridman"],["brock mesarich","youtube.com/@brockmesarich"],["nate b jones","youtube.com/@natebjones"],["peter yang","youtube.com/@peteryangyt"],["across the rubicon","youtube.com/@crosstherubicon"],["tbpn","youtube.com/@tbpnlive"],["the ai daily brief: artificial intelligence news","youtube.com/@aidailybrief"],["universe of ai","youtube.com/@universeofaiz"],["mark kashef","youtube.com/@mark_kashef"],["john hammond","youtube.com/@_johnhammond"],["the ai grid","youtube.com/@theaigrid"],["ai revolution","youtube.com/@airevolutionx"],["limitless podcast","youtube.com/@limitless-ft"],["chris verzwyvelt","youtube.com/@rawcontentdaily"],["the neuro futurist with prof joel pearson","youtube.com/@profjoelpearson"],["greg isenberg","youtube.com/@gregisenberg"],["samuel gregory","youtube.com/@0x5am5"],["walter pasquarelli","youtube.com/@walterpasquarelli"],["flipboard openclaw topic","flipboard.com/topic/openclaw"],["latent spaces","latent.space/"],["brian casel","youtube.com/@briancasel"],["duncan rogoff | ai automation","youtube.com/@duncanrogoff"],["ai master","youtube.com/@iamaimaster"],["rest of world","restofworld.org/"],["futurism","futurism.com/"],["this week in startups","youtube.com/@startups"],["every","every.to"]];
-  const _checkVerified = n => { const s = (n.source||'').toLowerCase().trim(), u = (n.url||'').toLowerCase(); return _WL.some(([name,dom]) => (name && name===s)||(dom && u.includes(dom))); };
-  const _scoreItem = n => { let s=(n.more_coverage?.length||0)*3; if(n.source_type==='priority')s+=2; if(_checkVerified(n))s+=(n.url||'').toLowerCase().includes('medium.com')?1:3; const isNews=!(n.url||'').toLowerCase().includes('github.com')&&!(n.url||'').toLowerCase().includes('youtube.com')&&!(n.url||'').toLowerCase().includes('youtu.be')&&!(n.title||'').toLowerCase().startsWith('show hn:'); if(isNews){if(n.d1_tier===1)s+=5;else if(n.d1_tier===2)s+=3;} return s; };
   /* ── INIT ── */
   Promise.all([
-    sbFetch('news_items?select=*&order=inserted_at.desc&limit=500'),
+    sbFetch('news_items?select=*&order=inserted_at.desc&limit=100'),
     sbFetch('events?select=*&limit=500'),
     sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
-  ]).then(([news, events, repos, daily, familyStats]) => {
-    const recentDate = news[0]?.date || '';
-    return Promise.all([
-      sbFetch(`spotlight_overrides?dispatch_date=eq.${recentDate}&order=slot.asc`),
-      sbFetch(`spotlight_excluded?dispatch_date=eq.${recentDate}&select=url`),
-    ]).then(([spotlight, excluded]) => {
-        // Hero signals 1-3: exact replica of index.tsx NewsList spotlight logic
-        const dayItems = news.filter(n => n.date === recentDate);
-        const overrideLookup = {};
-        for (const ov of (spotlight || [])) overrideLookup[ov.slot] = ov;
-        const overriddenUrls = new Set(Object.values(overrideLookup).map(ov => ov.url));
-        const excludedUrls = new Set((excluded || []).map(e => e.url));
-        const algoQueue = [...dayItems]
-          .filter(n => !overriddenUrls.has(n.url) && !excludedUrls.has(n.url))
-          .sort((a, b) => {
-            const aS = _scoreItem(a), bS = _scoreItem(b);
-            if (Math.abs(aS - bS) <= 3) { const aV = _checkVerified(a), bV = _checkVerified(b); if (aV !== bV) return aV ? -1 : 1; }
-            if (aS !== bS) return bS - aS;
-            const aD2 = a.d2_score ?? 0, bD2 = b.d2_score ?? 0;
-            if (aD2 !== bD2) return bD2 - aD2;
-            return new Date(b.inserted_at || 0).getTime() - new Date(a.inserted_at || 0).getTime();
-          });
-        let qi = 0;
-        const heroItems = [1, 2, 3].map(slot => {
-          if (overrideLookup[slot]) { const ov = overrideLookup[slot]; return { url: ov.url, title: ov.title, source: ov.source, date: recentDate, summary: ov.summary }; }
-          const item = algoQueue[qi++];
-          return item ? { url: item.url, title: item.title, source: item.source, date: item.date, summary: item.summary } : null;
-        }).filter(Boolean);
+    sbFetch('spotlight_overrides?order=dispatch_date.desc,slot.asc&limit=12'),
+  ]).then(([news, events, repos, daily, familyStats, spotlight]) => {
+    // Hero signals 1-3: slots 1-3 from the most recent dispatch in spotlight_overrides
+    const latestDate = (spotlight || [])[0]?.dispatch_date;
+    const heroItems = latestDate
+      ? [1, 2, 3]
+          .map(slot => (spotlight || []).find(ov => ov.dispatch_date === latestDate && ov.slot === slot))
+          .filter(Boolean)
+          .map(ov => ({ url: ov.url, title: ov.title, source: ov.source, date: ov.dispatch_date, summary: ov.summary }))
+      : [];
 
-        renderHero(heroItems);
-        renderFeed(news);
-        renderDaily(daily);
-        renderEvents(events);
-        renderRepos(repos, familyStats);
-        lucide.createIcons();
-      });
+    renderHero(heroItems);
+    renderFeed(news);
+    renderDaily(daily);
+    renderEvents(events);
+    renderRepos(repos, familyStats);
+    lucide.createIcons();
   }).catch(err => {
     console.error('ClawBeat load error:', err);
     lucide.createIcons();
