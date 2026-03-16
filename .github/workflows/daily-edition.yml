@@ -48,6 +48,7 @@ jobs:
 
           STATIC = [
             ("/",                              "daily",   "1.0"),
+            ("/news.html",                     "daily",   "0.9"),
             ("/events-calendar.html",          "weekly",  "0.8"),
             ("/forge.html",                    "weekly",  "0.8"),
             ("/research.html",                 "weekly",  "0.8"),
