@@ -740,8 +740,7 @@ img { display: block; max-width: 100%; }
   }
 
   /* ── RENDER: HERO ── */
-  // leadUrl: where "Read Signal" on card 1 links to (daily edition page, not raw article)
-  function renderHero(items, leadUrl) {
+  function renderHero(items) {
     const heroRoot = document.getElementById('hero-root');
     if (!items || items.length === 0) {
       heroRoot.innerHTML = '<div class="empty-state">No signals loaded</div>';
@@ -974,35 +973,38 @@ img { display: block; max-width: 100%; }
   document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
 
   /* ── INIT ── */
+  const _now = new Date();
+  const _todayMDY = `${String(_now.getMonth()+1).padStart(2,'0')}-${String(_now.getDate()).padStart(2,'0')}-${_now.getFullYear()}`;
+
   Promise.all([
     sbFetch('news_items?select=*&order=inserted_at.desc&limit=12'),
     sbFetch('events?select=*&limit=500'),
     sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
-    sbFetch('ecosystem_family_stats?select=*&order=total_count.desc')
-  ]).then(([news, events, repos, daily, familyStats]) => {
-    // Hero signals 1-3: pull from daily edition slots 1-3 (curated), fallback to news_items
-    let heroItems = news.slice(0, 3).map(n => ({ url: n.url, title: n.title, source: n.source, date: n.date, summary: n.summary }));
-    let heroLeadUrl = heroItems[0] ? heroItems[0].url : '#';
-
-    if (daily && daily.length > 0 && Array.isArray(daily[0].stories) && daily[0].stories.length > 0) {
-      const ed = daily[0];
-      const sorted = ed.stories.slice().sort((a, b) => (a.slot || 99) - (b.slot || 99));
-      const top3 = [1, 2, 3].map(slot => sorted.find(s => s.slot === slot)).filter(Boolean);
-      if (top3.length > 0) {
-        heroItems = top3.map(s => ({
-          url: s.url || '#',
-          title: s.headline || '',
-          source: s.pub_name || '',
-          date: s.pub_date || '',
-          summary: s.summary_html ? s.summary_html.replace(/<[^>]+>/g, '').trim().slice(0, 300) : '',
-        }));
-        // Signal 1 "Read Signal" links to the daily edition page, not the raw article
-        heroLeadUrl = ed.permalink || `/daily/${ed.edition_date}/`;
-      }
+    sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
+    sbFetch(`spotlight_overrides?dispatch_date=eq.${_todayMDY}&slot=lte.3&order=slot.asc`)
+  ]).then(([news, events, repos, daily, familyStats, spotlight]) => {
+    // Hero signals 1-3: today's spotlight (override → algo by total_score → recent fallback)
+    const ovLookup = {};
+    for (const ov of (spotlight || [])) ovLookup[ov.slot] = ov;
+    const usedUrls = new Set(Object.values(ovLookup).map(ov => ov.url));
+    const algoQueue = news
+      .filter(n => n.date === _todayMDY && !usedUrls.has(n.url))
+      .sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+    let qi = 0;
+    let heroItems = [1, 2, 3].map(slot => {
+      if (ovLookup[slot]) return { url: ovLookup[slot].url, title: ovLookup[slot].title, source: ovLookup[slot].source, date: _todayMDY, summary: ovLookup[slot].summary };
+      const item = algoQueue[qi++];
+      return item ? { url: item.url, title: item.title, source: item.source, date: item.date, summary: item.summary } : null;
+    }).filter(Boolean);
+    // If today has fewer than 3 items, fill from most recent news
+    if (heroItems.length < 3) {
+      const heroUrls = new Set(heroItems.map(i => i.url));
+      const fallback = news.filter(n => !heroUrls.has(n.url)).slice(0, 3 - heroItems.length);
+      heroItems = [...heroItems, ...fallback.map(n => ({ url: n.url, title: n.title, source: n.source, date: n.date, summary: n.summary }))];
     }
 
-    renderHero(heroItems, heroLeadUrl);
+    renderHero(heroItems);
     renderFeed(news);
     renderDaily(daily);
     renderEvents(events);
