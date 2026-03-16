@@ -474,6 +474,28 @@ img { display: block; max-width: 100%; }
 <!-- ══════════════════════════ MAIN CONTENT ══════════════════════════ -->
 <main id="main-content">
 
+<!-- ══════════════════════════ HERO (LEAD SIGNAL) ══════════════════════════ -->
+<section class="hero" aria-label="Top intelligence signal">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-live-dot" aria-hidden="true"></div>
+      <span class="hero-live-label"><strong>Live</strong> — OpenClaw Intelligence Feed</span>
+    </div>
+    <div id="hero-root" aria-live="polite" aria-atomic="false" aria-label="Top signal loading">
+      <!-- skeleton -->
+      <div class="hero-lead" role="status" aria-label="Loading top signal" style="border:1px solid var(--border-2);border-radius:0.75rem;">
+        <div class="hero-lead-accent" aria-hidden="true"></div>
+        <div class="hero-lead-number" aria-hidden="true">01</div>
+        <div><div class="skeleton skeleton-text short" style="height:1rem;width:120px;margin-bottom:0"></div></div>
+        <div class="skeleton skeleton-text wide" style="height:2.5rem;"></div>
+        <div class="skeleton skeleton-text wide"></div>
+        <div class="skeleton skeleton-text med"></div>
+        <div class="skeleton skeleton-text short" style="height:1rem;width:80px;margin-bottom:0"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════════════════ GEO / AI SUMMARY ══════════════════════════ -->
 <div class="page-wrap">
   <div class="geo-summary" style="margin-top:2.5rem;" role="complementary" aria-label="About ClawBeat">
@@ -703,8 +725,35 @@ img { display: block; max-width: 100%; }
     return d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  /* ── RENDER: LEAD SIGNAL ── */
+  function renderLead(item) {
+    const heroRoot = document.getElementById('hero-root');
+    if (!item) { heroRoot.innerHTML = ''; return; }
+    heroRoot.innerHTML = `
+      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer"
+         class="hero-lead" style="border:1px solid var(--border-2);border-radius:0.75rem;"
+         aria-label="Top signal: ${esc(item.title)}">
+        <div class="hero-lead-accent" aria-hidden="true"></div>
+        <div class="hero-lead-number" aria-hidden="true">01</div>
+        <div class="hero-lead-badges">
+          <span class="badge-signal" aria-hidden="true">// signal_01</span>
+          ${item.source ? `<span class="badge-cat">${esc(item.source)}</span>` : ''}
+        </div>
+        <div class="hero-lead-headline">${esc(item.title)}</div>
+        ${item.summary ? `<div class="hero-lead-summary">${esc(item.summary)}</div>` : ''}
+        <div class="hero-lead-meta">
+          <span class="source">${esc(item.source || 'Source')}</span>
+          <span aria-hidden="true">·</span>
+          <span>${formatAnyDate(item.date)}</span>
+        </div>
+        <span class="hero-lead-cta">Read Signal <i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
+      </a>
+    `;
+    lucide.createIcons();
+  }
+
   /* ── RENDER: INTEL FEED ── */
-  function renderFeed(items) {
+  function renderFeed(items, startRank = 1) {
     const feedRoot = document.getElementById('feed-root');
     if (!items || items.length === 0) {
       feedRoot.innerHTML = '<div class="empty-state">No feed items</div>';
@@ -712,8 +761,8 @@ img { display: block; max-width: 100%; }
     }
     const slice = items.slice(0, 12);
     const cards = slice.map((item, i) => `
-      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + 1}: ${esc(item.title)}">
-        <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + 1).padStart(2, '0')}</div>
+      <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="feed-card" aria-label="Signal ${i + startRank}: ${esc(item.title)}">
+        <div class="feed-card-rank" aria-hidden="true">// signal_${String(i + startRank).padStart(2, '0')}</div>
         <div class="feed-card-headline">${esc(item.title)}</div>
         ${item.summary ? `<div class="feed-card-summary">${esc(item.summary)}</div>` : ''}
         <div class="feed-card-foot">
@@ -928,7 +977,8 @@ img { display: block; max-width: 100%; }
       if (dA !== dB) return dB - dA;
       return _scoreItem(b) - _scoreItem(a);
     });
-    renderFeed(sorted);
+    renderLead(sorted[0]);
+    renderFeed(sorted.slice(1), 2);
     renderDaily(daily);
     renderEvents(events);
     renderRepos(repos, familyStats);
