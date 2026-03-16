@@ -1561,31 +1561,10 @@ def _save_to_supabase(db: dict) -> None:
             # (articles too old to reappear in live feeds).
             _supabase.table('news_items').delete().eq('needs_reprocess', True).execute()
 
-        # Prune stale items from the CURRENT dispatch only.
-        # Past dispatches are sealed once a new dispatch has begun — their articles
-        # can never be removed, even if a partial load caused them to drop from the
-        # in-memory list mid-run.
-        if len(news_records) >= 5:
-            try:
-                keep_urls = {r['url'] for r in news_records}
-                # Identify the current dispatch date (most recent date in the batch)
-                current_dispatch_date = max(
-                    (r['date'] for r in news_records if r.get('date')),
-                    key=lambda d: try_parse_date(d),
-                    default=None,
-                )
-                all_rows_resp = _supabase.table('news_items').select('url,date').execute()
-                stale = [
-                    r['url'] for r in (all_rows_resp.data or [])
-                    if r['url'] not in keep_urls
-                    and r.get('date') == current_dispatch_date  # only prune current dispatch
-                ]
-                for i in range(0, len(stale), 50):
-                    _supabase.table('news_items').delete().in_('url', stale[i:i+50]).execute()
-                if stale:
-                    print(f"🗑️  Pruned {len(stale)} stale items from current dispatch ({current_dispatch_date}).")
-            except Exception as prune_err:
-                print(f"⚠️  Pruning failed (non-fatal): {prune_err}")
+        # Same-day pruning removed: deleting today's articles each hourly run was
+        # causing legitimately discovered articles to be wiped once they fell out
+        # of the RSS [:25] window. Cleanup is handled by the needs_reprocess flag
+        # (admin deletions) and the 48h ingest window (natural staleness).
     except Exception as e:
         print(f"❌ news_items save failed: {e}")
 
