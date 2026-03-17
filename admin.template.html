@@ -332,11 +332,13 @@
 
       const load = useCallback(async () => {
         setLoading(true);
+        const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
         const { data, error } = await supabase
           .from('news_items')
           .select('url,title,source,date,is_minor,density,inserted_at')
+          .gte('inserted_at', cutoff)
           .order('inserted_at', { ascending: false })
-          .limit(150);
+          .limit(2000);
         if (!error) setItems(data || []);
         setLoading(false);
       }, []);
