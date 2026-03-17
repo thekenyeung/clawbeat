@@ -559,7 +559,7 @@
 <!-- ── PINNED REPO (always visible) ── -->
 <section class="pinned-section" aria-label="Pinned repository" id="pinned-section">
   <div class="pinned-inner">
-    <div class="pinned-lbl" aria-hidden="true">Pinned · openclaw/openclaw</div>
+    <div class="pinned-lbl" id="pinned-lbl" aria-hidden="true">Pinned · openclaw/openclaw</div>
     <div class="pinned-card" id="pinned-card">
       <div class="pinned-left" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Loading…</div>
     </div>
@@ -736,7 +736,7 @@
       <span style="font-family:var(--mono);font-size:0.55rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.3);border-radius:3px;padding:0.2rem 0.5rem;flex-shrink:0;margin-top:0.1rem">NEW · GTC 2026</span>
       <div>
         <div style="font-family:var(--sans);font-size:0.8rem;font-weight:700;color:var(--text);line-height:1.4">NVIDIA announced NemoClaw on March 16, 2026 at GTC 2026.</div>
-        <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.25rem;line-height:1.5">Enterprise-grade OpenClaw stack · OpenShell sandbox · Nemotron models · Apache 2.0 · <a href="/nemoclaw.html" style="color:var(--orange);text-decoration:none">Full NemoClaw guide →</a></div>
+        <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.25rem;line-height:1.5">Enterprise-grade OpenClaw stack · OpenShell sandbox · Nemotron models · Apache 2.0 · <a href="/guide/nemoclaw.html" style="color:var(--orange);text-decoration:none">Full NemoClaw guide →</a></div>
       </div>
     </div>
 
@@ -1833,6 +1833,22 @@
     /* Lazy-init charts when analytics becomes visible */
     if (tab === 'analytics' && !chartsInited) {
       requestAnimationFrame(() => initCharts());
+    }
+
+    /* Swap pinned card: NVIDIA/NemoClaw on nemoclaw tab, openclaw/openclaw elsewhere */
+    const pinnedLblEl = document.getElementById('pinned-lbl');
+    if (tab === 'nemoclaw') {
+      const ncRepo = allNcRepos.find(r => r.owner === 'NVIDIA' && r.name === 'NemoClaw')
+                  || SAMPLE_NEMOCLAW.find(r => r.name === 'NemoClaw');
+      if (ncRepo) {
+        pinnedRepo = ncRepo;
+        if (pinnedLblEl) pinnedLblEl.textContent = 'Pinned · NVIDIA/NemoClaw';
+        renderPinnedCard();
+      }
+    } else {
+      pinnedRepo = findPinned();
+      if (pinnedLblEl) pinnedLblEl.textContent = 'Pinned · openclaw/openclaw';
+      renderPinnedCard();
     }
   }
 
