@@ -141,6 +141,8 @@
   .footer-brand span { color: var(--orange); }
   .clawhub-badge { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
   .clawhub-badge:hover { color: var(--orange); }
+  .sitemap-link { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .sitemap-link:hover { color: var(--orange); }
 
   @media (max-width: 640px) {
     .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
@@ -255,6 +257,11 @@
         <span class="link-title">NemoClaw: Inside NVIDIA's Agent Runtime — GTC 2026 Deep Dive</span>
         <span class="link-meta">Guide</span>
         <span class="link-tag tag-core">guide</span>
+      </a>
+      <a class="link-row" href="/rss.html">
+        <span class="link-title">RSS Feeds — Subscribe to Intel, Daily Editions &amp; Trace</span>
+        <span class="link-meta">clawbeat.co/rss</span>
+        <span class="link-tag tag-core">rss</span>
       </a>
       <a class="link-row" href="/guide/openclaw-comparison.html">
         <span class="link-title">OpenClaw Comparison: NanoClaw vs PicoClaw vs Nanobot (2026)</span>
@@ -502,7 +509,7 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-inner">
     <div class="footer-brand">ClawBeat<span>.co</span></div>
-    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+    <div style="display:flex;align-items:center;gap:1.25rem;"><a class="sitemap-link" href="/sitemap.html">sitemap</a><a class="sitemap-link" href="/rss.html">rss</a><a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a></div>
   </div>
 </footer>
 
