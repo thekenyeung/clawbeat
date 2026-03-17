@@ -780,7 +780,7 @@ def fetch_youtube_videos_ytdlp(channel_url):
         print(f"⚠️ Error scanning {channel_url}: {e}")
         return []
 
-def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot", limit=30):
+def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot OR NemoClaw OR NanoClaw OR PicoClaw", limit=30):
     search_target = f"ytsearch{limit}:{query}"
     ydl_opts = {'quiet': True, 'extract_flat': 'in_playlist', 'skip_download': True}
     videos = []
