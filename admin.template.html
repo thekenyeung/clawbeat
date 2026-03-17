@@ -462,7 +462,7 @@
 
       const setF      = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }));
 
-      // ── Group filtered articles by inserted_at date ──────────────────────────
+      // ── Group filtered articles by publication date ───────────────────────────
       const filtered = useMemo(() =>
         items.filter(it =>
           it.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -473,7 +473,12 @@
       const grouped = useMemo(() => {
         const groups = {};
         filtered.forEach(it => {
-          const day = it.inserted_at ? it.inserted_at.slice(0, 10) : 'unknown';
+          // date field is MM-DD-YYYY; convert to YYYY-MM-DD for grouping/sorting
+          let day = 'unknown';
+          if (it.date) {
+            const p = it.date.split('-');
+            if (p.length === 3) day = `${p[2]}-${p[0]}-${p[1]}`;
+          }
           if (!groups[day]) groups[day] = [];
           groups[day].push(it);
         });
