@@ -1493,7 +1493,7 @@ def _load_from_supabase() -> dict:
                 'summary':       row.get('summary', ''),
                 'density':       row.get('density', 0),
                 'is_minor':      row.get('is_minor', False),
-                'moreCoverage':  [] if row.get('cluster_locked') else (row.get('more_coverage', []) or []),
+                'moreCoverage':  row.get('more_coverage', []) or [],
                 'tags':          row.get('tags', []) or [],
                 'date_is_manual': row.get('date_is_manual', False),
                 'source_type':   row.get('source_type', 'standard'),
@@ -1854,10 +1854,13 @@ if __name__ == "__main__":
     db['items'] = cluster_articles_temporal(newly_discovered, db.get('items', []))
 
     # Cleanup: remove any URL from moreCoverage that is also a top-level headline.
+    # Skipped for cluster_locked items — admin-curated coverage is preserved as-is.
     # Runs unconditionally every forge run so duplicates don't persist across runs
     # where cluster_articles_temporal exits early (no new articles).
     headline_urls = {item['url'] for item in db['items']}
     for item in db['items']:
+        if item.get('cluster_locked'):
+            continue  # Admin-locked: never strip manually-curated moreCoverage
         if item.get('moreCoverage'):
             item['moreCoverage'] = [
                 mc for mc in item['moreCoverage']

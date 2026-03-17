@@ -330,6 +330,15 @@ CREATE POLICY "Service role full access" ON channel_vetted
 ALTER TABLE news_items ADD COLUMN IF NOT EXISTS needs_reprocess BOOLEAN DEFAULT false;
 
 -- =============================================================
+-- cluster_locked flag on news_items
+-- When true: forge.py will never overwrite more_coverage for this article,
+-- and the duplicate-cleanup pass will not strip manually-curated coverage links.
+-- Cross-batch clustering also skips absorbing new articles into a locked headline.
+-- Set this via the admin Dispatch Editor lock checkbox.
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS cluster_locked BOOLEAN DEFAULT false;
+
+-- =============================================================
 -- spotlight_excluded table — tracks articles manually displaced from spotlight
 -- When the admin replaces article X in a spotlight slot, X is excluded from
 -- all algo-filled spotlight slots for that date (but stays in the news feed).
