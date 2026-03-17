@@ -568,6 +568,7 @@ const App: React.FC = () => {
           <div className="footer-brand">ClawBeat<span>.co</span></div>
           <div style={{display:'flex',alignItems:'center',gap:'1.25rem'}}>
             <a className="sitemap-link" href="/sitemap.html">sitemap</a>
+            <a className="sitemap-link" href="/rss.html">rss</a>
             <a className="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
           </div>
         </div>
