@@ -222,12 +222,17 @@
       return <div className={`toast toast-${type}`}>{msg}</div>;
     }
 
-    // Format YYYY-MM-DD → "FEB 26 2026"
+    // Format YYYY-MM-DD → "TODAY — MAR 17 2026" / "YESTERDAY — ..." / "MAR 15 2026"
     function formatDispatchDate(isoDate) {
       if (!isoDate || isoDate === 'unknown') return 'UNKNOWN DATE';
+      const todayStr     = new Date().toISOString().slice(0, 10);
+      const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
       const [yyyy, mm, dd] = isoDate.split('-');
       const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-      return `${months[parseInt(mm, 10) - 1]} ${dd} ${yyyy}`;
+      const label = `${months[parseInt(mm, 10) - 1]} ${dd} ${yyyy}`;
+      if (isoDate === todayStr)     return `TODAY \u2014 ${label}`;
+      if (isoDate === yesterdayStr) return `YESTERDAY \u2014 ${label}`;
+      return label;
     }
 
     // Format microlink ISO date → MM-DD-YYYY for news_items.date field
@@ -458,10 +463,12 @@
       const setF      = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }));
 
       // ── Group filtered articles by inserted_at date ──────────────────────────
-      const filtered = items.filter(it =>
-        it.title?.toLowerCase().includes(search.toLowerCase()) ||
-        it.source?.toLowerCase().includes(search.toLowerCase())
-      );
+      const filtered = useMemo(() =>
+        items.filter(it =>
+          it.title?.toLowerCase().includes(search.toLowerCase()) ||
+          it.source?.toLowerCase().includes(search.toLowerCase())
+        )
+      , [items, search]);
 
       const grouped = useMemo(() => {
         const groups = {};
@@ -470,7 +477,11 @@
           if (!groups[day]) groups[day] = [];
           groups[day].push(it);
         });
-        return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a));
+        return Object.entries(groups).sort(([a], [b]) => {
+          if (a === 'unknown') return 1;
+          if (b === 'unknown') return -1;
+          return b.localeCompare(a);
+        });
       }, [filtered]);
 
       return (
