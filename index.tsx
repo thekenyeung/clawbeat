@@ -26,7 +26,7 @@ import {
   MapPin,
   Globe,
   Layers,
-  FileText
+  BookMarked
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -450,9 +450,9 @@ const App: React.FC = () => {
                   <Layers size={14} />
                   <div><div className="nav-dropdown-label">Trace</div><div className="nav-dropdown-sub">Monthly magazine</div></div>
                 </a>
-                <a href="/guide/openclaw-comparison.html" className="nav-dropdown-item">
-                  <FileText size={14} />
-                  <div><div className="nav-dropdown-label">Guide</div><div className="nav-dropdown-sub">OpenClaw comparison</div></div>
+                <a href="/guide/" className="nav-dropdown-item">
+                  <BookMarked size={14} />
+                  <div><div className="nav-dropdown-label">Guides</div><div className="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
                 </a>
               </div>
             </div>
@@ -472,7 +472,7 @@ const App: React.FC = () => {
             <Newspaper size={16} />Intel Feed
           </button>
           <a href="/trace/" className="mobile-subnav-item"><Layers size={14} />Trace Magazine</a>
-          <a href="/guide/openclaw-comparison.html" className="mobile-subnav-item"><FileText size={14} />OpenClaw Guide</a>
+          <a href="/guide/" className="mobile-subnav-item"><BookMarked size={14} />Guides</a>
           <a href="/research.html" className="mobile-nav-item"><BookOpen size={16} />Research</a>
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
