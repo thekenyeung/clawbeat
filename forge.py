@@ -1493,7 +1493,7 @@ def _load_from_supabase() -> dict:
                 'summary':       row.get('summary', ''),
                 'density':       row.get('density', 0),
                 'is_minor':      row.get('is_minor', False),
-                'moreCoverage':  row.get('more_coverage', []) or [],
+                'moreCoverage':  [] if row.get('cluster_locked') else (row.get('more_coverage', []) or []),
                 'tags':          row.get('tags', []) or [],
                 'date_is_manual': row.get('date_is_manual', False),
                 'source_type':   row.get('source_type', 'standard'),
