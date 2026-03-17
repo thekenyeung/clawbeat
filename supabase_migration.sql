@@ -349,6 +349,28 @@ CREATE POLICY "Admin writes" ON spotlight_excluded
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- blocked_urls table — permanently excludes articles from algo re-discovery
+-- When an admin deletes an article from the feed, its URL is written here.
+-- forge.py loads this list at startup and adds all URLs to existing_urls,
+-- preventing them from ever being re-inserted by the scraper/algo.
+-- A URL can only be removed from this list manually (Supabase dashboard or future UI).
+-- =============================================================
+CREATE TABLE IF NOT EXISTS blocked_urls (
+  url         TEXT PRIMARY KEY,
+  blocked_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE blocked_urls ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public reads" ON blocked_urls
+  FOR SELECT TO anon, authenticated USING (true);
+
+CREATE POLICY "Admin writes" ON blocked_urls
+  FOR ALL TO authenticated
+  USING     (auth.email() = 'ADMIN_EMAIL_HERE')
+  WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON

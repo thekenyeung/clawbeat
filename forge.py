@@ -1480,6 +1480,7 @@ def _load_from_supabase() -> dict:
         news_resp     = _supabase.table('news_items').select('*').order('inserted_at', desc=True).limit(1500).execute()
         videos_resp   = _supabase.table('videos').select('*').limit(300).execute()
         research_resp = _supabase.table('research_papers').select('*').limit(100).execute()
+        blocked_resp  = _supabase.table('blocked_urls').select('url').execute()
 
         # Map DB snake_case → forge.py camelCase internals; add vec=None (not stored)
         items = []
@@ -1507,6 +1508,7 @@ def _load_from_supabase() -> dict:
                 'hn_comments':   row.get('hn_comments'),
                 'd5_score':      row.get('d5_score'),
                 'needs_reprocess': row.get('needs_reprocess', False),
+                'cluster_locked': row.get('cluster_locked', False),
                 'vec':           None,
             })
 
@@ -1531,8 +1533,9 @@ def _load_from_supabase() -> dict:
                 'summary': row.get('summary', ''),
             })
 
-        print(f"📦 Loaded from Supabase: {len(items)} items, {len(videos)} videos, {len(research)} papers.")
-        return {"items": items, "videos": videos, "githubProjects": [], "research": research}
+        blocked_urls = {row['url'] for row in (blocked_resp.data or [])}
+        print(f"📦 Loaded from Supabase: {len(items)} items, {len(videos)} videos, {len(research)} papers, {len(blocked_urls)} blocked URLs.")
+        return {"items": items, "videos": videos, "githubProjects": [], "research": research, "blocked_urls": blocked_urls}
     except Exception as e:
         print(f"⚠️  Supabase load failed: {e}")
         return empty
@@ -1578,6 +1581,7 @@ def _save_to_supabase(db: dict) -> None:
             'hn_points':     item.get('hn_points'),
             'hn_comments':   item.get('hn_comments'),
             'd5_score':      item.get('d5_score'),
+            'cluster_locked': item.get('cluster_locked', False),
             # needs_reprocess is omitted here; it is written only after the column
             # migration has been applied (ALTER TABLE news_items ADD COLUMN IF NOT EXISTS
             # needs_reprocess BOOLEAN DEFAULT false). Until then, leaving it out keeps
@@ -1697,7 +1701,7 @@ def cluster_articles_temporal(new_articles, existing_items):
             matched = False
             for cluster in daily_clusters:
                 sim = cosine_similarity(np.array(art['vec']), np.array(cluster[0]['vec']))
-                if sim > 0.82:
+                if sim > 0.88:
                     cluster.append(art); matched = True; break
             if not matched: daily_clusters.append([art])
         for cluster in daily_clusters:
@@ -1752,8 +1756,10 @@ def cluster_articles_temporal(new_articles, existing_items):
             and abs(try_parse_date(item.get('date', '')) - anchor_dt) <= window
         ]
         for existing in candidates:
+            if existing.get('cluster_locked'):
+                continue  # Admin-locked: never absorb new articles into this headline
             sim = cosine_similarity(np.array(new_anchor['vec']), np.array(existing['vec']))
-            if sim > 0.82:
+            if sim > 0.88:
                 # Merge new anchor (and its moreCoverage articles) into the existing headline.
                 existing_mc_urls = {mc['url'] for mc in existing.get('moreCoverage', [])}
                 existing_mc_urls.add(existing['url'])
@@ -1810,6 +1816,8 @@ if __name__ == "__main__":
     for item in db.get('items', []):
         for mc in item.get('moreCoverage', []):
             existing_urls.add(mc['url'])
+    # Permanently blocked URLs (admin-deleted) — never re-add via algo
+    existing_urls.update(db.get('blocked_urls', set()))
     for art in raw_news:
         if art['url'] in existing_urls: continue
         # Generate AI briefs for whitelist Publisher articles (authority=3) up to batch limit.

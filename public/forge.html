@@ -546,7 +546,11 @@
     </button>
     <button class="page-tab" id="tab-btn-repos" onclick="switchTab('repos')"
             role="tab" aria-selected="false" aria-controls="panel-repos">
-      <i data-lucide="github" aria-hidden="true"></i> Repos
+      <i data-lucide="github" aria-hidden="true"></i> OpenClaw Repos
+    </button>
+    <button class="page-tab" id="tab-btn-nemoclaw" onclick="switchTab('nemoclaw')"
+            role="tab" aria-selected="false" aria-controls="panel-nemoclaw">
+      <i data-lucide="shield" aria-hidden="true"></i> NemoClaw Repos
     </button>
   </div>
 </div>
@@ -724,6 +728,54 @@
 
   </div><!-- #panel-repos -->
 
+  <!-- ── NEMOCLAW REPOS TAB PANEL ── -->
+  <div id="panel-nemoclaw" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-nemoclaw" hidden>
+
+    <!-- NemoClaw announcement banner -->
+    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:0.9rem 1.1rem;margin:1.5rem 0 0.75rem;display:flex;align-items:flex-start;gap:0.75rem;">
+      <span style="font-family:var(--mono);font-size:0.55rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.3);border-radius:3px;padding:0.2rem 0.5rem;flex-shrink:0;margin-top:0.1rem">NEW · GTC 2026</span>
+      <div>
+        <div style="font-family:var(--sans);font-size:0.8rem;font-weight:700;color:var(--text);line-height:1.4">NVIDIA announced NemoClaw on March 16, 2026 at GTC 2026.</div>
+        <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.25rem;line-height:1.5">Enterprise-grade OpenClaw stack · OpenShell sandbox · Nemotron models · Apache 2.0 · <a href="/nemoclaw.html" style="color:var(--orange);text-decoration:none">Full NemoClaw guide →</a></div>
+      </div>
+    </div>
+
+    <!-- NemoClaw repo index table -->
+    <div class="section-divider" aria-hidden="true">
+      <div class="sdl"><span class="sdl-slash">//</span> <span class="sdl-tag">nemoclaw_repo_index</span></div>
+      <div class="sdl-line"></div>
+      <div class="sdl-count" id="nc-index-count">— repos</div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll" role="region" aria-label="NemoClaw repository index" tabindex="0">
+        <table class="rtable" id="nc-repo-table" aria-describedby="nc-index-count">
+          <caption class="sr-only">NemoClaw GitHub repositories. Click column headers to sort.</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="col-rank"><span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">#</span></th>
+              <th scope="col" class="col-repo"><span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Repository</span></th>
+              <th scope="col" class="col-stars"><button class="sort-th-btn" onclick="sortNcTable('stars')" aria-label="Sort by stars">Stars <span class="sort-arrow" aria-hidden="true" id="nc-arr-stars"></span></button></th>
+              <th scope="col" class="col-lang"><button class="sort-th-btn" onclick="sortNcTable('language')" aria-label="Sort by language">Language <span class="sort-arrow" aria-hidden="true" id="nc-arr-language"></span></button></th>
+              <th scope="col" class="col-topics"><span class="sort-th-btn" style="padding:0.65rem 1rem;display:block">Topics</span></th>
+              <th scope="col" class="col-date"><button class="sort-th-btn active" onclick="sortNcTable('created')" aria-label="Sort by created date">Created <span class="sort-arrow" aria-hidden="true" id="nc-arr-created">↓</span></button></th>
+              <th scope="col" class="col-link"><span class="sr-only">Link</span></th>
+            </tr>
+          </thead>
+          <tbody id="nc-repo-tbody">
+            <tr><td colspan="7" class="empty-state">// loading index…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <nav class="pagination" aria-label="NemoClaw repository table pages" id="nc-pagination-ctrl">
+        <button class="page-btn" id="nc-btn-prev" onclick="changeNcPage(-1)" aria-label="Previous page" disabled>← Prev</button>
+        <span class="page-info" id="nc-page-info" aria-live="polite">—</span>
+        <button class="page-btn" id="nc-btn-next" onclick="changeNcPage(1)" aria-label="Next page" disabled>Next →</button>
+      </nav>
+    </div>
+
+  </div><!-- #panel-nemoclaw -->
+
 </main>
 
 <!-- ── FOOTER ── -->
@@ -768,14 +820,28 @@
   ];
 
   /* ─────────────────────────────────────────
+   *  NEMOCLAW SAMPLE FALLBACK
+   * ───────────────────────────────────────── */
+  const SAMPLE_NEMOCLAW = [
+    { id:1, owner:'NVIDIA',  name:'NemoClaw',              description:'NVIDIA NemoClaw stack: secure OpenClaw runtime with OpenShell sandbox and Nemotron models. Enterprise privacy + security for autonomous agents.', stars:2100, language:'Python', created_at:'2026-03-16', url:'https://github.com/NVIDIA/NemoClaw',              topics:['nemoclaw','openclaw','nvidia','enterprise','security','agent'],     forks:312, open_issues:24, license:'Apache-2.0' },
+    { id:2, owner:'NVIDIA',  name:'NeMo',                  description:'NeMo: scalable generative AI framework for researchers and developers working on LLMs, multimodal AI, and speech.',                              stars:13200, language:'Python', created_at:'2019-10-03', url:'https://github.com/NVIDIA/NeMo',                  topics:['deep-learning','generative-ai','llm','nemo','nvidia'],               forks:2700, open_issues:432, license:'Apache-2.0' },
+    { id:3, owner:'NVIDIA',  name:'GenerativeAIExamples',  description:'NVIDIA Generative AI reference examples — Nemotron samples, NIM integration notebooks, and enterprise RAG pipelines.',                           stars:1890, language:'Python', created_at:'2023-09-12', url:'https://github.com/NVIDIA/GenerativeAIExamples',  topics:['generative-ai','llm','nemotron','nim','nvidia'],                     forks:630,  open_issues:56,  license:'Apache-2.0' },
+    { id:4, owner:'NVIDIA',  name:'AgentIQ',               description:'AI-Q: open research agent blueprint for autonomous document and web research. Part of the NVIDIA Agent Toolkit bundled with NemoClaw.',          stars:720,  language:'Python', created_at:'2026-01-22', url:'https://github.com/NVIDIA/AgentIQ',               topics:['agent','ai-q','nemoclaw','nvidia','research'],                       forks:98,   open_issues:11,  license:'Apache-2.0' },
+    { id:5, owner:'NVIDIA',  name:'nim-deploy',            description:'Reference architectures and Helm charts for deploying NVIDIA NIM microservices — the inference layer powering NemoClaw cloud mode.',              stars:980,  language:'Python', created_at:'2024-03-18', url:'https://github.com/NVIDIA/nim-deploy',            topics:['kubernetes','nim','nvidia','deployment','nemoclaw'],                 forks:213,  open_issues:18,  license:'Apache-2.0' },
+  ];
+
+  /* ─────────────────────────────────────────
    *  STATE
    * ───────────────────────────────────────── */
   let allRepos    = [];
+  let allNcRepos  = [];   /* NemoClaw repos (Supabase filtered or SAMPLE_NEMOCLAW) */
   let familyStats = [];   /* rows from ecosystem_family_stats Supabase table */
   let pinnedRepo  = null;
   let currentLang = 'ALL';
   let tablePage   = 1;
   let tableSort   = { col: 'created', dir: 'desc' };
+  let ncTablePage = 1;
+  let ncTableSort = { col: 'created', dir: 'desc' };
   let chartsInited    = false;
   let chartWindow     = 7;
   let chartMonthly    = null;
@@ -1591,14 +1657,107 @@
   }
 
   /* ─────────────────────────────────────────
+   *  NEMOCLAW TABLE
+   * ───────────────────────────────────────── */
+  function sortNcTable(col) {
+    if (ncTableSort.col === col) {
+      ncTableSort.dir = ncTableSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      ncTableSort = { col, dir: col === 'created' ? 'desc' : 'desc' };
+    }
+    ncTablePage = 1;
+    ['stars','language','created'].forEach(c => {
+      const arr = document.getElementById(`nc-arr-${c}`);
+      const btn = document.querySelector(`[onclick="sortNcTable('${c}')"]`);
+      if (arr) arr.textContent = ncTableSort.col === c ? (ncTableSort.dir === 'asc' ? '↑' : '↓') : '';
+      if (btn) btn.classList.toggle('active', ncTableSort.col === c);
+    });
+    renderNcTable();
+  }
+
+  function renderNcTable() {
+    let repos = [...allNcRepos];
+    repos.sort((a, b) => {
+      let av, bv;
+      switch (ncTableSort.col) {
+        case 'stars':    av = a.stars||0;  bv = b.stars||0;  break;
+        case 'language': av = a.language||''; bv = b.language||''; break;
+        case 'created':  av = parseDate(a.created_at)||new Date(0); bv = parseDate(b.created_at)||new Date(0); break;
+        default:         av = a.stars||0;  bv = b.stars||0;
+      }
+      if (typeof av === 'string') return ncTableSort.dir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+      return ncTableSort.dir==='asc' ? av-bv : bv-av;
+    });
+
+    const total = repos.length;
+    const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    ncTablePage = Math.min(ncTablePage, pages);
+    const start = (ncTablePage-1) * PAGE_SIZE;
+    const page  = repos.slice(start, start + PAGE_SIZE);
+
+    document.getElementById('nc-index-count').textContent = `${total} repo${total===1?'':'s'}`;
+
+    const tbody = document.getElementById('nc-repo-tbody');
+    if (!page.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">// no NemoClaw repositories indexed yet</td></tr>`;
+    } else {
+      tbody.innerHTML = page.map((r, i) => {
+        const rank     = start + i + 1;
+        const topics   = getTopics(r);
+        const topicHTML = topics.slice(0,3).map(t=>`<span class="badge badge-topic">${esc(t)}</span>`).join('');
+        const desc     = r.description || '—';
+        return `
+        <tr>
+          <td class="col-rank td-rank" aria-label="Rank ${rank}">${String(rank).padStart(2,'0')}</td>
+          <td class="col-repo td-repo">
+            ${langDot(r.language)}
+            <a href="${esc(r.url||'#')}" target="_blank" rel="noopener noreferrer"
+               aria-label="${esc(r.owner)}/${esc(r.name)} (opens GitHub in new tab)">
+              <span class="td-owner-dim">${esc(r.owner||'')}/</span>${esc(r.name||'')}
+            </a>
+            ${desc !== '—' ? `<span class="td-desc-inline" title="${esc(desc)}">${esc(desc)}</span>` : ''}
+          </td>
+          <td class="col-stars td-stars" aria-label="${(r.stars||0).toLocaleString()} stars">★ ${(r.stars||0).toLocaleString()}</td>
+          <td class="col-lang">${langBadge(r.language)}</td>
+          <td class="col-topics"><div class="td-topics">${topicHTML||'—'}</div></td>
+          <td class="col-date td-date">${fmtDate(r.created_at)}</td>
+          <td class="col-link td-link">
+            <a href="${esc(r.url||'#')}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(r.name)} on GitHub">
+              <i data-lucide="external-link" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>`;
+      }).join('');
+      lucide.createIcons({ nodes: [tbody] });
+    }
+
+    const btnPrev = document.getElementById('nc-btn-prev');
+    const btnNext = document.getElementById('nc-btn-next');
+    const info    = document.getElementById('nc-page-info');
+    const rangeEnd = Math.min(start + PAGE_SIZE, total);
+    info.innerHTML = total
+      ? `Page <em>${ncTablePage}</em> of <em>${pages}</em> · repos <em>${start+1}–${rangeEnd}</em> of <em>${total}</em>`
+      : 'No results';
+    btnPrev.disabled = ncTablePage <= 1;
+    btnNext.disabled = ncTablePage >= pages;
+  }
+
+  function changeNcPage(delta) {
+    ncTablePage += delta;
+    renderNcTable();
+    document.getElementById('panel-nemoclaw').querySelector('.table-wrap')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  /* ─────────────────────────────────────────
    *  DATA FETCH → RENDER
    * ───────────────────────────────────────── */
   async function init() {
     /* Fetch repos + ecosystem family stats in parallel */
     const hdrs = { apikey:SUPABASE_ANON, Authorization:`Bearer ${SUPABASE_ANON}` };
-    const [reposRes, statsRes] = await Promise.allSettled([
+    const [reposRes, statsRes, ncReposRes] = await Promise.allSettled([
       fetch(`${SUPABASE_URL}/rest/v1/github_projects?select=*&limit=2000&order=rubric_score.desc.nullslast,stars.desc`, { headers: hdrs }),
       fetch(`${SUPABASE_URL}/rest/v1/ecosystem_family_stats?select=*&order=total_count.desc`, { headers: hdrs }),
+      fetch(`${SUPABASE_URL}/rest/v1/github_projects?select=*&topics=cs.{nemoclaw}&limit=200&order=stars.desc`, { headers: hdrs }),
     ]);
 
     try {
@@ -1615,6 +1774,14 @@
       }
     } catch { /* familyStats stays [] */ }
 
+    /* NemoClaw repos: try Supabase filter, fall back to curated sample */
+    try {
+      if (ncReposRes.status === 'fulfilled' && ncReposRes.value.ok) {
+        const data = await ncReposRes.value.json();
+        allNcRepos = Array.isArray(data) && data.length ? data : SAMPLE_NEMOCLAW;
+      } else { allNcRepos = SAMPLE_NEMOCLAW; }
+    } catch { allNcRepos = SAMPLE_NEMOCLAW; }
+
     pinnedRepo = findPinned();
 
     renderPinnedCard();
@@ -1623,11 +1790,12 @@
     renderFamilyStats();
     renderLangTabs();
     renderTable();
+    renderNcTable();
 
     /* Handle initial tab from URL — no GA fire (page_view already sent by gtag config) */
     const initTab = new URLSearchParams(window.location.search).get('tab');
-    if (initTab === 'repos') {
-      switchTab('repos', false);
+    if (initTab === 'repos' || initTab === 'nemoclaw') {
+      switchTab(initTab, false);
       requestAnimationFrame(() => lucide.createIcons());
     } else {
       requestAnimationFrame(() => { initCharts(); lucide.createIcons(); });
@@ -1638,33 +1806,32 @@
    *  TAB SWITCHING
    * ───────────────────────────────────────── */
   function switchTab(tab, fireGA = true) {
-    const isAnalytics = tab === 'analytics';
+    const TABS = ['analytics', 'repos', 'nemoclaw'];
 
     /* Update tab button states */
-    const btnA = document.getElementById('tab-btn-analytics');
-    const btnR = document.getElementById('tab-btn-repos');
-    btnA.classList.toggle('active', isAnalytics);
-    btnA.setAttribute('aria-selected', isAnalytics ? 'true' : 'false');
-    btnR.classList.toggle('active', !isAnalytics);
-    btnR.setAttribute('aria-selected', isAnalytics ? 'false' : 'true');
-
-    /* Show/hide panels */
-    document.getElementById('panel-analytics').hidden = !isAnalytics;
-    document.getElementById('panel-repos').hidden = isAnalytics;
+    for (const t of TABS) {
+      const btn   = document.getElementById(`tab-btn-${t}`);
+      const panel = document.getElementById(`panel-${t}`);
+      if (btn)   { btn.classList.toggle('active', t === tab); btn.setAttribute('aria-selected', t === tab ? 'true' : 'false'); }
+      if (panel) { panel.hidden = t !== tab; }
+    }
 
     /* Update URL without reloading */
-    history.replaceState(null, '', isAnalytics ? '/forge.html' : '/forge.html?tab=repos');
+    const urlParam = tab === 'analytics' ? '/forge.html' : `/forge.html?tab=${tab}`;
+    history.replaceState(null, '', urlParam);
 
     /* Fire GA virtual pageview on tab switch */
     if (fireGA && typeof gtag !== 'undefined') {
-      gtag('event', 'page_view', {
-        page_title: isAnalytics ? 'Forge — Analytics · ClawBeat' : 'Forge — Repos · ClawBeat',
-        page_path:  isAnalytics ? '/forge.html' : '/forge.html?tab=repos',
-      });
+      const titles = {
+        analytics: 'Forge — Analytics · ClawBeat',
+        repos:     'Forge — OpenClaw Repos · ClawBeat',
+        nemoclaw:  'Forge — NemoClaw Repos · ClawBeat',
+      };
+      gtag('event', 'page_view', { page_title: titles[tab] || '', page_path: urlParam });
     }
 
     /* Lazy-init charts when analytics becomes visible */
-    if (isAnalytics && !chartsInited) {
+    if (tab === 'analytics' && !chartsInited) {
       requestAnimationFrame(() => initCharts());
     }
   }

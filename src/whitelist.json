@@ -970,5 +970,14 @@
     "Website RSS": "https://every.to/feeds/global.xml",
     "YouTube Channel ID": null,
     "Priority": "1"
+  },
+  {
+    "ID": "109",
+    "Source Name": "NVIDIA Newsroom",
+    "Category": "Publisher",
+    "Website URL": "https://nvidianews.nvidia.com",
+    "Website RSS": "https://nvidianews.nvidia.com/rss",
+    "YouTube Channel ID": null,
+    "Priority": "1"
   }
 ]

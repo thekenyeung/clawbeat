@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<title>NemoClaw — NVIDIA's Enterprise OpenClaw Stack · ClawBeat Guide</title>
+<meta name="description" content="Complete guide to NVIDIA NemoClaw: the open-source enterprise AI agent stack announced at GTC 2026. Architecture, OpenShell, Nemotron models, comparison with OpenClaw, and developer FAQ.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://clawbeat.co/guide/nemoclaw.html">
+<meta property="og:site_name" content="ClawBeat">
+<meta property="og:title" content="NemoClaw — NVIDIA's Enterprise OpenClaw Stack · ClawBeat">
+<meta property="og:description" content="Complete guide to NVIDIA NemoClaw: architecture, OpenShell sandbox, Nemotron models, NemoClaw vs OpenClaw comparison, and developer FAQ.">
+<meta property="og:image" content="https://clawbeat.co/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NemoClaw — NVIDIA's Enterprise OpenClaw Stack · ClawBeat">
+<meta name="twitter:description" content="Complete guide to NVIDIA NemoClaw: architecture, OpenShell sandbox, Nemotron models, NemoClaw vs OpenClaw comparison, and developer FAQ.">
+<meta name="twitter:image" content="https://clawbeat.co/images/og-image.png">
+<meta name="article:published_time" content="2026-03-16">
+<link rel="canonical" href="https://clawbeat.co/guide/nemoclaw.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "NemoClaw — NVIDIA's Enterprise OpenClaw Stack: Complete Guide",
+  "description": "Architecture, OpenShell sandbox, Nemotron models, comparison with OpenClaw, and developer FAQ for NVIDIA NemoClaw announced at GTC 2026.",
+  "datePublished": "2026-03-16",
+  "publisher": { "@type": "Organization", "name": "ClawBeat", "url": "https://clawbeat.co" },
+  "url": "https://clawbeat.co/guide/nemoclaw.html"
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; font-size: 16px; scroll-behavior: smooth; }
+
+  :root {
+    --bg: #08090b;
+    --bg-2: #0d0f12;
+    --bg-3: #131619;
+    --border: rgba(255,255,255,0.05);
+    --border-2: rgba(255,255,255,0.09);
+    --orange: #f97316;
+    --orange-bright: #fb923c;
+    --orange-dim: rgba(249,115,22,0.10);
+    --orange-glow: rgba(249,115,22,0.18);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.08);
+    --cyan: #06b6d4;
+    --cyan-dim: rgba(6,182,212,0.08);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.08);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.08);
+    --text: #e2e4e9;
+    --text-2: #9097a3;
+    --text-3: #6e7680;
+    --text-4: #3d4451;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+    --min-font: 0.6875rem;
+  }
+
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; line-height: 1.6; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+  :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(10,10,12,0.88);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  }
+  .header-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+    height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+  .brand-img { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+  .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+  .brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
+  .brand-text span { color: var(--orange); }
+  .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+  .nav-item {
+    font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem;
+    text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+  .nav-item[aria-current="page"] { background: rgba(255,255,255,0.1); color: var(--orange); }
+  @media (max-width: 640px) { .header-nav { display: none; } }
+
+  /* ── ANNOUNCEMENT BAND ── */
+  .announce-band {
+    background: linear-gradient(90deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.05) 60%, transparent 100%);
+    border-bottom: 1px solid rgba(249,115,22,0.2);
+    padding: 0.55rem 1.5rem;
+  }
+  .announce-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .announce-badge { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #000; background: var(--orange); border-radius: 3px; padding: 0.2rem 0.5rem; flex-shrink: 0; white-space: nowrap; }
+  .announce-text { font-family: var(--mono); font-size: var(--min-font); color: var(--text-2); line-height: 1.4; }
+  .announce-text a { color: var(--orange); text-decoration: none; }
+  .announce-text a:hover { text-decoration: underline; }
+
+  /* ── LAYOUT ── */
+  .page-wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── HERO ── */
+  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero-kicker { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .chip { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 3px; padding: 0.2rem 0.55rem; display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+  .chip-orange { color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.3); }
+  .chip-green  { color: var(--green);  background: var(--green-dim);  border: 1px solid rgba(34,197,94,0.25); }
+  .chip-dim    { color: var(--text-3); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+  .hero-title { font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1.05; color: #fff; text-transform: uppercase; font-style: italic; margin-bottom: 1rem; }
+  .hero-title em { color: var(--orange); font-style: italic; }
+  .hero-sub { font-size: 1.0625rem; color: var(--text-2); line-height: 1.75; max-width: 680px; margin-bottom: 1.75rem; }
+  .hero-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+  .hero-meta a { color: var(--orange); text-decoration: none; }
+  .hero-meta a:hover { text-decoration: underline; }
+  .hero-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.65rem; margin-top: 2rem; }
+  @media (max-width: 640px) { .hero-stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .hstat { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.85rem 1rem; }
+  .hstat-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .hstat-value { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; line-height: 1; }
+  .hstat-value.orange { color: var(--orange); }
+  .hstat-value.green  { color: var(--green); }
+  .hstat-value.cyan   { color: var(--cyan); }
+  .hstat-value.blue   { color: var(--blue); }
+
+  /* ── SECTION DIVIDER ── */
+  .sdiv { display: flex; align-items: center; gap: 0.75rem; margin: 3rem 0 1.5rem; }
+  .sdiv-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-3); white-space: nowrap; display: flex; align-items: center; gap: 0.35rem; }
+  .sdiv-slash { color: var(--text-4); }
+  .sdiv-tag   { color: var(--orange); }
+  .sdiv-line  { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+
+  /* ── PROSE ── */
+  .prose { max-width: 720px; }
+  .prose p { font-size: 0.9375rem; color: var(--text-2); line-height: 1.75; margin-bottom: 1rem; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose a { color: var(--orange); text-decoration: none; }
+  .prose a:hover { text-decoration: underline; }
+  .prose code { font-family: var(--mono); font-size: 0.8rem; color: var(--orange); background: var(--orange-dim); padding: 0.15rem 0.4rem; border-radius: 3px; }
+
+  /* ── CALLOUT ── */
+  .callout { border-left: 3px solid var(--orange); background: var(--bg-2); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+  .callout-title { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .callout p { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin: 0; }
+  .callout strong { color: var(--text); }
+  .callout.info { border-left-color: var(--cyan); }
+  .callout.info .callout-title { color: var(--cyan); }
+
+  /* ── ARCHITECTURE CARDS ── */
+  .arch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
+  @media (max-width: 860px) { .arch-grid { grid-template-columns: 1fr; } }
+  .arch-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.35rem 1.25rem; position: relative; overflow: hidden; }
+  .arch-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .arch-card.orange::before { background: var(--orange); }
+  .arch-card.cyan::before   { background: var(--cyan); }
+  .arch-card.blue::before   { background: var(--blue); }
+  .arch-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.9rem; }
+  .arch-icon.orange { background: var(--orange-dim); color: var(--orange); }
+  .arch-icon.cyan   { background: var(--cyan-dim);   color: var(--cyan); }
+  .arch-icon.blue   { background: var(--blue-dim);   color: var(--blue); }
+  .arch-icon svg { width: 18px; height: 18px; }
+  .arch-name { font-family: var(--sans); font-size: 0.9rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+  .arch-sub  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem; }
+  .arch-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; }
+  .arch-bullets { margin-top: 0.7rem; padding: 0; list-style: none; }
+  .arch-bullets li { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.4rem; line-height: 1.5; }
+  .arch-bullets li::before { content: '→'; color: var(--text-4); flex-shrink: 0; }
+
+  /* ── MODEL CARDS ── */
+  .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0; }
+  @media (max-width: 640px) { .model-grid { grid-template-columns: 1fr; } }
+  .model-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.2rem 1.25rem; }
+  .model-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .model-name   { font-family: var(--sans); font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+  .model-badge  { font-family: var(--mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-dim); border: 1px solid rgba(34,197,94,0.2); border-radius: 3px; padding: 0.18rem 0.45rem; white-space: nowrap; flex-shrink: 0; }
+  .model-desc   { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; margin-bottom: 0.85rem; }
+  .model-specs  { display: flex; flex-direction: column; gap: 0.3rem; }
+  .spec-row     { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.2rem 0; border-bottom: 1px solid var(--border); }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key     { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+  .spec-val     { font-family: var(--mono); font-size: var(--min-font); font-weight: 600; color: var(--text); text-align: right; }
+  .spec-val.orange { color: var(--orange); }
+  .spec-val.cyan   { color: var(--cyan); }
+  .spec-val.green  { color: var(--green); }
+
+  /* ── COMPARISON TABLE ── */
+  .cmp-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-2); margin: 1.5rem 0; }
+  .cmp-table { width: 100%; border-collapse: collapse; min-width: 580px; }
+  .cmp-table th { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--bg-2); color: var(--text-3); padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-2); }
+  .cmp-table th:first-child { color: var(--text-4); width: 170px; }
+  .cmp-table th.oc { color: var(--cyan); }
+  .cmp-table th.nc { color: var(--orange); }
+  .cmp-table td { font-size: 0.8125rem; color: var(--text-2); padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table td:first-child { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; background: var(--bg-3); white-space: nowrap; }
+  .cmp-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .cmp-table tr:hover td:first-child { background: var(--bg-3); }
+  .win      { color: var(--orange); font-weight: 600; }
+  .warn-cell { color: var(--cyan); }
+
+  /* ── CODE BLOCKS ── */
+  .code-block { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; margin: 1.25rem 0; overflow: hidden; }
+  .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; border-bottom: 1px solid var(--border); background: var(--bg-3); }
+  .code-lang { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+  .code-copy { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); background: none; border: none; cursor: pointer; padding: 0; transition: color 0.15s; }
+  .code-copy:hover { color: var(--orange); }
+  pre { font-family: var(--mono); font-size: 0.8rem; color: var(--text); padding: 1rem 1.25rem; overflow-x: auto; line-height: 1.65; margin: 0; scrollbar-width: thin; }
+  pre .c  { color: var(--text-3); }
+  pre .k  { color: var(--orange); }
+  pre .s  { color: var(--green); }
+
+  /* ── REQUIREMENTS ── */
+  .req-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1.25rem 0; }
+  @media (max-width: 540px) { .req-grid { grid-template-columns: 1fr; } }
+  .req-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.85rem 1rem; }
+  .req-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .req-value { font-size: 0.8125rem; color: var(--text); font-weight: 600; }
+  .req-note  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-top: 0.2rem; }
+
+  /* ── SECURITY THREAT CARDS ── */
+  .threat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1.5rem 0; }
+  @media (max-width: 580px) { .threat-grid { grid-template-columns: 1fr; } }
+  .threat-card { background: var(--bg-2); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 0.9rem 1rem; }
+  .threat-title { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: #ef4444; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .threat-desc  { font-size: 0.8125rem; color: var(--text-2); line-height: 1.55; }
+
+  /* ── TIMELINE ── */
+  .timeline { margin: 1.5rem 0; position: relative; padding-left: 1.5rem; }
+  .timeline::before { content: ''; position: absolute; left: 0.4rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: var(--border-2); }
+  .tl-item { position: relative; padding-bottom: 1.25rem; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot { position: absolute; left: -1.35rem; top: 0.3rem; width: 8px; height: 8px; border-radius: 50%; }
+  .tl-dot.orange { background: var(--orange); box-shadow: 0 0 8px rgba(249,115,22,0.5); }
+  .tl-dot.dim    { background: var(--text-4); }
+  .tl-date  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-bottom: 0.2rem; }
+  .tl-event { font-size: 0.875rem; color: var(--text); font-weight: 600; line-height: 1.4; }
+  .tl-note  { font-size: 0.8125rem; color: var(--text-3); margin-top: 0.2rem; line-height: 1.5; }
+
+  /* ── FAQ ── */
+  .faq { margin: 1.5rem 0; }
+  .faq-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; overflow: hidden; }
+  .faq-q { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.1rem; cursor: pointer; gap: 1rem; background: var(--bg-2); transition: background 0.15s; border: none; width: 100%; text-align: left; }
+  .faq-q:hover { background: var(--bg-3); }
+  .faq-q[aria-expanded="true"] { background: var(--bg-3); border-bottom: 1px solid var(--border); }
+  .faq-q-text { font-family: var(--sans); font-size: 0.875rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .faq-arrow { color: var(--text-4); transition: transform 0.2s; flex-shrink: 0; }
+  .faq-q[aria-expanded="true"] .faq-arrow { transform: rotate(180deg); color: var(--orange); }
+  .faq-a { display: none; padding: 1rem 1.1rem; background: var(--bg-2); }
+  .faq-a.open { display: block; }
+  .faq-a p { font-size: 0.875rem; color: var(--text-2); line-height: 1.7; margin-bottom: 0.75rem; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a strong { color: var(--text); font-weight: 600; }
+  .faq-a code { font-family: var(--mono); font-size: 0.78rem; color: var(--orange); background: var(--orange-dim); padding: 0.1rem 0.35rem; border-radius: 3px; }
+  .faq-a a { color: var(--orange); text-decoration: none; }
+  .faq-a a:hover { text-decoration: underline; }
+
+  /* ── RESOURCE GRID ── */
+  .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin: 1rem 0 1.5rem; }
+  @media (max-width: 760px) { .resource-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .resource-grid { grid-template-columns: 1fr; } }
+  .resource-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 1rem 1.1rem; text-decoration: none; transition: border-color 0.15s, background 0.15s; display: flex; flex-direction: column; gap: 0.35rem; }
+  .resource-card:hover { border-color: rgba(249,115,22,0.35); background: rgba(249,115,22,0.04); }
+  .resource-type   { font-family: var(--mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+  .resource-name   { font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.35; }
+  .resource-source { font-family: var(--mono); font-size: var(--min-font); color: var(--orange); }
+
+  /* ── SECTION HEADING (h3) ── */
+  .sh { font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--bg-2); border-top: 1px solid var(--border-2); margin-top: 5rem; }
+  .footer-inner { max-width: 72rem; margin: 0 auto; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .footer-brand { font-family: var(--sans); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; font-style: italic; color: #fff; }
+  .footer-brand span { color: var(--orange); }
+  .clawhub-badge { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .clawhub-badge:hover { color: var(--orange); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="ClawBeat home">
+      <div class="brand-img" aria-hidden="true">
+        <img src="/images/clawbeat-icon-claw-logo-32x32.ico" alt="" width="40" height="40">
+      </div>
+      <span class="brand-text">Clawbeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav" aria-label="Site navigation">
+      <a class="nav-item" href="/"><i data-lucide="home" aria-hidden="true"></i> Home</a>
+      <a class="nav-item" href="/forge.html?tab=nemoclaw" aria-current="page"><i data-lucide="shield" aria-hidden="true"></i> NemoClaw</a>
+      <a class="nav-item" href="/forge.html"><i data-lucide="bar-chart-2" aria-hidden="true"></i> Forge</a>
+      <a class="nav-item" href="/events-calendar.html"><i data-lucide="calendar" aria-hidden="true"></i> Events</a>
+      <a class="nav-item" href="/trace/index.html"><i data-lucide="layers" aria-hidden="true"></i> Trace</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ANNOUNCEMENT BAND -->
+<div class="announce-band" role="banner">
+  <div class="announce-inner">
+    <span class="announce-badge">Live · GTC 2026</span>
+    <span class="announce-text">
+      Jensen Huang announced NemoClaw on March 16, 2026. ·
+      <a href="https://nvidianews.nvidia.com/news/nvidia-announces-nemoclaw" target="_blank" rel="noopener">Official press release ↗</a> ·
+      <a href="https://github.com/NVIDIA/NemoClaw" target="_blank" rel="noopener">GitHub ↗</a>
+    </span>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-kicker">
+      <span class="chip chip-orange">New · March 16, 2026</span>
+      <span class="chip chip-dim">GTC 2026 · Jensen Huang Keynote</span>
+      <span class="chip chip-green">Open Source · Apache 2.0</span>
+    </div>
+    <h1 class="hero-title" id="hero-title">
+      Nvidia <em>Nemo</em>Claw<br>
+      <span style="font-size:0.5em;color:var(--text-3);font-weight:600;letter-spacing:-0.01em;font-style:normal">The Enterprise OpenClaw Stack</span>
+    </h1>
+    <p class="hero-sub">
+      NVIDIA's open-source AI agent platform — built on OpenClaw, hardened with the OpenShell sandbox, and bundled with Nemotron open models. Announced today at GTC 2026 in San Jose, NemoClaw targets the enterprise security problems that have kept OpenClaw out of production deployments.
+    </p>
+    <div class="hero-meta">
+      <span>By <strong style="color:var(--text)">ClawBeat</strong></span>
+      <span>March 16, 2026</span>
+      <span>~12 min read</span>
+      <a href="https://github.com/NVIDIA/NemoClaw" target="_blank" rel="noopener">github.com/NVIDIA/NemoClaw ↗</a>
+    </div>
+    <div class="hero-stats-row" aria-label="NemoClaw key facts">
+      <div class="hstat"><div class="hstat-label">License</div><div class="hstat-value orange">Apache 2.0</div></div>
+      <div class="hstat"><div class="hstat-label">Status</div><div class="hstat-value cyan">Early Access</div></div>
+      <div class="hstat"><div class="hstat-label">Language</div><div class="hstat-value blue">Python</div></div>
+      <div class="hstat"><div class="hstat-label">Base</div><div class="hstat-value green">OpenClaw</div></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">timeline</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">February 2026</div>
+      <div class="tl-event">OpenClaw acquired by OpenAI</div>
+      <div class="tl-note">OpenAI acquired OpenClaw from creator Peter Steinberger. Enterprise distrust grows over documented security vulnerabilities — ~900 malicious skills and ~135K exposed instances.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">March 10, 2026</div>
+      <div class="tl-event">CNBC / Wired break the story</div>
+      <div class="tl-note">NVIDIA has been pitching "NemoClaw" to Salesforce, Cisco, Google, Adobe, and CrowdStrike — open source, contribution-for-early-access model. Enterprise alternative to OpenClaw.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot orange"></div>
+      <div class="tl-date">March 16, 2026 — today</div>
+      <div class="tl-event">Official launch at GTC 2026 keynote</div>
+      <div class="tl-note">Jensen Huang announces NemoClaw stack publicly: NemoClaw runtime + OpenShell + AI-Q + Nemotron family. GitHub repo goes live under NVIDIA org, Apache 2.0.</div>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">the_problem</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>OpenClaw became the fastest-growing consumer AI agent platform in history — but its viral growth surfaced a severe security picture that made enterprise adoption nearly impossible. When OpenAI acquired it in February 2026, the threat model was already well-documented: malicious skills in the public registry, agents with unconstrained file system and network access, and zero enforcement of privacy policy at the runtime level.</p>
+    <p>NemoClaw is NVIDIA's answer. Rather than build a competing platform from scratch, NVIDIA wrapped OpenClaw in an enterprise-grade security and privacy layer — the <strong>OpenShell runtime</strong> — and bundled it with open Nemotron models so enterprise teams can run agents locally without routing sensitive data through external cloud APIs.</p>
+  </div>
+  <div class="threat-grid">
+    <div class="threat-card">
+      <div class="threat-title">Malicious Skills Registry</div>
+      <div class="threat-desc">~900 malicious skills documented in the OpenClaw public skill registry. No sandboxing prevents skill code from accessing system resources or exfiltrating data.</div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-title">Exposed Instances</div>
+      <div class="threat-desc">~135,000 publicly exposed OpenClaw instances with no authentication. Researchers demonstrated remote agent hijacking via unauthenticated API endpoints.</div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-title">Unconstrained File Access</div>
+      <div class="threat-desc">Default OpenClaw agents run with full user-space file system permissions. No enforcement of data access policies or network egress rules at the runtime level.</div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-title">Cloud Data Leakage</div>
+      <div class="threat-desc">All OpenClaw requests route through external frontier model APIs. Sensitive enterprise data (contracts, code, internal docs) transits third-party infrastructure by design.</div>
+    </div>
+  </div>
+  <div class="callout info">
+    <div class="callout-title">Early-stage caveat</div>
+    <p>NemoClaw itself is still <strong>early-stage</strong> with "rough edges" per NVIDIA's own documentation. OpenShell and the NemoClaw plugin API are under active development and subject to breaking changes. NVIDIA explicitly states it "should not yet be considered production-ready." This guide reflects what is confirmed as of March 16, 2026.</p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">architecture</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>NemoClaw is a <strong>three-component stack</strong> bundled under the NVIDIA Agent Toolkit umbrella. Each component addresses a distinct failure mode that makes enterprises reluctant to deploy autonomous agents.</p>
+  </div>
+  <div class="arch-grid">
+    <div class="arch-card orange">
+      <div class="arch-icon orange" aria-hidden="true"><i data-lucide="shield"></i></div>
+      <div class="arch-name">OpenShell Runtime</div>
+      <div class="arch-sub">Security &amp; Privacy Layer</div>
+      <div class="arch-desc">The sandboxed execution environment that wraps OpenClaw agents. Enforces network egress rules, data access policies, and model routing at the process level — not the application level.</div>
+      <ul class="arch-bullets">
+        <li>Isolated sandbox for each agent execution</li>
+        <li>Policy-based network and filesystem controls</li>
+        <li>Privacy router: local vs. cloud model decisions</li>
+        <li>Skill allowlist / blocklist enforcement</li>
+        <li>Open source (Apache 2.0), part of Agent Toolkit</li>
+      </ul>
+    </div>
+    <div class="arch-card cyan">
+      <div class="arch-icon cyan" aria-hidden="true"><i data-lucide="cpu"></i></div>
+      <div class="arch-name">Nemotron Models</div>
+      <div class="arch-sub">Open Local Model Family</div>
+      <div class="arch-desc">NVIDIA's open-weight model family, installable locally with a single command. Eliminates cloud dependency for sensitive workloads. Two flagship models for enterprise use.</div>
+      <ul class="arch-bullets">
+        <li>Nemotron 3 Ultra — frontier intelligence, NVFP4</li>
+        <li>Nemotron 3 Omni — multimodal (audio + vision + text)</li>
+        <li>5× throughput on Blackwell vs. FP8 baseline</li>
+        <li>Compatible with OpenClaw ClawdBot model slot</li>
+        <li>Runs on RTX PCs, RTX PRO, DGX Station / Spark</li>
+      </ul>
+    </div>
+    <div class="arch-card blue">
+      <div class="arch-icon blue" aria-hidden="true"><i data-lucide="search"></i></div>
+      <div class="arch-name">AI-Q</div>
+      <div class="arch-sub">Research Agent Blueprint</div>
+      <div class="arch-desc">Open research agent blueprint for autonomous document and web research — third component of the NVIDIA Agent Toolkit. Pre-built, enterprise-tested agentic workflow running inside OpenShell.</div>
+      <ul class="arch-bullets">
+        <li>Autonomous document analysis &amp; summarization</li>
+        <li>Multi-step web research workflows</li>
+        <li>Runs inside OpenShell (sandboxed)</li>
+        <li>Reference implementation for Nemotron integration</li>
+        <li>Open source at github.com/NVIDIA/AgentIQ</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <div class="callout-title">How the stack flows</div>
+    <p><strong>OpenClaw agent</strong> → receives user request → <strong>NemoClaw plugin</strong> intercepts execution → <strong>OpenShell</strong> evaluates against your privacy/network policy → routes to <strong>Nemotron (local)</strong> for sensitive tasks or <strong>frontier model via privacy router (cloud)</strong> for general tasks → agent output returned with full audit trail.</p>
+  </div>
+
+  <!-- NEMOTRON MODELS -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">nemotron_models</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="model-grid">
+    <div class="model-card">
+      <div class="model-header">
+        <div class="model-name">Nemotron 3 Ultra</div>
+        <span class="model-badge">Flagship LLM</span>
+      </div>
+      <div class="model-desc">Frontier-level intelligence with extreme throughput efficiency using NVIDIA's NVFP4 quantization on the Blackwell platform. Primary language model for NemoClaw enterprise deployments.</div>
+      <div class="model-specs">
+        <div class="spec-row"><span class="spec-key">Quantization</span><span class="spec-val orange">NVFP4</span></div>
+        <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">Blackwell (RTX / DGX)</span></div>
+        <div class="spec-row"><span class="spec-key">Throughput vs FP8</span><span class="spec-val green">5× faster</span></div>
+        <div class="spec-row"><span class="spec-key">License</span><span class="spec-val">Open weights</span></div>
+        <div class="spec-row"><span class="spec-key">Modality</span><span class="spec-val">Text → Text</span></div>
+      </div>
+    </div>
+    <div class="model-card">
+      <div class="model-header">
+        <div class="model-name">Nemotron 3 Omni</div>
+        <span class="model-badge">Multimodal</span>
+      </div>
+      <div class="model-desc">Audio, vision, and language understanding in a single model — enables NemoClaw agents to extract information from documents, images, and voice commands natively.</div>
+      <div class="model-specs">
+        <div class="spec-row"><span class="spec-key">Input modalities</span><span class="spec-val orange">Audio + Vision + Text</span></div>
+        <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">RTX PRO / DGX Spark</span></div>
+        <div class="spec-row"><span class="spec-key">Use case</span><span class="spec-val cyan">Document + voice agents</span></div>
+        <div class="spec-row"><span class="spec-key">License</span><span class="spec-val">Open weights</span></div>
+        <div class="spec-row"><span class="spec-key">Framework</span><span class="spec-val">NeMo + NIM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GETTING STARTED -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">getting_started</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>NemoClaw installs as an OpenClaw plugin. The stack — OpenShell runtime + Nemotron models — deploys in a single command via the <code>openclaw</code> CLI. Per NVIDIA, it is early-stage and interfaces may change without notice.</p>
+  </div>
+  <h3 class="sh">Requirements</h3>
+  <div class="req-grid">
+    <div class="req-card">
+      <div class="req-label">OpenClaw</div>
+      <div class="req-value">Latest stable release</div>
+      <div class="req-note">NemoClaw is a plugin — base OpenClaw install required</div>
+    </div>
+    <div class="req-card">
+      <div class="req-label">Python</div>
+      <div class="req-value">3.10 or higher</div>
+      <div class="req-note">NemoClaw uses Python (unlike OpenClaw's TypeScript stack)</div>
+    </div>
+    <div class="req-card">
+      <div class="req-label">GPU (local models)</div>
+      <div class="req-value">NVIDIA RTX or DGX</div>
+      <div class="req-note">RTX 5090 / DGX-class for Nemotron 3 Ultra (NVFP4)</div>
+    </div>
+    <div class="req-card">
+      <div class="req-label">VRAM</div>
+      <div class="req-value">24 GB+ recommended</div>
+      <div class="req-note">Reduced vs FP16 by NVFP4 quantization; cloud mode: any hardware</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">shell · install nemoclaw</span>
+      <button class="code-copy" onclick="copyCode(this)" aria-label="Copy install command">copy</button>
+    </div>
+    <pre><span class="c"># Install NemoClaw plugin via the OpenClaw CLI</span>
+<span class="k">openclaw</span> install nemoclaw
+
+<span class="c"># Install with Nemotron 3 Ultra (requires NVIDIA GPU)</span>
+<span class="k">openclaw</span> install nemoclaw <span class="s">--model nemotron-3-ultra</span>
+
+<span class="c"># Install with Nemotron 3 Omni (multimodal)</span>
+<span class="k">openclaw</span> install nemoclaw <span class="s">--model nemotron-3-omni</span>
+
+<span class="c"># Cloud-only mode (no GPU required)</span>
+<span class="k">openclaw</span> install nemoclaw <span class="s">--privacy-router cloud-only</span></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">shell · configure openShell policy</span>
+      <button class="code-copy" onclick="copyCode(this)" aria-label="Copy policy commands">copy</button>
+    </div>
+    <pre><span class="c"># Verify NemoClaw installation</span>
+<span class="k">openclaw</span> nemoclaw status
+
+<span class="c"># View current OpenShell sandbox policy</span>
+<span class="k">openclaw</span> nemoclaw policy show
+
+<span class="c"># Block PII and financial data from cloud model routing</span>
+<span class="k">openclaw</span> nemoclaw policy set <span class="s">--block-cloud-for pii,financial,health</span>
+
+<span class="c"># List installed Nemotron models</span>
+<span class="k">openclaw</span> nemoclaw models list</pre>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">nemoclaw_vs_openclaw</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="cmp-wrap">
+    <table class="cmp-table" aria-label="NemoClaw vs OpenClaw feature comparison">
+      <thead>
+        <tr>
+          <th scope="col">Dimension</th>
+          <th scope="col" class="oc">OpenClaw</th>
+          <th scope="col" class="nc">NemoClaw</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary language</td>
+          <td>TypeScript / Node.js</td>
+          <td class="win">Python + NeMo framework</td>
+        </tr>
+        <tr>
+          <td>Target audience</td>
+          <td>Developers, consumers</td>
+          <td class="win">Enterprise, DevSecOps</td>
+        </tr>
+        <tr>
+          <td>Security model</td>
+          <td class="warn-cell">Permissive — application-level only</td>
+          <td class="win">OpenShell sandbox — runtime-level enforcement</td>
+        </tr>
+        <tr>
+          <td>Data privacy</td>
+          <td class="warn-cell">All requests route to cloud APIs</td>
+          <td class="win">Privacy router — local-first with cloud fallback</td>
+        </tr>
+        <tr>
+          <td>Bundled models</td>
+          <td>Any (user-configured)</td>
+          <td class="win">Nemotron 3 Ultra + Omni (open weights, local)</td>
+        </tr>
+        <tr>
+          <td>Skill registry safety</td>
+          <td class="warn-cell">~900 malicious skills documented</td>
+          <td class="win">Allowlist + policy enforcement per skill</td>
+        </tr>
+        <tr>
+          <td>Messaging platforms</td>
+          <td class="win">WhatsApp, Telegram, Discord, iMessage</td>
+          <td>Orchestration/deployment layer — not messaging-first</td>
+        </tr>
+        <tr>
+          <td>Hardware requirement</td>
+          <td class="win">Any (cloud models)</td>
+          <td>NVIDIA GPU for local models; cloud-only mode: any hardware</td>
+        </tr>
+        <tr>
+          <td>Skill ecosystem size</td>
+          <td class="win">5,400+ skills (large community)</td>
+          <td>Inherits OpenClaw skills via curated allowlist</td>
+        </tr>
+        <tr>
+          <td>Production readiness</td>
+          <td class="win">Stable (v1.x+, post-OpenAI)</td>
+          <td class="warn-cell">Early access — not production-ready (NVIDIA's own caveat)</td>
+        </tr>
+        <tr>
+          <td>License</td>
+          <td>MIT</td>
+          <td>Apache 2.0</td>
+        </tr>
+        <tr>
+          <td>Ownership</td>
+          <td>OpenAI (acquired Feb 2026)</td>
+          <td>NVIDIA (open community)</td>
+        </tr>
+        <tr>
+          <td>3rd-party security audit</td>
+          <td class="warn-cell">Microsoft advisory; DigitalOcean CVE list</td>
+          <td class="warn-cell">None yet — too new</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ENTERPRISE CONTEXT -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">enterprise_context</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>NVIDIA positioned NemoClaw to five enterprise verticals before the GTC announcement: <strong>Salesforce</strong> (CRM and customer-facing AI), <strong>Cisco</strong> (infrastructure and networking), <strong>Google</strong> (cloud and AI platform), <strong>Adobe</strong> (creative and document workflows), and <strong>CrowdStrike</strong> (security — the most symbolically resonant partner given OpenClaw's track record).</p>
+    <p>Because the project is open source, the partnership model is contribution-based rather than licensed: early-access partners are expected to contribute code, resources, or integration work in exchange for access, not licensing fees. This aligns with NVIDIA's broader strategy of using open-source ecosystem positioning to drive hardware adoption — enterprises running NemoClaw at scale will overwhelmingly do so on NVIDIA GPU infrastructure.</p>
+    <p>The hardware-agnostic claim (AMD, Intel, other processors supported) is a strategic gesture to lower adoption barriers. Real performance advantages are on Blackwell-class NVIDIA GPUs using NVFP4, where Nemotron 3 Ultra achieves the 5× throughput multiplier cited in the announcement.</p>
+  </div>
+
+  <!-- DEVELOPER FAQ -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">developer_faq</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="faq" role="list">
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Does NemoClaw replace OpenClaw, or does it require it?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>NemoClaw <strong>requires</strong> an existing OpenClaw installation — it is a plugin, not a replacement. Install OpenClaw first, then add NemoClaw via <code>openclaw install nemoclaw</code>. The NemoClaw stack wraps OpenClaw's agent runtime with OpenShell; the underlying agent framework is unchanged.</p>
+        <p>This means full compatibility with the existing OpenClaw skill ecosystem is retained, but all skill executions are routed through the OpenShell sandbox where your policy configuration applies.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Can I use NemoClaw without an NVIDIA GPU?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>Yes — NemoClaw in <strong>cloud-only mode</strong> is hardware-agnostic and works on any machine that can run OpenClaw. In cloud mode, OpenShell's privacy router enforces data classification rules while all model calls route to external frontier models (GPT-4o, Claude, Gemini, etc.) — you get the security guardrails without running anything locally.</p>
+        <p>To use <strong>Nemotron local models</strong> (the core privacy value proposition), you need an NVIDIA GPU. Nemotron 3 Ultra targets Blackwell-class GPUs (RTX 5090, DGX Station) for the 5× NVFP4 throughput. Older Ampere/Ada GPUs run it at reduced performance via FP16.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What is OpenShell and how does it differ from a Docker container?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>OpenShell is <strong>agent-specific sandboxing</strong> — it operates at the agent execution layer, not the process/OS layer. While you can run NemoClaw inside Docker, OpenShell intercepts individual tool calls (file reads, web fetches, shell commands) made by OpenClaw agents and evaluates each against policy before allowing or blocking it.</p>
+        <p>Key difference: OpenShell understands <strong>semantic data types</strong> (PII, financial data, code) and can block specific content from reaching cloud models even when the container itself has network access. It also provides per-skill allowlisting — you can allow <code>fetch_url</code> while blocking <code>run_shell_command</code> without modifying any OpenClaw skill code.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Is NemoClaw compatible with all existing OpenClaw skills?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>In principle yes — NemoClaw inherits OpenClaw's full skill ecosystem. In practice, OpenShell's default conservative policy will <strong>block or restrict</strong> skills that request broad permissions (file system access, network egress, shell execution) until you explicitly allowlist them.</p>
+        <p>NVIDIA ships NemoClaw with a default policy that blocks high-risk skill categories. Enterprise teams are expected to build curated allowlists appropriate to their use case rather than enabling the full public registry — the right approach given the ~900 flagged malicious skills in the public OpenClaw skill store.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How does the Nemotron privacy router work?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>The <strong>privacy router</strong> is OpenShell's model routing layer. It inspects each agent request and decides — based on your policy — whether the request should go to a local Nemotron model or exit to a cloud frontier model.</p>
+        <p>You configure data classification rules, e.g. <code>--block-cloud-for pii,financial</code>: any request containing PII or financial data routes to local Nemotron instead of OpenAI/Anthropic/Google. General requests with no sensitive markers can freely use cloud models. This hybrid local/cloud architecture is the core enterprise value proposition — frontier quality where it's safe, local privacy where it's required.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What is the relationship between NemoClaw, NeMo, and NIM?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p><strong>NeMo</strong> is NVIDIA's pre-existing generative AI training and inference framework (open source, Apache 2.0, 13K+ GitHub stars). It provides model training infrastructure, quantization tooling (NVFP4), and serving optimizations for Nemotron.</p>
+        <p><strong>NIM</strong> (NVIDIA Inference Microservices) is the production inference layer — containerized, OpenAI-API-compatible model endpoints optimized for NVIDIA hardware. In NemoClaw's private-cloud mode, NIM microservices serve Nemotron inside your own infrastructure.</p>
+        <p><strong>NemoClaw</strong> ties these together at the agent layer: it installs Nemotron (trained via NeMo, served via NIM) and connects it to OpenClaw agents through OpenShell's privacy router. Think: <code>NeMo</code> = model infrastructure · <code>NIM</code> = inference serving · <code>NemoClaw</code> = agent integration + security.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">When will NemoClaw be production-ready?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p>NVIDIA has not given a timeline. As of the GTC 2026 launch, the repository is explicitly described as "early-stage with rough edges" and "shared to gather feedback and enable early experimentation." The NemoClaw plugin CLI is under active development.</p>
+        <p>Given NVIDIA's enterprise software cadence and the fact that it has been pitching to Salesforce, Cisco, Google, Adobe, and CrowdStrike, a stable release is likely timed to a partnership announcement. Watch <a href="https://github.com/NVIDIA/NemoClaw/releases" target="_blank" rel="noopener">github.com/NVIDIA/NemoClaw/releases</a> and ClawBeat's <a href="/">homepage feed</a> for updates.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Is this related to NVIDIA's existing NeMo Guardrails project?</span>
+        <i data-lucide="chevron-down" class="faq-arrow" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a">
+        <p><strong>NeMo Guardrails</strong> is a separate, older NVIDIA open-source project (also Apache 2.0) for adding safety and topical guardrails to LLM applications — think conversation policy enforcement via programmable rules. It operates at the LLM output layer.</p>
+        <p><strong>OpenShell</strong> in NemoClaw operates at the <em>agent execution</em> layer — it controls what tools/skills agents can invoke and what data can exit to cloud models, not just what the model says. The two are complementary and NemoClaw may incorporate NeMo Guardrails as an additional safety layer, though this has not been confirmed in the launch materials.</p>
+      </div>
+    </div>
+
+  </div><!-- .faq -->
+
+  <!-- RESOURCES -->
+  <div class="sdiv" aria-hidden="true">
+    <div class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">resources</span></div>
+    <div class="sdiv-line"></div>
+  </div>
+
+  <h3 class="sh">Official Sources</h3>
+  <div class="resource-grid">
+    <a class="resource-card" href="https://nvidianews.nvidia.com/news/nvidia-announces-nemoclaw" target="_blank" rel="noopener">
+      <div class="resource-type">Official · Press Release</div>
+      <div class="resource-name">NVIDIA Announces NemoClaw for the OpenClaw Community</div>
+      <div class="resource-source">nvidianews.nvidia.com ↗</div>
+    </a>
+    <a class="resource-card" href="https://github.com/NVIDIA/NemoClaw" target="_blank" rel="noopener">
+      <div class="resource-type">Official · GitHub</div>
+      <div class="resource-name">NVIDIA/NemoClaw — Apache 2.0 source code &amp; README</div>
+      <div class="resource-source">github.com ↗</div>
+    </a>
+    <a class="resource-card" href="https://github.com/NVIDIA/AgentIQ" target="_blank" rel="noopener">
+      <div class="resource-type">Official · GitHub</div>
+      <div class="resource-name">NVIDIA/AgentIQ — AI-Q Research Agent Blueprint</div>
+      <div class="resource-source">github.com ↗</div>
+    </a>
+    <a class="resource-card" href="https://github.com/NVIDIA/NeMo" target="_blank" rel="noopener">
+      <div class="resource-type">Official · GitHub</div>
+      <div class="resource-name">NVIDIA/NeMo — Generative AI Framework</div>
+      <div class="resource-source">github.com ↗</div>
+    </a>
+    <a class="resource-card" href="https://blogs.nvidia.com/blog/gtc-2026-news/" target="_blank" rel="noopener">
+      <div class="resource-type">Official · Blog</div>
+      <div class="resource-name">GTC 2026 Live Updates — NVIDIA Blog</div>
+      <div class="resource-source">blogs.nvidia.com ↗</div>
+    </a>
+    <a class="resource-card" href="https://www.globenewswire.com/news-release/2026/03/16/3256722/0/en/NVIDIA-Announces-NemoClaw-for-the-OpenClaw-Community.html" target="_blank" rel="noopener">
+      <div class="resource-type">Official · Wire Copy</div>
+      <div class="resource-name">NVIDIA Announces NemoClaw — GlobeNewswire</div>
+      <div class="resource-source">globenewswire.com ↗</div>
+    </a>
+  </div>
+
+  <h3 class="sh">Press Coverage</h3>
+  <div class="resource-grid">
+    <a class="resource-card" href="https://techcrunch.com/2026/03/16/nvidias-version-of-openclaw-could-solve-its-biggest-problem-security/" target="_blank" rel="noopener">
+      <div class="resource-type">Analysis</div>
+      <div class="resource-name">Nvidia's version of OpenClaw could solve its biggest problem: security</div>
+      <div class="resource-source">TechCrunch ↗</div>
+    </a>
+    <a class="resource-card" href="https://venturebeat.com/technology/nvidias-nemoclaw-brings-privacy-and-security-controls-to-autonomous-openclaw" target="_blank" rel="noopener">
+      <div class="resource-type">Analysis</div>
+      <div class="resource-name">NemoClaw brings privacy and security controls to autonomous OpenClaw agents</div>
+      <div class="resource-source">VentureBeat ↗</div>
+    </a>
+    <a class="resource-card" href="https://www.theregister.com/2026/03/16/nvidia_wraps_its_nemoclaw_around/" target="_blank" rel="noopener">
+      <div class="resource-type">Analysis</div>
+      <div class="resource-name">Nvidia wraps its NemoClaw around OpenClaw for security</div>
+      <div class="resource-source">The Register ↗</div>
+    </a>
+    <a class="resource-card" href="https://thenewstack.io/nemoclaw-openclaw-with-guardrails/" target="_blank" rel="noopener">
+      <div class="resource-type">Technical</div>
+      <div class="resource-name">NemoClaw: OpenClaw with guardrails</div>
+      <div class="resource-source">The New Stack ↗</div>
+    </a>
+    <a class="resource-card" href="https://siliconangle.com/2026/03/16/nvidia-launches-nemoclaw-agent-toolkit-enhance-ai-agents/" target="_blank" rel="noopener">
+      <div class="resource-type">News</div>
+      <div class="resource-name">NVIDIA launches NemoClaw + Agent Toolkit to enhance AI agents</div>
+      <div class="resource-source">SiliconANGLE ↗</div>
+    </a>
+    <a class="resource-card" href="https://www.cnbc.com/2026/03/10/nvidia-open-source-ai-agent-platform-nemoclaw-wired-agentic-tools-openclaw-clawdbot-moltbot.html" target="_blank" rel="noopener">
+      <div class="resource-type">Scoop · Mar 10</div>
+      <div class="resource-name">Nvidia plans open-source AI agent platform 'NemoClaw' for enterprises</div>
+      <div class="resource-source">CNBC ↗</div>
+    </a>
+  </div>
+
+</div><!-- .page-wrap -->
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  function toggleFaq(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    btn.nextElementSibling.classList.toggle('open', !expanded);
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.textContent;
+    navigator.clipboard?.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'copied!';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
