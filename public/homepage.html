@@ -346,7 +346,8 @@ img { display: block; max-width: 100%; }
 .repo-tier.tier-c { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid var(--border); }
 
 /* ── PROMO STRIP: TRACE + GUIDE ── */
-.promo-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.promo-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 900px) { .promo-strip { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .promo-strip { grid-template-columns: 1fr; } }
 
 .promo-card { border: 1px solid var(--border); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; position: relative; overflow: hidden; transition: border-color 0.2s; cursor: pointer; }
@@ -354,10 +355,12 @@ img { display: block; max-width: 100%; }
 .promo-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
 .promo-card.promo-trace::before { background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.15), transparent); }
 .promo-card.promo-guide::before { background: linear-gradient(to right, var(--cyan), rgba(6,182,212,0.15), transparent); }
+.promo-card.promo-nemoclaw::before { background: linear-gradient(to right, var(--green), rgba(34,197,94,0.15), transparent); }
 .promo-card-eyebrow { display: flex; align-items: center; gap: 0.625rem; }
 .promo-card-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.2rem 0.5rem; border-radius: 2px; }
 .promo-card.promo-trace .promo-card-label { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
 .promo-card.promo-guide .promo-card-label { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(6,182,212,0.2); }
+.promo-card.promo-nemoclaw .promo-card-label { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
 .promo-card-issue { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
 .promo-card-title { font-family: var(--sans); font-size: 1.375rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; color: #fff; }
 .promo-card-desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; }
@@ -366,6 +369,7 @@ img { display: block; max-width: 100%; }
 .promo-card-go { display: flex; align-items: center; gap: 0.3rem; font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; transition: color 0.15s; }
 .promo-card.promo-trace .promo-card-go { color: var(--orange); }
 .promo-card.promo-guide .promo-card-go { color: var(--cyan); }
+.promo-card.promo-nemoclaw .promo-card-go { color: var(--green); }
 .promo-card-go svg { width: 11px; height: 11px; }
 .promo-card:hover .promo-card-go { text-decoration: underline; }
 
@@ -637,6 +641,19 @@ img { display: block; max-width: 100%; }
       <div class="promo-card-footer">
         <span class="promo-card-stat">Updated 2026</span>
         <span class="promo-card-go">View Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+      </div>
+    </a>
+
+    <a href="/guide/nemoclaw.html" class="promo-card promo-nemoclaw" role="listitem" aria-label="Guide — NemoClaw deep dive">
+      <div class="promo-card-eyebrow">
+        <span class="promo-card-label">Guide</span>
+        <span class="promo-card-issue">// Deep dive · GTC 2026</span>
+      </div>
+      <div class="promo-card-title">NemoClaw: Inside NVIDIA's Agent Runtime</div>
+      <p class="promo-card-desc">Architecture, Nemotron models, memory systems, and deployment — everything announced at GTC 2026 broken down with the "Why It Matters" for the OpenClaw ecosystem.</p>
+      <div class="promo-card-footer">
+        <span class="promo-card-stat">New · Mar 2026</span>
+        <span class="promo-card-go">Read Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
       </div>
     </a>
 
