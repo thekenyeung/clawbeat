@@ -1578,14 +1578,20 @@ def _save_to_supabase(db: dict) -> None:
             'hn_points':     item.get('hn_points'),
             'hn_comments':   item.get('hn_comments'),
             'd5_score':      item.get('d5_score'),
-            'needs_reprocess': False,
+            # needs_reprocess is omitted here; it is written only after the column
+            # migration has been applied (ALTER TABLE news_items ADD COLUMN IF NOT EXISTS
+            # needs_reprocess BOOLEAN DEFAULT false). Until then, leaving it out keeps
+            # the upsert working. Once the column exists, re-add it here.
         } for item in db.get('items', [])]
         if news_records:
             _supabase.table('news_items').upsert(news_records).execute()
             print(f"✅ Upserted {len(news_records)} news items.")
-            # Clean up any orphan rows that were not re-discovered this run
-            # (articles too old to reappear in live feeds).
-            _supabase.table('news_items').delete().eq('needs_reprocess', True).execute()
+            # Clean up admin-flagged orphan rows (needs_reprocess = true).
+            # Guarded separately so a missing column doesn't abort the upsert above.
+            try:
+                _supabase.table('news_items').delete().eq('needs_reprocess', True).execute()
+            except Exception:
+                pass  # Column not yet migrated — skip cleanup
 
         # Same-day pruning removed: deleting today's articles each hourly run was
         # causing legitimately discovered articles to be wiped once they fell out
