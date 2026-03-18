@@ -26,7 +26,8 @@ import {
   MapPin,
   Globe,
   Layers,
-  BookMarked
+  BookMarked,
+  Link2
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -947,7 +948,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                         disabled={isPlinking}
                         aria-label="Copy permalink"
                       >
-                        {isCopied ? 'Copied!' : isPlinking ? '...' : '⌘'}
+                        {isCopied ? 'Copied!' : isPlinking ? '···' : <Link2 size={12} />}
                       </button>
                     </div>
                     {leadSlot.summary && <p className="lead-summary">{leadSlot.summary}</p>}
