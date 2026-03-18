@@ -218,7 +218,7 @@ const App: React.FC = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [spotlightOverrides, setSpotlightOverrides] = useState<SpotlightOverride[]>([]);
   const [spotlightExcluded, setSpotlightExcluded]   = useState<{dispatch_date:string; url:string}[]>([]);
-  const [dailyEditionDates, setDailyEditionDates]   = useState<Set<string>>(new Set()); // YYYY-MM-DD
+  const [dailyEditions, setDailyEditions]   = useState<Map<string, string>>(new Map()); // YYYY-MM-DD → slug
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -309,7 +309,7 @@ const App: React.FC = () => {
         supabase.from('events').select('*').limit(500),
         supabase.from('feed_metadata').select('*').eq('id', 1).maybeSingle(),
         supabase.from('spotlight_overrides').select('*'),
-        supabase.from('daily_editions').select('edition_date'),
+        supabase.from('daily_editions').select('edition_date,permalink'),
         supabase.from('spotlight_excluded').select('dispatch_date,url'),
       ]);
 
@@ -344,7 +344,7 @@ const App: React.FC = () => {
       setEvents(eventsRes.data || []);
       setSpotlightOverrides(spotlightRes.data || []);
       setSpotlightExcluded(excludedRes.data || []);
-      setDailyEditionDates(new Set((dailyEdRes.data || []).map((r: any) => r.edition_date)));
+      setDailyEditions(new Map((dailyEdRes.data || []).map((r: any) => [r.edition_date, r.permalink])));
     } catch (err: any) {
       setError("Intelligence feed is currently updating...");
     } finally {
@@ -522,7 +522,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditionDates={dailyEditionDates} />
+                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} />
                 <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
@@ -742,14 +742,14 @@ const scoreArticle = (item: NewsItem): number => {
   return score;
 };
 
-const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightExcluded, spotlightDays, dailyEditionDates }: {
+const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightExcluded, spotlightDays, dailyEditions }: {
   items: NewsItem[];
   allNews: NewsItem[];
   onTrackClick: (t: string, s: string) => void;
   spotlightOverrides: SpotlightOverride[];
   spotlightExcluded: {dispatch_date: string; url: string}[];
   spotlightDays: Set<string>;
-  dailyEditionDates: Set<string>;
+  dailyEditions: Map<string, string>;
 }) => {
   // Group current-page items by day
   const grouped: Record<string, NewsItem[]> = {};
@@ -938,9 +938,10 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                   {(() => {
                     const parts = leadSlot.date.split('-'); // MM-DD-YYYY
                     const isoDate = parts.length === 3 ? `${parts[2]}-${parts[0]}-${parts[1]}` : leadSlot.date;
-                    if (!dailyEditionDates.has(isoDate)) return null;
+                    const editionSlug = dailyEditions.get(isoDate);
+                    if (!editionSlug) return null;
                     return (
-                      <a href={`/daily/${isoDate}.html`} className="daily-edition-link">
+                      <a href={`/daily/${isoDate}/${editionSlug}.html`} className="daily-edition-link">
                         <span className="daily-edition-label">// daily_edition</span>
                         Read The Daily Edition
                         <span className="daily-edition-arrow">→</span>
