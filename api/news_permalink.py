@@ -109,7 +109,8 @@ def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "
     try:
         prompt = (
             "You are an AI analyst for ClawBeat, an agentic AI news feed. "
-            "Write a 3-4 sentence summary of the following article. "
+            "Write a detailed 4-6 sentence summary of the following article. "
+            "Cover: what happened, who is involved, why it matters, and any key details or implications. "
             "Be factual, specific, and grounded in the article content. "
             "Do not start with 'This article'. Do not editorialize.\n\n"
             f"Headline: {headline}\n\n"
@@ -120,7 +121,7 @@ def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "
             f"gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}",
             json={
                 "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"maxOutputTokens": 180, "temperature": 0.2},
+                "generationConfig": {"maxOutputTokens": 350, "temperature": 0.2},
             },
             timeout=15,
         )
