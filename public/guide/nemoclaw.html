@@ -206,13 +206,11 @@
   .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
   .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
   .nav-dropdown-item:hover { background: var(--orange-dim); }
-  .nav-dropdown-item.current { background: var(--orange-dim); }
   .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
   .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
   .nav-dropdown-sub { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
   .mobile-subnav-item { font-family: var(--mono); font-size: var(--min-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
   .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
-  .mobile-subnav-item.current { color: var(--orange); background: var(--orange-dim); }
   .mobile-subnav-item svg { width: 14px; height: 14px; }
 
   /* ── LAYOUT ── */
@@ -431,19 +429,19 @@
   <div class="header-inner">
     <a href="/" class="brand">
       <div class="brand-img">
-        <img src="/images/clawbeat-icon-claw-logo-32x32.ico" alt="ClawBeat" width="40" height="40">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
       </div>
-      <span class="brand-text">Clawbeat<span>.co</span></span>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
-    <nav class="header-nav" aria-label="Site navigation">
+    <nav class="header-nav">
       <div class="nav-dropdown">
-        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <a href="/news.html" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
         <div class="nav-dropdown-menu">
           <a href="/trace/" class="nav-dropdown-item">
             <i data-lucide="layers"></i>
             <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
           </a>
-          <a href="/guide/" class="nav-dropdown-item current">
+          <a href="/guide/" class="nav-dropdown-item">
             <i data-lucide="book-marked"></i>
             <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
           </a>
@@ -464,9 +462,9 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/news.html" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
   <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
-  <a href="/guide/" class="mobile-subnav-item current"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
   <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
