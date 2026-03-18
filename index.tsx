@@ -439,10 +439,15 @@ const App: React.FC = () => {
   );
 
 
-  // Spotlight shows for every day that has items
+  const currentNewsItems = React.useMemo(
+    () => sortedNews.filter(item => (item.date || 'unknown') === activeNewsDate),
+    [sortedNews, activeNewsDate]
+  );
+
+  // Spotlight always shows for the active day's page
   const spotlightDays = React.useMemo(
-    () => new Set(sortedNewsDays),
-    [sortedNewsDays]
+    () => activeNewsDate ? new Set([activeNewsDate]) : new Set<string>(),
+    [activeNewsDate]
   );
 
   const currentVideoItems = videos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
@@ -559,7 +564,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={sortedNews} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} onPermalinkCopy={handlePermalinkCopy} permalinkLoading={permalinkLoading} permalinkCopied={permalinkCopied} />
+                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} onPermalinkCopy={handlePermalinkCopy} permalinkLoading={permalinkLoading} permalinkCopied={permalinkCopied} />
                 <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
