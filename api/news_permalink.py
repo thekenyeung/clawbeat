@@ -52,7 +52,7 @@ def slugify(text: str, fallback: str = "article") -> str:
 
 
 def fetch_og_image(url: str) -> str:
-    """Fetch og:image from article HTML. Returns URL string or empty string."""
+    """Fetch og:image from article HTML. Returns absolute URL string or empty string."""
     try:
         r = requests.get(
             url,
@@ -67,7 +67,14 @@ def fetch_og_image(url: str) -> str:
         ]:
             m = re.search(pat, html, re.I)
             if m:
-                return m.group(1).strip()
+                img = m.group(1).strip()
+                # Absolutize relative URLs
+                if img.startswith("//"):
+                    img = "https:" + img
+                elif img.startswith("/"):
+                    parsed = urlparse(r.url)
+                    img = f"{parsed.scheme}://{parsed.netloc}{img}"
+                return img
     except Exception:
         pass
     return ""
@@ -91,9 +98,13 @@ def fetch_jina(url: str) -> str:
         return ""
 
 
-def gemini_summarize(headline: str, article_text: str) -> str:
-    """Generate a 3-4 sentence AI summary grounded in the article content."""
-    if not GEMINI_API_KEY or not article_text:
+def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "") -> str:
+    """Generate a 3-4 sentence AI summary grounded in the article content.
+    Falls back to fallback_summary (existing DB summary) if Jina returns nothing."""
+    if not GEMINI_API_KEY:
+        return fallback_summary
+    source_text = article_text or fallback_summary
+    if not source_text:
         return ""
     try:
         prompt = (
@@ -102,7 +113,7 @@ def gemini_summarize(headline: str, article_text: str) -> str:
             "Be factual, specific, and grounded in the article content. "
             "Do not start with 'This article'. Do not editorialize.\n\n"
             f"Headline: {headline}\n\n"
-            f"Article:\n{article_text[:5000]}"
+            f"Article:\n{source_text[:5000]}"
         )
         r = requests.post(
             "https://generativelanguage.googleapis.com/v1beta/models/"
@@ -115,7 +126,7 @@ def gemini_summarize(headline: str, article_text: str) -> str:
         )
         return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
     except Exception:
-        return ""
+        return fallback_summary
 
 
 def supabase_get(date: str, slug: str) -> dict | None:
@@ -563,12 +574,13 @@ class handler(BaseHTTPRequestHandler):
             self._json(400, {"error": "invalid json"})
             return
 
-        article_url  = body.get("article_url", "").strip()
-        headline     = body.get("headline", "").strip()
-        pub_name     = body.get("pub_name", "").strip()
-        pub_date     = body.get("pub_date", "").strip()
-        date_str     = body.get("date", "").strip()  # YYYY-MM-DD
-        more_cov     = body.get("more_coverage", [])
+        article_url      = body.get("article_url", "").strip()
+        headline         = body.get("headline", "").strip()
+        pub_name         = body.get("pub_name", "").strip()
+        pub_date         = body.get("pub_date", "").strip()
+        date_str         = body.get("date", "").strip()  # YYYY-MM-DD
+        fallback_summary = body.get("summary", "").strip()
+        more_cov         = body.get("more_coverage", [])
 
         if not article_url or not headline or not date_str:
             self._json(400, {"error": "missing required fields"})
@@ -576,9 +588,9 @@ class handler(BaseHTTPRequestHandler):
 
         slug = slugify(headline, fallback=date_str)
 
-        # ── Idempotency: return cached result if already exists ───────────────
+        # ── Idempotency: return cached result only if fields are populated ────
         existing = supabase_get(date_str, slug)
-        if existing:
+        if existing and existing.get("ai_summary") and existing.get("og_image_url"):
             permalink_url = (
                 f"{SITE_HOST}/news/{date_str}/{slug}"
                 "?utm_source=clawbeat&utm_medium=share&utm_campaign=permalink"
@@ -588,8 +600,9 @@ class handler(BaseHTTPRequestHandler):
 
         # ── Fetch content + generate summary ─────────────────────────────────
         article_text = fetch_jina(article_url)
-        ai_summary   = gemini_summarize(headline, article_text)
-        og_image_url = fetch_og_image(article_url)
+        ai_summary   = gemini_summarize(headline, article_text, fallback_summary)
+        # Reuse og_image_url from existing row if already fetched
+        og_image_url = (existing or {}).get("og_image_url") or fetch_og_image(article_url)
 
         # ── Persist ───────────────────────────────────────────────────────────
         row = {

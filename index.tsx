@@ -286,6 +286,7 @@ const App: React.FC = () => {
           pub_name:      item.source,
           pub_date:      item.date,
           date:          isoDate,
+          summary:       item.summary || '',
           more_coverage: item.moreCoverage || [],
         }),
       });
