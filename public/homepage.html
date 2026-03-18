@@ -176,31 +176,32 @@ img { display: block; max-width: 100%; }
 .brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
 .brand-text span { color: var(--orange); }
 .header-nav { display: flex; align-items: center; gap: 0.25rem; }
-.nav-item { font-family: var(--sans); font-size: var(--min-font); font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.5rem 1rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
+.nav-item { font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
 .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
 .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
 .nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
 .nav-dropdown { position: relative; }
 .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
-.nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown:focus-within .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-.nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; min-height: 44px; }
+.nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; }
 .nav-dropdown-item:hover { background: var(--orange-dim); }
 .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
-.nav-dropdown-label { font-family: var(--sans); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
-.nav-dropdown-sub { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
-.nav-skill-chip { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.375rem 0.6rem; min-height: 44px; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; display: flex; align-items: center; }
+.nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+.nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+.nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
 .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
-.hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: 0.375rem; }
+.hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }
 .hamburger-btn:hover { color: #fff; }
 .hamburger-btn svg { width: 24px; height: 24px; }
 .mobile-menu { display: none; position: fixed; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
 .mobile-menu.open { display: flex; }
-.mobile-nav-item { font-family: var(--sans); font-size: 0.8125rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+.mobile-nav-item { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
 .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
 .mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
 .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-.mobile-subnav-item { font-family: var(--mono); font-size: var(--min-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; min-height: 44px; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+.mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
 .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+.mobile-subnav-item svg { width: 14px; height: 14px; }
 @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
 
 /* ── LAYOUT ── */
@@ -349,8 +350,7 @@ img { display: block; max-width: 100%; }
 .repo-tier.tier-c { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid var(--border); }
 
 /* ── PROMO STRIP: TRACE + GUIDE ── */
-.promo-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
-@media (max-width: 900px) { .promo-strip { grid-template-columns: 1fr 1fr; } }
+.promo-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 @media (max-width: 640px) { .promo-strip { grid-template-columns: 1fr; } }
 
 .promo-card { border: 1px solid var(--border); border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; position: relative; overflow: hidden; transition: border-color 0.2s; cursor: pointer; }
@@ -414,6 +414,76 @@ img { display: block; max-width: 100%; }
 
 /* ── EMPTY / ERROR STATES ── */
 .empty-state { padding: 2rem 1.5rem; text-align: center; font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ── AT A GLANCE DASHBOARD ── */
+#glance-root { font-size: var(--min-font); } /* floor: 11px across entire section */
+.glance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
+@media (max-width: 900px) { .glance-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .glance-grid { grid-template-columns: 1fr; } }
+.glance-card { background: var(--bg-2); padding: 1.25rem 1.375rem; display: flex; flex-direction: column; gap: 0.625rem; }
+.glance-label { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); }
+.glance-label::before { content: '// '; color: var(--text-4); }
+.glance-val { font-family: var(--mono); font-size: 1.375rem; font-weight: 700; color: var(--orange); line-height: 1; letter-spacing: -0.04em; }
+.glance-sub { font-size: 0.8125rem; color: var(--text-2); }
+.glance-family-row { display: flex; align-items: center; gap: 0.5rem; font-size: var(--min-font); font-family: var(--mono); color: var(--text-2); }
+.glance-family-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.glance-family-count { color: var(--text-3); min-width: 2.5rem; text-align: right; flex-shrink: 0; }
+.glance-family-bar-wrap { width: 2.5rem; flex-shrink: 0; }
+.glance-family-bar { height: 3px; background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.35)); border-radius: 2px; }
+.glance-status { display: flex; align-items: center; gap: 0.375rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-top: auto; }
+.glance-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.glance-spark { display: flex; align-items: flex-end; }
+.glance-repo-row { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.75rem; font-family: var(--mono); }
+.glance-repo-name { color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.glance-repo-stars { color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
+.glance-repo-name:hover { color: var(--orange); }
+
+/* ── TRENDING TOPICS STRIP ── */
+.glance-section-label { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+.glance-section-label-text { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.18em; white-space: nowrap; }
+.glance-section-label-text::before { content: '// '; color: var(--text-4); }
+.glance-section-label-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+.glance-trending { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.375rem; -webkit-overflow-scrolling: touch; }
+.glance-trending::-webkit-scrollbar { height: 3px; }
+.glance-trending::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+.trend-chip { flex-shrink: 0; min-width: 152px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.875rem 1rem; display: flex; flex-direction: column; gap: 0.3rem; transition: border-color 0.15s, background 0.15s; text-decoration: none; }
+.trend-chip:hover { border-color: var(--border-2); background: var(--bg-3); }
+.trend-chip-tag { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: lowercase; letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trend-chip-tag::before { content: '#'; }
+.trend-chip-count { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+.trend-chip-hn { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); }
+.trend-chip-hn.has-signal { color: var(--green); }
+
+/* ── FAMILY TABS ── */
+.glance-tab-section { margin-top: 0.25rem; }
+.family-tab-bar { display: flex; gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; border-bottom: 1px solid var(--border); margin-bottom: 0.875rem; }
+.family-tab-bar::-webkit-scrollbar { height: 3px; }
+.family-tab-bar::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+.family-tab { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 0.875rem; border: none; background: transparent; color: var(--text-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color 0.15s; min-height: 36px; }
+.family-tab:hover { color: var(--text-2); }
+.family-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.family-mini-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
+@media (max-width: 900px) { .family-mini-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .family-mini-grid { grid-template-columns: 1fr; } }
+.family-mini-card { background: var(--bg-2); padding: 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.family-mini-label { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); }
+.family-mini-label::before { content: '// '; color: var(--text-4); }
+.family-mini-val { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; color: var(--orange); line-height: 1; letter-spacing: -0.04em; }
+.family-mini-sub { font-size: 0.8125rem; color: var(--text-2); }
+.family-mini-empty { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: auto; }
+.family-news-item { display: flex; flex-direction: column; gap: 0.2rem; text-decoration: none; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+.family-news-item:last-child { border-bottom: none; padding-bottom: 0; }
+.family-news-headline { font-size: 0.75rem; color: var(--text); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.family-news-item:hover .family-news-headline { color: var(--orange); }
+.family-news-meta { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+
+/* ── BOTTOM TWO-COLUMN (EVENTS + DEEP INTEL) ── */
+.bottom-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 900px) { .bottom-two-col { grid-template-columns: 1fr; } }
+.promo-col { display: flex; flex-direction: column; gap: 1rem; }
+.promo-col .promo-card { padding: 1.5rem; }
+.promo-col .promo-card-title { font-size: 1.125rem; }
+.promo-col .promo-card-desc { font-size: 0.8125rem; }
 
 /* ── BOTTOM SPACER ── */
 .pb { padding-bottom: 4rem; }
@@ -481,31 +551,62 @@ img { display: block; max-width: 100%; }
 <!-- ══════════════════════════ MAIN CONTENT ══════════════════════════ -->
 <main id="main-content">
 
-<!-- ══════════════════════════ HERO (LEAD SIGNAL) ══════════════════════════ -->
-<section class="hero" aria-label="Top intelligence signal">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">
-      <div class="hero-live-dot" aria-hidden="true"></div>
-      <span class="hero-live-label"><strong>Live</strong> — OpenClaw Intelligence Feed</span>
-    </div>
-    <div id="hero-root" aria-live="polite" aria-atomic="false" aria-label="Top signal loading">
-      <!-- skeleton -->
-      <div class="hero-lead" role="status" aria-label="Loading top signal" style="border:1px solid var(--border-2);border-radius:0.75rem;">
-        <div class="hero-lead-accent" aria-hidden="true"></div>
-        <div class="hero-lead-number" aria-hidden="true">01</div>
-        <div><div class="skeleton skeleton-text short" style="height:1rem;width:120px;margin-bottom:0"></div></div>
-        <div class="skeleton skeleton-text wide" style="height:2.5rem;"></div>
-        <div class="skeleton skeleton-text wide"></div>
-        <div class="skeleton skeleton-text med"></div>
-        <div class="skeleton skeleton-text short" style="height:1rem;width:80px;margin-bottom:0"></div>
+<!-- ══════════════════════════ AT A GLANCE ══════════════════════════ -->
+<div class="page-wrap">
+  <div class="section-divider" role="separator" aria-label="Ecosystem at a glance">
+    <span class="section-divider-label" aria-hidden="true">ecosystem_pulse</span>
+    <div class="section-divider-line" aria-hidden="true"></div>
+    <a href="/forge.html" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;transition:color 0.15s;padding:0.25rem 0;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--text-3)'" aria-label="Deep analytics in the Forge">Forge ↗</a>
+  </div>
+  <div id="glance-root" aria-live="polite" aria-atomic="false">
+    <!-- skeleton -->
+    <div class="glance-grid" role="status" aria-label="Loading ecosystem dashboard">
+      <div class="glance-card">
+        <div class="skeleton" style="height:0.6rem;width:70px;"></div>
+        <div class="skeleton" style="height:1.5rem;width:90px;margin-top:0.25rem;"></div>
+        <div class="skeleton" style="height:0.6rem;width:100%;"></div>
+        <div class="skeleton" style="height:0.6rem;width:90%;"></div>
+        <div class="skeleton" style="height:0.6rem;width:80%;"></div>
+      </div>
+      <div class="glance-card">
+        <div class="skeleton" style="height:0.6rem;width:80px;"></div>
+        <div class="skeleton" style="height:2rem;width:60px;margin-top:0.25rem;"></div>
+        <div class="skeleton" style="height:0.6rem;width:110px;"></div>
+        <div class="skeleton" style="height:0.6rem;width:80px;"></div>
+      </div>
+      <div class="glance-card">
+        <div class="skeleton" style="height:0.6rem;width:90px;"></div>
+        <div class="skeleton" style="height:28px;width:100%;margin-top:0.25rem;"></div>
+        <div class="skeleton" style="height:0.6rem;width:100px;"></div>
+      </div>
+      <div class="glance-card">
+        <div class="skeleton" style="height:0.6rem;width:60px;"></div>
+        <div class="skeleton" style="height:0.75rem;width:100%;margin-top:0.25rem;"></div>
+        <div class="skeleton" style="height:0.75rem;width:100%;"></div>
+        <div class="skeleton" style="height:0.75rem;width:100%;"></div>
       </div>
     </div>
+    <!-- trending skeleton -->
+    <div style="display:flex;gap:0.75rem;padding:1.25rem 0 0.5rem;overflow:hidden;">
+      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
+      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
+      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
+      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
+    </div>
+    <!-- tabs skeleton -->
+    <div style="display:flex;gap:0.5rem;margin-top:1.25rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">
+      <div class="skeleton" style="height:1.25rem;width:80px;border-radius:2px;"></div>
+      <div class="skeleton" style="height:1.25rem;width:70px;border-radius:2px;"></div>
+      <div class="skeleton" style="height:1.25rem;width:75px;border-radius:2px;"></div>
+      <div class="skeleton" style="height:1.25rem;width:65px;border-radius:2px;"></div>
+    </div>
+    <div class="skeleton" style="height:130px;border-radius:0.75rem;margin-top:0.875rem;"></div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════ GEO / AI SUMMARY ══════════════════════════ -->
+<!-- ══════════════════════════ ABOUT ══════════════════════════ -->
 <div class="page-wrap">
-  <div class="geo-summary" style="margin-top:2.5rem;" role="complementary" aria-label="About ClawBeat">
+  <div class="geo-summary" style="margin-top:2rem;" role="complementary" aria-label="About ClawBeat">
     <span class="geo-summary-icon" aria-hidden="true">// about</span>
     <p class="geo-summary-text">
       <strong>ClawBeat</strong> is an intelligence hub tracking the <strong>OpenClaw agentic AI ecosystem</strong> — covering breaking news, research papers, GitHub repo activity, live events, and comparative analysis. Updated daily via automated pipeline using Google Gemini. The <strong>Daily Edition</strong> distills the most significant signal of the day, while <strong>Trace</strong> delivers monthly deep analysis of the top 20 stories shaping agentic AI development through OpenClaw, NanoClaw, NemoBot, and adjacent frameworks.
@@ -557,63 +658,36 @@ img { display: block; max-width: 100%; }
   </div>
 </div>
 
-<!-- ══════════════════════════ DASHBOARD ══════════════════════════ -->
+<!-- ══════════════════════════ EVENTS ══════════════════════════ -->
 <div class="page-wrap">
-  <div class="section-divider" role="separator" aria-label="Signal dashboard section">
-    <span class="section-divider-label" aria-hidden="true">signal_dashboard</span>
+  <div class="section-divider" role="separator" aria-label="Upcoming events section">
+    <span class="section-divider-label" aria-hidden="true">upcoming_events</span>
     <div class="section-divider-line" aria-hidden="true"></div>
+    <a href="/events-calendar.html" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;transition:color 0.15s;padding:0.25rem 0;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--text-3)'" aria-label="View full events calendar">Calendar ↗</a>
   </div>
-  <div class="dashboard-grid">
-
-    <!-- EVENTS PANEL -->
-    <section class="dash-panel" aria-labelledby="events-panel-title">
-      <div class="dash-panel-header">
-        <span class="dash-panel-title" id="events-panel-title">upcoming_events</span>
-        <a href="/events-calendar.html" class="dash-panel-link" aria-label="View full events calendar">Calendar <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+  <section class="dash-panel" aria-labelledby="events-panel-title">
+    <div class="dash-panel-header">
+      <span class="dash-panel-title" id="events-panel-title">signal_schedule</span>
+      <a href="/events-calendar.html" class="dash-panel-link" aria-label="View full events calendar">Full Calendar <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+    </div>
+    <div class="dash-panel-body" id="events-list" aria-live="polite" aria-atomic="false">
+      <div class="event-item" role="status" aria-label="Loading events">
+        <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
+        <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
       </div>
-      <div class="dash-panel-body" id="events-list" aria-live="polite" aria-atomic="false">
-        <div class="event-item" role="status" aria-label="Loading events">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
-        <div class="event-item">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
-        <div class="event-item" style="border-bottom:none;">
-          <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
-          <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
-        </div>
+      <div class="event-item">
+        <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
+        <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
       </div>
-    </section>
-
-    <!-- REPOS ANALYTICS PANEL -->
-    <section class="dash-panel" aria-labelledby="repos-panel-title">
-      <div class="dash-panel-header">
-        <span class="dash-panel-title" id="repos-panel-title">ecosystem_analytics</span>
-        <a href="/forge.html" class="dash-panel-link" aria-label="View Forge repository browser">Forge <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+      <div class="event-item" style="border-bottom:none;">
+        <div class="event-date-block"><div class="skeleton" style="height:0.6rem;width:28px;margin-bottom:4px;"></div><div class="skeleton" style="height:1.5rem;width:24px;"></div></div>
+        <div class="event-info"><div class="skeleton skeleton-text wide" style="height:0.875rem;"></div><div class="skeleton skeleton-text med" style="height:0.7rem;margin-top:4px;"></div></div>
       </div>
-      <div id="repos-analytics" aria-live="polite" aria-atomic="true">
-        <!-- stats row skeleton -->
-        <div class="analytics-stats" role="status" aria-label="Loading ecosystem analytics">
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:60px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:80px;"></div></div>
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:60px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:80px;"></div></div>
-          <div class="analytics-stat"><div class="skeleton" style="height:1.25rem;width:40px;margin-bottom:4px;"></div><div class="skeleton" style="height:0.6rem;width:70px;"></div></div>
-        </div>
-        <!-- family skeleton -->
-        <div class="family-list">
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:80px;"></div><div class="skeleton" style="height:0.75rem;width:60px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:70px;"></div><div class="skeleton" style="height:0.75rem;width:50px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:60px;"></div><div class="skeleton" style="height:0.75rem;width:50px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-          <div class="family-row" style="border-bottom:none;"><div class="family-row-top"><div class="skeleton" style="height:0.75rem;width:65px;"></div><div class="skeleton" style="height:0.75rem;width:45px;"></div></div><div class="skeleton" style="height:3px;"></div></div>
-        </div>
-      </div>
-    </section>
-
-  </div>
+    </div>
+  </section>
 </div>
 
-<!-- ══════════════════════════ TRACE + GUIDE PROMO ══════════════════════════ -->
+<!-- ══════════════════════════ DEEP INTEL ══════════════════════════ -->
 <div class="page-wrap">
   <div class="section-divider" role="separator" aria-label="Deep intelligence section">
     <span class="section-divider-label" aria-hidden="true">deep_intel</span>
@@ -621,26 +695,26 @@ img { display: block; max-width: 100%; }
   </div>
   <div class="promo-strip" role="list" aria-label="Featured publications">
 
-    <a href="/trace/" class="promo-card promo-trace" role="listitem" aria-label="Trace — Signal Intelligence Monthly magazine">
+    <a href="/trace/" class="promo-card promo-trace" role="listitem" aria-label="Trace — Signal Intelligence Monthly">
       <div class="promo-card-eyebrow">
         <span class="promo-card-label">Trace</span>
         <span class="promo-card-issue" id="trace-issue-label">// Monthly magazine</span>
       </div>
       <div class="promo-card-title">Signal Intelligence Monthly</div>
-      <p class="promo-card-desc">The top 20 stories from the OpenClaw ecosystem — curated, analysed, and delivered monthly. AI editorial, deep summaries, and the "Why It Matters" breakdown for every signal.</p>
+      <p class="promo-card-desc">Top 20 stories from the OpenClaw ecosystem — curated, analysed, and delivered monthly with AI editorial and "Why It Matters" breakdowns.</p>
       <div class="promo-card-footer">
         <span class="promo-card-stat" id="trace-stat">20 signals / issue</span>
         <span class="promo-card-go">Read Trace <i data-lucide="arrow-right" aria-hidden="true"></i></span>
       </div>
     </a>
 
-    <a href="/guide/openclaw-comparison.html" class="promo-card promo-guide" role="listitem" aria-label="Guide — OpenClaw vs the Field comparison">
+    <a href="/guide/openclaw-comparison.html" class="promo-card promo-guide" role="listitem" aria-label="Guide — OpenClaw vs the Field">
       <div class="promo-card-eyebrow">
         <span class="promo-card-label">Guide</span>
-        <span class="promo-card-issue">// Comparison infographic</span>
+        <span class="promo-card-issue">// Comparison · 2026</span>
       </div>
       <div class="promo-card-title">OpenClaw vs. the Field</div>
-      <p class="promo-card-desc">A detailed side-by-side comparison of OpenClaw, NanoClaw, NemoBot, and adjacent agentic AI frameworks — architecture, performance, ecosystem fit, and community momentum.</p>
+      <p class="promo-card-desc">Side-by-side comparison of OpenClaw, NanoClaw, NemoBot, and adjacent frameworks — architecture, performance, ecosystem fit, and community momentum.</p>
       <div class="promo-card-footer">
         <span class="promo-card-stat">Updated 2026</span>
         <span class="promo-card-go">View Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
@@ -653,7 +727,20 @@ img { display: block; max-width: 100%; }
         <span class="promo-card-issue">// Deep dive · GTC 2026</span>
       </div>
       <div class="promo-card-title">NemoClaw: Inside NVIDIA's Agent Runtime</div>
-      <p class="promo-card-desc">Architecture, Nemotron models, memory systems, and deployment — everything announced at GTC 2026 broken down with the "Why It Matters" for the OpenClaw ecosystem.</p>
+      <p class="promo-card-desc">Architecture, Nemotron models, memory systems, and deployment — everything announced at GTC 2026 broken down for the OpenClaw ecosystem.</p>
+      <div class="promo-card-footer">
+        <span class="promo-card-stat">New · Mar 2026</span>
+        <span class="promo-card-go">Read Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+      </div>
+    </a>
+
+    <a href="/guide/claude-dispatch.html" class="promo-card promo-guide" role="listitem" aria-label="Guide — Claude Dispatch vs OpenClaw">
+      <div class="promo-card-eyebrow">
+        <span class="promo-card-label">Guide</span>
+        <span class="promo-card-issue">// Alt. evaluation · Mar 2026</span>
+      </div>
+      <div class="promo-card-title">Claude Dispatch</div>
+      <p class="promo-card-desc">Is Anthropic's always-on desktop agent a viable OpenClaw alternative? Pricing, sandbox limits, platform constraints, and independent test results — sourced and compared.</p>
       <div class="promo-card-footer">
         <span class="promo-card-stat">New · Mar 2026</span>
         <span class="promo-card-go">Read Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
@@ -888,63 +975,345 @@ img { display: block; max-width: 100%; }
     }).join('');
   }
 
-  /* ── RENDER: ECOSYSTEM ANALYTICS ── */
-  function renderRepos(repos, familyStats) {
-    const root = document.getElementById('repos-analytics');
+  /* ── SPARK HELPERS ── */
+  function buildSparkData(repos) {
+    const now = Date.now();
+    const DAY = 86400000;
+    const slots = Array(7).fill(0);
+    (repos || []).forEach(function(r) {
+      if (!r.pushed_at) return;
+      const age = Math.floor((now - new Date(r.pushed_at).getTime()) / DAY);
+      if (age >= 0 && age < 7) slots[6 - age]++;
+    });
+    return slots; // [day-6, day-5, ..., today]
+  }
 
-    // Aggregate stats from indexed repos
-    const totalStars  = (repos || []).reduce((s, r) => s + (r.stars || 0), 0);
-    const totalIndexed = (repos || []).length;
-    const langs       = new Set((repos || []).map(r => r.language).filter(Boolean));
+  function buildSparkSVG(counts) {
+    const W = 88, H = 28;
+    const max = Math.max.apply(null, counts.concat([1]));
+    const pts = counts.map(function(v, i) {
+      const x = (i / (counts.length - 1)) * W;
+      const y = H - (v / max) * (H - 4) - 2;
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true">'
+      + '<polyline points="' + pts + '" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>'
+      + '</svg>';
+  }
 
-    // Ecosystem total from family_stats (openclaw family = primary signal)
-    const fsMap = {};
-    for (const f of (familyStats || [])) fsMap[f.family] = f;
-    const ocTotal = fsMap['openclaw'] ? fsMap['openclaw'].total_count : totalIndexed;
+  /* ── FAMILY HELPERS ── */
+  var FAMILY_KW = {
+    openclaw: ['openclaw', 'open-claw'],
+    nanoclaw: ['nanoclaw', 'nano-claw'],
+    nemoclaw: ['nemoclaw', 'nemo-claw', 'nemobot'],
+    picoclaw: ['picoclaw', 'pico-claw'],
+    nanobot:  ['nanobot', 'nano-bot'],
+    zeroclaw: ['zeroclaw', 'zero-claw']
+  };
 
-    // Build family rows — use family_stats rows, sorted by total_count desc
+  function reposForFamily(repos, keywords) {
+    return (repos || []).filter(function(r) {
+      var text = [r.name || '', r.description || ''].concat(r.topics || []).join(' ').toLowerCase();
+      return keywords.some(function(kw) { return text.indexOf(kw) !== -1; });
+    });
+  }
+
+  function newsForFamily(news, keywords) {
+    var cutoff = Date.now() - 7 * 86400000;
+    return (news || []).filter(function(item) {
+      if (item.inserted_at && new Date(item.inserted_at).getTime() < cutoff) return false;
+      var text = ((item.title || '') + ' ' + (item.summary || '')).toLowerCase();
+      return keywords.some(function(kw) { return text.indexOf(kw) !== -1; });
+    });
+  }
+
+  function topArticleScore(item) {
+    return (item.hn_points || 0) + ((item.more_coverage && item.more_coverage.length ? item.more_coverage.length : 0) * 10);
+  }
+
+  /* ── RENDER: TRENDING TOPICS ── */
+  function renderTrending(news) {
+    var cutoff = Date.now() - 7 * 86400000;
+    var recent = (news || []).filter(function(item) {
+      return item.inserted_at && new Date(item.inserted_at).getTime() >= cutoff;
+    });
+
+    // Aggregate tag counts and articles per tag
+    var tagMap = {};
+    recent.forEach(function(item) {
+      var tags = Array.isArray(item.tags) ? item.tags : [];
+      tags.forEach(function(tag) {
+        if (!tag || typeof tag !== 'string') return;
+        var t = tag.toLowerCase().trim();
+        if (!t) return;
+        if (!tagMap[t]) tagMap[t] = { count: 0, articles: [] };
+        tagMap[t].count++;
+        tagMap[t].articles.push(item);
+      });
+    });
+
+    // Sort by count desc, take top 8
+    var topTags = Object.keys(tagMap)
+      .sort(function(a, b) { return tagMap[b].count - tagMap[a].count; })
+      .slice(0, 8);
+
+    if (topTags.length === 0) return ''; // nothing to show
+
+    var chips = topTags.map(function(tag) {
+      var data = tagMap[tag];
+      // Find top article by hn_points + coverage
+      var topArt = data.articles.reduce(function(best, item) {
+        return topArticleScore(item) > topArticleScore(best) ? item : best;
+      }, data.articles[0]);
+      var hn = topArt.hn_points || 0;
+      var hnClass = hn >= 50 ? ' has-signal' : '';
+      var hnText = hn > 0 ? 'HN ↑ ' + hn : (topArt.more_coverage && topArt.more_coverage.length > 0 ? topArt.more_coverage.length + ' sources' : '');
+      return '<a href="' + esc(topArt.url) + '" target="_blank" rel="noopener noreferrer" class="trend-chip" aria-label="Trending: ' + esc(tag) + ', ' + data.count + ' articles">'
+        + '<span class="trend-chip-tag">' + esc(tag) + '</span>'
+        + '<span class="trend-chip-count">' + data.count + ' article' + (data.count !== 1 ? 's' : '') + '</span>'
+        + (hnText ? '<span class="trend-chip-hn' + hnClass + '">' + esc(hnText) + '</span>' : '')
+        + '</a>';
+    }).join('');
+
+    return '<div class="glance-section-label" aria-hidden="true">'
+      + '<span class="glance-section-label-text">trending_topics</span>'
+      + '<div class="glance-section-label-line"></div>'
+      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">last 7d</span>'
+      + '</div>'
+      + '<div class="glance-trending" role="list" aria-label="Trending topics">' + chips + '</div>';
+  }
+
+  /* ── RENDER: FAMILY TAB PANEL ── */
+  function renderFamilyPanel(family, kw, repos, familyStats, news) {
+    var fsMap = {};
+    (familyStats || []).forEach(function(f) { fsMap[f.family] = f; });
+    var fsEntry = fsMap[family] || null;
+    var totalRepos = fsEntry ? fsEntry.total_count : 0;
+    var totalStars = (repos || []).reduce(function(s, r) { return s + (r.stars || 0); }, 0);
+
+    var famRepos = reposForFamily(repos, kw)
+      .sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); });
+    var famNews  = newsForFamily(news, kw)
+      .sort(function(a, b) { return (b.total_score || 0) - (a.total_score || 0); });
+    var sparkData = buildSparkData(famRepos);
+    var activeCount = sparkData.reduce(function(s, v) { return s + v; }, 0);
+
+    // Card 1: repo count
+    var starsDisp = totalStars >= 1000 ? (totalStars / 1000).toFixed(1) + 'k' : String(totalStars || 0);
+    var card1 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">ecosystem_size</div>'
+      + '<div class="family-mini-val">' + (totalRepos ? totalRepos.toLocaleString() : '—') + '</div>'
+      + '<div class="family-mini-sub">repos on GitHub</div>'
+      + (famRepos.length > 0 ? '<div class="family-mini-sub" style="color:var(--text-3);font-family:var(--mono);font-size:var(--min-font);">' + famRepos.length.toLocaleString() + ' indexed · ★ ' + starsDisp + '</div>' : '')
+      + '</div>';
+
+    // Card 2: activity spark
+    var recentAvg2 = sparkData.slice(0, 5).reduce(function(s, v) { return s + v; }, 0) / 5;
+    var last2avg2  = (sparkData[5] + sparkData[6]) / 2;
+    var sc2, sl2;
+    if (last2avg2 > recentAvg2 * 1.1)      { sc2 = 'var(--green)';  sl2 = 'ACTIVE'; }
+    else if (last2avg2 < recentAvg2 * 0.6) { sc2 = 'var(--text-4)'; sl2 = 'QUIET'; }
+    else                                    { sc2 = 'var(--orange)'; sl2 = 'BUILDING'; }
+    var card2 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">commit_activity</div>'
+      + (famRepos.length > 0
+        ? '<div class="glance-spark" style="margin-top:0.25rem;">' + buildSparkSVG(sparkData) + '</div>'
+          + '<div class="family-mini-sub">' + activeCount + ' repos pushed — 7d</div>'
+          + '<div class="glance-status"><span class="glance-status-dot" style="background:' + sc2 + ';box-shadow:0 0 5px ' + sc2 + ';"></span><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);">' + sl2 + '</span></div>'
+        : '<div class="family-mini-empty" style="margin-top:0.5rem;">no indexed repos</div>')
+      + '</div>';
+
+    // Card 3: top repos
+    var topFamRepos = famRepos.slice(0, 3);
+    var card3 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">top_repos</div>'
+      + (topFamRepos.length === 0
+        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">none indexed</div>'
+        : topFamRepos.map(function(r) {
+            var stars = r.stars >= 1000 ? (r.stars / 1000).toFixed(1) + 'k' : String(r.stars || 0);
+            return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="glance-repo-row" aria-label="' + esc(r.name) + ', ' + stars + ' stars">'
+              + '<span class="glance-repo-name">' + esc(r.name || r.owner) + '</span>'
+              + '<span class="glance-repo-stars">★ ' + stars + '</span>'
+              + '</a>';
+          }).join(''))
+      + '</div>';
+
+    // Card 4: recent news
+    var topFamNews = famNews.slice(0, 3);
+    var card4 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">recent_signals</div>'
+      + (topFamNews.length === 0
+        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">no recent signals</div>'
+        : topFamNews.map(function(item) {
+            return '<a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer" class="family-news-item">'
+              + '<span class="family-news-headline">' + esc(item.title) + '</span>'
+              + '<span class="family-news-meta">' + esc(item.source || '—') + ' · ' + formatAnyDate(item.date) + '</span>'
+              + '</a>';
+          }).join(''))
+      + '</div>';
+
+    return '<div class="family-mini-grid" role="list" aria-label="' + esc(family) + ' dashboard">'
+      + card1 + card2 + card3 + card4
+      + '</div>';
+  }
+
+  /* ── RENDER: FAMILY TABS SECTION ── */
+  function renderFamilyTabs(repos, familyStats, news) {
+    var families = (familyStats || [])
+      .filter(function(f) { return f.total_count > 0 && FAMILY_KW[f.family]; })
+      .sort(function(a, b) { return (b.total_count || 0) - (a.total_count || 0); });
+
+    if (families.length === 0) return '';
+
+    var activeFamily = families[0].family;
+
+    var tabBar = '<div class="family-tab-bar" role="tablist" aria-label="Claw family tabs" id="glance-tab-bar">'
+      + families.map(function(f, i) {
+          return '<button class="family-tab' + (i === 0 ? ' active' : '') + '" role="tab" aria-selected="' + (i === 0 ? 'true' : 'false') + '" data-family="' + esc(f.family) + '" aria-controls="glance-family-panel">'
+            + esc(f.display_name || f.family)
+            + '</button>';
+        }).join('')
+      + '</div>';
+
+    var panel = '<div id="glance-family-panel" role="tabpanel" aria-label="' + esc(families[0].display_name || families[0].family) + ' dashboard">'
+      + renderFamilyPanel(activeFamily, FAMILY_KW[activeFamily], repos, familyStats, news)
+      + '</div>';
+
+    // Wire up tab clicks via event delegation
+    var html = '<div class="glance-section-label" aria-hidden="true">'
+      + '<span class="glance-section-label-text">family_signal</span>'
+      + '<div class="glance-section-label-line"></div>'
+      + '</div>'
+      + '<div class="glance-tab-section">' + tabBar + panel + '</div>';
+
+    // Attach listener after rendering (deferred)
+    setTimeout(function() {
+      var bar = document.getElementById('glance-tab-bar');
+      if (!bar) return;
+      bar.addEventListener('click', function(e) {
+        var btn = e.target.closest('.family-tab');
+        if (!btn) return;
+        var fam = btn.getAttribute('data-family');
+        if (!fam || !FAMILY_KW[fam]) return;
+        // Update tab active states
+        bar.querySelectorAll('.family-tab').forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        // Re-render panel
+        var panelEl = document.getElementById('glance-family-panel');
+        if (panelEl) {
+          panelEl.setAttribute('aria-label', btn.textContent.trim() + ' dashboard');
+          panelEl.innerHTML = renderFamilyPanel(fam, FAMILY_KW[fam], repos, familyStats, news);
+          lucide.createIcons();
+        }
+      });
+    }, 0);
+
+    return html;
+  }
+
+  /* ── RENDER: AT A GLANCE ── */
+  function renderGlance(repos, familyStats, news) {
+    const root = document.getElementById('glance-root');
+    if (!root) return;
+
+    // ── Card 1: Claw Families ──
     const families = (familyStats || [])
-      .filter(f => f.total_count > 0)
-      .sort((a, b) => (b.total_count || 0) - (a.total_count || 0));
-
-    const maxCount = families.length ? families[0].total_count : 1;
-
-    const statsHtml = `
-      <div class="analytics-stats" role="group" aria-label="Ecosystem statistics">
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${ocTotal.toLocaleString()} ecosystem repositories">${ocTotal.toLocaleString()}</div>
-          <div class="analytics-stat-label">ecosystem repos</div>
-        </div>
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${totalStars.toLocaleString()} indexed stars">${totalStars >= 1000 ? (totalStars / 1000).toFixed(1) + 'k' : totalStars.toLocaleString()}</div>
-          <div class="analytics-stat-label">indexed stars</div>
-        </div>
-        <div class="analytics-stat">
-          <div class="analytics-stat-val" aria-label="${langs.size || 0} languages">${langs.size || '—'}</div>
-          <div class="analytics-stat-label">languages</div>
-        </div>
-      </div>
-    `;
-
-    const familyHtml = families.length === 0
-      ? '<div class="empty-state">No family data</div>'
-      : `<div class="family-list" role="list" aria-label="Framework families">${families.map((f, i) => {
-          const pct = maxCount > 0 ? Math.round((f.total_count / maxCount) * 100) : 0;
+      .filter(function(f) { return f.total_count > 0; })
+      .sort(function(a, b) { return (b.total_count || 0) - (a.total_count || 0); })
+      .slice(0, 5);
+    const maxFam = families.length ? families[0].total_count : 1;
+    const familyRows = families.length === 0
+      ? '<div class="glance-sub" style="color:var(--text-4);">No data</div>'
+      : families.map(function(f) {
           const name = f.display_name || f.family || '—';
-          return `
-            <div class="family-row" role="listitem" style="${i === families.length - 1 ? 'border-bottom:none;' : ''}">
-              <div class="family-row-top">
-                <span class="family-name">${esc(name)}</span>
-                <span class="family-count"><strong>${f.total_count.toLocaleString()}</strong> repos</span>
-              </div>
-              <div class="family-bar-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(name)}: ${f.total_count} repos">
-                <div class="family-bar-fill" style="width:${pct}%"></div>
-              </div>
-            </div>
-          `;
-        }).join('')}</div>`;
+          const pct = Math.round((f.total_count / maxFam) * 100);
+          const barW = Math.max(pct, 4);
+          return '<div class="glance-family-row">'
+            + '<span class="glance-family-name">' + esc(name) + '</span>'
+            + '<span class="glance-family-count">' + f.total_count.toLocaleString() + '</span>'
+            + '<div class="glance-family-bar-wrap"><div class="glance-family-bar" style="width:' + barW + '%;min-width:2px;" role="presentation"></div></div>'
+            + '</div>';
+        }).join('');
 
-    root.innerHTML = statsHtml + familyHtml;
+    const card1 = '<div class="glance-card">'
+      + '<div class="glance-label">claw_families</div>'
+      + familyRows
+      + '</div>';
+
+    // ── Card 2: New This Week ──
+    const now = Date.now();
+    const WEEK = 7 * 86400000;
+    const newThisWeek = (repos || []).filter(function(r) {
+      if (!r.inserted_at) return false;
+      return (now - new Date(r.inserted_at).getTime()) < WEEK;
+    }).length;
+    const totalIndexed = (repos || []).length;
+
+    const card2 = '<div class="glance-card">'
+      + '<div class="glance-label">new_this_week</div>'
+      + '<div class="glance-val">+' + newThisWeek + '</div>'
+      + '<div class="glance-sub">new repos — all families</div>'
+      + '<div class="glance-sub" style="color:var(--text-3);font-family:var(--mono);font-size:var(--min-font);">' + totalIndexed.toLocaleString() + ' total indexed</div>'
+      + '</div>';
+
+    // ── Card 3: Commit Activity (7-day sparkline, all families) ──
+    const sparkData = buildSparkData(repos);
+    const activeRepos = sparkData.reduce(function(s, v) { return s + v; }, 0);
+    const recentAvg = sparkData.slice(0, 5).reduce(function(s, v) { return s + v; }, 0) / 5;
+    const recentLast2 = (sparkData[5] + sparkData[6]) / 2;
+    let statusColor, statusLabel;
+    if (recentLast2 > recentAvg * 1.1) {
+      statusColor = 'var(--green)'; statusLabel = 'ACTIVE';
+    } else if (recentLast2 < recentAvg * 0.6) {
+      statusColor = 'var(--text-4)'; statusLabel = 'QUIET';
+    } else {
+      statusColor = 'var(--orange)'; statusLabel = 'BUILDING';
+    }
+
+    const card3 = '<div class="glance-card">'
+      + '<div class="glance-label">ecosystem_activity</div>'
+      + '<div class="glance-spark">' + buildSparkSVG(sparkData) + '</div>'
+      + '<div class="glance-sub">' + activeRepos + ' repos pushed — last 7d</div>'
+      + '<div class="glance-status">'
+      + '<span class="glance-status-dot" style="background:' + statusColor + ';box-shadow:0 0 5px ' + statusColor + ';"></span>'
+      + '<span>' + statusLabel + ' · all families</span>'
+      + '</div>'
+      + '</div>';
+
+    // ── Card 4: Top Featured Repos (all families) ──
+    const featured = (repos || [])
+      .filter(function(r) { return r.rubric_tier === 'featured'; })
+      .sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); })
+      .slice(0, 3);
+
+    const repoRows = featured.length === 0
+      ? '<div class="glance-sub" style="color:var(--text-4);">No featured repos yet</div>'
+      : featured.map(function(r) {
+          const stars = r.stars >= 1000 ? (r.stars / 1000).toFixed(1) + 'k' : (r.stars || 0).toString();
+          return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="glance-repo-row" aria-label="' + esc(r.name) + ', ' + stars + ' stars">'
+            + '<span class="glance-repo-name">' + esc(r.name || r.owner) + '</span>'
+            + '<span class="glance-repo-stars">★ ' + stars + '</span>'
+            + '</a>';
+        }).join('');
+
+    const card4 = '<div class="glance-card">'
+      + '<div class="glance-label">top_repos</div>'
+      + repoRows
+      + (featured.length > 0 ? '<div class="glance-sub" style="color:var(--text-4);font-family:var(--mono);font-size:var(--min-font);">all families · by score</div>' : '')
+      + '</div>';
+
+    var gridHtml = '<div class="glance-grid" role="list" aria-label="Ecosystem dashboard — all Claw families">'
+      + card1 + card2 + card3 + card4
+      + '</div>';
+
+    var trendingHtml = renderTrending(news);
+    var tabsHtml     = renderFamilyTabs(repos, familyStats, news);
+
+    root.innerHTML = gridHtml + trendingHtml + tabsHtml;
   }
 
   /* ── MOBILE MENU TOGGLE ── */
@@ -998,11 +1367,10 @@ img { display: block; max-width: 100%; }
       if (dA !== dB) return dB - dA;
       return _scoreItem(b) - _scoreItem(a);
     });
-    renderLead(sorted[0]);
-    renderFeed(sorted.slice(1), 2);
+    renderGlance(repos, familyStats, sorted);
+    renderFeed(sorted, 1);
     renderDaily(daily);
     renderEvents(events);
-    renderRepos(repos, familyStats);
     lucide.createIcons();
   }).catch(err => {
     console.error('ClawBeat load error:', err);
