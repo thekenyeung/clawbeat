@@ -4,8 +4,14 @@
   "functions": {
     "api/slack_ingest.py": {
       "maxDuration": 30
+    },
+    "api/news_permalink.py": {
+      "maxDuration": 30
     }
   },
+  "rewrites": [
+    { "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
+  ],
   "redirects": [
     {
       "source": "/",

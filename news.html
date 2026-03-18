@@ -673,6 +673,55 @@
             transform: translateX(3px);
         }
 
+        /* Permalink button */
+        .lead-headline-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+        .lead-headline-row .lead-headline {
+            flex: 1;
+        }
+        .permalink-btn {
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+            background: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-3);
+            cursor: pointer;
+            padding: 0.25rem 0.4rem;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
+            white-space: nowrap;
+        }
+        .lead-card:hover .permalink-btn { opacity: 1; }
+        .permalink-btn:hover:not(:disabled) {
+            color: var(--orange);
+            border-color: rgba(249,115,22,0.35);
+            background: rgba(249,115,22,0.07);
+        }
+        .permalink-btn.loading {
+            opacity: 0.5;
+            animation: permalink-pulse 0.9s ease-in-out infinite;
+        }
+        .permalink-btn.copied {
+            color: #22c55e;
+            border-color: rgba(34,197,94,0.35);
+            background: rgba(34,197,94,0.07);
+            opacity: 1;
+            font-size: 0.55rem;
+            letter-spacing: 0.06em;
+        }
+        @keyframes permalink-pulse {
+            0%, 100% { opacity: 0.5; }
+            50%       { opacity: 1;   }
+        }
+
         /* Responsive — intel feed */
         @media (max-width: 900px) {
             .lead-card { grid-template-columns: 1fr; }

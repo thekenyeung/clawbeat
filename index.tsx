@@ -219,6 +219,8 @@ const App: React.FC = () => {
   const [spotlightOverrides, setSpotlightOverrides] = useState<SpotlightOverride[]>([]);
   const [spotlightExcluded, setSpotlightExcluded]   = useState<{dispatch_date:string; url:string}[]>([]);
   const [dailyEditions, setDailyEditions]   = useState<Map<string, string>>(new Map()); // YYYY-MM-DD → slug
+  const [permalinkLoading, setPermalinkLoading] = useState<string | null>(null); // isoDate
+  const [permalinkCopied,  setPermalinkCopied]  = useState<string | null>(null); // isoDate
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -265,6 +267,44 @@ const App: React.FC = () => {
 
   const handleLinkClick = (title: string, source: string, type: string = 'news_article') => {
     trackEvent('select_content', { content_type: type, item_id: title, content_source: source });
+  };
+
+  const handlePermalinkCopy = async (item: NewsItem, isoDate: string) => {
+    if (permalinkLoading) return;
+    setPermalinkLoading(isoDate);
+    try {
+      const res = await fetch('/api/news_permalink', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(import.meta as any).env?.VITE_PERMALINK_SECRET ?? ''}`,
+        },
+        body: JSON.stringify({
+          article_url:   item.url,
+          headline:      item.title,
+          pub_name:      item.source,
+          pub_date:      item.date,
+          date:          isoDate,
+          more_coverage: item.moreCoverage || [],
+        }),
+      });
+      const data = await res.json();
+      if (data.permalink_url) {
+        await navigator.clipboard.writeText(data.permalink_url);
+        setPermalinkCopied(isoDate);
+        setTimeout(() => setPermalinkCopied(null), 2500);
+        trackEvent('permalink_copy', {
+          article_url: item.url,
+          headline:    item.title,
+          pub_name:    item.source,
+          date:        isoDate,
+        });
+      }
+    } catch (_) {
+      // silently fail — don't break the feed
+    } finally {
+      setPermalinkLoading(null);
+    }
   };
 
   const handleNavClick = (page: Page) => {
@@ -522,7 +562,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} />
+                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} onPermalinkCopy={handlePermalinkCopy} permalinkLoading={permalinkLoading} permalinkCopied={permalinkCopied} />
                 <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
@@ -742,7 +782,7 @@ const scoreArticle = (item: NewsItem): number => {
   return score;
 };
 
-const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightExcluded, spotlightDays, dailyEditions }: {
+const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightExcluded, spotlightDays, dailyEditions, onPermalinkCopy, permalinkLoading, permalinkCopied }: {
   items: NewsItem[];
   allNews: NewsItem[];
   onTrackClick: (t: string, s: string) => void;
@@ -750,6 +790,9 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
   spotlightExcluded: {dispatch_date: string; url: string}[];
   spotlightDays: Set<string>;
   dailyEditions: Map<string, string>;
+  onPermalinkCopy: (item: NewsItem, isoDate: string) => void;
+  permalinkLoading: string | null;
+  permalinkCopied: string | null;
 }) => {
   // Group current-page items by day
   const grouped: Record<string, NewsItem[]> = {};
@@ -883,15 +926,30 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
               const isVerified = checkIfVerified(leadSlot);
               const isPriority = leadSlot.source_type === 'priority';
               const moreCov = (leadSlot.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              const dateParts = leadSlot.date.split('-'); // MM-DD-YYYY
+              const isoDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}` : leadSlot.date;
+              const isPlinking = permalinkLoading === isoDate;
+              const isCopied   = permalinkCopied  === isoDate;
               return (
                 <div className="lead-card">
                   <div className="lead-body">
                     <div className="lead-flag">Lead Signal</div>
-                    <h2 className="lead-headline">
-                      <a href={leadSlot.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(leadSlot.title, leadSlot.source)}>
-                        {leadSlot.title}
-                      </a>
-                    </h2>
+                    <div className="lead-headline-row">
+                      <h2 className="lead-headline">
+                        <a href={leadSlot.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(leadSlot.title, leadSlot.source)}>
+                          {leadSlot.title}
+                        </a>
+                      </h2>
+                      <button
+                        className={`permalink-btn${isPlinking ? ' loading' : ''}${isCopied ? ' copied' : ''}`}
+                        onClick={() => onPermalinkCopy(leadSlot, isoDate)}
+                        title="Copy permalink"
+                        disabled={isPlinking}
+                        aria-label="Copy permalink"
+                      >
+                        {isCopied ? 'Copied!' : isPlinking ? '...' : '⌘'}
+                      </button>
+                    </div>
                     {leadSlot.summary && <p className="lead-summary">{leadSlot.summary}</p>}
                     <div className="story-meta">
                       <span className="meta-source">{formatSourceName(leadSlot.source)}</span>
@@ -936,8 +994,6 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                   )}
                   {/* ── Daily Edition link (only shown when edition exists) ── */}
                   {(() => {
-                    const parts = leadSlot.date.split('-'); // MM-DD-YYYY
-                    const isoDate = parts.length === 3 ? `${parts[2]}-${parts[0]}-${parts[1]}` : leadSlot.date;
                     const editionSlug = dailyEditions.get(isoDate);
                     if (!editionSlug) return null;
                     return (
