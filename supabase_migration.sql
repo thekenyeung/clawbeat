@@ -380,6 +380,32 @@ CREATE POLICY "Admin writes" ON blocked_urls
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- article_feedback table — admin rejection signals for score recalibration
+-- Data collection only. Does NOT modify scoring pipeline.
+-- article_id references news_items(url) (text PK).
+-- signal: 'reject' | 'approve' | 'boost' — only 'reject' has UI currently.
+-- reason: one of five predefined enum values.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS article_feedback (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  article_id  TEXT NOT NULL REFERENCES news_items(url) ON DELETE CASCADE,
+  signal      TEXT NOT NULL CHECK (signal IN ('reject', 'approve', 'boost')),
+  reason      TEXT NOT NULL CHECK (reason IN (
+                 'too_elementary', 'off_topic',
+                 'low_quality_source', 'clickbait', 'duplicate'
+               )),
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE article_feedback ENABLE ROW LEVEL SECURITY;
+
+-- Admin-only: only the admin account can read or write feedback
+CREATE POLICY "Admin writes" ON article_feedback
+  FOR ALL TO authenticated
+  USING     (auth.email() = 'ADMIN_EMAIL_HERE')
+  WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON
