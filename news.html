@@ -475,8 +475,8 @@
             font-weight: 700;
             color: rgba(249,115,22,0.7);
         }
-        .sidebar-title { font-size: 0.8125rem; font-weight: 600; color: var(--text); line-height: 1.35; }
-        .sidebar-title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+        .sidebar-title { font-size: 0.8125rem; font-weight: 600; color: var(--text); line-height: 1.35; display: flex; align-items: flex-start; gap: 0.4rem; }
+        .sidebar-title a { color: inherit; text-decoration: none; transition: color 0.15s; flex: 1; }
         .sidebar-title a:hover { color: var(--orange); }
         .sidebar-source { font-family: var(--mono); font-size: var(--min-size); color: var(--text-mid); }
 
@@ -529,8 +529,11 @@
             color: #fff;
             line-height: 1.3;
             letter-spacing: -0.02em;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
         }
-        .story-headline a { color: inherit; text-decoration: none; transition: color 0.15s; display: block; }
+        .story-headline a { color: inherit; text-decoration: none; transition: color 0.15s; flex: 1; }
         .story-headline a:hover { color: var(--orange); }
         .story-summary {
             font-size: 0.875rem;
@@ -699,7 +702,9 @@
             transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
             white-space: nowrap;
         }
-        .lead-card:hover .permalink-btn { opacity: 1; }
+        .lead-card:hover .permalink-btn,
+        .story-item:hover .permalink-btn,
+        .sidebar-item:hover .permalink-btn { opacity: 1; }
         .permalink-btn:hover:not(:disabled) {
             color: var(--orange);
             border-color: rgba(249,115,22,0.35);

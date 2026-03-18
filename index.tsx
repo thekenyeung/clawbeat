@@ -220,8 +220,8 @@ const App: React.FC = () => {
   const [spotlightOverrides, setSpotlightOverrides] = useState<SpotlightOverride[]>([]);
   const [spotlightExcluded, setSpotlightExcluded]   = useState<{dispatch_date:string; url:string}[]>([]);
   const [dailyEditions, setDailyEditions]   = useState<Map<string, string>>(new Map()); // YYYY-MM-DD → slug
-  const [permalinkLoading, setPermalinkLoading] = useState<string | null>(null); // isoDate
-  const [permalinkCopied,  setPermalinkCopied]  = useState<string | null>(null); // isoDate
+  const [permalinkLoading, setPermalinkLoading] = useState<string | null>(null); // article url
+  const [permalinkCopied,  setPermalinkCopied]  = useState<string | null>(null); // article url
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -272,7 +272,7 @@ const App: React.FC = () => {
 
   const handlePermalinkCopy = async (item: NewsItem, isoDate: string) => {
     if (permalinkLoading) return;
-    setPermalinkLoading(isoDate);
+    setPermalinkLoading(item.url);
     try {
       const res = await fetch('/api/news_permalink', {
         method: 'POST',
@@ -292,7 +292,7 @@ const App: React.FC = () => {
       const data = await res.json();
       if (data.permalink_url) {
         await navigator.clipboard.writeText(data.permalink_url);
-        setPermalinkCopied(isoDate);
+        setPermalinkCopied(item.url);
         setTimeout(() => setPermalinkCopied(null), 2500);
         trackEvent('permalink_copy', {
           article_url: item.url,
@@ -934,8 +934,8 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
               const moreCov = (leadSlot.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
               const dateParts = leadSlot.date.split('-'); // MM-DD-YYYY
               const isoDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}` : leadSlot.date;
-              const isPlinking = permalinkLoading === isoDate;
-              const isCopied   = permalinkCopied  === isoDate;
+              const isPlinking = permalinkLoading === leadSlot.url;
+              const isCopied   = permalinkCopied  === leadSlot.url;
               return (
                 <div className="lead-card">
                   <div className="lead-body">
@@ -990,6 +990,15 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                             <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
                               {item.title}
                             </a>
+                            <button
+                              className={`permalink-btn${permalinkLoading === item.url ? ' loading' : ''}${permalinkCopied === item.url ? ' copied' : ''}`}
+                              onClick={() => onPermalinkCopy(item, isoDate)}
+                              title="Copy permalink"
+                              disabled={!!permalinkLoading}
+                              aria-label="Copy permalink"
+                            >
+                              {permalinkCopied === item.url ? 'Copied!' : permalinkLoading === item.url ? '···' : <Link2 size={11} />}
+                            </button>
                           </div>
                           <div className="sidebar-source">
                             {formatSourceName(item.source)}{checkIfVerified(item) ? ' · verified' : ''}
@@ -1019,6 +1028,8 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
               const isVerified = checkIfVerified(item);
               const isPriority = item.source_type === 'priority';
               const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              const storyParts = item.date.split('-');
+              const storyIsoDate = storyParts.length === 3 ? `${storyParts[2]}-${storyParts[0]}-${storyParts[1]}` : item.date;
               return (
                 <div key={item.url} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}`}>
                   <div className="story-body">
@@ -1033,6 +1044,15 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                       <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
                         {item.title}
                       </a>
+                      <button
+                        className={`permalink-btn${permalinkLoading === item.url ? ' loading' : ''}${permalinkCopied === item.url ? ' copied' : ''}`}
+                        onClick={() => onPermalinkCopy(item, storyIsoDate)}
+                        title="Copy permalink"
+                        disabled={!!permalinkLoading}
+                        aria-label="Copy permalink"
+                      >
+                        {permalinkCopied === item.url ? 'Copied!' : permalinkLoading === item.url ? '···' : <Link2 size={11} />}
+                      </button>
                     </div>
                     {item.summary && <p className="story-summary">{item.summary}</p>}
                     {item.tags && item.tags.length > 0 && (
