@@ -689,22 +689,22 @@
             flex-shrink: 0;
             margin-top: 0.2rem;
             background: none;
-            border: 1px solid transparent;
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 4px;
             font-family: var(--mono);
             font-size: 0.65rem;
             font-weight: 700;
-            color: var(--text-3);
+            color: var(--text-2);
             cursor: pointer;
             padding: 0.25rem 0.4rem;
             line-height: 1;
-            opacity: 0.25;
+            opacity: 0.55;
             transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
             white-space: nowrap;
         }
         .lead-card:hover .permalink-btn,
         .story-item:hover .permalink-btn,
-        .sidebar-item:hover .permalink-btn { opacity: 1; }
+        .sidebar-item:hover .permalink-btn { opacity: 1; border-color: rgba(255,255,255,0.2); }
         .permalink-btn:hover:not(:disabled) {
             color: var(--orange);
             border-color: rgba(249,115,22,0.35);
