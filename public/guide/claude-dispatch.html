@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<title>Claude Dispatch — Is Anthropic's Answer to OpenClaw a Viable Alternative? · ClawBeat Guide</title>
+<meta name="description" content="A factual, journalist-style evaluation of Anthropic's Claude Dispatch for Cowork. Does it hold up as a viable alternative to OpenClaw? Pricing, platform limits, security model, and independent test results — all sourced.">
+<meta name="keywords" content="Claude Dispatch, Claude Cowork, Anthropic Dispatch, OpenClaw alternative, Claude Cowork vs OpenClaw, Anthropic agent, Dispatch research preview, OpenClaw comparison, always-on AI agent, Claude Mac agent">
+<meta name="author" content="ClawBeat">
+<meta name="robots" content="index, follow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://clawbeat.co/guide/claude-dispatch.html">
+<meta property="og:site_name" content="ClawBeat">
+<meta property="og:title" content="Claude Dispatch — Is Anthropic's Answer to OpenClaw a Viable Alternative? · ClawBeat">
+<meta property="og:description" content="Factual evaluation of Anthropic's Claude Dispatch for Cowork vs. OpenClaw. Pricing, sandbox, platform limits, and independent test results.">
+<meta property="og:image" content="https://clawbeat.co/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Dispatch — Is Anthropic's Answer to OpenClaw Viable? · ClawBeat">
+<meta name="twitter:description" content="Factual, sourced evaluation of Anthropic's Claude Dispatch for Cowork versus OpenClaw.">
+<meta name="twitter:image" content="https://clawbeat.co/images/og-image.png">
+<meta name="article:published_time" content="2026-03-18">
+<meta name="article:modified_time" content="2026-03-18">
+<meta name="article:section" content="Guides">
+<meta name="article:author" content="ClawBeat">
+<link rel="canonical" href="https://clawbeat.co/guide/claude-dispatch.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Claude Dispatch — Is Anthropic's Answer to OpenClaw a Viable Alternative?",
+    "description": "A factual evaluation of Anthropic's Claude Dispatch for Cowork: pricing, sandbox model, platform limits, independent test results, and head-to-head comparison with OpenClaw.",
+    "datePublished": "2026-03-18",
+    "dateModified": "2026-03-18",
+    "author": { "@type": "Organization", "name": "ClawBeat", "url": "https://clawbeat.co" },
+    "publisher": { "@type": "Organization", "name": "ClawBeat", "url": "https://clawbeat.co" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://clawbeat.co/guide/claude-dispatch.html" },
+    "url": "https://clawbeat.co/guide/claude-dispatch.html",
+    "keywords": ["Claude Dispatch", "Claude Cowork", "Anthropic", "OpenClaw", "AI agent comparison", "always-on agent", "computer use agent"],
+    "articleSection": "Guides",
+    "about": [
+      { "@type": "SoftwareApplication", "name": "Claude Dispatch", "applicationCategory": "AI Agent", "operatingSystem": "macOS" },
+      { "@type": "SoftwareApplication", "name": "Claude Cowork", "applicationCategory": "AI Desktop Agent", "operatingSystem": "macOS" },
+      { "@type": "Organization", "name": "Anthropic", "url": "https://anthropic.com" }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Claude Dispatch the same as Claude Cowork?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Claude Cowork is Anthropic's desktop agent product that runs on your Mac and can read, write, and act on files and websites. Dispatch is a research-preview feature within Cowork that lets you control your Mac's Cowork session from a mobile device (iPhone). Cowork launched in January 2026; Dispatch launched March 17, 2026." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need an OpenClaw account or API key to use Claude Dispatch?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Dispatch runs entirely through Anthropic's Claude Mac app. You need a Claude Max subscription ($100–$200/month), the Claude Mac app installed and running, and an iPhone to scan the QR code. No API keys or external configuration are required." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Claude Dispatch give Claude access to my entire Mac?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Per Anthropic's documentation, Dispatch operates within a sandboxed virtual machine with no direct filesystem access. Unlike OpenClaw, which runs with full user-space permissions by default, Dispatch uses default-deny networking and hard isolation boundaries. You choose which folders Cowork can access." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is Claude Dispatch currently only available on macOS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Claude Cowork — the underlying product — uses Apple's Virtualization Framework (VZVirtualMachine) to run a sandboxed Linux environment. This technology is macOS-specific. Anthropic has indicated Windows support is planned but has not given a timeline." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Claude Dispatch free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dispatch currently requires a Claude Max subscription, which costs $100–$200/month. Anthropic announced that Pro subscribers would gain access within days of the March 17 launch, though no separate Dispatch pricing has been officially disclosed." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can developers automate Dispatch via API or webhooks?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. As of the March 17, 2026 research preview, Anthropic has not announced a Dispatch-specific API, webhooks, or native integrations with automation platforms like Make, n8n, or Zapier. Dispatch is a consumer-facing feature, not a developer API surface." }
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "ClawBeat", "item": "https://clawbeat.co" },
+      { "@type": "ListItem", "position": 2, "name": "Intel", "item": "https://clawbeat.co/news.html" },
+      { "@type": "ListItem", "position": 3, "name": "Guides", "item": "https://clawbeat.co/guide/" },
+      { "@type": "ListItem", "position": 4, "name": "Claude Dispatch Guide", "item": "https://clawbeat.co/guide/claude-dispatch.html" }
+    ]
+  }
+]
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; font-size: 16px; scroll-behavior: smooth; }
+
+  /* ── SKIP LINK ── */
+  .skip-link {
+    position: absolute; top: -100%; left: 1rem;
+    background: var(--orange); color: #fff; font-family: var(--mono);
+    font-size: var(--min-font); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 0.6rem 1rem; border-radius: 0 0 6px 6px;
+    text-decoration: none; z-index: 9999; transition: top 0.1s;
+  }
+  .skip-link:focus { top: 0; outline: 2px solid #fff; outline-offset: 2px; }
+
+  :root {
+    --bg: #08090b;
+    --bg-2: #0d0f12;
+    --bg-3: #131619;
+    --border: rgba(255,255,255,0.05);
+    --border-2: rgba(255,255,255,0.09);
+    --orange: #f97316;
+    --orange-bright: #fb923c;
+    --orange-dim: rgba(249,115,22,0.10);
+    --orange-glow: rgba(249,115,22,0.18);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.08);
+    --cyan: #06b6d4;
+    --cyan-dim: rgba(6,182,212,0.08);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.08);
+    --blue-border: rgba(59,130,246,0.25);
+    --purple: #a78bfa;
+    --red: #ef4444;
+    --text: #e2e4e9;
+    --text-2: #9097a3;
+    --text-3: #6e7680;
+    --text-4: #3d4451;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+    --min-font: 0.75rem;
+  }
+
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; line-height: 1.6; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+  :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(10,10,12,0.8);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  }
+  .header-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+    height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+  .brand-img { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+  .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+  .brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
+  .brand-text span { color: var(--orange); }
+  .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+  .nav-item {
+    font-family: var(--sans); font-size: var(--min-font); font-weight: 900; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem;
+    text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .nav-item svg { width: 16px; height: 16px; }
+  .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+  .nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
+
+  /* ── HAMBURGER / MOBILE MENU ── */
+  .hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }
+  .hamburger-btn:hover { color: #fff; }
+  .hamburger-btn svg { width: 24px; height: 24px; }
+  .mobile-menu {
+    display: none; position: fixed; top: 4rem; left: 0; width: 100%;
+    background: rgba(10,10,12,0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem;
+    flex-direction: column; gap: 0.5rem; z-index: 60;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-nav-item {
+    font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem;
+    text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%;
+  }
+  .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+  .mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
+  .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+  .nav-skill-chip { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+  .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
+  .nav-dropdown-item:hover { background: var(--orange-dim); }
+  .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+  .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+  .nav-dropdown-sub { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+  .mobile-subnav-item { font-family: var(--mono); font-size: var(--min-font); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+  .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+  .mobile-subnav-item svg { width: 14px; height: 14px; }
+
+  /* ── LAYOUT ── */
+  .page-wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── HERO ── */
+  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero-kicker { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 3px; padding: 0.2rem 0.55rem;
+    display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;
+  }
+  .chip-orange { color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.3); }
+  .chip-blue   { color: var(--blue);   background: var(--blue-dim);   border: 1px solid var(--blue-border); }
+  .chip-cyan   { color: var(--cyan);   background: var(--cyan-dim);   border: 1px solid rgba(6,182,212,0.3); }
+  .chip-dim    { color: var(--text-3); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+  .hero-title {
+    font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900; letter-spacing: -0.05em; line-height: 1.05;
+    color: #fff; text-transform: uppercase; font-style: italic; margin-bottom: 1rem;
+  }
+  .hero-title em { color: var(--orange); font-style: italic; }
+  .hero-sub { font-size: 1.0625rem; color: var(--text-2); line-height: 1.75; max-width: 680px; margin-bottom: 1.75rem; }
+  .hero-sub a { color: var(--orange); text-decoration: none; }
+  .hero-sub a:hover { text-decoration: underline; }
+  .hero-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+  .hero-meta a { color: var(--orange); text-decoration: none; }
+  .hero-meta a:hover { text-decoration: underline; }
+  .hero-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.65rem; margin-top: 2rem; }
+  @media (max-width: 640px) { .hero-stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .hstat { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.85rem 1rem; }
+  .hstat-label { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .hstat-value { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; line-height: 1; }
+  .hstat-value.orange { color: var(--orange); }
+  .hstat-value.blue   { color: var(--blue); }
+  .hstat-value.cyan   { color: var(--cyan); }
+  .hstat-value.dim    { color: var(--text-3); }
+
+  /* ── SECTION DIVIDER ── */
+  .sdiv { display: flex; align-items: center; gap: 0.75rem; margin: 3rem 0 1.5rem; }
+  .sdiv-label { font-family: var(--mono); font-size: 0.875rem; font-weight: 700; color: var(--text-3); white-space: nowrap; display: flex; align-items: center; gap: 0.35rem; margin: 0; line-height: 1; }
+  .sdiv-slash { color: var(--text-4); }
+  .sdiv-tag   { color: var(--orange); }
+  .sdiv-line  { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+
+  /* ── PROSE ── */
+  .prose { max-width: 720px; }
+  .prose p { font-size: 0.9375rem; color: var(--text-2); line-height: 1.75; margin-bottom: 1rem; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose a { color: var(--orange); text-decoration: none; }
+  .prose a:hover { text-decoration: underline; }
+
+  /* ── INLINE SOURCE LINK ── */
+  .src { font-family: var(--mono); color: var(--text-3); text-decoration: none; border-bottom: 1px dashed var(--text-4); transition: color 0.12s, border-color 0.12s; }
+  .src:hover { color: var(--orange); border-color: var(--orange); }
+
+  /* ── CALLOUT ── */
+  .callout { border-left: 3px solid var(--orange); background: var(--bg-2); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+  .callout-title { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .callout p { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin: 0; }
+  .callout p + p { margin-top: 0.5rem; }
+  .callout strong { color: var(--text); }
+  .callout a { color: var(--orange); text-decoration: none; }
+  .callout a:hover { text-decoration: underline; }
+  .callout.info { border-left-color: var(--cyan); }
+  .callout.info .callout-title { color: var(--cyan); }
+  .callout.blue { border-left-color: var(--blue); }
+  .callout.blue .callout-title { color: var(--blue); }
+  .callout.green { border-left-color: var(--green); }
+  .callout.green .callout-title { color: var(--green); }
+
+  /* ── ARCH / FEATURE CARDS ── */
+  .arch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
+  @media (max-width: 860px) { .arch-grid { grid-template-columns: 1fr; } }
+  .arch-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.35rem 1.25rem; position: relative; overflow: hidden; }
+  .arch-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .arch-card.orange::before { background: var(--orange); }
+  .arch-card.cyan::before   { background: var(--cyan); }
+  .arch-card.blue::before   { background: var(--blue); }
+  .arch-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.9rem; }
+  .arch-icon.orange { background: var(--orange-dim); color: var(--orange); }
+  .arch-icon.cyan   { background: var(--cyan-dim);   color: var(--cyan); }
+  .arch-icon.blue   { background: var(--blue-dim);   color: var(--blue); }
+  .arch-icon svg { width: 18px; height: 18px; }
+  .arch-name { font-family: var(--sans); font-size: 1.0625rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+  .arch-sub  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem; }
+  .arch-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; }
+  .arch-desc a { color: var(--text-3); text-decoration: none; border-bottom: 1px dashed var(--text-4); transition: color 0.12s; font-size: inherit; }
+  .arch-desc a:hover { color: var(--orange); border-color: var(--orange); }
+  .arch-bullets { margin-top: 0.7rem; padding: 0; list-style: none; }
+  .arch-bullets li { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); padding: 0.2rem 0; display: flex; align-items: flex-start; gap: 0.4rem; line-height: 1.5; }
+  .arch-bullets li::before { content: '→'; color: var(--text-4); flex-shrink: 0; }
+  .arch-bullets a { color: var(--text-3); text-decoration: none; border-bottom: 1px dashed var(--text-4); font-size: var(--min-font); }
+  .arch-bullets a:hover { color: var(--orange); border-color: var(--orange); }
+
+  /* ── TIMELINE ── */
+  .timeline { margin: 1.5rem 0; position: relative; padding-left: 1.5rem; }
+  .timeline::before { content: ''; position: absolute; left: 0.4rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: var(--border-2); }
+  .tl-item { position: relative; padding-bottom: 1.25rem; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot { position: absolute; left: -1.35rem; top: 0.3rem; width: 8px; height: 8px; border-radius: 50%; }
+  .tl-dot.orange { background: var(--orange); box-shadow: 0 0 8px rgba(249,115,22,0.5); }
+  .tl-dot.blue   { background: var(--blue);   box-shadow: 0 0 8px rgba(59,130,246,0.5); }
+  .tl-dot.dim    { background: var(--text-4); }
+  .tl-date  { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-bottom: 0.2rem; }
+  .tl-event { font-size: 0.875rem; color: var(--text); font-weight: 600; line-height: 1.4; }
+  .tl-note  { font-size: 0.8125rem; color: var(--text-3); margin-top: 0.2rem; line-height: 1.5; }
+  .tl-note a { color: var(--text-3); border-bottom: 1px dashed var(--text-4); text-decoration: none; font-size: inherit; }
+  .tl-note a:hover { color: var(--orange); border-color: var(--orange); }
+
+  /* ── COMPARISON TABLE ── */
+  .cmp-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-2); margin: 1.5rem 0; }
+  .cmp-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+  .cmp-table th { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--bg-2); color: var(--text-3); padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-2); }
+  .cmp-table th:first-child { color: var(--text-4); width: 160px; }
+  .cmp-table th.oc { color: var(--cyan); }
+  .cmp-table th.cd { color: var(--blue); }
+  .cmp-table td { font-size: 0.8125rem; color: var(--text-2); padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table td:first-child { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; background: var(--bg-3); white-space: nowrap; }
+  .cmp-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .cmp-table tr:hover td:first-child { background: var(--bg-3); }
+  .win-blue { color: var(--blue); font-weight: 600; }
+  .win-cyan { color: var(--cyan); font-weight: 600; }
+  .warn     { color: var(--orange); }
+
+  /* ── THREAT / RISK CARDS ── */
+  .threat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1.5rem 0; }
+  @media (max-width: 580px) { .threat-grid { grid-template-columns: 1fr; } }
+  .threat-card { background: var(--bg-2); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 0.9rem 1rem; }
+  .threat-title { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .threat-desc  { font-size: 0.8125rem; color: var(--text-2); line-height: 1.55; }
+  .threat-desc a { color: var(--text-3); text-decoration: none; border-bottom: 1px dashed var(--text-4); font-size: inherit; }
+  .threat-desc a:hover { color: var(--orange); border-color: var(--orange); }
+
+  /* ── LIMIT CARDS ── */
+  .limit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1.5rem 0; }
+  @media (max-width: 540px) { .limit-grid { grid-template-columns: 1fr; } }
+  .limit-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 1rem 1.1rem; }
+  .limit-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .limit-title { font-family: var(--sans); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+  .limit-desc  { font-size: 0.8125rem; color: var(--text-2); line-height: 1.55; }
+  .limit-desc a { color: var(--text-3); text-decoration: none; border-bottom: 1px dashed var(--text-4); font-size: inherit; }
+  .limit-desc a:hover { color: var(--orange); border-color: var(--orange); }
+
+  /* ── VERDICT SPLIT ── */
+  .verdict-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0; max-width: 720px; }
+  @media (max-width: 600px) { .verdict-split { grid-template-columns: 1fr; } }
+  .verdict-card { border-radius: 8px; padding: 1rem 1.1rem; }
+  .verdict-card.green { background: var(--green-dim); border: 1px solid rgba(34,197,94,0.2); }
+  .verdict-card.cyan  { background: var(--cyan-dim);  border: 1px solid rgba(6,182,212,0.2); }
+  .verdict-heading { font-family: var(--mono); font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem; }
+  .verdict-heading.green { color: var(--green); }
+  .verdict-heading.cyan  { color: var(--cyan); }
+  .verdict-list { list-style: none; padding: 0; }
+  .verdict-list li { font-size: 0.8125rem; color: var(--text-2); padding: 0.25rem 0; line-height: 1.5; display: flex; align-items: flex-start; gap: 0.4rem; }
+  .verdict-list li::before { content: '→'; flex-shrink: 0; }
+  .verdict-card.green .verdict-list li::before { color: var(--green); }
+  .verdict-card.cyan  .verdict-list li::before { color: var(--cyan); }
+
+  /* ── FAQ ── */
+  .faq { margin: 1.5rem 0; max-width: 720px; }
+  .faq-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem; overflow: hidden; }
+  .faq-q { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.1rem; cursor: pointer; gap: 1rem; background: var(--bg-2); transition: background 0.15s; border: none; width: 100%; text-align: left; }
+  .faq-q:hover { background: var(--bg-3); }
+  .faq-q[aria-expanded="true"] { background: var(--bg-3); border-bottom: 1px solid var(--border); }
+  .faq-q-text { font-family: var(--sans); font-size: 0.875rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .faq-arrow { color: var(--text-4); transition: transform 0.2s; flex-shrink: 0; }
+  .faq-q[aria-expanded="true"] .faq-arrow { transform: rotate(180deg); color: var(--orange); }
+  .faq-a { display: none; padding: 1rem 1.1rem; background: var(--bg-2); }
+  .faq-a.open { display: block; }
+  .faq-a p { font-size: 0.875rem; color: var(--text-2); line-height: 1.7; margin-bottom: 0.75rem; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a strong { color: var(--text); font-weight: 600; }
+  .faq-a a { color: var(--orange); text-decoration: none; }
+  .faq-a a:hover { text-decoration: underline; }
+
+  /* ── RESOURCE GRID ── */
+  .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin: 1rem 0 1.5rem; }
+  @media (max-width: 760px) { .resource-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .resource-grid { grid-template-columns: 1fr; } }
+  .resource-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 1rem 1.1rem; text-decoration: none; transition: border-color 0.15s, background 0.15s; display: flex; flex-direction: column; gap: 0.35rem; }
+  .resource-card:hover { border-color: rgba(249,115,22,0.35); background: rgba(249,115,22,0.04); }
+  .resource-type   { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+  .resource-name   { font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.35; }
+  .resource-source { font-family: var(--mono); font-size: var(--min-font); color: var(--orange); }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--bg-2); border-top: 1px solid var(--border-2); margin-top: 5rem; }
+  .footer-inner { max-width: 72rem; margin: 0 auto; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .footer-brand { font-family: var(--sans); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; font-style: italic; color: #fff; }
+  .footer-brand span { color: var(--orange); }
+  .clawhub-badge { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .clawhub-badge:hover { color: var(--orange); }
+  .sitemap-link { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .sitemap-link:hover { color: var(--orange); }
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+          <a href="/guide/" class="nav-dropdown-item">
+            <i data-lucide="book-marked"></i>
+            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+</div>
+
+<main id="main-content">
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-kicker">
+      <span class="chip chip-blue">Comparison · March 18, 2026</span>
+      <span class="chip chip-dim">Research Preview</span>
+      <span class="chip chip-cyan">macOS Only</span>
+    </div>
+    <h1 class="hero-title" id="hero-title">
+      Claude <em>Dispatch</em><br>
+      <span style="font-size:0.5em;color:var(--text-3);font-weight:600;letter-spacing:-0.01em;font-style:normal">Anthropic's Answer to OpenClaw — A Factual Assessment</span>
+    </h1>
+    <p class="hero-sub">
+      On March 17, 2026 — one day ago — Anthropic shipped
+      <a href="https://claude.com/blog/cowork-research-preview" target="_blank" rel="noopener">Dispatch for Cowork</a>,
+      a research-preview feature that lets Max subscribers control a Mac-based AI agent session from a mobile device.
+      Industry observers immediately framed it as Anthropic's direct counter to OpenClaw.
+      This guide evaluates whether that framing holds up.
+    </p>
+    <div class="hero-meta">
+      <span>By <strong style="color:var(--text)">ClawBeat</strong></span>
+      <span>March 18, 2026</span>
+      <span>~12 min read</span>
+      <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">Official Cowork docs ↗</a>
+    </div>
+    <div class="hero-stats-row">
+      <div class="hstat"><div class="hstat-label">Launched</div><div class="hstat-value blue">Mar 17, 2026</div></div>
+      <div class="hstat"><div class="hstat-label">Price</div><div class="hstat-value orange">Max $100–200/mo</div></div>
+      <div class="hstat"><div class="hstat-label">Platform</div><div class="hstat-value cyan">macOS</div></div>
+      <div class="hstat"><div class="hstat-label">Status</div><div class="hstat-value dim">Preview</div></div>
+    </div>
+  </section>
+
+  <!-- BACKGROUND / TIMELINE -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">background</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>
+      To understand why Dispatch matters, you need the backstory. OpenClaw did not exist six months ago.
+      Its creator, Peter Steinberger, released a project called Clawdbot in late January 2026 — a thin wrapper that let anyone run
+      Claude as an always-on desktop agent. The project went viral instantly.
+      <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener" class="src">By March 2, the repo had 247,000 GitHub stars.</a>
+    </p>
+    <p>
+      Anthropic responded on January 27 with a cease-and-desist over trademark infringement on the "Claude" name.
+      The project was renamed — first to Moltbot, then to OpenClaw. Then on February 14, OpenAI hired Steinberger and
+      <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener" class="src">OpenClaw moved to an independent foundation with OpenAI as primary sponsor.</a>
+      Anthropic had pushed away the builder, and OpenAI welcomed him in.
+    </p>
+    <p>
+      What observers largely missed in the cease-and-desist story was what Anthropic was building in parallel.
+      <a href="https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no" target="_blank" rel="noopener" class="src">Cowork had been in research preview since January 2026</a> —
+      a sandboxed desktop agent product with a fundamentally different security posture than OpenClaw.
+      Dispatch, the mobile-remote-control layer on top of it, shipped on March 17.
+    </p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">January 2026</div>
+      <div class="tl-event">Clawdbot launches; Cowork research preview opens</div>
+      <div class="tl-note">Steinberger's Clawdbot goes viral.
+        <a href="https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no" target="_blank" rel="noopener">Anthropic simultaneously opens Cowork to Max subscribers on macOS.</a>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">January 27, 2026</div>
+      <div class="tl-event">Anthropic cease-and-desist; project renamed to OpenClaw</div>
+      <div class="tl-note">
+        <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">Anthropic cites trademark infringement on the "Claude" name.</a>
+        Project cycles through Moltbot → OpenClaw.
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">January 30, 2026</div>
+      <div class="tl-event">Anthropic adds Agent Skills (plugins) to Cowork</div>
+      <div class="tl-note">
+        <a href="https://techcrunch.com/2026/01/30/anthropic-brings-agentic-plugins-to-cowork/" target="_blank" rel="noopener">TechCrunch: Anthropic launches Agent Skills spec as an open standard</a>,
+        aiming for a role similar to MCP in the tool ecosystem.
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-date">February 14, 2026</div>
+      <div class="tl-event">OpenAI hires Steinberger; OpenClaw joins independent foundation</div>
+      <div class="tl-note">
+        <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">OpenClaw moves to an independent foundation with OpenAI as primary sponsor.</a>
+        GitHub stars cross 247K by March 2.
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-date">March 17, 2026</div>
+      <div class="tl-event">Dispatch for Cowork launches — research preview</div>
+      <div class="tl-note">
+        <a href="https://claude.com/blog/cowork-research-preview" target="_blank" rel="noopener">Anthropic ships Dispatch</a>,
+        enabling Mac Cowork sessions to be controlled from a mobile device via QR code pairing.
+        Available to Max subscribers; Pro access promised within days.
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IS COWORK -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">what_is_cowork</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>
+      Claude Cowork is Anthropic's desktop agent product for non-developers.
+      It lives as a new tab in the Claude Mac app alongside Chat and Code, and
+      <a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener" class="src">Simon Willison described it as "Claude Code for the rest of your work"</a> —
+      the same underlying agent architecture repackaged without the terminal.
+      Cowork uses <strong>Apple's Virtualization Framework</strong> to boot a sandboxed Linux environment
+      on your machine; files are mounted at <code style="font-family:var(--mono);font-size:var(--min-font);color:var(--blue);background:var(--blue-dim);padding:0.1rem 0.3rem;border-radius:3px">/sessions/[name]/mnt/[folder]</code>
+      and the agent operates within that container.
+    </p>
+    <p>
+      Cowork supports folder-scoped file access (you choose what it can see),
+      web navigation, form interaction, and artifact generation.
+      <a href="https://techcrunch.com/2026/01/30/anthropic-brings-agentic-plugins-to-cowork/" target="_blank" rel="noopener" class="src">As of January 30, Cowork also supports Agent Skills</a> —
+      a plugin system Anthropic has proposed as an open standard.
+      Dispatch is the third pillar: the ability to initiate and monitor Cowork tasks from a phone.
+    </p>
+  </div>
+  <div class="arch-grid">
+    <div class="arch-card orange">
+      <div class="arch-icon orange" aria-hidden="true"><i data-lucide="folder-open"></i></div>
+      <div class="arch-name">Cowork Core</div>
+      <div class="arch-sub">Desktop agent layer</div>
+      <div class="arch-desc">
+        Runs in the Claude Mac app. Operates inside a sandboxed Linux VM (Apple Virtualization Framework).
+        <a href="https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no" target="_blank" rel="noopener">Reads, writes, and modifies files in a folder you designate</a>;
+        can browse the web, fill forms, and generate output artifacts.
+      </div>
+      <ul class="arch-bullets">
+        <li>Folder-scoped filesystem access</li>
+        <li>Web browsing + form interaction</li>
+        <li>Artifact generation (HTML, docs, etc.)</li>
+        <li><a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">Max subscription required ($100–200/mo)</a></li>
+        <li>macOS only; Windows support planned</li>
+      </ul>
+    </div>
+    <div class="arch-card cyan">
+      <div class="arch-icon cyan" aria-hidden="true"><i data-lucide="puzzle"></i></div>
+      <div class="arch-name">Agent Skills</div>
+      <div class="arch-sub">Plugin / extension layer</div>
+      <div class="arch-desc">
+        <a href="https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/" target="_blank" rel="noopener">Anthropic's open-standard plugin spec</a>
+        for teaching Claude repeatable workflows via folders of instructions, scripts, and resources loaded dynamically.
+        Positioned as a potential successor to MCP in the agent tooling ecosystem.
+      </div>
+      <ul class="arch-bullets">
+        <li>Organized instruction + script folders</li>
+        <li>Dynamic skill loading at runtime</li>
+        <li><a href="https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/" target="_blank" rel="noopener">Open standard, not proprietary</a></li>
+        <li>Launched January 30, 2026</li>
+      </ul>
+    </div>
+    <div class="arch-card blue">
+      <div class="arch-icon blue" aria-hidden="true"><i data-lucide="smartphone"></i></div>
+      <div class="arch-name">Dispatch</div>
+      <div class="arch-sub">Mobile remote layer</div>
+      <div class="arch-desc">
+        <a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener">Research preview feature</a>
+        that pairs your iPhone with the Mac app via QR code scan.
+        Once paired, a Dispatch entry appears in the mobile sidebar, allowing you to send tasks to your Mac's
+        active Cowork session from anywhere.
+      </div>
+      <ul class="arch-bullets">
+        <li>QR code pairing (≈30 seconds)</li>
+        <li>Mobile-to-Mac session control</li>
+        <li>Sandboxed VM — no direct FS access</li>
+        <li>Max first; Pro access arriving shortly</li>
+        <li><a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener">Currently ~50% task success rate (MacStories)</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HOW DISPATCH WORKS -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">how_dispatch_works</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>
+      Setup is designed to be quick.
+      <a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener" class="src">After updating the Claude Mac app, a Dispatch option appears in the Cowork section</a>,
+      prompting you to scan a QR code with your iPhone. Once paired, your phone's Claude app gains a Dispatch entry
+      in its sidebar — a live link into the Cowork session running on your Mac.
+      The Mac must be awake with the Claude app open; there is no server-side session persistence.
+    </p>
+    <p>
+      <strong>What worked</strong> in MacStories' hands-on testing: locating screenshots, summarizing Notion notes,
+      accessing files already open in Cowork.
+      <strong>What failed</strong>: opening new applications, accessing Terminal sessions, reading Safari tabs, sending via iMessage.
+      MacStories characterized the overall experience as "rough around the edges" and "currently slow,"
+      with approximately a 50% success rate across attempted tasks.
+    </p>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-title">Research Preview Caveat</div>
+    <p>
+      <strong>Dispatch is explicitly a research preview.</strong>
+      <a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener">MacStories' independent hands-on found roughly 50% task completion</a>
+      on the day of launch, with slow execution and a number of capability gaps (no Terminal, no Safari, no iMessage).
+      Anthropic has not published a reliability roadmap or timeline for general availability.
+      Users evaluating Dispatch as a production tool should treat current performance as a lower bound, not a ceiling.
+    </p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.65rem;margin:1.5rem 0;max-width:720px">
+    <div style="background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;padding:0.85rem 1rem">
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Subscription</div>
+      <div style="font-size:0.8125rem;color:var(--text);font-weight:600">Claude Max ($100–200/mo)</div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.2rem">Pro tier access announced "within days" of launch</div>
+    </div>
+    <div style="background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;padding:0.85rem 1rem">
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Host requirements</div>
+      <div style="font-size:0.8125rem;color:var(--text);font-weight:600">Mac must be awake, app running</div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.2rem">No server-side session persistence</div>
+    </div>
+    <div style="background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;padding:0.85rem 1rem">
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Sandbox model</div>
+      <div style="font-size:0.8125rem;color:var(--text);font-weight:600">VM, default-deny, no direct FS</div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.2rem"><a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener" style="color:var(--text-3);border-bottom:1px dashed var(--text-4);text-decoration:none">Apple Virtualization Framework (VZVirtualMachine)</a></div>
+    </div>
+    <div style="background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;padding:0.85rem 1rem">
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Setup time</div>
+      <div style="font-size:0.8125rem;color:var(--text);font-weight:600">~30 seconds (QR code scan)</div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.2rem">No API keys or external config required</div>
+    </div>
+  </div>
+
+  <!-- HEAD-TO-HEAD COMPARISON -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">comparison</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose" style="margin-bottom:1rem">
+    <p>The table below draws exclusively on publicly documented facts. "Success rate" reflects MacStories' independent Dispatch test; OpenClaw performance varies significantly by configuration and skill set.</p>
+  </div>
+  <div class="cmp-wrap" role="region" aria-label="OpenClaw vs Claude Dispatch comparison table">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th class="oc" scope="col">OpenClaw</th>
+          <th class="cd" scope="col">Claude Dispatch (Cowork)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Cost</th>
+          <td class="win-cyan">Free (open source)</td>
+          <td>Max: $100–200/mo<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Pro tier coming "within days"</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Setup</th>
+          <td>~30+ min<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">API keys, config, runtime install</span></td>
+          <td class="win-blue">~30 seconds<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">QR code pairing, no config</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Platform</th>
+          <td class="win-cyan">macOS / Linux / Windows</td>
+          <td class="warn">macOS only<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Windows support planned</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Sandboxing</th>
+          <td class="warn">None by default<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">Full user-space FS access</span></td>
+          <td class="win-blue">VM, default-deny networking<br><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)">No direct filesystem access</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Filesystem access</th>
+          <td class="warn">Unrestricted (user-space)</td>
+          <td class="win-blue">Folder-scoped, opt-in</td>
+        </tr>
+        <tr>
+          <th scope="row">Mobile control</th>
+          <td>Via 3rd-party integrations</td>
+          <td class="win-blue">Native (Dispatch QR pairing)</td>
+        </tr>
+        <tr>
+          <th scope="row">API required</th>
+          <td class="warn">Yes (Anthropic, OpenAI, etc.)</td>
+          <td class="win-blue">No</td>
+        </tr>
+        <tr>
+          <th scope="row">Developer API</th>
+          <td class="win-cyan">Full API + CLI</td>
+          <td class="warn">None announced for Dispatch</td>
+        </tr>
+        <tr>
+          <th scope="row">Automation (webhooks)</th>
+          <td class="win-cyan">Supported</td>
+          <td class="warn">Not available</td>
+        </tr>
+        <tr>
+          <th scope="row">Maturity</th>
+          <td class="win-cyan">v1.x, production deployments</td>
+          <td class="warn">Research preview (March 17, 2026)</td>
+        </tr>
+        <tr>
+          <th scope="row">Success rate</th>
+          <td>Varies by skill config</td>
+          <td class="warn">~50% (MacStories, launch day)</td>
+        </tr>
+        <tr>
+          <th scope="row">Community</th>
+          <td class="win-cyan">247K+ GitHub stars</td>
+          <td>Managed product, no OSS repo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">security</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>
+      Security is the single strongest argument for Dispatch.
+      <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener" class="src">The fundamental difference between Dispatch and OpenClaw lies in isolation</a>:
+      OpenClaw runs with full user-space permissions and no mandatory sandboxing;
+      Dispatch runs inside a virtual machine with default-deny networking and no direct filesystem access.
+    </p>
+    <p>
+      Industry assessments of OpenClaw's security posture have been consistently negative.
+      The gap is not subtle — it is architectural.
+    </p>
+  </div>
+  <div class="threat-grid">
+    <div class="threat-card">
+      <div class="threat-title">Gartner: "Insecure by Default"</div>
+      <div class="threat-desc">
+        <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">Gartner publicly classified OpenClaw as "insecure by default"</a>
+        — a designation that reflects the absence of sandboxing, skill validation, and network egress controls in the base installation.
+      </div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-title">Cisco: "A Security Nightmare"</div>
+      <div class="threat-desc">
+        <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">Cisco's security team described OpenClaw as "a security nightmare,"</a>
+        citing unconstrained agent access to the local filesystem and the absence of runtime isolation.
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Ethan Mollick — Wharton, AI researcher</div>
+    <p>
+      "Dispatch covers 90% of what I was trying to use OpenClaw for, but feels far less likely to upload my entire drive to a malware site."
+    </p>
+    <p><a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">Source: Gadoci Consulting, citing Mollick — March 2026</a></p>
+  </div>
+
+  <div class="prose">
+    <p>
+      The tradeoff is real, however.
+      <a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener" class="src">Simon Willison noted that prompt injection remains an active threat</a>
+      even within Cowork's sandbox — Anthropic acknowledges its defenses "aren't guaranteed" —
+      and questioned whether typical users can realistically monitor for suspicious agent behavior.
+      Dispatch's VM isolation reduces the blast radius of a successful attack, but does not eliminate the attack surface.
+    </p>
+  </div>
+
+  <!-- LIMITATIONS -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">limitations</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose" style="margin-bottom:1rem">
+    <p>Dispatch's security advantages come with significant practical constraints. Four stand out as current blockers for serious adoption.</p>
+  </div>
+  <div class="limit-grid">
+    <div class="limit-card">
+      <div class="limit-label">Platform lock-in</div>
+      <div class="limit-title">macOS Only</div>
+      <div class="limit-desc">
+        Cowork uses <a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener">Apple's Virtualization Framework (VZVirtualMachine)</a>,
+        which is macOS-specific. Windows support is planned but unscheduled.
+        OpenClaw runs on macOS, Linux, and Windows.
+      </div>
+    </div>
+    <div class="limit-card">
+      <div class="limit-label">Reliability</div>
+      <div class="limit-title">~50% Task Success Rate at Launch</div>
+      <div class="limit-desc">
+        <a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener">MacStories' hands-on test found roughly half of attempted tasks succeeded.</a>
+        Opening apps, accessing Terminal sessions, reading Safari tabs, and sending iMessage all failed.
+        Execution was described as "currently slow."
+      </div>
+    </div>
+    <div class="limit-card">
+      <div class="limit-label">Cost</div>
+      <div class="limit-title">Max Subscription Required at Launch</div>
+      <div class="limit-desc">
+        Access at launch requires a Claude Max subscription at <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">$100–200/month</a>.
+        Pro access was promised within days but has not yet shipped as of March 18, 2026.
+        OpenClaw is free and open source.
+      </div>
+    </div>
+    <div class="limit-card">
+      <div class="limit-label">Developer access</div>
+      <div class="limit-title">No API or Automation Hooks</div>
+      <div class="limit-desc">
+        <a href="https://coey.com/resources/blog/2026/03/17/anthropic-dispatch-turns-claude-into-your-always-on-creative-coworker/" target="_blank" rel="noopener">Anthropic has not announced a Dispatch API, webhooks, or integrations</a>
+        with automation platforms like Make, n8n, or Zapier.
+        Dispatch is a consumer feature; developers who need programmatic control have no path forward today.
+      </div>
+    </div>
+  </div>
+
+  <!-- REACTIONS -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">reactions</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-title">Simon Willison — Developer, Django co-creator</div>
+    <p>
+      Characterized Cowork as "Claude Code for the rest of your work" — the same agentic architecture as Claude Code,
+      repackaged with a friendlier interface and a pre-configured sandbox. Willison flagged prompt injection as the
+      persistent threat and noted that <strong>Anthropic's defenses exist but aren't guaranteed</strong>.
+    </p>
+    <p><a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener">Source: simonw.substack.com — March 2026</a></p>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">Latent Space (Swyx) — AI research newsletter</div>
+    <p>
+      Framed Dispatch as <strong>"Anthropic's Answer to OpenClaw,"</strong> noting that observers Simon Willison and Ethan Mollick
+      both described it positively relative to OpenClaw. Observed that Anthropic
+      "famously fumbled the Clawdbot relationship," making the Dispatch launch a strategically meaningful response.
+    </p>
+    <p><a href="https://www.latent.space/p/ainews-claude-cowork-dispatch-anthropics" target="_blank" rel="noopener">Source: latent.space — March 18, 2026</a></p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Gadoci Consulting — Independent Analysis</div>
+    <p>
+      Argued that <strong>professionals were never blocking OpenClaw over capability</strong> — they were blocking it over security.
+      Dispatch's sandbox model changes that calculus: "if this is going to carry the Claude name, it needs to be built differently."
+      Concluded Dispatch represents a more deployable enterprise solution, with "unresolved scaling questions" as the main caveat.
+    </p>
+    <p><a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener">Source: gadociconsulting.com — March 2026</a></p>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">verdict</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="prose">
+    <p>
+      Claude Dispatch is a credible first step, not a complete alternative. As of March 18, 2026 — one day after launch —
+      it is a research preview with a 50% task success rate, a macOS requirement, a $100/month price floor,
+      and no developer API. On those terms, OpenClaw remains the more capable and accessible tool for anyone
+      comfortable with the security tradeoffs.
+    </p>
+    <p>
+      What Dispatch does solve — and solve meaningfully — is the security objection that has kept OpenClaw out of
+      professional and enterprise environments. The sandboxed VM, the default-deny networking, and the absence of
+      raw filesystem access represent a genuinely different architecture. Mollick's framing holds:
+      Dispatch covers a large share of the use cases with a substantially smaller attack surface.
+      Whether that is enough depends entirely on what you are trying to do.
+    </p>
+  </div>
+  <div class="verdict-split">
+    <div class="verdict-card green">
+      <div class="verdict-heading green">Choose Dispatch if…</div>
+      <ul class="verdict-list">
+        <li>You need a sandboxed agent with no raw filesystem access</li>
+        <li>Security policy blocks OpenClaw's default permissions</li>
+        <li>You are on macOS and a Max subscriber</li>
+        <li>You want zero-config setup (no API keys)</li>
+        <li>You are willing to wait for reliability to improve</li>
+      </ul>
+    </div>
+    <div class="verdict-card cyan">
+      <div class="verdict-heading cyan">Stick with OpenClaw if…</div>
+      <ul class="verdict-list">
+        <li>You need Windows or Linux support</li>
+        <li>You require developer API access or automation hooks</li>
+        <li>You need production-level task reliability today</li>
+        <li>Cost is a constraint (OpenClaw is free)</li>
+        <li>You need the full, unconstrained skill ecosystem</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">faq</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="faq" role="list">
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-1" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Is Claude Dispatch the same as Claude Cowork?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-1">
+        <p>No. <strong>Claude Cowork</strong> is Anthropic's desktop agent product that runs on your Mac and can read, write, and act on files and websites. <strong>Dispatch</strong> is a research-preview feature within Cowork that lets you control your Mac's Cowork session from a mobile device (iPhone). Cowork <a href="https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no" target="_blank" rel="noopener">launched in January 2026</a>; Dispatch launched March 17, 2026.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-2" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Do I need an OpenClaw account or API key to use Claude Dispatch?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-2">
+        <p>No. Dispatch runs entirely through Anthropic's Claude Mac app. You need a <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">Claude Max subscription ($100–$200/month)</a>, the Claude Mac app installed and running, and an iPhone to scan the QR code. No API keys or external configuration are required.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-3" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Does Claude Dispatch give Claude access to my entire Mac?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-3">
+        <p>No. Per <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">Anthropic's documentation</a>, Dispatch operates within a sandboxed virtual machine with no direct filesystem access. Unlike OpenClaw, which runs with full user-space permissions by default, Dispatch uses default-deny networking and hard isolation boundaries. You choose which folders Cowork can access — Claude cannot read or edit anything outside that scope.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-4" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Why is Claude Dispatch currently only available on macOS?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-4">
+        <p>Claude Cowork — the underlying product — uses <a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener">Apple's Virtualization Framework (VZVirtualMachine)</a> to run a sandboxed Linux environment. This technology is macOS-specific. Anthropic has indicated Windows support is planned but has not given a timeline.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-5" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Is Claude Dispatch free?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-5">
+        <p>Dispatch currently requires a <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener">Claude Max subscription, which costs $100–$200/month</a>. Anthropic announced that Pro subscribers would gain access within days of the March 17 launch, though no separate Dispatch-only pricing has been officially disclosed.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-6" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Can developers automate Dispatch via API or webhooks?</span>
+        <span class="faq-arrow" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
+      </button>
+      <div class="faq-a" id="faq-a-6">
+        <p>No. As of the March 17, 2026 research preview, <a href="https://coey.com/resources/blog/2026/03/17/anthropic-dispatch-turns-claude-into-your-always-on-creative-coworker/" target="_blank" rel="noopener">Anthropic has not announced a Dispatch-specific API, webhooks, or native integrations</a> with automation platforms like Make, n8n, or Zapier. Dispatch is a consumer-facing feature, not a developer API surface.</p>
+      </div>
+    </div>
+
+  </div><!-- .faq -->
+
+  <!-- SOURCES -->
+  <div class="sdiv">
+    <h2 class="sdiv-label"><span class="sdiv-slash">//</span> <span class="sdiv-tag">sources</span></h2>
+    <div class="sdiv-line"></div>
+  </div>
+  <div class="resource-grid">
+    <a href="https://claude.com/blog/cowork-research-preview" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Official</div>
+      <div class="resource-name">Introducing Cowork — Research Preview</div>
+      <div class="resource-source">Anthropic / claude.com</div>
+    </a>
+    <a href="https://support.claude.com/en/articles/13345190-get-started-with-cowork" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Official</div>
+      <div class="resource-name">Get Started with Cowork</div>
+      <div class="resource-source">Anthropic Help Center</div>
+    </a>
+    <a href="https://www.macstories.net/stories/hands-on-with-claude-dispatch-for-cowork/" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Hands-on Review</div>
+      <div class="resource-name">Hands-On with Claude Dispatch for Cowork</div>
+      <div class="resource-source">MacStories</div>
+    </a>
+    <a href="https://gadociconsulting.com/articles/the-cease-and-desist-everyone-misread-anthropic-s-quiet-answer-to-always-on-agents" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Analysis</div>
+      <div class="resource-name">The Cease-and-Desist Everyone Misread: Anthropic's Quiet Answer to Always-On Agents</div>
+      <div class="resource-source">Gadoci Consulting</div>
+    </a>
+    <a href="https://www.latent.space/p/ainews-claude-cowork-dispatch-anthropics" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Newsletter</div>
+      <div class="resource-name">AINews: Claude Cowork Dispatch — Anthropic's Answer to OpenClaw</div>
+      <div class="resource-source">Latent Space</div>
+    </a>
+    <a href="https://simonw.substack.com/p/first-impressions-of-claude-cowork" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Developer Review</div>
+      <div class="resource-name">First Impressions of Claude Cowork</div>
+      <div class="resource-source">Simon Willison (simonw.substack.com)</div>
+    </a>
+    <a href="https://venturebeat.com/technology/anthropic-launches-cowork-a-claude-desktop-agent-that-works-in-your-files-no" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">News</div>
+      <div class="resource-name">Anthropic Launches Cowork, a Claude Desktop Agent That Works in Your Files</div>
+      <div class="resource-source">VentureBeat</div>
+    </a>
+    <a href="https://techcrunch.com/2026/01/30/anthropic-brings-agentic-plugins-to-cowork/" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">News</div>
+      <div class="resource-name">Anthropic Brings Agentic Plug-ins to Cowork</div>
+      <div class="resource-source">TechCrunch</div>
+    </a>
+    <a href="https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Analysis</div>
+      <div class="resource-name">Agent Skills: Anthropic's Next Bid to Define AI Standards</div>
+      <div class="resource-source">The New Stack</div>
+    </a>
+    <a href="https://coey.com/resources/blog/2026/03/17/anthropic-dispatch-turns-claude-into-your-always-on-creative-coworker/" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">Coverage</div>
+      <div class="resource-name">Anthropic Dispatch Turns Claude Into Your Always-On Creative Coworker</div>
+      <div class="resource-source">Coey</div>
+    </a>
+    <a href="https://analyticsindiamag.com/ai-news/anthropic-expands-claude-beyond-desktop-with-dispatch-cross-device-control-feature" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">News</div>
+      <div class="resource-name">Anthropic Expands Claude Beyond Desktop with Dispatch Cross-Device Control</div>
+      <div class="resource-source">Analytics India Magazine</div>
+    </a>
+    <a href="https://letsdatascience.com/news/anthropic-launches-dispatch-for-cowork-remote-control-e3e037ab" target="_blank" rel="noopener" class="resource-card">
+      <div class="resource-type">News</div>
+      <div class="resource-name">Anthropic Launches Dispatch for Cowork Remote Control</div>
+      <div class="resource-source">Let's Data Science</div>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <div style="display:flex;align-items:center;gap:1.25rem;">
+      <a class="sitemap-link" href="/sitemap.html">sitemap</a>
+      <a class="sitemap-link" href="/rss.html">rss</a>
+      <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  function toggleMenu() {
+    const btn       = document.getElementById('hamburger-btn');
+    const menu      = document.getElementById('mobile-menu');
+    const iconMenu  = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+    const isOpen    = menu.classList.contains('open');
+    menu.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    iconMenu.style.display  = isOpen ? '' : 'none';
+    iconClose.style.display = isOpen ? 'none' : '';
+  }
+
+  function toggleFaq(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    btn.nextElementSibling.classList.toggle('open', !expanded);
+  }
+</script>
+</body>
+</html>
