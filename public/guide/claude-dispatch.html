@@ -426,44 +426,44 @@
       </div>
       <span class="brand-text">ClawBeat<span>.co</span></span>
     </a>
-    <nav class="header-nav" aria-label="Primary navigation">
+    <nav class="header-nav">
       <div class="nav-dropdown">
-        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper" aria-hidden="true"></i>Intel</a>
+        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
         <div class="nav-dropdown-menu">
           <a href="/trace/" class="nav-dropdown-item">
-            <i data-lucide="layers" aria-hidden="true"></i>
+            <i data-lucide="layers"></i>
             <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
           </a>
           <a href="/guide/" class="nav-dropdown-item">
-            <i data-lucide="book-marked" aria-hidden="true"></i>
+            <i data-lucide="book-marked"></i>
             <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
           </a>
         </div>
       </div>
-      <a href="/research.html" class="nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-      <a href="/media.html" class="nav-item"><i data-lucide="video" aria-hidden="true"></i>Media</a>
-      <a href="/forge.html" class="nav-item"><i data-lucide="github" aria-hidden="true"></i>Forge</a>
-      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
       <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
     </nav>
-    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
-      <i data-lucide="menu" id="icon-menu" aria-hidden="true"></i>
-      <i data-lucide="x" id="icon-close" style="display:none" aria-hidden="true"></i>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
     </button>
   </div>
 </header>
 
 <!-- MOBILE MENU -->
-<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
-  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper" aria-hidden="true"></i>Intel Feed</a>
-  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers" aria-hidden="true"></i>Trace Magazine</a>
-  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked" aria-hidden="true"></i>Guides</a>
-  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Research</a>
-  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video" aria-hidden="true"></i>Media Lab</a>
-  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github" aria-hidden="true"></i>The Forge</a>
-  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar" aria-hidden="true"></i>Events</a>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
   <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
-</nav>
+</div>
 
 <main id="main-content">
 <div class="page-wrap">
@@ -1122,14 +1122,11 @@
   lucide.createIcons();
 
   function toggleMenu() {
-    const btn       = document.getElementById('hamburger-btn');
     const menu      = document.getElementById('mobile-menu');
     const iconMenu  = document.getElementById('icon-menu');
     const iconClose = document.getElementById('icon-close');
     const isOpen    = menu.classList.contains('open');
     menu.classList.toggle('open', !isOpen);
-    btn.setAttribute('aria-expanded', String(!isOpen));
-    menu.setAttribute('aria-hidden', String(isOpen));
     iconMenu.style.display  = isOpen ? '' : 'none';
     iconClose.style.display = isOpen ? 'none' : '';
   }
