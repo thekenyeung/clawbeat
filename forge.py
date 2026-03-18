@@ -1541,6 +1541,84 @@ def _load_from_supabase() -> dict:
         return empty
 
 
+def _apply_feedback_signals(db: dict) -> set:
+    """Apply admin rejection signals to article scores and write back to Supabase.
+
+    Returns the set of rejected article URLs so they can be added to existing_urls
+    and never re-ingested, even if their news_items row was later deleted.
+
+    Reason → score adjustment:
+      off_topic          → d1_score = 0   (product relevance zeroed)
+      too_elementary     → d5_score = 0   (reader value zeroed)
+      low_quality_source → source_type='delist', d4_score = 0 (credibility zeroed)
+      clickbait          → d2_score = 0   (depth/actionability zeroed)
+      duplicate          → URL excluded from re-ingestion, no score change
+    """
+    rejected_urls: set = set()
+    if not _supabase:
+        return rejected_urls
+    try:
+        resp = _supabase.table('article_feedback').select('article_id,reason').eq('signal', 'reject').execute()
+        rows = resp.data or []
+    except Exception as e:
+        print(f"⚠️  Could not load article_feedback: {e}")
+        return rejected_urls
+
+    if not rows:
+        return rejected_urls
+
+    # Latest rejection per URL wins if the admin rejected the same article twice
+    feedback_by_url: dict[str, str] = {}
+    for row in rows:
+        feedback_by_url[row['article_id']] = row['reason']
+
+    rejected_urls = set(feedback_by_url.keys())
+    items_by_url  = {item['url']: item for item in db.get('items', [])}
+
+    updates: list[tuple[str, dict]] = []
+    for url, reason in feedback_by_url.items():
+        item = items_by_url.get(url)
+        if not item or reason == 'duplicate':
+            continue  # duplicate: URL exclusion only; missing item: already deleted
+
+        patch: dict = {}
+        if reason == 'off_topic':
+            patch['d1_score'] = 0.0
+        elif reason == 'too_elementary':
+            patch['d5_score'] = 0.0
+        elif reason == 'low_quality_source':
+            patch['source_type'] = 'delist'
+            patch['d4_score']    = 0.0
+        elif reason == 'clickbait':
+            patch['d2_score'] = 0.0
+
+        if not patch:
+            continue
+
+        # Recalculate total_score using adjusted dimension values
+        d1 = float(patch.get('d1_score', item.get('d1_score') or 0) or 0)
+        d2 = float(patch.get('d2_score', item.get('d2_score') or 0) or 0)
+        d3 = float(item.get('d3_score') or 0)
+        d4 = float(patch.get('d4_score', item.get('d4_score') or 0) or 0)
+        d5 = float(patch.get('d5_score', item.get('d5_score') or 0) or 0)
+        patch['total_score'] = round((d1/40*35) + (d2/25*20) + (d3/20*15) + (d4/15*10) + (d5/20*20), 2)
+
+        item.update(patch)
+        updates.append((url, patch))
+
+    write_errors = 0
+    for url, patch in updates:
+        try:
+            _supabase.table('news_items').update(patch).eq('url', url).execute()
+        except Exception as e:
+            print(f"⚠️  Feedback write-back failed for {url[:60]}: {e}")
+            write_errors += 1
+
+    err_str = f', {write_errors} write error(s)' if write_errors else ''
+    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s) excluded, {len(updates)} score(s) adjusted{err_str}.")
+    return rejected_urls
+
+
 def _save_to_supabase(db: dict) -> None:
     """Upsert all data to Supabase. Only prunes stale items from the current dispatch date;
     articles from past dispatches are never deleted.
@@ -1808,6 +1886,9 @@ if __name__ == "__main__":
         db['items'] = [item for item in db['items'] if not item.get('needs_reprocess')]
         print(f"♻️  {orphan_count} orphaned sublink(s) released for reclustering.")
 
+    # Apply admin rejection feedback — adjust scores in DB and collect excluded URLs
+    rejected_urls = _apply_feedback_signals(db)
+
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
     new_summaries_count = 0
@@ -1818,6 +1899,8 @@ if __name__ == "__main__":
             existing_urls.add(mc['url'])
     # Permanently blocked URLs (admin-deleted) — never re-add via algo
     existing_urls.update(db.get('blocked_urls', set()))
+    # Rejected article URLs — prevent re-ingestion even if deleted from news_items
+    existing_urls.update(rejected_urls)
     for art in raw_news:
         if art['url'] in existing_urls: continue
         # Generate AI briefs for whitelist Publisher articles (authority=3) up to batch limit.
