@@ -438,15 +438,11 @@ const App: React.FC = () => {
     [currentNewsDate, sortedNewsDays]
   );
 
-  const currentNewsItems = React.useMemo(
-    () => sortedNews.filter(item => (item.date || 'unknown') === activeNewsDate),
-    [sortedNews, activeNewsDate]
-  );
 
-  // Spotlight always shows for the active day's page
+  // Spotlight shows for every day that has items
   const spotlightDays = React.useMemo(
-    () => activeNewsDate ? new Set([activeNewsDate]) : new Set<string>(),
-    [activeNewsDate]
+    () => new Set(sortedNewsDays),
+    [sortedNewsDays]
   );
 
   const currentVideoItems = videos.slice((currentVideoPage - 1) * videosPerPage, currentVideoPage * videosPerPage);
@@ -563,7 +559,7 @@ const App: React.FC = () => {
           <div className="min-h-[50vh] border-t border-white/[0.09] pt-6">
             {activePage === 'news' && (
               <>
-                <NewsList items={currentNewsItems} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} onPermalinkCopy={handlePermalinkCopy} permalinkLoading={permalinkLoading} permalinkCopied={permalinkCopied} />
+                <NewsList items={sortedNews} allNews={sortedNews} onTrackClick={handleLinkClick} spotlightOverrides={spotlightOverrides} spotlightExcluded={spotlightExcluded} spotlightDays={spotlightDays} dailyEditions={dailyEditions} onPermalinkCopy={handlePermalinkCopy} permalinkLoading={permalinkLoading} permalinkCopied={permalinkCopied} />
                 <DatePagination days={sortedNewsDays} current={activeNewsDate} onChange={setCurrentNewsDate} />
               </>
             )}
@@ -884,6 +880,9 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
           .filter(item => !overriddenUrls.has(item.url) && !(dayExcluded?.has(item.url)));
         let queueIdx = 0;
 
+        // Best item for the day ignoring exclusions — fallback for slot 1
+        const dayBest = [...dayItems].sort((a, b) => scoreArticle(b) - scoreArticle(a))[0] ?? null;
+
         const spotlightSlots: (NewsItem | null)[] = [1, 2, 3, 4].map(slot => {
           if (dayOverrides[slot]) {
             // Manual override — build a NewsItem-shaped object from override data
@@ -897,8 +896,9 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
               moreCoverage: [],
             } as NewsItem;
           }
-          // Algorithmic pick
-          return algoQueue[queueIdx++] ?? null;
+          // Algorithmic pick; slot 1 always falls back to best day item
+          const candidate = algoQueue[queueIdx++] ?? null;
+          return (slot === 1 && !candidate) ? dayBest : candidate;
         });
 
         const leadSlot      = spotlightSlots[0];
