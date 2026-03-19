@@ -1,30 +1,75 @@
 /**
  * Vercel Edge Function — Reddit proxy
  *
- * Pulls top posts from r/openclaw, r/clawdbot, and r/LocalLLaMA.
- * r/openclaw and r/clawdbot fetch all top posts (no keyword filter needed).
- * r/LocalLLaMA is filtered by Claw keywords.
- * Merges, deduplicates by post ID, sorts by score.
+ * Uses Reddit app-only OAuth (client_credentials) to avoid 403s from
+ * Vercel's datacenter IPs. Requires REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET
+ * env vars (set in Vercel dashboard).
  *
- * Response: { posts: Post[] }
- * Cached 5 minutes server-side via Cache-Control s-maxage.
+ * Sources:
+ *   r/openclaw + r/clawdbot  — hot posts, all on-topic
+ *   r/LocalLLaMA             — keyword-filtered, top all-time
+ *
+ * Ranked by score + num_comments×5 (upvotes + engagement).
+ * Response: { posts: Post[], _debug: DebugEntry[] }
  */
 
 export const config = { runtime: 'edge' };
 
-const CLAW_QUERY = 'openclaw OR nanoclaw OR nemoclaw OR nanobot OR zeroclaw OR picoclaw';
-const UA         = { 'User-Agent': 'ClawBeat/1.0 (clawbeat.co)' };
+const CLAW_QUERY   = 'openclaw OR nanoclaw OR nemoclaw OR nanobot OR zeroclaw OR picoclaw';
+// Reddit requires a descriptive UA: platform:appid:version (by /u/user)
+const USER_AGENT   = 'web:clawbeat:1.0 (by /u/thekenyeung)';
+
+async function getRedditToken(clientId, clientSecret) {
+  const creds = btoa(`${clientId}:${clientSecret}`);
+  const r = await fetch('https://www.reddit.com/api/v1/access_token', {
+    method:  'POST',
+    headers: {
+      'Authorization': `Basic ${creds}`,
+      'User-Agent':    USER_AGENT,
+      'Content-Type':  'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  });
+  if (!r.ok) throw new Error(`Token fetch failed: ${r.status}`);
+  const json = await r.json();
+  return json.access_token;
+}
 
 export default async function handler(req) {
+  const clientId     = process.env.REDDIT_CLIENT_ID;
+  const clientSecret = process.env.REDDIT_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    return new Response(JSON.stringify({
+      posts:  [],
+      _debug: [{ error: 'REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET not set' }],
+    }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+  }
+
+  let token;
+  try {
+    token = await getRedditToken(clientId, clientSecret);
+  } catch (e) {
+    return new Response(JSON.stringify({
+      posts:  [],
+      _debug: [{ error: `OAuth failed: ${e.message}` }],
+    }), { status: 502, headers: { 'Content-Type': 'application/json' } });
+  }
+
+  const authHeaders = {
+    'Authorization': `Bearer ${token}`,
+    'User-Agent':    USER_AGENT,
+  };
+
   const sources = [
-    { label: 'r/openclaw',   url: 'https://www.reddit.com/r/openclaw/hot.json?limit=25' },
-    { label: 'r/clawdbot',   url: 'https://www.reddit.com/r/clawdbot/hot.json?limit=25' },
-    { label: 'r/LocalLLaMA', url: `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=15&restrict_sr=1` },
+    { label: 'r/openclaw',   url: 'https://oauth.reddit.com/r/openclaw/hot?limit=25' },
+    { label: 'r/clawdbot',   url: 'https://oauth.reddit.com/r/clawdbot/hot?limit=25' },
+    { label: 'r/LocalLLaMA', url: `https://oauth.reddit.com/r/LocalLLaMA/search?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=15&restrict_sr=1` },
   ];
 
   const rawResponses = await Promise.all(
     sources.map(s =>
-      fetch(s.url, { headers: UA })
+      fetch(s.url, { headers: authHeaders })
         .then(async r => ({ label: s.label, status: r.status, ok: r.ok, body: r.ok ? await r.json() : null }))
         .catch(e => ({ label: s.label, status: 0, ok: false, body: null, error: String(e) }))
     )
@@ -45,7 +90,6 @@ export default async function handler(req) {
     .map(p => ({
       id:           p.id,
       title:        p.title,
-      url:          p.url,
       permalink:    `https://reddit.com${p.permalink}`,
       subreddit:    p.subreddit,
       score:        p.score,
@@ -66,7 +110,7 @@ export default async function handler(req) {
   return new Response(JSON.stringify({ posts, _debug }), {
     headers: {
       'Content-Type':                'application/json',
-      'Cache-Control':               'no-store',   // disable cache while debugging
+      'Cache-Control':               'public, s-maxage=300, stale-while-revalidate=60',
       'Access-Control-Allow-Origin': '*',
     },
   });
