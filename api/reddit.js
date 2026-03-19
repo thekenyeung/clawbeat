@@ -6,9 +6,6 @@
  * r/LocalLLaMA is filtered by Claw keywords.
  * Merges, deduplicates by post ID, sorts by score.
  *
- * Query params:
- *   t  — Reddit time filter: week | month | year  (default: week)
- *
  * Response: { posts: Post[] }
  * Cached 5 minutes server-side via Cache-Control s-maxage.
  */
@@ -19,25 +16,20 @@ const CLAW_QUERY = 'openclaw OR nanoclaw OR nemoclaw OR nanobot OR zeroclaw OR p
 const UA         = { 'User-Agent': 'ClawBeat/1.0 (clawbeat.co)' };
 
 export default async function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const t = ['week', 'month', 'year'].includes(searchParams.get('t'))
-    ? searchParams.get('t')
-    : 'week';
-
   const fetches = [
     // r/openclaw — just pull top posts, all are relevant
-    fetch(`https://www.reddit.com/r/openclaw/top.json?t=${t}&limit=15`, { headers: UA })
+    fetch('https://www.reddit.com/r/openclaw/top.json?limit=15', { headers: UA })
       .then(r => r.ok ? r.json() : { data: { children: [] } })
       .catch(() => ({ data: { children: [] } })),
 
     // r/clawdbot — same, pull top posts directly
-    fetch(`https://www.reddit.com/r/clawdbot/top.json?t=${t}&limit=15`, { headers: UA })
+    fetch('https://www.reddit.com/r/clawdbot/top.json?limit=15', { headers: UA })
       .then(r => r.ok ? r.json() : { data: { children: [] } })
       .catch(() => ({ data: { children: [] } })),
 
-    // r/LocalLLaMA — filter by Claw keywords
+    // r/LocalLLaMA — filter by Claw keywords, all time
     fetch(
-      `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=${t}&limit=10&restrict_sr=1`,
+      `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=10&restrict_sr=1`,
       { headers: UA }
     ).then(r => r.ok ? r.json() : { data: { children: [] } })
      .catch(() => ({ data: { children: [] } })),

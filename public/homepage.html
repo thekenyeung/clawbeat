@@ -1367,8 +1367,8 @@ img { display: block; max-width: 100%; }
     }).join('');
   }
 
-  function fetchRedditAndUpdate(period) {
-    fetch('/api/reddit?t=' + redditT(period))
+  function fetchRedditAndUpdate() {
+    fetch('/api/reddit')
       .then(function(r) { return r.ok ? r.json() : { posts: [] }; })
       .then(function(data) { updateRedditPanel(data.posts || []); })
       .catch(function() { updateRedditPanel([]); });
@@ -1423,7 +1423,7 @@ img { display: block; max-width: 100%; }
         if (days === _activePeriod) return;
         _activePeriod = days;
         renderGlanceContent(_glanceData, _activePeriod);
-        fetchRedditAndUpdate(_activePeriod);
+        fetchRedditAndUpdate();
       });
 
       // Wire tab bar
@@ -1455,7 +1455,7 @@ img { display: block; max-width: 100%; }
   function renderGlance(repos, familyStats, news, contributors, releases) {
     _glanceData = { repos: repos, familyStats: familyStats, news: news, contributors: contributors, releases: releases };
     renderGlanceContent(_glanceData, _activePeriod);
-    fetchRedditAndUpdate(_activePeriod);
+    fetchRedditAndUpdate();
   }
 
   /* ── MOBILE MENU TOGGLE ── */
