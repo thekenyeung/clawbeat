@@ -415,53 +415,51 @@ img { display: block; max-width: 100%; }
 /* ── EMPTY / ERROR STATES ── */
 .empty-state { padding: 2rem 1.5rem; text-align: center; font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* ── AT A GLANCE DASHBOARD ── */
-#glance-root { font-size: 0.75rem; } /* floor: 12px across entire section */
-.glance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
-@media (max-width: 900px) { .glance-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .glance-grid { grid-template-columns: 1fr; } }
-.glance-card { background: var(--bg-2); padding: 1.25rem 1.375rem; display: flex; flex-direction: column; gap: 0.625rem; }
-.glance-label { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); }
-.glance-label::before { content: '// '; color: var(--text-4); }
-.glance-val { font-family: var(--mono); font-size: 1.375rem; font-weight: 700; color: var(--orange); line-height: 1; letter-spacing: -0.04em; }
-.glance-sub { font-size: 0.8125rem; color: var(--text-2); }
-.glance-family-row { display: flex; align-items: center; gap: 0.5rem; font-size: var(--min-font); font-family: var(--mono); color: var(--text-2); }
-.glance-family-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.glance-family-count { color: var(--text-3); min-width: 2.5rem; text-align: right; flex-shrink: 0; }
-.glance-family-bar-wrap { width: 2.5rem; flex-shrink: 0; }
-.glance-family-bar { height: 3px; background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.35)); border-radius: 2px; }
-.glance-status { display: flex; align-items: center; gap: 0.375rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-top: auto; }
-.glance-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.glance-spark { display: flex; align-items: flex-end; }
-.glance-repo-row { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.75rem; font-family: var(--mono); }
-.glance-repo-name { color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.glance-repo-stars { color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
-.glance-repo-name:hover { color: var(--orange); }
+/* ── ECOSYSTEM PULSE DASHBOARD ── */
+#glance-root { font-size: 0.75rem; }
 
-/* ── TRENDING TOPICS STRIP ── */
-.glance-section-label { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+/* Period selector */
+.period-selector { display: flex; gap: 0.25rem; margin-bottom: 1.125rem; }
+.period-btn { font-family: var(--mono); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.3rem 0.75rem; border-radius: 0.35rem; border: 1px solid var(--border-2); background: transparent; color: var(--text-3); cursor: pointer; transition: all 0.15s; }
+.period-btn:hover { color: var(--text-2); background: var(--bg-3); }
+.period-btn.active { color: var(--orange); border-color: rgba(249,115,22,0.4); background: rgba(249,115,22,0.08); }
+
+/* Section labels */
+.glance-section-label { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.5rem; margin-bottom: 0.625rem; }
 .glance-section-label-text { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.18em; white-space: nowrap; }
 .glance-section-label-text::before { content: '// '; color: var(--text-4); }
 .glance-section-label-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
-.glance-trending { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.375rem; -webkit-overflow-scrolling: touch; }
-.glance-trending::-webkit-scrollbar { height: 3px; }
-.glance-trending::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
-.trend-chip { flex-shrink: 0; min-width: 152px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.875rem 1rem; display: flex; flex-direction: column; gap: 0.3rem; transition: border-color 0.15s, background 0.15s; text-decoration: none; }
-.trend-chip:hover { border-color: var(--border-2); background: var(--bg-3); }
-.trend-chip-tag { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: lowercase; letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.trend-chip-tag::before { content: '#'; }
-.trend-chip-count { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
-.trend-chip-hn { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); }
-.trend-chip-hn.has-signal { color: var(--green); }
 
-/* ── FAMILY TABS ── */
-.glance-tab-section { margin-top: 0.25rem; }
-.family-tab-bar { display: flex; gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; border-bottom: 1px solid var(--border); margin-bottom: 0.875rem; }
+/* ── TOP ROW: TAB SYSTEM ── */
+.family-tab-bar { display: flex; gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
 .family-tab-bar::-webkit-scrollbar { height: 3px; }
 .family-tab-bar::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
-.family-tab { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 0.875rem; border: none; background: transparent; color: var(--text-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color 0.15s; min-height: 36px; }
+.family-tab { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.1em; padding: 0.5rem 1rem; border: none; background: transparent; color: var(--text-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color 0.15s; }
 .family-tab:hover { color: var(--text-2); }
 .family-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* Claw Families overview panel */
+.cf-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+@media (max-width: 768px) { .cf-panel { grid-template-columns: 1fr; } }
+.cf-section { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem 1.375rem; }
+.cf-section-title { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); margin-bottom: 1rem; }
+.cf-section-title::before { content: '// '; color: var(--text-4); }
+.cf-chart { display: flex; flex-direction: column; gap: 0.625rem; }
+.cf-row { display: flex; align-items: center; gap: 0.75rem; }
+.cf-name { font-family: var(--mono); font-size: 0.75rem; color: var(--text-2); width: 5.5rem; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cf-bar-wrap { flex: 1; height: 5px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
+.cf-bar { height: 100%; background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.4)); border-radius: 3px; }
+.cf-count { font-family: var(--mono); font-size: 0.75rem; color: var(--text-3); min-width: 2rem; text-align: right; flex-shrink: 0; }
+.cf-new { font-family: var(--mono); font-size: var(--min-font); color: var(--green); min-width: 3rem; text-align: right; flex-shrink: 0; }
+.cf-top-repo { display: flex; align-items: baseline; gap: 0.5rem; text-decoration: none; padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+.cf-top-repo:last-child { border-bottom: none; }
+.cf-repo-rank { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); min-width: 1.25rem; flex-shrink: 0; }
+.cf-repo-name { font-family: var(--mono); font-size: 0.75rem; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cf-top-repo:hover .cf-repo-name { color: var(--orange); }
+.cf-repo-family { font-family: var(--mono); font-size: 0.6rem; color: var(--text-4); background: var(--bg-3); border: 1px solid var(--border); border-radius: 0.2rem; padding: 0.1rem 0.375rem; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.08em; }
+.cf-repo-stars { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); flex-shrink: 0; }
+
+/* Per-family panel */
 .family-mini-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; }
 @media (max-width: 900px) { .family-mini-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 480px) { .family-mini-grid { grid-template-columns: 1fr; } }
@@ -471,11 +469,54 @@ img { display: block; max-width: 100%; }
 .family-mini-val { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; color: var(--orange); line-height: 1; letter-spacing: -0.04em; }
 .family-mini-sub { font-size: 0.8125rem; color: var(--text-2); }
 .family-mini-empty { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: auto; }
-.family-news-item { display: flex; flex-direction: column; gap: 0.2rem; text-decoration: none; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
-.family-news-item:last-child { border-bottom: none; padding-bottom: 0; }
-.family-news-headline { font-size: 0.75rem; color: var(--text); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.family-news-item:hover .family-news-headline { color: var(--orange); }
-.family-news-meta { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+.glance-spark { display: flex; align-items: flex-end; }
+.glance-status { display: flex; align-items: center; gap: 0.375rem; font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); margin-top: auto; }
+.glance-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* Contributors */
+.contributor-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0; text-decoration: none; }
+.contributor-row:hover .contributor-login { color: var(--orange); }
+.contributor-avatar { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; background: var(--bg-3); }
+.contributor-login { font-family: var(--mono); font-size: 0.75rem; color: var(--text-2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contributor-commits { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); flex-shrink: 0; }
+
+/* Use case chips */
+.use-case-chips { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.use-case-chip { font-family: var(--mono); font-size: 0.625rem; text-transform: lowercase; letter-spacing: 0.04em; color: var(--text-2); background: var(--bg-3); border: 1px solid var(--border); border-radius: 0.25rem; padding: 0.2rem 0.5rem; }
+.use-case-chip::before { content: '#'; color: var(--text-4); }
+
+/* ── MIDDLE ROW: TRENDING GRID (7-col, no scroll) ── */
+.glance-trending-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.625rem; }
+@media (max-width: 1024px) { .glance-trending-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) { .glance-trending-grid { grid-template-columns: repeat(2, 1fr); } }
+.trend-chip { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem 0.875rem; display: flex; flex-direction: column; gap: 0.25rem; transition: border-color 0.15s, background 0.15s; text-decoration: none; }
+.trend-chip:hover { border-color: var(--border-2); background: var(--bg-3); }
+.trend-chip-tag { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; color: var(--orange); text-transform: lowercase; letter-spacing: 0.04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trend-chip-tag::before { content: '#'; }
+.trend-chip-count { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); }
+.trend-chip-hn { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); }
+.trend-chip-hn.has-signal { color: var(--green); }
+
+/* ── BOTTOM ROW: REDDIT + RELEASES ── */
+.pulse-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 768px) { .pulse-bottom { grid-template-columns: 1fr; } }
+.pulse-col { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem 1.375rem; }
+.pulse-col-title { font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); margin-bottom: 0.875rem; }
+.pulse-col-title::before { content: '// '; color: var(--text-4); }
+.reddit-post { display: flex; flex-direction: column; gap: 0.2rem; text-decoration: none; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.reddit-post:last-child { border-bottom: none; }
+.reddit-post-title { font-size: 0.8125rem; color: var(--text); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.reddit-post:hover .reddit-post-title { color: var(--orange); }
+.reddit-post-meta { font-family: var(--mono); font-size: 0.625rem; color: var(--text-3); display: flex; gap: 0.625rem; flex-wrap: wrap; margin-top: 0.125rem; }
+.reddit-score { color: var(--orange); }
+.release-item { display: flex; flex-direction: column; gap: 0.15rem; text-decoration: none; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.release-item:last-child { border-bottom: none; }
+.release-header { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.release-tag { font-family: var(--mono); font-size: 0.6875rem; color: var(--orange); font-weight: 700; }
+.release-family-badge { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-4); background: var(--bg-3); border: 1px solid var(--border); border-radius: 0.2rem; padding: 0.1rem 0.375rem; }
+.release-name { font-size: 0.8125rem; color: var(--text); line-height: 1.3; }
+.release-item:hover .release-name { color: var(--orange); }
+.release-meta { font-family: var(--mono); font-size: 0.625rem; color: var(--text-3); }
 
 /* ── BOTTOM TWO-COLUMN (EVENTS + DEEP INTEL) ── */
 .bottom-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
@@ -558,49 +599,44 @@ img { display: block; max-width: 100%; }
     <div class="section-divider-line" aria-hidden="true"></div>
     <a href="/forge.html" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;transition:color 0.15s;padding:0.25rem 0;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--text-3)'" aria-label="Deep analytics in the Forge">Forge ↗</a>
   </div>
-  <div id="glance-root" aria-live="polite" aria-atomic="false">
-    <!-- skeleton -->
-    <div class="glance-grid" role="status" aria-label="Loading ecosystem dashboard">
-      <div class="glance-card">
-        <div class="skeleton" style="height:0.6rem;width:70px;"></div>
-        <div class="skeleton" style="height:1.5rem;width:90px;margin-top:0.25rem;"></div>
-        <div class="skeleton" style="height:0.6rem;width:100%;"></div>
-        <div class="skeleton" style="height:0.6rem;width:90%;"></div>
-        <div class="skeleton" style="height:0.6rem;width:80%;"></div>
-      </div>
-      <div class="glance-card">
-        <div class="skeleton" style="height:0.6rem;width:80px;"></div>
-        <div class="skeleton" style="height:2rem;width:60px;margin-top:0.25rem;"></div>
-        <div class="skeleton" style="height:0.6rem;width:110px;"></div>
-        <div class="skeleton" style="height:0.6rem;width:80px;"></div>
-      </div>
-      <div class="glance-card">
-        <div class="skeleton" style="height:0.6rem;width:90px;"></div>
-        <div class="skeleton" style="height:28px;width:100%;margin-top:0.25rem;"></div>
-        <div class="skeleton" style="height:0.6rem;width:100px;"></div>
-      </div>
-      <div class="glance-card">
-        <div class="skeleton" style="height:0.6rem;width:60px;"></div>
-        <div class="skeleton" style="height:0.75rem;width:100%;margin-top:0.25rem;"></div>
-        <div class="skeleton" style="height:0.75rem;width:100%;"></div>
-        <div class="skeleton" style="height:0.75rem;width:100%;"></div>
-      </div>
+  <div id="glance-root" aria-live="polite" aria-atomic="false" role="status" aria-label="Loading ecosystem dashboard">
+    <!-- period skeleton -->
+    <div style="display:flex;gap:0.25rem;margin-bottom:1.125rem;">
+      <div class="skeleton" style="height:1.5rem;width:40px;border-radius:0.35rem;"></div>
+      <div class="skeleton" style="height:1.5rem;width:40px;border-radius:0.35rem;"></div>
+      <div class="skeleton" style="height:1.5rem;width:40px;border-radius:0.35rem;"></div>
+      <div class="skeleton" style="height:1.5rem;width:40px;border-radius:0.35rem;"></div>
     </div>
-    <!-- trending skeleton -->
-    <div style="display:flex;gap:0.75rem;padding:1.25rem 0 0.5rem;overflow:hidden;">
-      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
-      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
-      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
-      <div class="skeleton" style="height:76px;min-width:152px;width:152px;border-radius:0.5rem;flex-shrink:0;"></div>
+    <!-- tab bar skeleton -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1rem;">
+      <div class="skeleton" style="height:1rem;width:90px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:70px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:65px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:70px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:65px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:65px;border-radius:2px;margin-right:0.5rem;"></div>
+      <div class="skeleton" style="height:1rem;width:70px;border-radius:2px;"></div>
     </div>
-    <!-- tabs skeleton -->
-    <div style="display:flex;gap:0.5rem;margin-top:1.25rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">
-      <div class="skeleton" style="height:1.25rem;width:80px;border-radius:2px;"></div>
-      <div class="skeleton" style="height:1.25rem;width:70px;border-radius:2px;"></div>
-      <div class="skeleton" style="height:1.25rem;width:75px;border-radius:2px;"></div>
-      <div class="skeleton" style="height:1.25rem;width:65px;border-radius:2px;"></div>
+    <!-- panel skeleton (2-col) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+      <div class="skeleton" style="height:200px;border-radius:0.75rem;"></div>
+      <div class="skeleton" style="height:200px;border-radius:0.75rem;"></div>
     </div>
-    <div class="skeleton" style="height:130px;border-radius:0.75rem;margin-top:0.875rem;"></div>
+    <!-- trending skeleton (7-col grid) -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:0.625rem;margin-top:1.5rem;">
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+      <div class="skeleton" style="height:68px;border-radius:0.5rem;"></div>
+    </div>
+    <!-- bottom row skeleton -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+      <div class="skeleton" style="height:200px;border-radius:0.75rem;"></div>
+      <div class="skeleton" style="height:200px;border-radius:0.75rem;"></div>
+    </div>
   </div>
 </div>
 
@@ -976,24 +1012,29 @@ img { display: block; max-width: 100%; }
   }
 
   /* ── SPARK HELPERS ── */
-  function buildSparkData(repos) {
-    const now = Date.now();
-    const DAY = 86400000;
-    const slots = Array(7).fill(0);
+  function buildSparkData(repos, days) {
+    days = days || 7;
+    var buckets = Math.min(days, 14); // cap at 14 buckets for readability
+    var interval = (days * 86400000) / buckets;
+    var now = Date.now();
+    var counts = new Array(buckets).fill(0);
     (repos || []).forEach(function(r) {
       if (!r.pushed_at) return;
-      const age = Math.floor((now - new Date(r.pushed_at).getTime()) / DAY);
-      if (age >= 0 && age < 7) slots[6 - age]++;
+      var age = now - new Date(r.pushed_at).getTime();
+      if (age < 0 || age > days * 86400000) return;
+      var idx = Math.floor(age / interval);
+      if (idx >= 0 && idx < buckets) counts[buckets - 1 - idx]++;
     });
-    return slots; // [day-6, day-5, ..., today]
+    return counts;
   }
 
   function buildSparkSVG(counts) {
-    const W = 88, H = 28;
-    const max = Math.max.apply(null, counts.concat([1]));
-    const pts = counts.map(function(v, i) {
-      const x = (i / (counts.length - 1)) * W;
-      const y = H - (v / max) * (H - 4) - 2;
+    var W = 88, H = 28;
+    var max = Math.max.apply(null, counts.concat([1]));
+    var n = counts.length;
+    var pts = counts.map(function(v, i) {
+      var x = n > 1 ? (i / (n - 1)) * W : W / 2;
+      var y = H - (v / max) * (H - 4) - 2;
       return x.toFixed(1) + ',' + y.toFixed(1);
     }).join(' ');
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true">'
@@ -1001,7 +1042,7 @@ img { display: block; max-width: 100%; }
       + '</svg>';
   }
 
-  /* ── FAMILY HELPERS ── */
+  /* ── FAMILY / DATA HELPERS ── */
   var FAMILY_KW = {
     openclaw: ['openclaw', 'open-claw'],
     nanoclaw: ['nanoclaw', 'nano-claw'],
@@ -1011,6 +1052,17 @@ img { display: block; max-width: 100%; }
     zeroclaw: ['zeroclaw', 'zero-claw']
   };
 
+  // Ordered tab list: "all" first, then families sorted by repo count
+  var FAMILY_TABS = [
+    { key: 'all',      label: 'Claw Families' },
+    { key: 'openclaw', label: 'OpenClaw'  },
+    { key: 'nanobot',  label: 'Nanobot'   },
+    { key: 'nanoclaw', label: 'NanoClaw'  },
+    { key: 'zeroclaw', label: 'ZeroClaw'  },
+    { key: 'picoclaw', label: 'PicoClaw'  },
+    { key: 'nemoclaw', label: 'NemoClaw'  },
+  ];
+
   function reposForFamily(repos, keywords) {
     return (repos || []).filter(function(r) {
       var text = [r.name || '', r.description || ''].concat(r.topics || []).join(' ').toLowerCase();
@@ -1018,31 +1070,198 @@ img { display: block; max-width: 100%; }
     });
   }
 
-  function newsForFamily(news, keywords) {
-    var cutoff = Date.now() - 7 * 86400000;
-    return (news || []).filter(function(item) {
-      if (item.inserted_at && new Date(item.inserted_at).getTime() < cutoff) return false;
-      var text = ((item.title || '') + ' ' + (item.summary || '')).toLowerCase();
-      return keywords.some(function(kw) { return text.indexOf(kw) !== -1; });
+  function contributorsForFamily(contributors, familyKey) {
+    var aggr = {};
+    (contributors || []).filter(function(c) { return c.family === familyKey; })
+      .forEach(function(c) {
+        var login = c.contributor_login;
+        if (!aggr[login]) aggr[login] = { login: login, avatar: c.contributor_avatar_url, total: 0 };
+        aggr[login].total += (c.contributions || 0);
+      });
+    return Object.values(aggr).sort(function(a, b) { return b.total - a.total; }).slice(0, 5);
+  }
+
+  function useCasesForFamily(repos, keywords) {
+    var famRepos = reposForFamily(repos, keywords);
+    var tc = {};
+    famRepos.forEach(function(r) {
+      (r.topics || []).forEach(function(t) {
+        if (!t || t.length < 2) return;
+        tc[t] = (tc[t] || 0) + 1;
+      });
     });
+    return Object.entries(tc).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 10).map(function(e) { return e[0]; });
   }
 
   function topArticleScore(item) {
     return (item.hn_points || 0) + ((item.more_coverage && item.more_coverage.length ? item.more_coverage.length : 0) * 10);
   }
 
-  /* ── RENDER: TRENDING TOPICS ── */
-  function renderTrending(news) {
-    var cutoff = Date.now() - 7 * 86400000;
+  function periodCutoff(days) { return Date.now() - days * 86400000; }
+
+  function redditT(days) {
+    if (days <= 7)  return 'week';
+    if (days <= 30) return 'month';
+    return 'year';
+  }
+
+  /* ── GLOBAL GLANCE STATE ── */
+  var _glanceData   = null; // { repos, familyStats, news, contributors, releases }
+  var _activePeriod = 7;
+  var _activeTab    = 'all';
+
+  /* ── RENDER: CLAW FAMILIES PANEL (tab = "all") ── */
+  function renderClawFamiliesPanel(repos, familyStats, period) {
+    var cutoff = periodCutoff(period);
+    var families = (familyStats || [])
+      .filter(function(f) { return f.total_count > 0; })
+      .sort(function(a, b) { return (b.total_count || 0) - (a.total_count || 0); });
+    var maxCount = families.length ? families[0].total_count : 1;
+
+    // Bar chart rows
+    var chartRows = families.length === 0
+      ? '<div class="family-mini-empty">no data</div>'
+      : families.map(function(f) {
+          var name  = f.display_name || f.family || '—';
+          var kw    = FAMILY_KW[f.family];
+          var newCt = kw ? reposForFamily(repos, kw).filter(function(r) {
+            return r.inserted_at && new Date(r.inserted_at).getTime() >= cutoff;
+          }).length : 0;
+          var pct   = Math.max(Math.round((f.total_count / maxCount) * 100), 3);
+          return '<div class="cf-row">'
+            + '<span class="cf-name">' + esc(name) + '</span>'
+            + '<div class="cf-bar-wrap"><div class="cf-bar" style="width:' + pct + '%;"></div></div>'
+            + '<span class="cf-count">' + f.total_count.toLocaleString() + '</span>'
+            + (newCt > 0 ? '<span class="cf-new">+' + newCt + '</span>' : '<span class="cf-new" style="color:var(--text-4);">—</span>')
+            + '</div>';
+        }).join('');
+
+    var legendHtml = '<div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);">'
+      + '<span style="flex:1;margin-left:5.5rem;">repos</span>'
+      + '<span style="color:var(--green);">new (' + period + 'd)</span>'
+      + '</div>';
+
+    var chartSection = '<div class="cf-section">'
+      + '<div class="cf-section-title">repo_distribution</div>'
+      + legendHtml
+      + '<div class="cf-chart">' + chartRows + '</div>'
+      + '</div>';
+
+    // Top repos across all families
+    var topRepos = (repos || [])
+      .filter(function(r) { return r.rubric_tier === 'featured' || r.rubric_score > 0; })
+      .sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); })
+      .slice(0, 8);
+
+    var topRepoRows = topRepos.length === 0
+      ? '<div class="family-mini-empty">no featured repos yet</div>'
+      : topRepos.map(function(r, i) {
+          var stars = (r.stars || 0) >= 1000 ? (r.stars / 1000).toFixed(1) + 'k' : String(r.stars || 0);
+          // detect family label
+          var famLabel = '';
+          for (var fk in FAMILY_KW) {
+            if (reposForFamily([r], FAMILY_KW[fk]).length > 0) { famLabel = fk; break; }
+          }
+          return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="cf-top-repo">'
+            + '<span class="cf-repo-rank">' + (i + 1) + '</span>'
+            + '<span class="cf-repo-name">' + esc(r.name || r.owner) + '</span>'
+            + (famLabel ? '<span class="cf-repo-family">' + esc(famLabel) + '</span>' : '')
+            + '<span class="cf-repo-stars">★ ' + stars + '</span>'
+            + '</a>';
+        }).join('');
+
+    var topSection = '<div class="cf-section">'
+      + '<div class="cf-section-title">top_repos — all families</div>'
+      + topRepoRows
+      + '</div>';
+
+    return '<div class="cf-panel">' + chartSection + topSection + '</div>';
+  }
+
+  /* ── RENDER: PER-FAMILY PANEL ── */
+  function renderFamilyPanel(familyKey, kw, repos, familyStats, contributors, period) {
+    var fsMap = {};
+    (familyStats || []).forEach(function(f) { fsMap[f.family] = f; });
+    var fsEntry   = fsMap[familyKey] || null;
+    var totalRepos = fsEntry ? fsEntry.total_count : 0;
+    var famRepos  = reposForFamily(repos, kw).sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); });
+    var totalStars = famRepos.reduce(function(s, r) { return s + (r.stars || 0); }, 0);
+    var starsDisp  = totalStars >= 1000 ? (totalStars / 1000).toFixed(1) + 'k' : String(totalStars);
+    var cutoff     = periodCutoff(period);
+    var newCount   = famRepos.filter(function(r) { return r.inserted_at && new Date(r.inserted_at).getTime() >= cutoff; }).length;
+    var sparkData  = buildSparkData(famRepos, period);
+    var activeCount = sparkData.reduce(function(s, v) { return s + v; }, 0);
+
+    // Card 1: ecosystem size
+    var card1 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">ecosystem_size</div>'
+      + '<div class="family-mini-val">' + (totalRepos ? totalRepos.toLocaleString() : '—') + '</div>'
+      + '<div class="family-mini-sub">repos on GitHub</div>'
+      + (famRepos.length > 0 ? '<div class="family-mini-sub" style="color:var(--text-3);font-family:var(--mono);font-size:var(--min-font);">'
+          + famRepos.length + ' indexed · ★ ' + starsDisp
+          + (newCount > 0 ? ' · <span style="color:var(--green);">+' + newCount + ' new</span>' : '')
+          + '</div>' : '')
+      + '</div>';
+
+    // Card 2: commit activity
+    var n = sparkData.length;
+    var half = Math.floor(n / 2);
+    var recentHalf = sparkData.slice(half).reduce(function(s, v) { return s + v; }, 0);
+    var olderHalf  = sparkData.slice(0, half).reduce(function(s, v) { return s + v; }, 0);
+    var sc, sl;
+    if (recentHalf > olderHalf * 1.1)      { sc = 'var(--green)';  sl = 'ACTIVE'; }
+    else if (recentHalf < olderHalf * 0.6) { sc = 'var(--text-4)'; sl = 'QUIET'; }
+    else                                    { sc = 'var(--orange)'; sl = 'BUILDING'; }
+    var card2 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">commit_activity</div>'
+      + (famRepos.length > 0
+        ? '<div class="glance-spark" style="margin-top:0.25rem;">' + buildSparkSVG(sparkData) + '</div>'
+          + '<div class="family-mini-sub">' + activeCount + ' repos pushed — ' + period + 'd</div>'
+          + '<div class="glance-status"><span class="glance-status-dot" style="background:' + sc + ';box-shadow:0 0 4px ' + sc + ';"></span>'
+          + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);">' + sl + '</span></div>'
+        : '<div class="family-mini-empty" style="margin-top:0.5rem;">no indexed repos</div>')
+      + '</div>';
+
+    // Card 3: top contributors
+    var contribs = contributorsForFamily(contributors, familyKey);
+    var card3 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">top_contributors</div>'
+      + (contribs.length === 0
+        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">scraping nightly…</div>'
+        : contribs.map(function(c) {
+            return '<a href="https://github.com/' + esc(c.login) + '" target="_blank" rel="noopener noreferrer" class="contributor-row">'
+              + '<img src="' + esc(c.avatar || 'https://github.com/ghost.png') + '" class="contributor-avatar" alt="" loading="lazy">'
+              + '<span class="contributor-login">' + esc(c.login) + '</span>'
+              + '<span class="contributor-commits">' + (c.total >= 1000 ? (c.total / 1000).toFixed(1) + 'k' : c.total) + ' commits</span>'
+              + '</a>';
+          }).join(''))
+      + '</div>';
+
+    // Card 4: popular use cases (from topics)
+    var useCases = useCasesForFamily(repos, kw);
+    var card4 = '<div class="family-mini-card">'
+      + '<div class="family-mini-label">popular_use_cases</div>'
+      + (useCases.length === 0
+        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">no topics indexed</div>'
+        : '<div class="use-case-chips">' + useCases.map(function(t) {
+            return '<span class="use-case-chip">' + esc(t) + '</span>';
+          }).join('') + '</div>')
+      + '</div>';
+
+    return '<div class="family-mini-grid" role="list" aria-label="' + esc(familyKey) + ' dashboard">'
+      + card1 + card2 + card3 + card4
+      + '</div>';
+  }
+
+  /* ── RENDER: TRENDING TOPICS (7-col grid, no scroll) ── */
+  function renderTrending(news, period) {
+    var cutoff = periodCutoff(period || 7);
     var recent = (news || []).filter(function(item) {
       return item.inserted_at && new Date(item.inserted_at).getTime() >= cutoff;
     });
-
-    // Aggregate tag counts and articles per tag
     var tagMap = {};
     recent.forEach(function(item) {
-      var tags = Array.isArray(item.tags) ? item.tags : [];
-      tags.forEach(function(tag) {
+      (Array.isArray(item.tags) ? item.tags : []).forEach(function(tag) {
         if (!tag || typeof tag !== 'string') return;
         var t = tag.toLowerCase().trim();
         if (!t) return;
@@ -1051,269 +1270,192 @@ img { display: block; max-width: 100%; }
         tagMap[t].articles.push(item);
       });
     });
-
-    // Sort by count desc, take top 8
     var topTags = Object.keys(tagMap)
       .sort(function(a, b) { return tagMap[b].count - tagMap[a].count; })
-      .slice(0, 8);
-
-    if (topTags.length === 0) return ''; // nothing to show
-
+      .slice(0, 7);
+    if (topTags.length === 0) return '';
     var chips = topTags.map(function(tag) {
-      var data = tagMap[tag];
-      // Find top article by hn_points + coverage
+      var data   = tagMap[tag];
       var topArt = data.articles.reduce(function(best, item) {
         return topArticleScore(item) > topArticleScore(best) ? item : best;
       }, data.articles[0]);
-      var hn = topArt.hn_points || 0;
-      var hnClass = hn >= 50 ? ' has-signal' : '';
-      var hnText = hn > 0 ? 'HN ↑ ' + hn : (topArt.more_coverage && topArt.more_coverage.length > 0 ? topArt.more_coverage.length + ' sources' : '');
-      return '<a href="' + esc(topArt.url) + '" target="_blank" rel="noopener noreferrer" class="trend-chip" aria-label="Trending: ' + esc(tag) + ', ' + data.count + ' articles">'
+      var hn       = topArt.hn_points || 0;
+      var hnClass  = hn >= 50 ? ' has-signal' : '';
+      var hnText   = hn > 0 ? 'HN ↑ ' + hn : (topArt.more_coverage && topArt.more_coverage.length > 0 ? topArt.more_coverage.length + ' sources' : '');
+      return '<a href="' + esc(topArt.url) + '" target="_blank" rel="noopener noreferrer" class="trend-chip">'
         + '<span class="trend-chip-tag">' + esc(tag) + '</span>'
         + '<span class="trend-chip-count">' + data.count + ' article' + (data.count !== 1 ? 's' : '') + '</span>'
         + (hnText ? '<span class="trend-chip-hn' + hnClass + '">' + esc(hnText) + '</span>' : '')
         + '</a>';
     }).join('');
-
-    return '<div class="glance-section-label" aria-hidden="true">'
+    var periodLabel = period + 'd';
+    return '<div class="glance-section-label">'
       + '<span class="glance-section-label-text">trending_topics</span>'
       + '<div class="glance-section-label-line"></div>'
-      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">last 7d</span>'
+      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">' + periodLabel + '</span>'
       + '</div>'
-      + '<div class="glance-trending" role="list" aria-label="Trending topics">' + chips + '</div>';
+      + '<div class="glance-trending-grid">' + chips + '</div>';
   }
 
-  /* ── RENDER: FAMILY TAB PANEL ── */
-  function renderFamilyPanel(family, kw, repos, familyStats, news) {
-    var fsMap = {};
-    (familyStats || []).forEach(function(f) { fsMap[f.family] = f; });
-    var fsEntry = fsMap[family] || null;
-    var totalRepos = fsEntry ? fsEntry.total_count : 0;
-    var totalStars = (repos || []).reduce(function(s, r) { return s + (r.stars || 0); }, 0);
+  /* ── RENDER: BOTTOM ROW (Reddit + Releases) ── */
+  function renderBottomRow(releases, period) {
+    var cutoff = periodCutoff(period);
 
-    var famRepos = reposForFamily(repos, kw)
-      .sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); });
-    var famNews  = newsForFamily(news, kw)
-      .sort(function(a, b) { return (b.total_score || 0) - (a.total_score || 0); });
-    var sparkData = buildSparkData(famRepos);
-    var activeCount = sparkData.reduce(function(s, v) { return s + v; }, 0);
+    // Releases (from Supabase, filter client-side)
+    var filteredReleases = (releases || [])
+      .filter(function(r) { return r.published_at && new Date(r.published_at).getTime() >= cutoff && !r.is_prerelease; })
+      .slice(0, 6);
 
-    // Card 1: repo count
-    var starsDisp = totalStars >= 1000 ? (totalStars / 1000).toFixed(1) + 'k' : String(totalStars || 0);
-    var card1 = '<div class="family-mini-card">'
-      + '<div class="family-mini-label">ecosystem_size</div>'
-      + '<div class="family-mini-val">' + (totalRepos ? totalRepos.toLocaleString() : '—') + '</div>'
-      + '<div class="family-mini-sub">repos on GitHub</div>'
-      + (famRepos.length > 0 ? '<div class="family-mini-sub" style="color:var(--text-3);font-family:var(--mono);font-size:var(--min-font);">' + famRepos.length.toLocaleString() + ' indexed · ★ ' + starsDisp + '</div>' : '')
-      + '</div>';
-
-    // Card 2: activity spark
-    var recentAvg2 = sparkData.slice(0, 5).reduce(function(s, v) { return s + v; }, 0) / 5;
-    var last2avg2  = (sparkData[5] + sparkData[6]) / 2;
-    var sc2, sl2;
-    if (last2avg2 > recentAvg2 * 1.1)      { sc2 = 'var(--green)';  sl2 = 'ACTIVE'; }
-    else if (last2avg2 < recentAvg2 * 0.6) { sc2 = 'var(--text-4)'; sl2 = 'QUIET'; }
-    else                                    { sc2 = 'var(--orange)'; sl2 = 'BUILDING'; }
-    var card2 = '<div class="family-mini-card">'
-      + '<div class="family-mini-label">commit_activity</div>'
-      + (famRepos.length > 0
-        ? '<div class="glance-spark" style="margin-top:0.25rem;">' + buildSparkSVG(sparkData) + '</div>'
-          + '<div class="family-mini-sub">' + activeCount + ' repos pushed — 7d</div>'
-          + '<div class="glance-status"><span class="glance-status-dot" style="background:' + sc2 + ';box-shadow:0 0 5px ' + sc2 + ';"></span><span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);">' + sl2 + '</span></div>'
-        : '<div class="family-mini-empty" style="margin-top:0.5rem;">no indexed repos</div>')
-      + '</div>';
-
-    // Card 3: top repos
-    var topFamRepos = famRepos.slice(0, 3);
-    var card3 = '<div class="family-mini-card">'
-      + '<div class="family-mini-label">top_repos</div>'
-      + (topFamRepos.length === 0
-        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">none indexed</div>'
-        : topFamRepos.map(function(r) {
-            var stars = r.stars >= 1000 ? (r.stars / 1000).toFixed(1) + 'k' : String(r.stars || 0);
-            return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="glance-repo-row" aria-label="' + esc(r.name) + ', ' + stars + ' stars">'
-              + '<span class="glance-repo-name">' + esc(r.name || r.owner) + '</span>'
-              + '<span class="glance-repo-stars">★ ' + stars + '</span>'
-              + '</a>';
-          }).join(''))
-      + '</div>';
-
-    // Card 4: recent news
-    var topFamNews = famNews.slice(0, 3);
-    var card4 = '<div class="family-mini-card">'
-      + '<div class="family-mini-label">recent_signals</div>'
-      + (topFamNews.length === 0
-        ? '<div class="family-mini-empty" style="margin-top:0.5rem;">no recent signals</div>'
-        : topFamNews.map(function(item) {
-            return '<a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer" class="family-news-item">'
-              + '<span class="family-news-headline">' + esc(item.title) + '</span>'
-              + '<span class="family-news-meta">' + esc(item.source || '—') + ' · ' + formatAnyDate(item.date) + '</span>'
-              + '</a>';
-          }).join(''))
-      + '</div>';
-
-    return '<div class="family-mini-grid" role="list" aria-label="' + esc(family) + ' dashboard">'
-      + card1 + card2 + card3 + card4
-      + '</div>';
-  }
-
-  /* ── RENDER: FAMILY TABS SECTION ── */
-  function renderFamilyTabs(repos, familyStats, news) {
-    var families = (familyStats || [])
-      .filter(function(f) { return f.total_count > 0 && FAMILY_KW[f.family]; })
-      .sort(function(a, b) { return (b.total_count || 0) - (a.total_count || 0); });
-
-    if (families.length === 0) return '';
-
-    var activeFamily = families[0].family;
-
-    var tabBar = '<div class="family-tab-bar" role="tablist" aria-label="Claw family tabs" id="glance-tab-bar">'
-      + families.map(function(f, i) {
-          return '<button class="family-tab' + (i === 0 ? ' active' : '') + '" role="tab" aria-selected="' + (i === 0 ? 'true' : 'false') + '" data-family="' + esc(f.family) + '" aria-controls="glance-family-panel">'
-            + esc(f.display_name || f.family)
-            + '</button>';
-        }).join('')
-      + '</div>';
-
-    var panel = '<div id="glance-family-panel" role="tabpanel" aria-label="' + esc(families[0].display_name || families[0].family) + ' dashboard">'
-      + renderFamilyPanel(activeFamily, FAMILY_KW[activeFamily], repos, familyStats, news)
-      + '</div>';
-
-    // Wire up tab clicks via event delegation
-    var html = '<div class="glance-section-label" aria-hidden="true">'
-      + '<span class="glance-section-label-text">family_signal</span>'
-      + '<div class="glance-section-label-line"></div>'
-      + '</div>'
-      + '<div class="glance-tab-section">' + tabBar + panel + '</div>';
-
-    // Attach listener after rendering (deferred)
-    setTimeout(function() {
-      var bar = document.getElementById('glance-tab-bar');
-      if (!bar) return;
-      bar.addEventListener('click', function(e) {
-        var btn = e.target.closest('.family-tab');
-        if (!btn) return;
-        var fam = btn.getAttribute('data-family');
-        if (!fam || !FAMILY_KW[fam]) return;
-        // Update tab active states
-        bar.querySelectorAll('.family-tab').forEach(function(b) {
-          b.classList.remove('active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
-        // Re-render panel
-        var panelEl = document.getElementById('glance-family-panel');
-        if (panelEl) {
-          panelEl.setAttribute('aria-label', btn.textContent.trim() + ' dashboard');
-          panelEl.innerHTML = renderFamilyPanel(fam, FAMILY_KW[fam], repos, familyStats, news);
-          lucide.createIcons();
-        }
-      });
-    }, 0);
-
-    return html;
-  }
-
-  /* ── RENDER: AT A GLANCE ── */
-  function renderGlance(repos, familyStats, news) {
-    const root = document.getElementById('glance-root');
-    if (!root) return;
-
-    // ── Card 1: Claw Families ──
-    const families = (familyStats || [])
-      .filter(function(f) { return f.total_count > 0; })
-      .sort(function(a, b) { return (b.total_count || 0) - (a.total_count || 0); })
-      .slice(0, 5);
-    const maxFam = families.length ? families[0].total_count : 1;
-    const familyRows = families.length === 0
-      ? '<div class="glance-sub" style="color:var(--text-4);">No data</div>'
-      : families.map(function(f) {
-          const name = f.display_name || f.family || '—';
-          const pct = Math.round((f.total_count / maxFam) * 100);
-          const barW = Math.max(pct, 4);
-          return '<div class="glance-family-row">'
-            + '<span class="glance-family-name">' + esc(name) + '</span>'
-            + '<span class="glance-family-count">' + f.total_count.toLocaleString() + '</span>'
-            + '<div class="glance-family-bar-wrap"><div class="glance-family-bar" style="width:' + barW + '%;min-width:2px;" role="presentation"></div></div>'
-            + '</div>';
-        }).join('');
-
-    const card1 = '<div class="glance-card">'
-      + '<div class="glance-label">claw_families</div>'
-      + familyRows
-      + '</div>';
-
-    // ── Card 2: New This Week ──
-    const now = Date.now();
-    const WEEK = 7 * 86400000;
-    const newThisWeek = (repos || []).filter(function(r) {
-      if (!r.inserted_at) return false;
-      return (now - new Date(r.inserted_at).getTime()) < WEEK;
-    }).length;
-    const totalIndexed = (repos || []).length;
-
-    const card2 = '<div class="glance-card">'
-      + '<div class="glance-label">new_this_week</div>'
-      + '<div class="glance-val">+' + newThisWeek + '</div>'
-      + '<div class="glance-sub">new repos — all families</div>'
-      + '<div class="glance-sub" style="color:var(--text-3);font-family:var(--mono);font-size:var(--min-font);">' + totalIndexed.toLocaleString() + ' total indexed</div>'
-      + '</div>';
-
-    // ── Card 3: Commit Activity (7-day sparkline, all families) ──
-    const sparkData = buildSparkData(repos);
-    const activeRepos = sparkData.reduce(function(s, v) { return s + v; }, 0);
-    const recentAvg = sparkData.slice(0, 5).reduce(function(s, v) { return s + v; }, 0) / 5;
-    const recentLast2 = (sparkData[5] + sparkData[6]) / 2;
-    let statusColor, statusLabel;
-    if (recentLast2 > recentAvg * 1.1) {
-      statusColor = 'var(--green)'; statusLabel = 'ACTIVE';
-    } else if (recentLast2 < recentAvg * 0.6) {
-      statusColor = 'var(--text-4)'; statusLabel = 'QUIET';
-    } else {
-      statusColor = 'var(--orange)'; statusLabel = 'BUILDING';
-    }
-
-    const card3 = '<div class="glance-card">'
-      + '<div class="glance-label">ecosystem_activity</div>'
-      + '<div class="glance-spark">' + buildSparkSVG(sparkData) + '</div>'
-      + '<div class="glance-sub">' + activeRepos + ' repos pushed — last 7d</div>'
-      + '<div class="glance-status">'
-      + '<span class="glance-status-dot" style="background:' + statusColor + ';box-shadow:0 0 5px ' + statusColor + ';"></span>'
-      + '<span>' + statusLabel + ' · all families</span>'
-      + '</div>'
-      + '</div>';
-
-    // ── Card 4: Top Featured Repos (all families) ──
-    const featured = (repos || [])
-      .filter(function(r) { return r.rubric_tier === 'featured'; })
-      .sort(function(a, b) { return (b.rubric_score || 0) - (a.rubric_score || 0); })
-      .slice(0, 3);
-
-    const repoRows = featured.length === 0
-      ? '<div class="glance-sub" style="color:var(--text-4);">No featured repos yet</div>'
-      : featured.map(function(r) {
-          const stars = r.stars >= 1000 ? (r.stars / 1000).toFixed(1) + 'k' : (r.stars || 0).toString();
-          return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="glance-repo-row" aria-label="' + esc(r.name) + ', ' + stars + ' stars">'
-            + '<span class="glance-repo-name">' + esc(r.name || r.owner) + '</span>'
-            + '<span class="glance-repo-stars">★ ' + stars + '</span>'
+    var releasesHtml = filteredReleases.length === 0
+      ? '<div class="family-mini-empty">no releases in this period — scraping nightly</div>'
+      : filteredReleases.map(function(r) {
+          var date = r.published_at ? new Date(r.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+          return '<a href="' + esc(r.html_url) + '" target="_blank" rel="noopener noreferrer" class="release-item">'
+            + '<div class="release-header">'
+            + '<span class="release-tag">' + esc(r.tag_name) + '</span>'
+            + (r.family ? '<span class="release-family-badge">' + esc(r.family) + '</span>' : '')
+            + '</div>'
+            + '<span class="release-name">' + esc(r.release_name || r.tag_name) + '</span>'
+            + '<span class="release-meta">' + esc(r.repo_full_name || '') + (date ? ' · ' + date : '') + '</span>'
             + '</a>';
         }).join('');
 
-    const card4 = '<div class="glance-card">'
-      + '<div class="glance-label">top_repos</div>'
-      + repoRows
-      + (featured.length > 0 ? '<div class="glance-sub" style="color:var(--text-4);font-family:var(--mono);font-size:var(--min-font);">all families · by score</div>' : '')
+    var releasesCol = '<div class="pulse-col">'
+      + '<div class="pulse-col-title">release_announcements</div>'
+      + releasesHtml
       + '</div>';
 
-    var gridHtml = '<div class="glance-grid" role="list" aria-label="Ecosystem dashboard — all Claw families">'
-      + card1 + card2 + card3 + card4
+    // Reddit placeholder — filled async after fetch
+    var redditCol = '<div class="pulse-col" id="reddit-col">'
+      + '<div class="pulse-col-title">community_conversations</div>'
+      + '<div id="reddit-posts-inner">'
+      + '<div class="family-mini-empty">loading Reddit…</div>'
+      + '</div>'
       + '</div>';
 
-    var trendingHtml = renderTrending(news);
-    var tabsHtml     = renderFamilyTabs(repos, familyStats, news);
+    return '<div class="glance-section-label">'
+      + '<span class="glance-section-label-text">community_pulse</span>'
+      + '<div class="glance-section-label-line"></div>'
+      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">' + period + 'd</span>'
+      + '</div>'
+      + '<div class="pulse-bottom">' + redditCol + releasesCol + '</div>';
+  }
 
-    root.innerHTML = gridHtml + trendingHtml + tabsHtml;
+  /* ── UPDATE REDDIT PANEL ── */
+  function updateRedditPanel(posts) {
+    var el = document.getElementById('reddit-posts-inner');
+    if (!el) return;
+    if (!posts || posts.length === 0) {
+      el.innerHTML = '<div class="family-mini-empty">no results found — try a broader time range</div>';
+      return;
+    }
+    el.innerHTML = posts.slice(0, 6).map(function(p) {
+      var ago = '';
+      if (p.created_utc) {
+        var days = Math.floor((Date.now() / 1000 - p.created_utc) / 86400);
+        ago = days === 0 ? 'today' : days + 'd ago';
+      }
+      return '<a href="' + esc(p.permalink) + '" target="_blank" rel="noopener noreferrer" class="reddit-post">'
+        + '<span class="reddit-post-title">' + esc(p.title) + '</span>'
+        + '<span class="reddit-post-meta">'
+        + '<span class="reddit-score">↑ ' + (p.score || 0).toLocaleString() + '</span>'
+        + '<span>r/' + esc(p.subreddit) + '</span>'
+        + (ago ? '<span>' + ago + '</span>' : '')
+        + '<span>' + (p.num_comments || 0) + ' comments</span>'
+        + '</span>'
+        + '</a>';
+    }).join('');
+  }
+
+  function fetchRedditAndUpdate(period) {
+    fetch('/api/reddit?t=' + redditT(period))
+      .then(function(r) { return r.ok ? r.json() : { posts: [] }; })
+      .then(function(data) { updateRedditPanel(data.posts || []); })
+      .catch(function() { updateRedditPanel([]); });
+  }
+
+  /* ── RENDER: FULL GLANCE SECTION ── */
+  function renderGlanceContent(data, period) {
+    var repos        = data.repos;
+    var familyStats  = data.familyStats;
+    var news         = data.news;
+    var contributors = data.contributors;
+    var releases     = data.releases;
+
+    // Period selector
+    var periodSel = '<div class="period-selector" id="glance-period-selector">'
+      + [7, 14, 30, 90].map(function(d) {
+          return '<button class="period-btn' + (d === period ? ' active' : '') + '" data-period="' + d + '">' + d + 'D</button>';
+        }).join('')
+      + '</div>';
+
+    // Tab bar (always show all 7 regardless of data)
+    var tabBar = '<div class="family-tab-bar" role="tablist" aria-label="Claw family tabs" id="glance-tab-bar">'
+      + FAMILY_TABS.map(function(t) {
+          return '<button class="family-tab' + (t.key === _activeTab ? ' active' : '') + '" role="tab" data-tab="' + t.key + '">'
+            + t.label + '</button>';
+        }).join('')
+      + '</div>';
+
+    // Tab panel
+    var panelHtml;
+    if (_activeTab === 'all') {
+      panelHtml = renderClawFamiliesPanel(repos, familyStats, period);
+    } else {
+      var kw = FAMILY_KW[_activeTab];
+      panelHtml = kw ? renderFamilyPanel(_activeTab, kw, repos, familyStats, contributors, period) : '';
+    }
+
+    var topRow = tabBar + '<div id="glance-tab-panel">' + panelHtml + '</div>';
+    var middleRow = renderTrending(news, period);
+    var bottomRow = renderBottomRow(releases, period);
+
+    document.getElementById('glance-root').innerHTML = periodSel + topRow + middleRow + bottomRow;
+    lucide.createIcons();
+
+    // Wire period selector
+    setTimeout(function() {
+      var sel = document.getElementById('glance-period-selector');
+      if (sel) sel.addEventListener('click', function(e) {
+        var btn = e.target.closest('.period-btn');
+        if (!btn) return;
+        var days = parseInt(btn.getAttribute('data-period'), 10);
+        if (days === _activePeriod) return;
+        _activePeriod = days;
+        renderGlanceContent(_glanceData, _activePeriod);
+        fetchRedditAndUpdate(_activePeriod);
+      });
+
+      // Wire tab bar
+      var bar = document.getElementById('glance-tab-bar');
+      if (bar) bar.addEventListener('click', function(e) {
+        var btn = e.target.closest('.family-tab');
+        if (!btn) return;
+        var tab = btn.getAttribute('data-tab');
+        if (!tab || tab === _activeTab) return;
+        _activeTab = tab;
+        // Re-render just the panel (avoid full rebuild)
+        var panelEl = document.getElementById('glance-tab-panel');
+        if (panelEl) {
+          if (_activeTab === 'all') {
+            panelEl.innerHTML = renderClawFamiliesPanel(_glanceData.repos, _glanceData.familyStats, _activePeriod);
+          } else {
+            var kw = FAMILY_KW[_activeTab];
+            panelEl.innerHTML = kw ? renderFamilyPanel(_activeTab, kw, _glanceData.repos, _glanceData.familyStats, _glanceData.contributors, _activePeriod) : '';
+          }
+          lucide.createIcons();
+        }
+        bar.querySelectorAll('.family-tab').forEach(function(b) {
+          b.classList.toggle('active', b === btn);
+        });
+      });
+    }, 0);
+  }
+
+  function renderGlance(repos, familyStats, news, contributors, releases) {
+    _glanceData = { repos: repos, familyStats: familyStats, news: news, contributors: contributors, releases: releases };
+    renderGlanceContent(_glanceData, _activePeriod);
+    fetchRedditAndUpdate(_activePeriod);
   }
 
   /* ── MOBILE MENU TOGGLE ── */
@@ -1360,14 +1502,15 @@ img { display: block; max-width: 100%; }
     sbFetch('github_projects?select=*&order=rubric_score.desc.nullslast,stars.desc&limit=200'),
     sbFetch('daily_editions?select=*&order=edition_date.desc&limit=1'),
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
-  ]).then(([news, events, repos, daily, familyStats]) => {
-    // River: most recent date first, then algo score DESC within same date
+    sbFetch('repo_contributors?select=*&limit=1000'),
+    sbFetch('github_releases?select=*&order=published_at.desc&limit=300'),
+  ]).then(([news, events, repos, daily, familyStats, contributors, releases]) => {
     const sorted = [...(news||[])].sort((a, b) => {
       const dA = _parseMDYVal(a.date), dB = _parseMDYVal(b.date);
       if (dA !== dB) return dB - dA;
       return _scoreItem(b) - _scoreItem(a);
     });
-    renderGlance(repos, familyStats, sorted);
+    renderGlance(repos, familyStats, sorted, contributors, releases);
     renderFeed(sorted, 1);
     renderDaily(daily);
     renderEvents(events);

@@ -1,0 +1,31 @@
+name: GitHub Meta Scraper
+
+on:
+  schedule:
+    # 02:00 UTC daily — runs after news_forge, before daily-edition
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    name: Scrape contributors + releases
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests supabase
+
+      - name: Run scraper
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_TOKEN:         ${{ secrets.GITHUB_TOKEN }}
+        run: python scrape_github_meta.py

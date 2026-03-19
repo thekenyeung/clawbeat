@@ -406,6 +406,53 @@ CREATE POLICY "Admin writes" ON article_feedback
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- github_releases — nightly-scraped release announcements per repo/family
+-- Populated by scrape_github_meta.py via GitHub Releases API.
+-- Unique on (repo_full_name, tag_name) so upserts are idempotent.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS github_releases (
+  id               BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  repo_full_name   TEXT NOT NULL,
+  family           TEXT,
+  tag_name         TEXT NOT NULL,
+  release_name     TEXT,
+  body_preview     TEXT,
+  html_url         TEXT NOT NULL,
+  published_at     TIMESTAMPTZ NOT NULL,
+  author_login     TEXT,
+  is_prerelease    BOOLEAN DEFAULT FALSE,
+  scraped_at       TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (repo_full_name, tag_name)
+);
+
+ALTER TABLE github_releases ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public reads" ON github_releases
+  FOR SELECT TO anon, authenticated USING (true);
+
+-- =============================================================
+-- repo_contributors — top contributors per repo, updated nightly
+-- Populated by scrape_github_meta.py via GitHub contributors API.
+-- contributions = commit count per contributor per repo.
+-- Unique on (repo_full_name, contributor_login).
+-- =============================================================
+CREATE TABLE IF NOT EXISTS repo_contributors (
+  id                     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  repo_full_name         TEXT NOT NULL,
+  family                 TEXT,
+  contributor_login      TEXT NOT NULL,
+  contributor_avatar_url TEXT,
+  contributions          INT DEFAULT 0,
+  scraped_at             TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (repo_full_name, contributor_login)
+);
+
+ALTER TABLE repo_contributors ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public reads" ON repo_contributors
+  FOR SELECT TO anon, authenticated USING (true);
+
+-- =============================================================
 -- Supabase Storage bucket for Daily Edition hero images
 -- This cannot be created via SQL — do it in the Supabase Dashboard:
 --   Storage → New bucket → Name: "daily-edition-images" → Public: ON
