@@ -17,19 +17,19 @@ const UA         = { 'User-Agent': 'ClawBeat/1.0 (clawbeat.co)' };
 
 export default async function handler(req) {
   const fetches = [
-    // r/openclaw — just pull top posts, all are relevant
-    fetch('https://www.reddit.com/r/openclaw/top.json?limit=15', { headers: UA })
+    // r/openclaw — hot = most active right now, all posts are on-topic
+    fetch('https://www.reddit.com/r/openclaw/hot.json?limit=25', { headers: UA })
       .then(r => r.ok ? r.json() : { data: { children: [] } })
       .catch(() => ({ data: { children: [] } })),
 
-    // r/clawdbot — same, pull top posts directly
-    fetch('https://www.reddit.com/r/clawdbot/top.json?limit=15', { headers: UA })
+    // r/clawdbot — same
+    fetch('https://www.reddit.com/r/clawdbot/hot.json?limit=25', { headers: UA })
       .then(r => r.ok ? r.json() : { data: { children: [] } })
       .catch(() => ({ data: { children: [] } })),
 
-    // r/LocalLLaMA — filter by Claw keywords, all time
+    // r/LocalLLaMA — keyword-filtered, best all-time matches
     fetch(
-      `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=10&restrict_sr=1`,
+      `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=15&restrict_sr=1`,
       { headers: UA }
     ).then(r => r.ok ? r.json() : { data: { children: [] } })
      .catch(() => ({ data: { children: [] } })),
@@ -60,8 +60,9 @@ export default async function handler(req) {
       author:       p.author,
       created_utc:  p.created_utc,
     }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 8);
+    // Rank by engagement: upvotes + comment activity weighted 5×
+    .sort((a, b) => (b.score + b.num_comments * 5) - (a.score + a.num_comments * 5))
+    .slice(0, 5);
 
   return new Response(JSON.stringify({ posts }), {
     headers: {
