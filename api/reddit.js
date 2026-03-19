@@ -16,31 +16,24 @@ const CLAW_QUERY = 'openclaw OR nanoclaw OR nemoclaw OR nanobot OR zeroclaw OR p
 const UA         = { 'User-Agent': 'ClawBeat/1.0 (clawbeat.co)' };
 
 export default async function handler(req) {
-  const fetches = [
-    // r/openclaw — hot = most active right now, all posts are on-topic
-    fetch('https://www.reddit.com/r/openclaw/hot.json?limit=25', { headers: UA })
-      .then(r => r.ok ? r.json() : { data: { children: [] } })
-      .catch(() => ({ data: { children: [] } })),
-
-    // r/clawdbot — same
-    fetch('https://www.reddit.com/r/clawdbot/hot.json?limit=25', { headers: UA })
-      .then(r => r.ok ? r.json() : { data: { children: [] } })
-      .catch(() => ({ data: { children: [] } })),
-
-    // r/LocalLLaMA — keyword-filtered, best all-time matches
-    fetch(
-      `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=15&restrict_sr=1`,
-      { headers: UA }
-    ).then(r => r.ok ? r.json() : { data: { children: [] } })
-     .catch(() => ({ data: { children: [] } })),
+  const sources = [
+    { label: 'r/openclaw',   url: 'https://www.reddit.com/r/openclaw/hot.json?limit=25' },
+    { label: 'r/clawdbot',   url: 'https://www.reddit.com/r/clawdbot/hot.json?limit=25' },
+    { label: 'r/LocalLLaMA', url: `https://www.reddit.com/r/LocalLLaMA/search.json?q=${encodeURIComponent(CLAW_QUERY)}&sort=top&t=all&limit=15&restrict_sr=1` },
   ];
 
-  const results = await Promise.all(fetches);
+  const rawResponses = await Promise.all(
+    sources.map(s =>
+      fetch(s.url, { headers: UA })
+        .then(async r => ({ label: s.label, status: r.status, ok: r.ok, body: r.ok ? await r.json() : null }))
+        .catch(e => ({ label: s.label, status: 0, ok: false, body: null, error: String(e) }))
+    )
+  );
 
   // Deduplicate by post ID, keep highest score copy
   const seen = new Map();
-  for (const result of results) {
-    for (const child of result?.data?.children || []) {
+  for (const { body } of rawResponses) {
+    for (const child of body?.data?.children || []) {
       const p = child?.data;
       if (!p?.id) continue;
       if (!seen.has(p.id) || p.score > seen.get(p.id).score) seen.set(p.id, p);
@@ -60,14 +53,20 @@ export default async function handler(req) {
       author:       p.author,
       created_utc:  p.created_utc,
     }))
-    // Rank by engagement: upvotes + comment activity weighted 5×
     .sort((a, b) => (b.score + b.num_comments * 5) - (a.score + a.num_comments * 5))
     .slice(0, 5);
 
-  return new Response(JSON.stringify({ posts }), {
+  const _debug = rawResponses.map(r => ({
+    label:  r.label,
+    status: r.status,
+    count:  r.body?.data?.children?.length ?? 0,
+    error:  r.error || null,
+  }));
+
+  return new Response(JSON.stringify({ posts, _debug }), {
     headers: {
       'Content-Type':                'application/json',
-      'Cache-Control':               'public, s-maxage=300, stale-while-revalidate=60',
+      'Cache-Control':               'no-store',   // disable cache while debugging
       'Access-Control-Allow-Origin': '*',
     },
   });
