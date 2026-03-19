@@ -8,10 +8,7 @@
   <url><loc>https://clawbeat.co/forge.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://clawbeat.co/research.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://clawbeat.co/media.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://clawbeat.co/guide/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://clawbeat.co/guide/openclaw-comparison.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/nemoclaw.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/claude-dispatch.html</loc><lastmod>2026-03-18</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/sitemap.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
@@ -40,6 +37,7 @@
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
 
   <!-- ── Daily Editions ── -->
+  <url><loc>https://clawbeat.co/daily/2026-03-18/is-openclaw-really-the-next-chatgpt-why-nvidias-ceo-called-t.html</loc><lastmod>2026-03-18</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-17/nvidia-nemoclaw-promises-to-run-openclaw-agents-securely.html</loc><lastmod>2026-03-17</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-16/aws-launches-managed-openclaw-on-lightsail-amid-critical-sec.html</loc><lastmod>2026-03-16</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-14/what-is-picoclaw-running-openclaw-ai-agents-on-10-hardware.html</loc><lastmod>2026-03-14</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
