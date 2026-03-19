@@ -1349,7 +1349,10 @@ img { display: block; max-width: 100%; }
       el.innerHTML = '<div class="family-mini-empty">no discussions found</div>';
       return;
     }
-    el.innerHTML = posts.slice(0, 5).map(function(p) {
+    var ranked = posts.slice().sort(function(a, b) {
+      return ((b.score||0) + (b.num_comments||0) * 5) - ((a.score||0) + (a.num_comments||0) * 5);
+    });
+    el.innerHTML = ranked.slice(0, 5).map(function(p) {
       var ago = '';
       if (p.created_utc) {
         var days = Math.floor((Date.now() / 1000 - p.created_utc) / 86400);
@@ -1367,14 +1370,7 @@ img { display: block; max-width: 100%; }
     }).join('');
   }
 
-  function fetchRedditAndUpdate() {
-    fetch('/api/reddit')
-      .then(function(r) { return r.ok ? r.json() : { posts: [] }; })
-      .then(function(data) { updateRedditPanel(data.posts || []); })
-      .catch(function() { updateRedditPanel([]); });
-  }
-
-  /* ── RENDER: FULL GLANCE SECTION ── */
+/* ── RENDER: FULL GLANCE SECTION ── */
   function renderGlanceContent(data, period) {
     var repos        = data.repos;
     var familyStats  = data.familyStats;
@@ -1452,10 +1448,10 @@ img { display: block; max-width: 100%; }
     }, 0);
   }
 
-  function renderGlance(repos, familyStats, news, contributors, releases) {
+  function renderGlance(repos, familyStats, news, contributors, releases, redditPosts) {
     _glanceData = { repos: repos, familyStats: familyStats, news: news, contributors: contributors, releases: releases };
     renderGlanceContent(_glanceData, _activePeriod);
-    fetchRedditAndUpdate();
+    updateRedditPanel(redditPosts || []);
   }
 
   /* ── MOBILE MENU TOGGLE ── */
@@ -1504,13 +1500,14 @@ img { display: block; max-width: 100%; }
     sbFetch('ecosystem_family_stats?select=*&order=total_count.desc'),
     sbFetch('repo_contributors?select=*&limit=1000'),
     sbFetch('github_releases?select=*&order=published_at.desc&limit=300'),
-  ]).then(([news, events, repos, daily, familyStats, contributors, releases]) => {
+    sbFetch('reddit_posts?select=*&order=score.desc&limit=20'),
+  ]).then(([news, events, repos, daily, familyStats, contributors, releases, redditPosts]) => {
     const sorted = [...(news||[])].sort((a, b) => {
       const dA = _parseMDYVal(a.date), dB = _parseMDYVal(b.date);
       if (dA !== dB) return dB - dA;
       return _scoreItem(b) - _scoreItem(a);
     });
-    renderGlance(repos, familyStats, sorted, contributors, releases);
+    renderGlance(repos, familyStats, sorted, contributors, releases, redditPosts);
     renderFeed(sorted, 1);
     renderDaily(daily);
     renderEvents(events);

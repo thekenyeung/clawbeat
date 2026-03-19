@@ -1,0 +1,30 @@
+name: Reddit Scraper
+
+on:
+  schedule:
+    # Every 4 hours — keeps community_conversations fresh
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    name: Scrape Reddit top posts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests supabase
+
+      - name: Run scraper
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scrape_reddit.py
