@@ -56,6 +56,18 @@ FAMILY_KW = {
     "zeroclaw": ["zeroclaw", "zero-claw"],
 }
 
+# Official repos whose releases are shown on the homepage.
+# Only these repos are scraped for github_releases — user forks and
+# third-party repos are excluded. Add others as confirmed.
+OFFICIAL_RELEASE_REPOS = {
+    "openclaw/openclaw": "openclaw",
+    # "nemoclaw/nemoclaw": "nemoclaw",  # add when confirmed
+    # "nanoclaw/nanoclaw": "nanoclaw",
+    # "nanobot/nanobot":   "nanobot",
+    # "picoclaw/picoclaw": "picoclaw",
+    # "zeroclaw/zeroclaw": "zeroclaw",
+}
+
 # ── HELPERS ───────────────────────────────────────────────────────────────────
 
 def detect_family(repo: dict) -> str | None:
@@ -173,9 +185,15 @@ def main():
         print(f"  [{i+1:>3}/{len(repos)}] {full_name} ({family or 'unknown'})")
 
         c = scrape_contributors(repo, family)
-        r = scrape_releases(repo, family)
         total_c += c
-        total_r += r
+
+        # Releases: official repos only
+        if full_name in OFFICIAL_RELEASE_REPOS:
+            official_family = OFFICIAL_RELEASE_REPOS[full_name]
+            r = scrape_releases(repo, official_family)
+            total_r += r
+            print(f"    ✅  official repo — {r} release(s) scraped")
+
         time.sleep(delay)
 
     print(f"\n✅  Done — {total_c} contributor rows, {total_r} release rows upserted")
