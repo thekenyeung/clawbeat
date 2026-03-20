@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClawBeat Daily — Episode Intro Graphic (1920×1080)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,400..900;1,800..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
+      gap: 14px;
+    }
+
+    .meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: #444;
+      text-transform: uppercase;
+    }
+
+    /* ─── FRAME ──────────────────────────────────────────────────────── */
+    .frame {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: #08090b;
+      flex-shrink: 0;
+    }
+
+    /* ── BG LAYER 1: base gradient (matches og-image warmth) */
+    .bg-base {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(150deg, #0c0e12 0%, #08090b 40%, #0e0a07 100%);
+    }
+
+    /* ── BG LAYER 2: subtle orange glow top-right (same as og-image) */
+    .bg-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 55% 65% at 95% 5%,
+        rgba(223,85,8,0.09) 0%,
+        transparent 60%
+      );
+    }
+
+    /* ── BG LAYER 3: hex grid (top-right, 1920×1080 → ~900px zone) */
+    .hex-bg {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 940px;
+      height: 940px;
+      opacity: 0.08;
+      z-index: 1;
+    }
+
+    /* Gradient masks to softly dissolve the hex into the background */
+    .hex-fade-left {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 940px;
+      height: 940px;
+      background: linear-gradient(to right, #08090b 0%, transparent 42%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hex-fade-bottom {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 940px;
+      height: 440px;
+      background: linear-gradient(to top, #08090b 0%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── STRUCTURAL: left orange accent bar */
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        #df5508 18%,
+        #df5508 82%,
+        transparent 100%
+      );
+      z-index: 20;
+    }
+
+    /* ── STRUCTURAL: scanlines */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.006) 3px,
+        rgba(255,255,255,0.006) 4px
+      );
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ── STRUCTURAL: top divider (same as thumbnail) */
+    .divider-top {
+      position: absolute;
+      top: 88px;
+      left: 4px;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba(223,85,8,0.75) 0%,
+        rgba(223,85,8,0.35) 4px,
+        rgba(255,255,255,0.07) 60px,
+        rgba(255,255,255,0.07) 80%,
+        transparent 100%
+      );
+      z-index: 10;
+    }
+
+    /* ─── CONTENT LAYER ──────────────────────────────────────────────── */
+    .content {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      padding: 0 100px 0 92px;
+    }
+
+    /* ── TOP STRIP (0–88px) */
+    .top-strip {
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .show-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: #df5508;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .show-tag::before {
+      content: '// ';
+      opacity: 0.5;
+    }
+
+    .ep-meta {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    /* EDIT THIS per episode */
+    .ep-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: #525866;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    /* EDIT THIS per episode */
+    .ep-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: #6b7280;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── CENTER ZONE (88px → ~992px) */
+    .center-zone {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 16px;
+    }
+
+    /* ClawBeat.co wordmark — Reddit Sans, matches og-image proportions */
+    .wordmark {
+      font-family: 'Reddit Sans', sans-serif;
+      font-size: 180px;
+      font-weight: 900;
+      font-style: italic;
+      line-height: 0.92;
+      letter-spacing: -0.045em;
+      color: #e2e4e9;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .wordmark .co {
+      color: #df5508;
+      font-size: 110px;
+      letter-spacing: -0.02em;
+      vertical-align: 10px;
+      text-shadow:
+        0 0 50px rgba(223,85,8,0.5),
+        0 0 110px rgba(223,85,8,0.2);
+    }
+
+    /* "DAILY" show badge + rule */
+    .show-row {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-top: 24px;
+      margin-bottom: 56px;
+    }
+    .daily-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 30px;
+      font-weight: 700;
+      color: #df5508;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+    .daily-rule {
+      flex: 1;
+      max-width: 560px;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        #df5508 0%,
+        rgba(223,85,8,0.35) 50%,
+        transparent 100%
+      );
+    }
+
+    /* Episode title placeholder — EDIT PER EPISODE */
+    .ep-title-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 960px;
+    }
+    .ep-title-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #525866;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .ep-title-kicker::before {
+      content: '// ';
+      color: #df5508;
+      opacity: 0.4;
+    }
+    /* EDIT THIS: replace with episode headline */
+    .ep-title-text {
+      font-family: 'Reddit Sans', sans-serif;
+      font-size: 48px;
+      font-weight: 500;
+      font-style: italic;
+      color: rgba(144,151,163,0.6);
+      line-height: 1.2;
+      border-left: 3px solid rgba(223,85,8,0.32);
+      padding-left: 26px;
+    }
+
+    /* ── BOTTOM STRIP (~992px–1080px) */
+    .bottom-strip {
+      height: 88px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .footer-rule {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        #df5508 0%,
+        rgba(223,85,8,0.45) 4px,
+        rgba(255,255,255,0.07) 60px,
+        rgba(255,255,255,0.07) 78%,
+        transparent 100%
+      );
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-links {
+      display: flex;
+      gap: 52px;
+    }
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      color: #525866;
+      letter-spacing: 0.1em;
+    }
+    .nav-link::before {
+      content: '// ';
+      color: rgba(223,85,8,0.4);
+    }
+    .nav-link.active { color: #9097a3; }
+
+    .live-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #22c55e;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9), 0 0 20px rgba(34,197,94,0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="meta-label">Episode Intro Graphic — 1920 × 1080 px</div>
+  <div class="meta-label">Screenshot at 100% zoom · Edit EP NUMBER / DATE / TITLE per episode</div>
+
+  <div class="frame">
+
+    <!-- ── BACKGROUND LAYERS ── -->
+    <div class="bg-base"></div>
+    <div class="bg-glow"></div>
+
+    <!-- ── HEX GRID (JS-generated, top-right) ── -->
+    <svg class="hex-bg" id="hexBgSvg" viewBox="0 0 940 940" preserveAspectRatio="xMaxYMin meet">
+      <g id="hexGrid" fill="none" stroke="#f97316" stroke-width="0.85"></g>
+    </svg>
+    <div class="hex-fade-left"></div>
+    <div class="hex-fade-bottom"></div>
+
+    <!-- ── STRUCTURAL ELEMENTS ── -->
+    <div class="accent-bar"></div>
+    <div class="divider-top"></div>
+    <div class="scanlines"></div>
+
+    <!-- ── CONTENT ── -->
+    <div class="content">
+
+      <!-- TOP STRIP -->
+      <div class="top-strip">
+        <span class="show-tag">CLAWBEAT_DAILY</span>
+        <div class="ep-meta">
+          <span class="ep-number">EP. 001</span><!-- ← EDIT -->
+          <span class="ep-date">MAR 15, 2026</span><!-- ← EDIT -->
+        </div>
+      </div>
+
+      <!-- CENTER: wordmark + show label + episode title -->
+      <div class="center-zone">
+        <div class="wordmark">CLAWBEAT<span class="co">.co</span></div>
+        <div class="show-row">
+          <span class="daily-tag">DAILY</span>
+          <div class="daily-rule"></div>
+        </div>
+        <div class="ep-title-zone">
+          <span class="ep-title-kicker">today's signal</span>
+          <div class="ep-title-text">Episode Title Goes Here</div><!-- ← EDIT -->
+        </div>
+      </div>
+
+      <!-- BOTTOM STRIP -->
+      <div class="bottom-strip">
+        <div class="footer-rule"></div>
+        <div class="footer-nav">
+          <div class="nav-links">
+            <span class="nav-link active">intel</span>
+            <span class="nav-link">events</span>
+            <span class="nav-link">trace</span>
+            <span class="nav-link">forge</span>
+          </div>
+          <div class="live-chip">
+            <div class="live-dot"></div>
+            LIVE
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /frame -->
+
+  <div class="meta-label">Reddit Sans 900 italic · JetBrains Mono · #df5508 · #08090b</div>
+
+  <script>
+    // Generate pointy-top hexagon grid in the top-right SVG
+    (function () {
+      const g = document.getElementById('hexGrid');
+      const S3 = Math.sqrt(3);
+      const r = 46;   // circumradius (px in the 940×940 viewBox)
+      const W = 940, H = 940;
+      const cols = Math.ceil(W / (S3 * r)) + 2;
+      const rows = Math.ceil(H / (1.5 * r)) + 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const cx = col * S3 * r + (row % 2) * (S3 * r / 2);
+          const cy = row * 1.5 * r;
+          const pts = Array.from({ length: 6 }, (_, i) => {
+            const a = (Math.PI / 180) * (60 * i - 30); // -30° = pointy-top start
+            return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
+          }).join(' ');
+
+          const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          poly.setAttribute('points', pts);
+          g.appendChild(poly);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

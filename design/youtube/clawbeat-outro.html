@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ClawBeat — Outro Graphic (1920×1080, Text-Free)</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #080808;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
+      gap: 14px;
+    }
+
+    .meta-label {
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: #444;
+      text-transform: uppercase;
+    }
+
+    /* ─── FRAME ──────────────────────────────────────────────────────── */
+    .frame {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      background: #08090b;
+      flex-shrink: 0;
+    }
+
+    /* ── LAYER 1: Base gradient (deep dark with slight warmth) */
+    .bg-base {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0c0f13 0%, #08090b 50%, #0b0908 100%);
+    }
+
+    /* ── LAYER 2 & 3: Hex grids (full-frame, JS-generated)
+       Large grid (r=80) — structural bones of the design.
+       Medium grid (r=44) — finer detail layer, slightly offset for depth.   */
+    .hex-large {
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      width: 2000px;
+      height: 1160px;
+      z-index: 1;
+      opacity: 0.10;
+    }
+
+    .hex-medium {
+      position: absolute;
+      top: -20px;
+      left: 30px;
+      width: 2000px;
+      height: 1120px;
+      z-index: 2;
+      opacity: 0.055;
+    }
+
+    /* ── LAYER 4: Orange node dots at hex centers near glow (JS-generated SVG) */
+    .hex-nodes {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+    }
+
+    /* ── LAYER 5: Central orange radial glow — signal source */
+    .glow-main {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 860px 680px at 50% 40%,
+        rgba(223,85,8,0.17) 0%,
+        rgba(223,85,8,0.08) 28%,
+        rgba(223,85,8,0.025) 52%,
+        transparent 70%
+      );
+      z-index: 4;
+    }
+
+    /* Secondary warm ambient — lower-right, very subtle */
+    .glow-ambient {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 580px 420px at 82% 82%,
+        rgba(223,85,8,0.055) 0%,
+        transparent 55%
+      );
+      z-index: 4;
+    }
+
+    /* Cool counter-accent — upper-left, barely perceptible */
+    .glow-counter {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 440px 360px at 8% 12%,
+        rgba(6,182,212,0.03) 0%,
+        transparent 55%
+      );
+      z-index: 4;
+    }
+
+    /* ── LAYER 6: Vignette — pulls focus inward, darkens edges for text overlay */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 115% 108% at 50% 42%,
+        transparent 30%,
+        rgba(4,5,7,0.35) 58%,
+        rgba(4,5,7,0.68) 78%,
+        rgba(4,5,7,0.88) 92%,
+        rgba(4,5,7,0.95) 100%
+      );
+      z-index: 5;
+    }
+
+    /* Top and bottom gradient bars (extra darkening for letterbox feel) */
+    .vignette-top {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(4,5,7,0.55) 0%,
+        transparent 18%
+      );
+      z-index: 5;
+    }
+    .vignette-bottom {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        0deg,
+        rgba(4,5,7,0.60) 0%,
+        transparent 20%
+      );
+      z-index: 5;
+    }
+
+    /* ── LAYER 7: Scanlines */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.005) 3px,
+        rgba(255,255,255,0.005) 4px
+      );
+      z-index: 6;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="meta-label">Outro Graphic — 1920 × 1080 px — Text-Free CTA Background</div>
+  <div class="meta-label">Screenshot at 100% zoom · No edits needed — use as-is each episode</div>
+
+  <div class="frame">
+
+    <!-- BG base -->
+    <div class="bg-base"></div>
+
+    <!-- ── LARGE HEX GRID (r=80, full frame) ── -->
+    <svg class="hex-large" id="hexLarge" viewBox="0 0 2000 1160"
+         preserveAspectRatio="xMidYMid meet">
+      <g id="hexGridLarge" fill="none" stroke="#f97316" stroke-width="0.75"></g>
+    </svg>
+
+    <!-- ── MEDIUM HEX GRID (r=44, offset) ── -->
+    <svg class="hex-medium" id="hexMedium" viewBox="0 0 2000 1120"
+         preserveAspectRatio="xMidYMid meet">
+      <g id="hexGridMedium" fill="none" stroke="#f97316" stroke-width="0.5"></g>
+    </svg>
+
+    <!-- ── NODE DOTS (near glow center, JS-generated) ── -->
+    <svg class="hex-nodes" id="hexNodes" viewBox="0 0 1920 1080">
+      <g id="nodeGroup"></g>
+    </svg>
+
+    <!-- Glow layers -->
+    <div class="glow-main"></div>
+    <div class="glow-ambient"></div>
+    <div class="glow-counter"></div>
+
+    <!-- Vignette -->
+    <div class="vignette"></div>
+    <div class="vignette-top"></div>
+    <div class="vignette-bottom"></div>
+
+    <!-- Scanlines -->
+    <div class="scanlines"></div>
+
+  </div><!-- /frame -->
+
+  <div class="meta-label">Text-free · #df5508 glow · #08090b bg · dual hex grid · vignette</div>
+
+  <script>
+    const S3 = Math.sqrt(3);
+
+    // ── Helper: generate pointy-top hex grid ──────────────────────────
+    function genHexGrid(groupId, viewW, viewH, r, startX, startY) {
+      const g = document.getElementById(groupId);
+      const cols = Math.ceil((viewW - startX) / (S3 * r)) + 2;
+      const rows = Math.ceil((viewH - startY) / (1.5 * r)) + 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const cx = startX + col * S3 * r + (row % 2) * (S3 * r / 2);
+          const cy = startY + row * 1.5 * r;
+          const pts = Array.from({ length: 6 }, (_, i) => {
+            const a = (Math.PI / 180) * (60 * i - 30);
+            return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
+          }).join(' ');
+
+          const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          poly.setAttribute('points', pts);
+          g.appendChild(poly);
+        }
+      }
+    }
+
+    // ── Large grid (r=80, covers 2000×1160 viewBox) ─────────────────
+    genHexGrid('hexGridLarge', 2000, 1160, 80, 0, 0);
+
+    // ── Medium grid (r=44, covers 2000×1120 viewBox) ─────────────────
+    genHexGrid('hexGridMedium', 2000, 1120, 44, 0, 0);
+
+    // ── Node dots at large-grid hex centers near the glow origin ─────
+    // Glow center mapped to 1920×1080 coordinates: (960, 432) = 50% × 40%
+    const GLOW_X = 960;
+    const GLOW_Y = 432;
+    const MAX_DIST = 400;          // node visibility radius (px)
+    const r_lg = 80;               // must match large-grid r
+    const nodeGroup = document.getElementById('nodeGroup');
+
+    // Reproduce the large-grid hex centers, offset for the svg.hex-large placement
+    // .hex-large is top:-40px left:-40px so hex cx/cy are offset by -40 from frame coords
+    const OFFSET_X = -40;
+    const OFFSET_Y = -40;
+    const n_cols = Math.ceil(2000 / (S3 * r_lg)) + 2;
+    const n_rows = Math.ceil(1160 / (1.5 * r_lg)) + 2;
+
+    for (let row = 0; row < n_rows; row++) {
+      for (let col = 0; col < n_cols; col++) {
+        // hex center in the large SVG's viewBox space
+        const vcx = col * S3 * r_lg + (row % 2) * (S3 * r_lg / 2);
+        const vcy = row * 1.5 * r_lg;
+
+        // convert to frame coordinates (account for SVG placement offset)
+        const fcx = vcx + OFFSET_X;
+        const fcy = vcy + OFFSET_Y;
+
+        const dist = Math.hypot(fcx - GLOW_X, fcy - GLOW_Y);
+        if (dist >= MAX_DIST) continue;
+
+        // Probability and opacity fall off with distance
+        const t = 1 - dist / MAX_DIST;           // 1 at center, 0 at edge
+        if (Math.random() > 0.45 + t * 0.25) continue; // sparser at edges
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', fcx.toFixed(1));
+        circle.setAttribute('cy', fcy.toFixed(1));
+        circle.setAttribute('r', (2.5 + t * 1.5).toFixed(1)); // larger near center
+        circle.setAttribute('fill', '#f97316');
+        circle.setAttribute('opacity', (t * 0.48).toFixed(3));
+        nodeGroup.appendChild(circle);
+      }
+    }
+  </script>
+</body>
+</html>

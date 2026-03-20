@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Chronicle — ClawBeat [Proto B: Timeline Rail]</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090b;--bg-2:#0d0f12;--bg-3:#131619;
+  --border:rgba(255,255,255,0.05);--border-2:rgba(255,255,255,0.09);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,0.10);--orange-glow:rgba(249,115,22,0.15);
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.08);
+  --cyan:#06b6d4;--cyan-dim:rgba(6,182,212,0.08);
+  --text:#e2e4e9;--text-2:#9097a3;--text-3:#525866;--text-4:#2e333d;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+  --header-h:4rem;--rail-w:48px;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:50;height:var(--header-h);background:rgba(8,9,11,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-2)}
+.header-inner{max-width:860px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;gap:2rem}
+.brand{font-family:var(--sans);font-size:0.9rem;font-weight:900;font-style:italic;letter-spacing:-0.04em;text-transform:uppercase;color:#fff}
+.brand span{color:var(--orange)}
+.header-nav{display:flex;align-items:center;gap:1.5rem}
+.nav-item{font-family:var(--mono);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);transition:color 0.15s}
+.nav-item:hover{color:var(--text-2)}
+.nav-item.active{color:var(--orange)}
+.nav-skill-chip{font-family:var(--mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--orange);padding:0.25rem 0.6rem;border:1px solid rgba(249,115,22,0.3);border-radius:0.25rem;background:rgba(249,115,22,0.06);transition:all 0.15s}
+.nav-skill-chip:hover{background:rgba(249,115,22,0.12)}
+
+/* MASTHEAD */
+.masthead{background:var(--bg);border-bottom:1px solid var(--border-2);padding:4rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.masthead::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.018) 39px,rgba(255,255,255,0.018) 40px),repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,0.010) 79px,rgba(255,255,255,0.010) 80px)}
+.masthead-inner{position:relative;z-index:1}
+.masthead-eyebrow{font-family:var(--mono);font-size:0.65rem;color:var(--orange);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1.25rem}
+.masthead-title{font-family:var(--sans);font-size:clamp(2.5rem,8vw,6rem);font-weight:900;letter-spacing:-0.045em;line-height:0.9;color:#fff;text-transform:uppercase;font-style:italic;margin-bottom:1.25rem}
+.masthead-title em{color:var(--orange);font-style:italic;display:block}
+.masthead-sub{font-family:var(--mono);font-size:0.7rem;color:var(--text-3);display:flex;align-items:center;justify-content:center;gap:0.75rem}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse-green 2s ease-in-out infinite}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+@keyframes pulse-orange{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,0.5)}50%{box-shadow:0 0 0 8px rgba(249,115,22,0)}}
+
+/* ASK BAR */
+.ask-bar{background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:1rem 1.5rem}
+.ask-bar-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:1rem;padding:0.75rem 1rem;border-left:3px solid var(--orange);background:var(--bg-3);border-radius:0 0.375rem 0.375rem 0}
+.ask-label{font-family:var(--mono);font-size:0.65rem;font-weight:700;color:var(--orange);letter-spacing:0.1em;white-space:nowrap}
+.ask-input{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:0.75rem;color:var(--text-3);cursor:not-allowed}
+.ask-input::placeholder{color:var(--text-4)}
+.coming-soon-chip{font-family:var(--mono);font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.25);padding:0.2rem 0.5rem;border-radius:3px;white-space:nowrap}
+
+/* STATS BAR */
+.stats-bar{background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:0.6rem 1.5rem}
+.stats-bar-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.stat-chip{font-family:var(--mono);font-size:0.65rem;color:var(--text-3);display:flex;align-items:center;gap:0.35rem}
+.stat-chip strong{color:var(--text-2);font-weight:600}
+.stat-sep{color:var(--text-4);font-family:var(--mono)}
+
+/* TAB BAR */
+.tab-bar{position:sticky;top:var(--header-h);z-index:40;background:rgba(8,9,11,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-2)}
+.tab-bar-inner{max-width:860px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:stretch;gap:0}
+.tab-item{font-family:var(--mono);font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-4);padding:0.85rem 1.25rem;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.tab-item:hover{color:var(--text-3)}
+.tab-item.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* MAIN CONTENT */
+.main{flex:1;padding:3rem 1.5rem 4rem}
+.timeline{max-width:800px;margin:0 auto;position:relative}
+
+/* THE RAIL */
+.timeline-rail{position:absolute;left:calc(var(--rail-w) - 1px);top:0;bottom:0;width:1px;background:linear-gradient(to bottom, transparent, var(--border-2) 4%,var(--border-2) 96%, transparent)}
+
+/* RELEASE ENTRY */
+.release-entry{position:relative;padding-left:var(--rail-w);margin-bottom:1.5rem}
+.release-entry:last-child{margin-bottom:0}
+
+/* NODE DOT */
+.node{position:absolute;left:calc(var(--rail-w) - 9px);top:1.4rem;width:16px;height:16px;border-radius:50%;border:2px solid;background:var(--bg);z-index:2;transition:all 0.2s}
+.node.breaking{border-color:var(--orange);background:var(--orange-dim);animation:pulse-orange 2.5s ease-in-out infinite}
+.node.feature{border-color:var(--green);background:var(--green-dim)}
+.node.fix{border-color:var(--border-2);background:var(--bg-2)}
+.node.latest{border-color:var(--orange);background:var(--orange);box-shadow:0 0 12px rgba(249,115,22,0.4)}
+
+/* CONNECTOR */
+.connector{position:absolute;left:calc(var(--rail-w) + 7px);top:calc(1.4rem + 7px);width:16px;height:1px;background:var(--border-2)}
+
+/* CARD */
+.release-card{background:var(--bg-2);border:1px solid var(--border);border-radius:0.5rem;overflow:hidden;transition:all 0.2s;cursor:pointer}
+.release-card:hover{border-color:var(--border-2)}
+.release-card.breaking-card{border-left:2px solid var(--orange);box-shadow:0 0 20px rgba(249,115,22,0.05)}
+.release-card.breaking-card:hover{box-shadow:0 0 30px rgba(249,115,22,0.08)}
+
+/* CARD HEADER (always visible) */
+.card-head{padding:1.1rem 1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.card-head-left{flex:1;min-width:0}
+.card-meta-row{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.5rem}
+.ver-badge{font-family:var(--mono);font-size:0.75rem;font-weight:700;color:var(--orange)}
+.pre-badge{font-family:var(--mono);font-size:0.55rem;color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(6,182,212,0.2);padding:0.12rem 0.4rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.08em}
+.breaking-badge{font-family:var(--mono);font-size:0.55rem;font-weight:700;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.2);padding:0.12rem 0.4rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.08em}
+.date-badge{font-family:var(--mono);font-size:0.6rem;color:var(--text-4)}
+.card-name{font-size:1rem;font-weight:700;letter-spacing:-0.02em;color:var(--text);line-height:1.3}
+.card-summary-row{display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem}
+.summary-chip{font-family:var(--mono);font-size:0.6rem;display:inline-flex;align-items:center;gap:0.3rem}
+.summary-chip.b{color:var(--orange)}
+.summary-chip.f{color:var(--green)}
+.summary-chip.x{color:var(--text-3)}
+.expand-btn{background:none;border:none;cursor:pointer;color:var(--text-4);display:flex;align-items:center;gap:0.25rem;font-family:var(--mono);font-size:0.6rem;padding:0.25rem;transition:color 0.15s;white-space:nowrap;margin-top:0.25rem}
+.expand-btn:hover{color:var(--text-3)}
+
+/* CARD BODY (collapsible) */
+.card-body{display:none;border-top:1px solid var(--border);padding:1.25rem;display:none;flex-direction:column;gap:0.75rem}
+.card-body.open{display:flex}
+.change-block{padding:0.875rem 1rem;border-radius:0.375rem;border-left:2px solid}
+.change-block.breaking{background:var(--orange-dim);border-color:var(--orange)}
+.change-block.feature{background:var(--green-dim);border-color:var(--green)}
+.change-block.fix{background:var(--bg-3);border-color:var(--border-2)}
+.change-block-label{font-family:var(--mono);font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.6rem}
+.change-block.breaking .change-block-label{color:var(--orange)}
+.change-block.feature .change-block-label{color:var(--green)}
+.change-block.fix .change-block-label{color:var(--text-3)}
+.change-list{list-style:none;display:flex;flex-direction:column;gap:0.35rem}
+.change-list li{font-size:0.8rem;line-height:1.5;color:var(--text-2);padding-left:1rem;position:relative}
+.change-list li::before{content:'·';position:absolute;left:0.3rem;opacity:0.5}
+.change-block.breaking .change-list li{color:var(--text)}
+.gh-link{font-family:var(--mono);font-size:0.62rem;color:var(--text-3);border:1px solid var(--border-2);padding:0.35rem 0.75rem;border-radius:4px;display:inline-flex;align-items:center;gap:0.4rem;transition:all 0.15s;align-self:flex-start;margin-top:0.25rem}
+.gh-link:hover{color:var(--orange);border-color:rgba(249,115,22,0.3)}
+
+/* SECTION RULE (year dividers) */
+.year-divider{display:flex;align-items:center;gap:1rem;padding-left:var(--rail-w);margin-bottom:1.5rem;margin-top:1rem}
+.year-label{font-family:var(--mono);font-size:0.6rem;font-weight:700;color:var(--text-4);letter-spacing:0.2em;text-transform:uppercase;white-space:nowrap}
+.year-line{flex:1;height:1px;background:linear-gradient(to right, var(--border-2), transparent)}
+
+/* FOOTER */
+.footer{background:var(--bg-2);border-top:1px solid var(--border-2);padding:1.25rem 1.5rem}
+.footer-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.footer-brand{font-family:var(--sans);font-size:0.85rem;font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.03em;color:#fff}
+.footer-brand span{color:var(--orange)}
+.clawhub-badge{font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);transition:color 0.15s}
+.clawhub-badge:hover{color:var(--orange)}
+
+/* MOBILE */
+@media(max-width:640px){
+  :root{--rail-w:32px}
+  .masthead{padding:2.5rem 1rem 2rem}
+  .card-name{font-size:0.9rem}
+  .main{padding:2rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">ClawBeat<span>.co</span></a>
+    <nav class="header-nav">
+      <a href="/news.html" class="nav-item">Intel</a>
+      <a href="/forge.html" class="nav-item">Forge</a>
+      <a href="/events-calendar.html" class="nav-item">Events</a>
+      <a href="#" class="nav-item active">Chronicle</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+    </nav>
+  </div>
+</header>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-eyebrow">─────&nbsp;&nbsp;OPENCLAW CHRONICLE&nbsp;&nbsp;─────</div>
+    <h1 class="masthead-title">OpenClaw<em>Chronicle</em></h1>
+    <div class="masthead-sub">
+      <span>github.com/openclaw/openclaw</span>
+      <span class="live-dot"></span>
+      <span style="color:var(--green);font-weight:600">LIVE</span>
+    </div>
+  </div>
+</div>
+
+<!-- ASK BAR -->
+<div class="ask-bar">
+  <div class="ask-bar-inner">
+    <span class="ask-label">// ask_openclaw</span>
+    <input class="ask-input" type="text" disabled placeholder="Ask about breaking changes, features, version history...">
+    <span class="coming-soon-chip">Coming Soon</span>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-chip"><strong>★ 322k</strong> stars</div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip"><strong>⑂ 62k</strong> forks</div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip">latest <strong>v2025.3.15</strong></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip">updated <strong>2 days ago</strong></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip"><strong>20,311</strong> commits</div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <div class="tab-item active">// Releases</div>
+    <div class="tab-item" onclick="this.innerHTML='// Commits &nbsp;<span style=\'font-size:0.5rem;color:var(--text-4)\'>coming soon</span>'">// Commits</div>
+    <div class="tab-item" onclick="this.innerHTML='// Pull Requests &nbsp;<span style=\'font-size:0.5rem;color:var(--text-4)\'>coming soon</span>'">// Pull Requests</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="timeline">
+    <div class="timeline-rail"></div>
+    <div id="timeline-entries"></div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+  </div>
+</footer>
+
+<script>
+const RELEASES=[
+  {version:'v2025.3.15',date:'2025-03-15',name:'Canvas UI + Voice Overhaul',prerelease:false,breaking:['Removed legacy auth API v1 — migrate to OAuth2 flow','Config format changed: openclaw.json → openclaw.config.ts'],features:['New Canvas UI with real-time collaboration','Voice command support for macOS + iOS','Telegram multi-bot account support','Discord slash command builder','WhatsApp Business API v3 integration'],fixes:['Reconnect loop on WhatsApp connector','iOS widget crash on cold start','Memory leak in Slack event listener','Android push notification delay > 30s']},
+  {version:'v2025.2.28',date:'2025-02-28',name:'iOS Widget + Android Stability',prerelease:false,breaking:[],features:['iOS home screen widget','Android background sync improvements'],fixes:['Fixed ANR on Android 14','Reduced battery drain by 40%','Fixed widget refresh interval']},
+  {version:'v2025.2.14-beta.2',date:'2025-02-14',name:'Canvas Beta 2',prerelease:true,breaking:[],features:['Canvas drag-and-drop blocks','Shared canvas rooms'],fixes:['Canvas cursor desync','Block deletion race condition']},
+  {version:'v2025.1.31',date:'2025-01-31',name:'Multi-Platform Gateway v2',prerelease:false,breaking:['Plugin API v1 deprecated — use Plugin API v2','Node.js minimum version raised to 20'],features:['Unified gateway for WhatsApp + Telegram + Slack','Plugin system v2 with hot reload','Rate limit manager with per-channel queues'],fixes:['Gateway crash on high message volume','Slack OAuth token refresh race']},
+  {version:'v2024.12.20',date:'2024-12-20',name:'Holiday Stability Release',prerelease:false,breaking:[],features:['Scheduled message delivery','Message template editor'],fixes:['12 stability fixes across connectors','Improved error messages for auth failures']},
+  {version:'v2024.11.15',date:'2024-11-15',name:'Local Control Plane',prerelease:false,breaking:['Cloud sync removed — all data now local-first'],features:['Local-first control plane','End-to-end encryption for all channels','Self-hosted deployment guide'],fixes:['Data sync conflict resolution','Config migration tool']},
+  {version:'v2024.10.01',date:'2024-10-01',name:'Discord + Circle.so Launch',prerelease:false,breaking:[],features:['Discord connector','Circle.so community integration','Webhook builder UI'],fixes:['Discord rate limit handling','Circle webhook signature validation']},
+  {version:'v2024.9.5',date:'2024-09-05',name:'Initial Public Release',prerelease:false,breaking:[],features:['WhatsApp connector','Telegram connector','Slack connector','Local-first architecture','macOS + iOS + Android apps'],fixes:[]}
+];
+
+function fmtDate(d){const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+
+function nodeClass(r,isFirst){
+  if(isFirst) return 'node latest';
+  if(r.breaking.length) return 'node breaking';
+  if(r.features.length) return 'node feature';
+  return 'node fix';
+}
+
+function toggleCard(id){
+  const body=document.getElementById('body-'+id);
+  const btn=document.getElementById('btn-'+id);
+  const open=body.classList.toggle('open');
+  btn.innerHTML=open?'<i data-lucide="chevron-up" style="width:12px;height:12px"></i> collapse':'<i data-lucide="chevron-down" style="width:12px;height:12px"></i> expand';
+  lucide.createIcons();
+}
+
+function render(){
+  const container=document.getElementById('timeline-entries');
+  let html='';
+  let lastYear='';
+
+  RELEASES.forEach((r,i)=>{
+    const year=r.date.slice(0,4);
+    if(year!==lastYear){
+      html+=`<div class="year-divider"><span class="year-label">// ${year}</span><div class="year-line"></div></div>`;
+      lastYear=year;
+    }
+    const isFirst=i===0;
+    const nc=nodeClass(r,isFirst);
+    const hasBreaking=r.breaking.length>0;
+    const id='rel-'+i;
+
+    html+=`
+    <div class="release-entry">
+      <div class="${nc}"></div>
+      <div class="connector"></div>
+      <div class="release-card${hasBreaking?' breaking-card':''}" id="${id}">
+        <div class="card-head" onclick="toggleCard('${id}')">
+          <div class="card-head-left">
+            <div class="card-meta-row">
+              <span class="ver-badge">${r.version}</span>
+              ${isFirst?'<span style="font-family:var(--mono);font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--bg);background:var(--orange);padding:0.12rem 0.4rem;border-radius:2px">Latest</span>':''}
+              ${r.prerelease?'<span class="pre-badge">Beta</span>':''}
+              ${hasBreaking?'<span class="breaking-badge">⚠ Breaking</span>':''}
+              <span class="date-badge">${fmtDate(r.date)}</span>
+            </div>
+            <div class="card-name">${r.name}</div>
+            <div class="card-summary-row">
+              ${r.breaking.length?`<span class="summary-chip b">⚠ ${r.breaking.length} breaking</span>`:''}
+              ${r.features.length?`<span class="summary-chip f">✦ ${r.features.length} features</span>`:''}
+              ${r.fixes.length?`<span class="summary-chip x">✓ ${r.fixes.length} fixes</span>`:''}
+            </div>
+          </div>
+          <button class="expand-btn" id="btn-${id}" onclick="event.stopPropagation();toggleCard('${id}')">
+            <i data-lucide="${isFirst?'chevron-up':'chevron-down'}" style="width:12px;height:12px"></i>
+            ${isFirst?'collapse':'expand'}
+          </button>
+        </div>
+        <div class="card-body${isFirst?' open':''}" id="body-${id}">
+          ${r.breaking.length?`<div class="change-block breaking"><div class="change-block-label">⚠ Breaking Changes</div><ul class="change-list">${r.breaking.map(b=>`<li>${b}</li>`).join('')}</ul></div>`:''}
+          ${r.features.length?`<div class="change-block feature"><div class="change-block-label">✦ New Features</div><ul class="change-list">${r.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>`:''}
+          ${r.fixes.length?`<div class="change-block fix"><div class="change-block-label">✓ Bug Fixes</div><ul class="change-list">${r.fixes.map(f=>`<li>${f}</li>`).join('')}</ul></div>`:''}
+          <a class="gh-link" href="https://github.com/openclaw/openclaw/releases/tag/${r.version}" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML=html;
+  lucide.createIcons();
+}
+
+render();
+</script>
+</body>
+</html>

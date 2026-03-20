@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OpenClaw Chronicle — Release History &amp; Changelog | ClawBeat</title>
+<meta name="description" content="Track every OpenClaw release: breaking changes, new features, and bug fixes across all versions of github.com/openclaw/openclaw. Developer-grade changelog intelligence by ClawBeat.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#08090b">
+<link rel="canonical" href="https://openclaw.clawbeat.co/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenClaw Chronicle — Release History &amp; Changelog">
+<meta property="og:description" content="Track every OpenClaw release: breaking changes, new features, and bug fixes. Developer changelog intelligence by ClawBeat.">
+<meta property="og:url" content="https://openclaw.clawbeat.co/">
+<meta property="og:site_name" content="ClawBeat">
+<meta property="og:image" content="https://clawbeat.co/images/clawbeat-icon-claw-logo-512x512.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenClaw Chronicle — ClawBeat">
+<meta name="twitter:description" content="Track breaking changes, new features, and bug fixes across all OpenClaw releases.">
+<meta name="twitter:image" content="https://clawbeat.co/images/clawbeat-icon-claw-logo-512x512.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://openclaw.clawbeat.co/","url":"https://openclaw.clawbeat.co/","name":"OpenClaw Chronicle — Release History & Changelog","description":"Developer changelog for the OpenClaw agentic AI framework. Tracks breaking changes, new features, and bug fixes across all GitHub releases.","inLanguage":"en","isPartOf":{"@id":"https://clawbeat.co/"},"about":{"@type":"SoftwareSourceCode","name":"OpenClaw","codeRepository":"https://github.com/openclaw/openclaw","description":"OpenClaw is a personal AI assistant platform — any OS, any platform.","programmingLanguage":["TypeScript","Swift","Kotlin","Python"]},"publisher":{"@type":"Organization","name":"ClawBeat","url":"https://clawbeat.co"}}]}</script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-WHLSLX6VL3');</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090b;--bg-2:#0d0f12;--bg-3:#131619;
+  --border:rgba(255,255,255,0.05);--border-2:rgba(255,255,255,0.09);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,0.10);--orange-glow:rgba(249,115,22,0.15);
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.08);
+  --cyan:#06b6d4;--cyan-dim:rgba(6,182,212,0.08);
+  --yellow:#eab308;--yellow-dim:rgba(234,179,8,0.10);
+  --text:#e2e4e9;--text-2:#b8beca;--text-3:#7c8694;--text-4:#4a5260;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+  --header-h:4rem;--min-font:0.75rem;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased;text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100dvh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+
+/* ── HEADER (matches events-calendar.html exactly) ── */
+.header{position:sticky;top:0;z-index:50;height:var(--header-h);background:rgba(8,9,11,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-2)}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.brand{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
+.brand-img{width:28px;height:28px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--bg-3)}
+.brand-img img{width:100%;height:100%;object-fit:cover;display:block}
+.brand-text{font-family:var(--sans);font-size:0.9rem;font-weight:900;font-style:italic;letter-spacing:-0.04em;text-transform:uppercase;color:#fff}
+.brand-text span{color:var(--orange)}
+.header-nav{display:flex;align-items:center;gap:0.25rem}
+.nav-item{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);padding:0.4rem 0.65rem;border-radius:0.35rem;transition:all 0.15s;display:flex;align-items:center;gap:0.35rem;white-space:nowrap}
+.nav-item svg{width:14px;height:14px}
+.nav-item:hover{color:#cbd5e1;background:rgba(255,255,255,0.05)}
+.nav-item.active{color:var(--orange);background:var(--orange-dim)}
+.nav-dropdown{position:relative}
+.nav-dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;background:rgba(10,10,12,0.97);border:1px solid var(--border-2);border-radius:0.5rem;min-width:200px;padding:0.4rem;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 0.15s,transform 0.15s,visibility 0.15s;z-index:100;backdrop-filter:blur(16px)}
+.nav-dropdown:hover .nav-dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-dropdown-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:0.35rem;transition:background 0.12s}
+.nav-dropdown-item:hover{background:var(--orange-dim)}
+.nav-dropdown-item svg{width:14px;height:14px;color:var(--orange);flex-shrink:0}
+.nav-dropdown-label{font-family:var(--sans);font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);line-height:1}
+.nav-dropdown-sub{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.2rem}
+.nav-skill-chip{font-family:var(--mono);font-size:var(--min-font);text-transform:uppercase;letter-spacing:0.12em;color:var(--orange);padding:0.3rem 0.65rem;border:1px solid rgba(249,115,22,0.3);border-radius:0.25rem;background:rgba(249,115,22,0.06);transition:all 0.15s;white-space:nowrap;margin-left:0.35rem}
+.nav-skill-chip:hover{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.5)}
+.hamburger-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text-2);padding:0.5rem;border-radius:0.35rem;min-height:44px;min-width:44px;align-items:center;justify-content:center}
+.mobile-menu{display:none;background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:0.5rem 1rem;flex-direction:column;gap:0.15rem}
+.mobile-menu.open{display:flex}
+.mobile-nav-item{font-family:var(--mono);font-size:var(--min-font);letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0.65rem 0.75rem;border-radius:0.375rem;display:flex;align-items:center;gap:0.5rem;transition:all 0.15s;min-height:44px}
+.mobile-nav-item svg{width:16px;height:16px;flex-shrink:0}
+.mobile-nav-item:hover{color:#cbd5e1;background:rgba(255,255,255,0.05)}
+.mobile-nav-item.active{color:var(--orange);background:var(--orange-dim)}
+.mobile-subnav-item{font-family:var(--mono);font-size:var(--min-font);letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0.5rem 0.75rem 0.5rem 2.5rem;border-radius:0.375rem;display:flex;align-items:center;gap:0.5rem;transition:all 0.15s}
+.mobile-subnav-item svg{width:14px;height:14px}
+.mobile-subnav-item:hover{color:var(--orange);background:var(--orange-dim)}
+@media(max-width:768px){
+  .header-nav{display:none}
+  .hamburger-btn{display:flex}
+}
+
+/* ── MASTHEAD ── */
+.masthead{background:var(--bg);border-bottom:1px solid var(--border-2);padding:4rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.masthead::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.018) 39px,rgba(255,255,255,0.018) 40px),repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,0.010) 79px,rgba(255,255,255,0.010) 80px)}
+.masthead-inner{position:relative;z-index:1}
+.masthead-eyebrow{font-family:var(--mono);font-size:var(--min-font);color:var(--orange);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1.25rem}
+.masthead-title{font-family:var(--sans);font-size:clamp(2.5rem,8vw,6rem);font-weight:900;letter-spacing:-0.045em;line-height:0.9;color:#fff;text-transform:uppercase;font-style:italic;margin-bottom:1.25rem}
+.masthead-title em{color:var(--orange);font-style:italic;display:block}
+.masthead-sub{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse-green 2s ease-in-out infinite;flex-shrink:0}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+
+/* ── ASK BAR ── */
+.ask-bar{background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:1rem 1.5rem}
+.ask-bar-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;gap:1rem;padding:0.75rem 1rem;border-left:3px solid var(--orange);background:var(--bg-3);border-radius:0 0.375rem 0.375rem 0}
+.ask-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;color:var(--orange);letter-spacing:0.1em;white-space:nowrap}
+.ask-input{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:1rem;color:var(--text-3);cursor:not-allowed;min-width:0}
+.ask-input::placeholder{color:var(--text-4)}
+.coming-soon-chip{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.25);padding:0.2rem 0.5rem;border-radius:3px;white-space:nowrap}
+
+/* ── STATS BAR ── */
+.stats-bar{background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:0.6rem 1.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.stats-bar::-webkit-scrollbar{display:none}
+.stats-bar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;white-space:nowrap}
+.stat-chip{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);display:inline-flex;align-items:center;gap:0.35rem}
+.stat-chip strong{color:var(--text-2);font-weight:600}
+.stat-sep{color:var(--text-4);font-family:var(--mono);font-size:var(--min-font)}
+
+/* ── VELOCITY CHART ── */
+.velocity-wrap{background:var(--bg-2);border-bottom:1px solid var(--border-2);padding:1.25rem 1.5rem}
+.velocity-inner{max-width:1200px;margin:0 auto}
+.section-rule{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.section-rule-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);letter-spacing:0.15em;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:0.5rem}
+.section-rule-label .sl{color:var(--orange)}
+.section-rule-line{flex:1;height:1px;background:linear-gradient(to right,var(--border-2),transparent)}
+.velocity-chart{display:flex;align-items:flex-end;gap:0.375rem;height:52px}
+.vel-col{display:flex;flex-direction:column;align-items:center;gap:0.3rem;flex:1;min-width:28px}
+.vel-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end}
+.vel-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:opacity 0.15s;cursor:default;position:relative}
+.vel-bar.has-breaking{background:var(--orange)}
+.vel-bar.features-only{background:var(--green)}
+.vel-bar.fixes-only{background:var(--text-3)}
+.vel-bar:hover{opacity:0.8}
+.vel-bar[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg-3);border:1px solid var(--border-2);border-radius:4px;padding:0.25rem 0.5rem;font-family:var(--mono);font-size:0.7rem;color:var(--text-2);white-space:nowrap;pointer-events:none;z-index:10}
+.vel-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);text-align:center;line-height:1}
+.vel-count{font-family:var(--mono);font-size:var(--min-font);font-weight:700;color:var(--text-3);text-align:center;line-height:1}
+.velocity-legend{display:flex;align-items:center;gap:1.25rem;margin-top:0.75rem;flex-wrap:wrap}
+.vel-legend-item{display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-4)}
+.vel-legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── HEATMAP ── */
+.heatmap-wrap{background:var(--bg);border-bottom:1px solid var(--border-2);padding:1.25rem 1.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.heatmap-inner{max-width:1200px;margin:0 auto;min-width:680px}
+.heatmap-grid{display:grid;gap:0}
+.heatmap-header-row{display:flex;gap:0;margin-top:1rem;margin-bottom:0.5rem;padding-left:100px}
+.heatmap-ver-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);flex:1;text-align:center;padding:0 3px;line-height:1.3;white-space:normal;word-break:break-all;display:flex;align-items:flex-end;justify-content:center}
+.heatmap-ver-label.has-breaking{color:var(--orange)}
+.heatmap-row{display:flex;align-items:center;gap:0;height:30px}
+.heatmap-row-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);width:100px;flex-shrink:0;display:flex;align-items:center;gap:0.5rem;padding-right:0.75rem}
+.heatmap-row-label .intro-dot{width:5px;height:5px;border-radius:50%;background:var(--text-4);flex-shrink:0}
+.heatmap-cell{flex:1;height:22px;margin:1px;border-radius:3px;cursor:default;transition:opacity 0.15s;position:relative}
+.heatmap-cell:hover{opacity:0.75}
+.heatmap-cell[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg-3);border:1px solid var(--border-2);border-radius:4px;padding:0.25rem 0.5rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-2);white-space:nowrap;pointer-events:none;z-index:10}
+.heatmap-cell.c-breaking{background:rgba(249,115,22,0.55)}
+.heatmap-cell.c-feature{background:rgba(34,197,94,0.45)}
+.heatmap-cell.c-fix{background:rgba(82,88,102,0.35)}
+.heatmap-cell.c-none{background:var(--bg-3)}
+.heatmap-cell.c-new{outline:1px dashed var(--text-4);background:transparent}
+.heatmap-legend{display:flex;align-items:center;gap:1.25rem;margin-top:0.875rem;flex-wrap:wrap}
+.hm-legend-item{display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-4)}
+.hm-legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* ── SPLIT LAYOUT ── */
+.split-wrap{flex:1;max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:stretch}
+
+/* ── SIDEBAR ── */
+.sidebar{width:288px;min-width:288px;border-right:1px solid var(--border);background:var(--bg-2);position:sticky;top:var(--header-h);height:calc(100dvh - var(--header-h));overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--border-2) transparent;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px}
+.sidebar-header{padding:1rem 1rem 0.75rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg-2);z-index:5;flex-shrink:0}
+.sidebar-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-4)}
+.sidebar-count{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);float:right}
+.sidebar-list{padding:0.5rem 0;flex:1}
+.sidebar-item{padding:0.875rem 1rem;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;display:flex;flex-direction:column;gap:0.3rem;touch-action:manipulation;min-height:52px}
+.sidebar-item:hover{background:rgba(255,255,255,0.02);border-left-color:var(--border-2)}
+.sidebar-item.active{background:var(--orange-dim);border-left-color:var(--orange)}
+.sidebar-item-top{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+.ver-chip{font-family:var(--mono);font-size:0.9375rem;font-weight:700;color:var(--orange);letter-spacing:-0.01em}
+.sidebar-item.active .ver-chip{color:#fff}
+.pre-chip{font-family:var(--mono);font-size:var(--min-font);color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(6,182,212,0.2);padding:0.1rem 0.35rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.08em}
+.breaking-chip{font-family:var(--mono);font-size:var(--min-font);color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.2);padding:0.1rem 0.35rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.08em}
+.sidebar-date{font-family:var(--mono);font-size:0.8125rem;color:var(--text-4)}
+.sidebar-name{font-size:0.875rem;font-weight:600;color:var(--text-2);line-height:1.3;margin-top:0.1rem}
+.sidebar-item.active .sidebar-name{color:var(--text)}
+.sidebar-counts{display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center}
+.sidebar-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sidebar-dot.breaking{background:var(--orange)}
+.sidebar-dot.feature{background:var(--green)}
+.sidebar-dot.fix{background:var(--text-3)}
+.count-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4)}
+
+/* deprecation widget inside sidebar */
+.depr-widget{border-top:1px solid var(--border);padding:0.875rem 1rem;flex-shrink:0;background:var(--bg-2)}
+.depr-widget-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-4);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem}
+.depr-widget-label .sl{color:var(--yellow)}
+.depr-item{padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:0.2rem}
+.depr-item:last-child{border-bottom:none;padding-bottom:0}
+.depr-name{font-size:var(--min-font);font-weight:600;color:var(--text-2);line-height:1.3}
+.depr-meta{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+.depr-badge{font-family:var(--mono);font-size:var(--min-font);font-weight:700;padding:0.1rem 0.35rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.06em}
+.depr-badge.removed{background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
+.depr-badge.active{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(234,179,8,0.2)}
+
+/* ── DETAIL PANEL ── */
+.detail{flex:1;min-width:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border-2);background:var(--bg-2);position:sticky;top:0;z-index:5;flex-shrink:0}
+.detail-tab{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-4);padding:0.8rem 1.25rem;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.detail-tab:hover{color:var(--text-3)}
+.detail-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.detail-pane{display:none;padding:2rem 2.5rem;flex:1}
+.detail-pane.active{display:block}
+.detail-empty{display:flex;align-items:center;justify-content:center;height:200px;color:var(--text-4);font-family:var(--mono);font-size:var(--min-font)}
+
+/* release detail */
+.detail-version-row{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem}
+.detail-ver{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--orange)}
+.detail-date{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3)}
+.latest-chip{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--bg);background:var(--orange);padding:0.2rem 0.5rem;border-radius:3px}
+.detail-name{font-size:clamp(1.25rem,4vw,1.75rem);font-weight:900;letter-spacing:-0.03em;line-height:1.1;color:#fff;margin-bottom:1.25rem}
+.detail-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+.count-chips{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.75rem}
+.count-chip{font-family:var(--mono);font-size:var(--min-font);font-weight:700;padding:0.3rem 0.75rem;border-radius:4px;border:1px solid;display:inline-flex;align-items:center;gap:0.4rem}
+.count-chip.breaking{color:var(--orange);background:var(--orange-dim);border-color:rgba(249,115,22,0.25)}
+.count-chip.feature{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,0.2)}
+.count-chip.fix{color:var(--text-3);background:var(--bg-3);border-color:var(--border-2)}
+.gh-link{font-family:var(--mono);font-size:var(--min-font);font-weight:700;color:var(--text-3);border:1px solid var(--border-2);padding:0.5rem 0.875rem;border-radius:4px;display:inline-flex;align-items:center;gap:0.4rem;transition:all 0.15s;min-height:44px;touch-action:manipulation}
+.gh-link:hover{color:var(--orange);border-color:rgba(249,115,22,0.3)}
+.change-section{margin-top:1.75rem}
+.change-block{padding:1rem 1.25rem;border-radius:0.375rem;border-left:2px solid;margin-bottom:0.5rem}
+.change-block.breaking{background:var(--orange-dim);border-left-color:var(--orange)}
+.change-block.feature{background:var(--green-dim);border-left-color:var(--green)}
+.change-block.fix{background:var(--bg-3);border-left-color:var(--border-2)}
+.change-block-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.75rem}
+.change-block.breaking .change-block-label{color:var(--orange)}
+.change-block.feature .change-block-label{color:var(--green)}
+.change-block.fix .change-block-label{color:var(--text-3)}
+.change-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+.change-list li{font-size:0.9375rem;line-height:1.55;color:var(--text-2);padding-left:1rem;position:relative}
+.change-list li::before{content:'·';position:absolute;left:0.25rem;opacity:0.5}
+.change-block.breaking .change-list li{color:var(--text)}
+.collapse-btn{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);background:none;border:none;cursor:pointer;padding:0.5rem 0;display:inline-flex;align-items:center;gap:0.35rem;transition:color 0.15s;margin-top:0.25rem;min-height:44px}
+.collapse-btn:hover{color:var(--text-3)}
+
+/* contributors pane */
+.contrib-intro{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-bottom:1.5rem}
+.contrib-grid{display:flex;flex-wrap:wrap;gap:1rem}
+.contrib-card{display:flex;align-items:center;gap:0.75rem;background:var(--bg-2);border:1px solid var(--border);border-radius:0.5rem;padding:0.75rem 1rem;min-width:180px;flex:1;transition:border-color 0.15s}
+.contrib-card:hover{border-color:var(--border-2)}
+.contrib-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg-3);overflow:hidden;flex-shrink:0;border:1px solid var(--border-2)}
+.contrib-avatar img{width:100%;height:100%;object-fit:cover}
+.contrib-info{}
+.contrib-name{font-size:0.9rem;font-weight:700;color:var(--text);line-height:1.2}
+.contrib-role{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);margin-top:0.1rem}
+.contrib-first-chip{font-family:var(--mono);font-size:var(--min-font);color:var(--green);background:var(--green-dim);border:1px solid rgba(34,197,94,0.2);padding:0.1rem 0.35rem;border-radius:2px;text-transform:uppercase;letter-spacing:0.06em;display:inline-block;margin-top:0.25rem}
+.contrib-commits{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);margin-top:0.15rem}
+
+/* ── FOOTER ── */
+.footer{background:var(--bg-2);border-top:1px solid var(--border-2);padding:1.25rem 1.5rem;padding-bottom:max(1.25rem,env(safe-area-inset-bottom))}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.footer-brand{font-family:var(--sans);font-size:0.875rem;font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.03em;color:#fff}
+.footer-brand span{color:var(--orange)}
+.clawhub-badge{font-family:var(--mono);font-size:var(--min-font);text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);transition:color 0.15s;min-height:44px;display:inline-flex;align-items:center}
+.clawhub-badge:hover{color:var(--orange)}
+
+/* ── PAGE-LEVEL TABS (Releases / Features) ── */
+.page-tabs{background:var(--bg);border-bottom:2px solid var(--border-2);position:sticky;top:var(--header-h);z-index:45}
+.page-tabs-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;gap:0}
+.page-tab{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-4);padding:0.9rem 1.5rem;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.15s;white-space:nowrap;display:flex;align-items:center;gap:0.5rem}
+.page-tab:hover{color:var(--text-3)}
+.page-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.page-tab svg{width:14px;height:14px}
+.page-pane{display:none}
+.page-pane.active{display:contents}
+
+/* ── FEATURES SECTION ── */
+.features-wrap{flex:1;padding:2.5rem 1.5rem 4rem;background:var(--bg);display:none}
+.features-wrap.active{display:block}
+.features-inner{max-width:1200px;margin:0 auto}
+.features-intro{max-width:680px;margin-bottom:2.5rem}
+.features-intro h2{font-size:1.5rem;font-weight:900;letter-spacing:-0.03em;color:#fff;margin-bottom:0.5rem}
+.features-intro p{font-size:1rem;line-height:1.65;color:var(--text-2)}
+/* connector strip */
+.connector-strip{background:var(--bg-2);border:1px solid var(--border);border-radius:0.5rem;padding:1.25rem 1.5rem;margin-bottom:2.5rem;font-size:var(--min-font)}
+.connector-strip-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-4);margin-bottom:0.875rem;display:flex;align-items:center;gap:0.5rem}
+.connector-strip-label .sl{color:var(--orange)}
+.connector-pills{display:flex;flex-wrap:wrap;gap:0.375rem}
+.connector-pill{font-family:var(--mono);font-size:0.8125rem;color:var(--text-3);background:var(--bg-3);border:1px solid var(--border-2);padding:0.25rem 0.6rem;border-radius:3px;transition:all 0.15s;cursor:default}
+.connector-pill:hover{color:var(--text-2);border-color:rgba(249,115,22,0.25)}
+.connector-pill.highlight{color:var(--orange);background:var(--orange-dim);border-color:rgba(249,115,22,0.25)}
+/* feature category grid */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.feature-card{background:var(--bg-2);border:1px solid var(--border);border-radius:0.5rem;padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;transition:border-color 0.15s;font-size:var(--min-font)}
+.feature-card:hover{border-color:var(--border-2)}
+.feature-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem}
+.feature-card-title{font-size:1rem;font-weight:800;letter-spacing:-0.02em;color:#fff;line-height:1.2}
+.feature-since{font-family:var(--mono);font-size:var(--min-font);color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.2);padding:0.15rem 0.5rem;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.feature-since.since-latest{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,0.2)}
+.feature-desc{font-size:0.9375rem;line-height:1.65;color:var(--text-2)}
+.feature-list{list-style:none;display:flex;flex-direction:column;gap:0.35rem;margin-top:0.25rem}
+.feature-list li{font-size:0.875rem;line-height:1.55;color:var(--text-2);padding-left:1rem;position:relative}
+.feature-list li::before{content:'·';position:absolute;left:0.25rem;color:var(--text-3)}
+.feature-install{background:var(--bg-3);border:1px solid var(--border);border-radius:0.375rem;padding:0.875rem 1rem;margin-top:0.5rem}
+.feature-install-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.4rem}
+.feature-install code{font-family:var(--mono);font-size:0.875rem;color:var(--cyan);display:block;line-height:1.7}
+@media(max-width:1024px){.feature-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.feature-grid{grid-template-columns:1fr}.features-wrap{padding:1.5rem 1rem 3rem}}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .split-wrap{flex-direction:column}
+  .sidebar{width:100%;min-width:0;height:auto;position:relative;top:0;border-right:none;border-bottom:1px solid var(--border)}
+  .sidebar-list{display:flex;flex-direction:row;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0.5rem;gap:0.5rem;scrollbar-width:none}
+  .sidebar-list::-webkit-scrollbar{display:none}
+  .sidebar-item{min-width:148px;border-left:none;border-bottom:2px solid transparent;border-radius:0.375rem;padding:0.75rem}
+  .sidebar-item.active{border-bottom-color:var(--orange);border-left-color:transparent}
+  .sidebar-name{display:none}
+  .sidebar-counts{display:none}
+  .depr-widget{display:none}
+  .detail-pane{padding:1.25rem}
+  .heatmap-wrap{padding:1rem}
+  .detail-header-row{flex-direction:column;gap:0.75rem}
+}
+@media(max-width:480px){
+  .masthead{padding:2.5rem 1rem 2rem}
+  .detail-pane{padding:1rem}
+  .ask-label{display:none}
+  .velocity-chart{height:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER (live site nav) ── -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/news.html" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+          <a href="/guide/" class="nav-dropdown-item">
+            <i data-lucide="book-marked"></i>
+            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <div class="nav-dropdown">
+        <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+        <div class="nav-dropdown-menu">
+          <a href="https://openclaw.clawbeat.co/" class="nav-dropdown-item">
+            <i data-lucide="git-branch"></i>
+            <div><div class="nav-dropdown-label">Chronicle</div><div class="nav-dropdown-sub">OpenClaw release history</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="https://openclaw.clawbeat.co/" class="mobile-subnav-item active"><i data-lucide="git-branch"></i>OpenClaw Chronicle</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" style="margin:0.5rem 0 0.25rem">// skill</a>
+</div>
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-eyebrow">─────&nbsp;&nbsp;OPENCLAW CHRONICLE&nbsp;&nbsp;─────</div>
+    <h1 class="masthead-title">OpenClaw<em>Chronicle</em></h1>
+    <div class="masthead-sub">
+      <span>github.com/openclaw/openclaw</span>
+      <span class="live-dot"></span>
+      <span style="color:var(--green);font-weight:600">LIVE</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ASK BAR ── -->
+<div class="ask-bar">
+  <div class="ask-bar-inner">
+    <span class="ask-label">// ask_openclaw</span>
+    <input class="ask-input" type="text" disabled placeholder="Ask about breaking changes, features, version history...">
+    <span class="coming-soon-chip">Coming Soon</span>
+  </div>
+</div>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-chip"><strong>★ 322k</strong> stars</div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip"><strong>⑂ 62k</strong> forks</div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip">latest <strong>v2025.3.15</strong></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip">updated <strong>2 days ago</strong></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-chip"><strong>20,311</strong> commits</div>
+  </div>
+</div>
+
+<!-- ── RELEASE VELOCITY CHART ── -->
+<div class="velocity-wrap">
+  <div class="velocity-inner">
+    <div class="section-rule">
+      <div class="section-rule-label"><span class="sl">//</span> Release Velocity</div>
+      <div class="section-rule-line"></div>
+      <span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap">Sep 2024 — Mar 2025</span>
+    </div>
+    <div class="velocity-chart" id="velocity-chart"></div>
+    <div class="velocity-legend">
+      <div class="vel-legend-item"><div class="vel-legend-dot" style="background:var(--orange)"></div>contains breaking changes</div>
+      <div class="vel-legend-item"><div class="vel-legend-dot" style="background:var(--green)"></div>features only</div>
+      <div class="vel-legend-item"><div class="vel-legend-dot" style="background:var(--text-3)"></div>fixes / maintenance</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SUBSYSTEM HEATMAP ── -->
+<div class="heatmap-wrap">
+  <div class="heatmap-inner">
+    <div class="section-rule" style="margin-bottom:0.875rem">
+      <div class="section-rule-label"><span class="sl">//</span> Subsystem Activity — how each area of OpenClaw has evolved across releases</div>
+      <div class="section-rule-line"></div>
+    </div>
+    <div id="heatmap-container"></div>
+    <div class="heatmap-legend">
+      <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:rgba(249,115,22,0.55)"></div>breaking change</div>
+      <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:rgba(34,197,94,0.45)"></div>new feature</div>
+      <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:rgba(82,88,102,0.35)"></div>fix / maintenance</div>
+      <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:var(--bg-3);border:1px solid var(--border-2)"></div>not touched</div>
+      <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:transparent;border:1px dashed var(--text-4)"></div>not yet introduced</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE TABS ── -->
+<div class="page-tabs">
+  <div class="page-tabs-inner">
+    <div class="page-tab active" id="ptab-releases" onclick="switchPageTab('releases')">
+      <i data-lucide="git-branch"></i> Releases
+    </div>
+    <div class="page-tab" id="ptab-features" onclick="switchPageTab('features')">
+      <i data-lucide="layers"></i> Features
+    </div>
+  </div>
+</div>
+
+<!-- ── FEATURES PANE ── -->
+<div class="features-wrap" id="features-pane">
+  <div class="features-inner">
+    <div class="features-intro">
+      <h2>OpenClaw — Full Feature Reference</h2>
+      <p>Every capability in the OpenClaw platform, grounded in the <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener" style="color:var(--orange);text-decoration:underline;text-underline-offset:3px">official README</a>. Each card is tagged with the release that introduced it so you can trace the evolution of any feature through the changelog.</p>
+    </div>
+
+    <!-- CONNECTOR STRIP -->
+    <div class="connector-strip">
+      <div class="connector-strip-label"><span class="sl">//</span> Supported Messaging Channels <span style="color:var(--text-4);font-weight:400">(23 connectors)</span></div>
+      <div class="connector-pills">
+        <span class="connector-pill highlight">WhatsApp</span>
+        <span class="connector-pill highlight">Telegram</span>
+        <span class="connector-pill highlight">Slack</span>
+        <span class="connector-pill highlight">Discord</span>
+        <span class="connector-pill">Google Chat</span>
+        <span class="connector-pill">Signal</span>
+        <span class="connector-pill">BlueBubbles</span>
+        <span class="connector-pill">iMessage</span>
+        <span class="connector-pill">IRC</span>
+        <span class="connector-pill">Microsoft Teams</span>
+        <span class="connector-pill">Matrix</span>
+        <span class="connector-pill">Feishu</span>
+        <span class="connector-pill">LINE</span>
+        <span class="connector-pill">Mattermost</span>
+        <span class="connector-pill">Nextcloud Talk</span>
+        <span class="connector-pill">Nostr</span>
+        <span class="connector-pill">Synology Chat</span>
+        <span class="connector-pill">Tlon</span>
+        <span class="connector-pill">Twitch</span>
+        <span class="connector-pill">Zalo</span>
+        <span class="connector-pill">Zalo Personal</span>
+        <span class="connector-pill">WebChat</span>
+        <span class="connector-pill">Circle.so</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);margin-top:0.75rem">
+        <span style="color:var(--orange)">■</span> Core four (featured in release history) &nbsp;·&nbsp; <span style="color:var(--text-4)">■</span> Additional supported channels
+      </div>
+    </div>
+
+    <!-- FEATURE CARDS -->
+    <div class="feature-grid" id="feature-grid"></div>
+  </div>
+</div>
+
+<!-- ── SPLIT LAYOUT ── -->
+<div id="split-pane" style="display:contents">
+<div class="split-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-label">// Releases</span>
+      <span class="sidebar-count">8 total</span>
+    </div>
+    <div class="sidebar-list" id="sidebar-list"></div>
+
+    <!-- DEPRECATION TRACKER -->
+    <div class="depr-widget">
+      <div class="depr-widget-label"><span class="sl">//</span> Deprecation Tracker</div>
+      <div id="depr-list"></div>
+    </div>
+  </aside>
+
+  <!-- DETAIL -->
+  <main class="detail" id="detail-panel">
+    <div class="detail-tabs" id="detail-tabs">
+      <div class="detail-tab active" onclick="switchDetailTab('notes',this)">Release Notes</div>
+      <div class="detail-tab" onclick="switchDetailTab('contributors',this)">Contributors</div>
+    </div>
+    <div class="detail-pane active" id="pane-notes">
+      <div class="detail-empty">← Select a release</div>
+    </div>
+    <div class="detail-pane" id="pane-contributors">
+      <div class="detail-empty">← Select a release</div>
+    </div>
+  </main>
+
+</div>
+
+</div><!-- /split-pane -->
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+  </div>
+</footer>
+
+<script>
+/* ── DATA ── */
+const RELEASES = [
+  {
+    version:'v2025.3.15', date:'2025-03-15', name:'Canvas UI + Voice Overhaul', prerelease:false,
+    breaking:['Removed legacy auth API v1 — migrate to OAuth2 flow','Config format changed: openclaw.json → openclaw.config.ts'],
+    features:['New Canvas UI with real-time collaboration','Voice command support for macOS + iOS','Telegram multi-bot account support','Discord slash command builder','WhatsApp Business API v3 integration'],
+    fixes:['Reconnect loop on WhatsApp connector','iOS widget crash on cold start','Memory leak in Slack event listener','Android push notification delay > 30s'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:47,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:31,firstTime:false},
+      {login:'tobias-voss',name:'Tobias Voss',commits:18,firstTime:false},
+      {login:'yuki-tanaka',name:'Yuki Tanaka',commits:12,firstTime:false},
+      {login:'sarah-ndau',name:'Sarah Ndau',commits:9,firstTime:false}
+    ],
+    subsystems:{core:'fix',whatsapp:'breaking',telegram:'feature',slack:'fix',discord:'feature',ios:'breaking',android:'fix',macos:'feature',canvas:'feature',voice:'feature'}
+  },
+  {
+    version:'v2025.2.28', date:'2025-02-28', name:'iOS Widget + Android Stability', prerelease:false,
+    breaking:[],
+    features:['iOS home screen widget','Android background sync improvements'],
+    fixes:['Fixed ANR on Android 14','Reduced battery drain by 40%','Fixed widget refresh interval'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:22,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:14,firstTime:false},
+      {login:'tobias-voss',name:'Tobias Voss',commits:8,firstTime:false}
+    ],
+    subsystems:{core:'fix',whatsapp:'none',telegram:'none',slack:'none',discord:'none',ios:'feature',android:'feature',macos:'none',canvas:'feature',voice:'none'}
+  },
+  {
+    version:'v2025.2.14-beta.2', date:'2025-02-14', name:'Canvas Beta 2', prerelease:true,
+    breaking:[],
+    features:['Canvas drag-and-drop blocks','Shared canvas rooms'],
+    fixes:['Canvas cursor desync','Block deletion race condition'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:19,firstTime:false},
+      {login:'yuki-tanaka',name:'Yuki Tanaka',commits:11,firstTime:false}
+    ],
+    subsystems:{core:'none',whatsapp:'none',telegram:'none',slack:'none',discord:'none',ios:'none',android:'none',macos:'none',canvas:'feature',voice:'none'}
+  },
+  {
+    version:'v2025.1.31', date:'2025-01-31', name:'Multi-Platform Gateway v2', prerelease:false,
+    breaking:['Plugin API v1 deprecated — use Plugin API v2','Node.js minimum version raised to 20'],
+    features:['Unified gateway for WhatsApp + Telegram + Slack','Plugin system v2 with hot reload','Rate limit manager with per-channel queues'],
+    fixes:['Gateway crash on high message volume','Slack OAuth token refresh race'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:53,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:27,firstTime:false},
+      {login:'tobias-voss',name:'Tobias Voss',commits:21,firstTime:false},
+      {login:'sarah-ndau',name:'Sarah Ndau',commits:15,firstTime:false},
+      {login:'ramiro-glez',name:'Ramiro González',commits:9,firstTime:false}
+    ],
+    subsystems:{core:'breaking',whatsapp:'feature',telegram:'feature',slack:'breaking',discord:'none',ios:'none',android:'none',macos:'none',canvas:'none',voice:'none'}
+  },
+  {
+    version:'v2024.12.20', date:'2024-12-20', name:'Holiday Stability Release', prerelease:false,
+    breaking:[],
+    features:['Scheduled message delivery','Message template editor'],
+    fixes:['12 stability fixes across connectors','Improved error messages for auth failures'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:16,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:10,firstTime:false}
+    ],
+    subsystems:{core:'fix',whatsapp:'fix',telegram:'fix',slack:'fix',discord:'fix',ios:'none',android:'none',macos:'none',canvas:'none',voice:'none'}
+  },
+  {
+    version:'v2024.11.15', date:'2024-11-15', name:'Local Control Plane', prerelease:false,
+    breaking:['Cloud sync removed — all data now local-first'],
+    features:['Local-first control plane','End-to-end encryption for all channels','Self-hosted deployment guide'],
+    fixes:['Data sync conflict resolution','Config migration tool'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:44,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:29,firstTime:false},
+      {login:'tobias-voss',name:'Tobias Voss',commits:17,firstTime:false},
+      {login:'ramiro-glez',name:'Ramiro González',commits:11,firstTime:true}
+    ],
+    subsystems:{core:'breaking',whatsapp:'feature',telegram:'feature',slack:'feature',discord:'none',ios:'none',android:'none',macos:'none',canvas:'none',voice:'none'}
+  },
+  {
+    version:'v2024.10.01', date:'2024-10-01', name:'Discord + Circle.so Launch', prerelease:false,
+    breaking:[],
+    features:['Discord connector','Circle.so community integration','Webhook builder UI'],
+    fixes:['Discord rate limit handling','Circle webhook signature validation'],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:28,firstTime:false},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:19,firstTime:false},
+      {login:'tobias-voss',name:'Tobias Voss',commits:13,firstTime:true}
+    ],
+    subsystems:{core:'fix',whatsapp:'none',telegram:'none',slack:'none',discord:'feature',ios:'none',android:'none',macos:'none',canvas:'none',voice:'none'}
+  },
+  {
+    version:'v2024.9.5', date:'2024-09-05', name:'Initial Public Release', prerelease:false,
+    breaking:[],
+    features:['WhatsApp connector','Telegram connector','Slack connector','Local-first architecture','macOS + iOS + Android apps'],
+    fixes:[],
+    contributors:[
+      {login:'alexchen',name:'Alex Chen',commits:312,firstTime:true},
+      {login:'mirafernandez',name:'Mira Fernandez',commits:187,firstTime:true}
+    ],
+    subsystems:{core:'feature',whatsapp:'feature',telegram:'feature',slack:'feature',discord:'new',ios:'feature',android:'feature',macos:'feature',canvas:'new',voice:'new'}
+  }
+];
+
+// Subsystem metadata: when each was introduced (index into RELEASES array, newest=0)
+const SUBSYSTEMS = [
+  {key:'core',    label:'Core'},
+  {key:'whatsapp',label:'WhatsApp'},
+  {key:'telegram',label:'Telegram'},
+  {key:'slack',   label:'Slack'},
+  {key:'discord', label:'Discord',  introAt:6}, // introduced in index 6 (v2024.10.01)
+  {key:'ios',     label:'iOS',      introAt:7}, // introduced in index 7 (initial)
+  {key:'android', label:'Android',  introAt:7},
+  {key:'macos',   label:'macOS',    introAt:7},
+  {key:'canvas',  label:'Canvas',   introAt:2}, // introduced in index 2 (v2025.2.14-beta)
+  {key:'voice',   label:'Voice',    introAt:0}, // introduced in index 0 (v2025.3.15)
+];
+
+const DEPRECATIONS = [
+  {name:'Legacy Auth API v1',  deprecatedIn:'v2024.11.15', removedIn:'v2025.3.15', status:'removed'},
+  {name:'Plugin API v1',       deprecatedIn:'v2025.1.31',  removedIn:null,          status:'active', note:'Removal TBD'},
+  {name:'Cloud Sync',          deprecatedIn:'v2024.11.15', removedIn:'v2024.11.15', status:'removed'},
+  {name:'openclaw.json config',deprecatedIn:'v2025.3.15',  removedIn:null,          status:'active', note:'Use openclaw.config.ts'},
+];
+
+/* ── HELPERS ── */
+function fmtDate(d){const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function fmtMonth(d){const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',year:'2-digit'})}
+function avatarUrl(login){return `https://github.com/${login}.png?size=72`}
+
+/* ── MOBILE MENU ── */
+function toggleMenu(){
+  const menu=document.getElementById('mobile-menu');
+  const iconMenu=document.getElementById('icon-menu');
+  const iconClose=document.getElementById('icon-close');
+  const open=menu.classList.toggle('open');
+  iconMenu.style.display=open?'none':'';
+  iconClose.style.display=open?'':'none';
+}
+
+/* ── VELOCITY CHART ── */
+function renderVelocity(){
+  // Group releases by month
+  const months={};
+  RELEASES.forEach(r=>{
+    const key=r.date.slice(0,7);
+    if(!months[key]) months[key]={count:0,hasBreaking:false,featuresOnly:false};
+    months[key].count++;
+    if(r.breaking.length) months[key].hasBreaking=true;
+  });
+  const keys=Object.keys(months).sort();
+  const max=Math.max(...keys.map(k=>months[k].count));
+  const chart=document.getElementById('velocity-chart');
+  chart.innerHTML=keys.map(k=>{
+    const m=months[k];
+    const pct=Math.round((m.count/max)*100);
+    const cls=m.hasBreaking?'has-breaking':(m.count>1?'features-only':'fixes-only');
+    const [yr,mo]=k.split('-');
+    const label=new Date(yr,parseInt(mo)-1,1).toLocaleDateString('en-US',{month:'short'});
+    const titleTxt=`${fmtMonth(k+'-01')}: ${m.count} release${m.count>1?'s':''}${m.hasBreaking?' · ⚠ breaking':''}`;
+    return `<div class="vel-col">
+      <div class="vel-count">${m.count}</div>
+      <div class="vel-bar-wrap"><div class="vel-bar ${cls}" style="height:${pct}%" title="${titleTxt}"></div></div>
+      <div class="vel-label">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── HEATMAP ── */
+function renderHeatmap(){
+  const container=document.getElementById('heatmap-container');
+  // Header row: version labels (newest first = left)
+  let html=`<div class="heatmap-header-row">`;
+  RELEASES.forEach(r=>{
+    const hasBreak=r.breaking.length>0;
+    html+=`<div class="heatmap-ver-label${hasBreak?' has-breaking':''}">${r.version.replace('v','')}</div>`;
+  });
+  html+='</div>';
+  // Subsystem rows
+  SUBSYSTEMS.forEach(sub=>{
+    html+=`<div class="heatmap-row">`;
+    html+=`<div class="heatmap-row-label">${sub.label}</div>`;
+    RELEASES.forEach((r,ri)=>{
+      const val=r.subsystems[sub.key]||'none';
+      const notYet=sub.introAt!==undefined && ri < sub.introAt;
+      if(notYet){
+        html+=`<div class="heatmap-cell c-new" title="${sub.label} not yet introduced in ${r.version}"></div>`;
+      } else {
+        const cls=val==='breaking'?'c-breaking':val==='feature'?'c-feature':val==='fix'?'c-fix':'c-none';
+        const tip=val==='none'?`${sub.label}: no changes in ${r.version}`:`${sub.label}: ${val} in ${r.version}`;
+        html+=`<div class="heatmap-cell ${cls}" title="${tip}"></div>`;
+      }
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+}
+
+/* ── DEPRECATION TRACKER ── */
+function renderDeprecations(){
+  const list=document.getElementById('depr-list');
+  list.innerHTML=DEPRECATIONS.map(d=>`
+    <div class="depr-item">
+      <div class="depr-name">${d.name}</div>
+      <div class="depr-meta">
+        <span class="depr-badge ${d.status}">${d.status==='removed'?'Removed':'Active'}</span>
+        <span>deprecated ${d.deprecatedIn}</span>
+        ${d.removedIn?`<span>· removed ${d.removedIn}</span>`:d.note?`<span>· ${d.note}</span>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── SIDEBAR ── */
+let selectedIdx=0;
+function renderSidebar(){
+  const list=document.getElementById('sidebar-list');
+  list.innerHTML=RELEASES.map((r,i)=>`
+    <div class="sidebar-item${i===0?' active':''}" onclick="selectRelease(${i})" id="si-${i}">
+      <div class="sidebar-item-top">
+        <span class="ver-chip">${r.version}</span>
+        ${r.prerelease?'<span class="pre-chip">Beta</span>':''}
+        ${r.breaking.length?'<span class="breaking-chip">⚠</span>':''}
+      </div>
+      <div class="sidebar-date">${fmtDate(r.date)}</div>
+      <div class="sidebar-name">${r.name}</div>
+      <div class="sidebar-counts">
+        ${r.breaking.length?`<span class="sidebar-dot breaking"></span><span class="count-label">${r.breaking.length}b</span>`:''}
+        ${r.features.length?`<span class="sidebar-dot feature"></span><span class="count-label">${r.features.length}f</span>`:''}
+        ${r.fixes.length?`<span class="sidebar-dot fix"></span><span class="count-label">${r.fixes.length}x</span>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectRelease(idx){
+  selectedIdx=idx;
+  document.querySelectorAll('.sidebar-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  renderNotes(RELEASES[idx],idx===0);
+  renderContributors(RELEASES[idx]);
+}
+
+/* ── DETAIL TABS ── */
+function switchDetailTab(tab,el){
+  document.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.detail-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pane-'+tab).classList.add('active');
+}
+
+/* ── RELEASE NOTES PANE ── */
+function renderNotes(r,isLatest){
+  const collapseId='fix-'+r.version.replace(/[\.\-]/g,'_');
+  const COLLAPSE_AT=4;
+  const needsCollapse=r.fixes.length>COLLAPSE_AT;
+  document.getElementById('pane-notes').innerHTML=`
+    <article>
+      <div class="detail-header-row">
+        <div>
+          <div class="detail-version-row">
+            ${isLatest?'<span class="latest-chip">Latest</span>':''}
+            <span class="detail-ver">${r.version}</span>
+            ${r.prerelease?'<span class="pre-chip">Pre-release</span>':''}
+            <span class="detail-date">${fmtDate(r.date)}</span>
+          </div>
+          <h2 class="detail-name">${r.name}</h2>
+          <div class="count-chips">
+            ${r.breaking.length?`<span class="count-chip breaking">⚠ ${r.breaking.length} Breaking</span>`:''}
+            ${r.features.length?`<span class="count-chip feature">✦ ${r.features.length} Features</span>`:''}
+            ${r.fixes.length?`<span class="count-chip fix">✓ ${r.fixes.length} Fixes</span>`:''}
+          </div>
+        </div>
+        <a class="gh-link" href="https://github.com/openclaw/openclaw/releases/tag/${r.version}" target="_blank" rel="noopener">View on GitHub ↗</a>
+      </div>
+      ${r.breaking.length?`<div class="change-section"><div class="change-block breaking"><div class="change-block-label">⚠ Breaking Changes</div><ul class="change-list">${r.breaking.map(b=>`<li>${b}</li>`).join('')}</ul></div></div>`:''}
+      ${r.features.length?`<div class="change-section"><div class="change-block feature"><div class="change-block-label">✦ New Features</div><ul class="change-list">${r.features.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>`:''}
+      ${r.fixes.length?`<div class="change-section"><div class="change-block fix"><div class="change-block-label">✓ Bug Fixes</div><ul class="change-list" id="${collapseId}">${r.fixes.slice(0,needsCollapse?COLLAPSE_AT:r.fixes.length).map(f=>`<li>${f}</li>`).join('')}</ul>${needsCollapse?`<button class="collapse-btn" onclick="toggleFixes('${collapseId}',${JSON.stringify(r.fixes)},${COLLAPSE_AT},this)">↓ Show ${r.fixes.length-COLLAPSE_AT} more</button>`:''}</div></div>`:''}
+    </article>`;
+}
+
+function toggleFixes(id,fixes,at,btn){
+  const ul=document.getElementById(id);
+  const expanded=ul.children.length>at;
+  if(expanded){while(ul.children.length>at)ul.removeChild(ul.lastChild);btn.textContent=`↓ Show ${fixes.length-at} more`;}
+  else{fixes.slice(at).forEach(f=>{const li=document.createElement('li');li.textContent=f;ul.appendChild(li)});btn.textContent='↑ Show fewer';}
+}
+
+/* ── CONTRIBUTORS PANE ── */
+function renderContributors(r){
+  document.getElementById('pane-contributors').innerHTML=`
+    <div class="contrib-intro">${r.contributors.length} contributor${r.contributors.length>1?'s':''} in ${r.version} · ${r.date}</div>
+    <div class="contrib-grid">
+      ${r.contributors.map(c=>`
+        <div class="contrib-card">
+          <div class="contrib-avatar">
+            <img src="${avatarUrl(c.login)}" alt="${c.name}" onerror="this.parentElement.style.background='#131619'">
+          </div>
+          <div class="contrib-info">
+            <div class="contrib-name">${c.name}</div>
+            <div class="contrib-commits">${c.commits} commits</div>
+            ${c.firstTime?'<span class="contrib-first-chip">First contrib</span>':''}
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+/* ── PAGE TAB SWITCHER ── */
+function switchPageTab(tab){
+  const releasesVisible = tab === 'releases';
+  document.getElementById('ptab-releases').classList.toggle('active', releasesVisible);
+  document.getElementById('ptab-features').classList.toggle('active', !releasesVisible);
+  document.getElementById('split-pane').style.display = releasesVisible ? 'contents' : 'none';
+  document.getElementById('features-pane').classList.toggle('active', !releasesVisible);
+  lucide.createIcons();
+}
+
+/* ── FEATURES DATA (from README) ── */
+const FEATURES = [
+  {
+    title: 'Gateway & Control Plane',
+    since: 'v2024.9.5',
+    desc: 'Local-first WebSocket control plane (ws://127.0.0.1:18789) that manages sessions, presence, configuration, cron jobs, webhooks, and hosts the Canvas workspace. The single control hub for all connected devices and channels.',
+    items: ['WebSocket control plane with session management','Tailscale Serve/Funnel for remote access (tailnet or public)','SSH tunnel support for remote Gateway control','Control UI and WebChat served directly from Gateway','Presence & typing indicators across all channels']
+  },
+  {
+    title: 'Multi-Channel Messaging',
+    since: 'v2024.9.5',
+    desc: 'Route 23+ messaging platforms through a single unified agent. Each channel gets per-channel chunking, routing rules, and activation modes.',
+    items: ['Per-channel chunking and message routing','Group rules: mention-gating, reply-tags, activation modes','Queue modes and reply-back functionality','Allowlists (allowFrom) for controlling inbound access','Channel-level model and session configuration']
+  },
+  {
+    title: 'Plugin & Skills System',
+    since: 'v2025.1.31',
+    desc: 'Extensible plugin system (v2) with hot reload for building custom tools and integrations. Skills can be bundled, managed, or workspace-scoped with install gating.',
+    items: ['Plugin API v2 with hot reload (Plugin v1 removed in v2025.3.15)','Bundled, managed, and workspace skills','Install gating for controlled skill deployment','Rate limit manager with per-channel queues','Unified gateway for WhatsApp + Telegram + Slack']
+  },
+  {
+    title: 'Voice & Audio',
+    since: 'v2025.3.15',
+    sinceClass: 'since-latest',
+    desc: 'Full voice pipeline from wake word detection to TTS output, with continuous talk mode on Android and transcription hooks across all platforms.',
+    items: ['Voice Wake: wake word detection on macOS + iOS','Talk Mode: continuous voice input on Android','TTS via ElevenLabs with system voice fallback','Audio transcription hooks with size caps','PTT (push-to-talk) overlay on macOS']
+  },
+  {
+    title: 'Canvas — Visual Workspace',
+    since: 'v2025.2.14',
+    desc: 'Agent-driven visual workspace with real-time collaboration. Agents can push, reset, evaluate, and snapshot the canvas. Available on macOS, iOS, and Android.',
+    items: ['Live Canvas with A2UI (agent-to-UI) integration','Real-time collaboration and shared canvas rooms','Drag-and-drop block builder','Canvas push, reset, evaluation, snapshot','Agent-driven workspace updates']
+  },
+  {
+    title: 'Browser Control',
+    since: 'v2024.9.5',
+    desc: 'Dedicated Chrome/Chromium instance controlled via DevTools Protocol. Agents can browse, take snapshots, perform actions, upload files, and manage browser profiles.',
+    items: ['Dedicated Chrome/Chromium with DevTools Protocol','Page snapshots and visual captures','Browser actions: click, type, scroll, upload','Browser profile management','Full web automation from any connected channel']
+  },
+  {
+    title: 'Session Management',
+    since: 'v2024.9.5',
+    desc: 'Fine-grained session control with per-session model selection, thinking level, verbose output, and context management. Supports agent-to-agent coordination via session tools.',
+    items: ['sessions_list / sessions_history / sessions_send tools','Per-session: model, thinking level, verbose toggle','Context compacting via summarization (/compact)','Session pruning for resource management','Elevated access toggle per session (/elevated)'],
+    commands: ['/status', '/new', '/reset', '/compact', '/think', '/verbose', '/usage', '/restart', '/activation']
+  },
+  {
+    title: 'Security & DM Policy',
+    since: 'v2024.9.5',
+    desc: 'Defense-first approach to inbound messages. Unknown senders require pairing approval. Open DM mode requires explicit opt-in with allowlists.',
+    items: ['DM Pairing: unknown senders get a code before processing','Open DM mode requires explicit opt-in','Channel allowlists (allowFrom) for inbound control','OAuth and API key rotation with model failover','"Treat inbound DMs as untrusted input" by default']
+  },
+  {
+    title: 'Node Commands & Device Access',
+    since: 'v2024.9.5',
+    desc: 'Device-local capabilities exposed through iOS and Android nodes: camera, screen recording, location, notifications, and more — all callable by the agent.',
+    items: ['Camera snap/clip and screen recording','Device location retrieval','System notifications from agent','Android: SMS, contacts, calendar, motion, app updates','iOS: Bonjour discovery + device pairing']
+  },
+  {
+    title: 'Automation — Cron & Webhooks',
+    since: 'v2024.9.5',
+    desc: 'Schedule agent actions with cron jobs and trigger workflows via webhooks and Gmail Pub/Sub. Wakeup timers allow time-delayed agent execution.',
+    items: ['Cron jobs and wakeup scheduling','Webhook triggers for event-driven automation','Gmail Pub/Sub email integration','Scheduled message delivery','Message template editor']
+  },
+  {
+    title: 'Local-First Architecture',
+    since: 'v2024.11.15',
+    desc: 'All data stays on your devices. Cloud sync was removed in v2024.11.15 in favor of a fully local control plane with end-to-end encryption across all channels.',
+    items: ['No cloud sync — fully local-first since v2024.11.15','End-to-end encryption across all connected channels','Self-hosted deployment guide','Docker container support','Nix declarative configuration mode']
+  },
+  {
+    title: 'Remote Access',
+    since: 'v2024.11.15',
+    desc: 'Expose your Gateway securely over Tailscale (private tailnet) or Funnel (public internet), or via SSH tunnel. Remote Gateway handles exec tools; device nodes handle device-local actions.',
+    items: ['Tailscale Serve (tailnet-only) automation','Tailscale Funnel (public) with token/password auth','SSH tunnel support for Gateway control','node.list / node.describe for capability discovery','node.invoke for executing remote device actions']
+  },
+  {
+    title: 'Multi-Model Support',
+    since: 'v2024.9.5',
+    desc: 'Switch models per session. Supports OpenAI (required) and optional providers with OAuth and API key profiles. Model failover keeps the agent running when a model is unavailable.',
+    items: ['Per-session model switching','OAuth and API key authentication profiles','Model failover with fallback support','Latest-generation model support','OpenAI required; other providers optional']
+  },
+  {
+    title: 'Installation & Runtime',
+    since: 'v2024.9.5',
+    desc: 'Ships as an npm global package with a one-command onboarding flow. Runs as a launchd daemon on macOS. Supports Node 22.16+ and Node 24 (recommended).',
+    items: ['Node 24 recommended (Node 22.16+ minimum)','pnpm monorepo with TypeScript (pnpm build → dist/)','Dev loop: pnpm gateway:watch for auto-reload','Doctor tool: migrations, diagnostics, DM policy detection','Development channels: stable / beta / dev (main)'],
+    install: 'npm install -g openclaw@latest\nopenclaw onboard --install-daemon'
+  }
+];
+
+function renderFeatures(){
+  const grid = document.getElementById('feature-grid');
+  grid.innerHTML = FEATURES.map(f => `
+    <div class="feature-card">
+      <div class="feature-card-head">
+        <div class="feature-card-title">${f.title}</div>
+        <span class="feature-since${f.sinceClass?' '+f.sinceClass:''}">${f.since}</span>
+      </div>
+      <p class="feature-desc">${f.desc}</p>
+      ${f.items.length ? `<ul class="feature-list">${f.items.map(i=>`<li>${i}</li>`).join('')}</ul>` : ''}
+      ${f.commands ? `<div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.25rem">${f.commands.map(c=>`<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--cyan);background:var(--cyan-dim);border:1px solid rgba(6,182,212,0.2);padding:0.1rem 0.4rem;border-radius:2px">${c}</span>`).join('')}</div>` : ''}
+      ${f.install ? `<div class="feature-install"><div class="feature-install-label">Install</div><code>${f.install.replace(/\n/g,'<br>')}</code></div>` : ''}
+    </div>
+  `).join('');
+}
+
+/* ── INIT ── */
+renderVelocity();
+renderHeatmap();
+renderDeprecations();
+renderFeatures();
+renderSidebar();
+selectRelease(0);
+lucide.createIcons();
+</script>
+</body>
+</html>
