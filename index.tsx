@@ -27,7 +27,8 @@ import {
   Globe,
   Layers,
   BookMarked,
-  Link2
+  Link2,
+  GitBranch
 } from 'lucide-react';
 import whitelist from './src/whitelist.json';
 
@@ -501,7 +502,15 @@ const App: React.FC = () => {
             </div>
             <a href="/research.html" className="nav-item"><BookOpen size={16} />Research</a>
             <a href="/media.html" className="nav-item"><Video size={16} />Media</a>
-            <a href="/forge.html" className="nav-item"><Github size={16} />Forge</a>
+            <div className="nav-dropdown">
+              <a href="/forge.html" className="nav-item"><Github size={16} />Forge</a>
+              <div className="nav-dropdown-menu">
+                <a href="/openclaw/index.html" className="nav-dropdown-item">
+                  <GitBranch size={14} />
+                  <div><div className="nav-dropdown-label">Chronicle</div><div className="nav-dropdown-sub">OpenClaw release history</div></div>
+                </a>
+              </div>
+            </div>
             <a href="/events-calendar.html" className="nav-item"><Calendar size={16} />Events</a>
             <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onClick={() => (window as any).gtag?.('event','click',{event_category:'outbound',event_label:'clawhub_skill'})} >// skill</a>
           </nav>
@@ -519,6 +528,7 @@ const App: React.FC = () => {
           <a href="/research.html" className="mobile-nav-item"><BookOpen size={16} />Research</a>
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
+          <a href="/openclaw/index.html" className="mobile-subnav-item"><GitBranch size={14} />OpenClaw Chronicle</a>
           <a href="/events-calendar.html" className="mobile-nav-item"><Calendar size={16} />Events</a>
           <a className="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onClick={() => (window as any).gtag?.('event','click',{event_category:'outbound',event_label:'clawhub_skill'})} >// skill</a>
         </div>
