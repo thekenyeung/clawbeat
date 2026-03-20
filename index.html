@@ -1131,7 +1131,7 @@ img { display: block; max-width: 100%; }
 
   /* ── GLOBAL GLANCE STATE ── */
   var _glanceData   = null; // { repos, familyStats, news, contributors, releases }
-  var _activePeriod = 7;
+  var _activePeriod = 30;
   var _activeTab    = 'all';
 
   /* ── RENDER: CLAW FAMILIES PANEL (tab = "all") ── */
@@ -1162,7 +1162,7 @@ img { display: block; max-width: 100%; }
 
     var legendHtml = '<div style="display:flex;gap:1.5rem;margin-bottom:0.75rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);">'
       + '<span style="flex:1;margin-left:5.5rem;">repos</span>'
-      + '<span style="color:var(--green);">new (' + period + 'd)</span>'
+      + '<span style="color:var(--green);">new</span>'
       + '</div>';
 
     var chartSection = '<div class="cf-section">'
@@ -1240,7 +1240,7 @@ img { display: block; max-width: 100%; }
       + '<div class="family-mini-label">commit_activity</div>'
       + (famRepos.length > 0
         ? '<div class="glance-spark" style="margin-top:0.25rem;">' + buildSparkSVG(sparkData) + '</div>'
-          + '<div class="family-mini-sub">' + activeCount + ' repos pushed — ' + period + 'd</div>'
+          + '<div class="family-mini-sub">' + activeCount + ' repos recently active</div>'
           + '<div class="glance-status"><span class="glance-status-dot" style="background:' + sc + ';box-shadow:0 0 4px ' + sc + ';"></span>'
           + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);">' + sl + '</span></div>'
         : '<div class="family-mini-empty" style="margin-top:0.5rem;">no indexed repos</div>')
@@ -1312,11 +1312,9 @@ img { display: block; max-width: 100%; }
         + (hnText ? '<span class="trend-chip-hn' + hnClass + '">' + esc(hnText) + '</span>' : '')
         + '</a>';
     }).join('');
-    var periodLabel = period + 'd';
     return '<div class="glance-section-label">'
       + '<span class="glance-section-label-text">trending_topics</span>'
       + '<div class="glance-section-label-line"></div>'
-      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">' + periodLabel + '</span>'
       + '</div>'
       + '<div class="glance-trending-grid">' + chips + '</div>';
   }
@@ -1370,7 +1368,6 @@ img { display: block; max-width: 100%; }
     return '<div class="glance-section-label">'
       + '<span class="glance-section-label-text">community_pulse</span>'
       + '<div class="glance-section-label-line"></div>'
-      + '<span style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);white-space:nowrap;letter-spacing:0.1em;">' + period + 'd</span>'
       + '</div>'
       + '<div class="pulse-bottom">' + redditCol + releasesCol + '</div>';
   }
@@ -1410,13 +1407,6 @@ img { display: block; max-width: 100%; }
     var contributors = data.contributors;
     var releases     = data.releases;
 
-    // Period selector
-    var periodSel = '<div class="period-selector" id="glance-period-selector">'
-      + [7, 14, 30, 90].map(function(d) {
-          return '<button class="period-btn' + (d === period ? ' active' : '') + '" data-period="' + d + '">' + d + 'D</button>';
-        }).join('')
-      + '</div>';
-
     // Tab bar (always show all 7 regardless of data)
     var tabBar = '<div class="family-tab-bar" role="tablist" aria-label="Claw family tabs" id="glance-tab-bar">'
       + FAMILY_TABS.map(function(t) {
@@ -1438,22 +1428,11 @@ img { display: block; max-width: 100%; }
     var middleRow = renderTrending(news, period);
     var bottomRow = renderBottomRow(releases, period);
 
-    document.getElementById('glance-root').innerHTML = periodSel + topRow + middleRow + bottomRow;
+    document.getElementById('glance-root').innerHTML = topRow + middleRow + bottomRow;
     lucide.createIcons();
 
-    // Wire period selector
+    // Wire interactions
     setTimeout(function() {
-      var sel = document.getElementById('glance-period-selector');
-      if (sel) sel.addEventListener('click', function(e) {
-        var btn = e.target.closest('.period-btn');
-        if (!btn) return;
-        var days = parseInt(btn.getAttribute('data-period'), 10);
-        if (days === _activePeriod) return;
-        _activePeriod = days;
-        renderGlanceContent(_glanceData, _activePeriod);
-        fetchRedditAndUpdate();
-      });
-
       // Wire tab bar
       var bar = document.getElementById('glance-tab-bar');
       if (bar) bar.addEventListener('click', function(e) {
