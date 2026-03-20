@@ -520,6 +520,18 @@ img { display: block; max-width: 100%; }
 .release-name { font-size: 0.8125rem; color: var(--text); line-height: 1.3; }
 .release-item:hover .release-name { color: var(--orange); }
 .release-meta { font-family: var(--mono); font-size: 0.625rem; color: var(--text-3); }
+.chronicle-promo { border-color: rgba(249,115,22,0.2); background: linear-gradient(135deg, var(--bg-2) 0%, rgba(249,115,22,0.04) 100%); display: flex; flex-direction: column; }
+.chronicle-promo-inner { flex: 1; display: flex; flex-direction: column; }
+.chronicle-promo-eyebrow { font-family: var(--mono); font-size: 0.6rem; color: var(--text-4); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+.chronicle-live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; animation: pulse-green 2s ease-in-out infinite; flex-shrink: 0; }
+.chronicle-promo-headline { font-family: var(--sans); font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 900; font-style: italic; letter-spacing: -0.04em; text-transform: uppercase; line-height: 0.92; color: #fff; margin-bottom: 1rem; }
+.chronicle-promo-headline em { color: var(--orange); font-style: italic; display: block; }
+.chronicle-promo-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.5; margin-bottom: 1.25rem; }
+.chronicle-promo-features { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.5rem; }
+.chronicle-feat { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); display: flex; align-items: center; gap: 0.5rem; }
+.chronicle-feat-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.chronicle-promo-cta { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 0.35rem; padding: 0.55rem 1rem; text-decoration: none; transition: all 0.15s; margin-top: auto; width: fit-content; }
+.chronicle-promo-cta:hover { background: rgba(249,115,22,0.18); border-color: rgba(249,115,22,0.5); color: #fff; }
 
 /* ── BOTTOM TWO-COLUMN (EVENTS + DEEP INTEL) ── */
 .bottom-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
@@ -1332,9 +1344,19 @@ img { display: block; max-width: 100%; }
             + '</a>';
         }).join('');
 
-    var releasesCol = '<div class="pulse-col">'
-      + '<div class="pulse-col-title">release_announcements</div>'
-      + releasesHtml
+    var releasesCol = '<div class="pulse-col chronicle-promo">'
+      + '<div class="pulse-col-title">openclaw_chronicle</div>'
+      + '<div class="chronicle-promo-inner">'
+      + '<div class="chronicle-promo-eyebrow"><span class="chronicle-live-dot"></span>github.com/openclaw/openclaw</div>'
+      + '<div class="chronicle-promo-headline">OpenClaw<em>Chronicle</em></div>'
+      + '<div class="chronicle-promo-desc">Every release tracked — breaking changes, new features, and bug fixes across all versions. Developer-grade changelog intelligence.</div>'
+      + '<div class="chronicle-promo-features">'
+      + '<div class="chronicle-feat"><span class="chronicle-feat-dot" style="background:var(--orange)"></span>Breaking changes flagged per release</div>'
+      + '<div class="chronicle-feat"><span class="chronicle-feat-dot" style="background:var(--green)"></span>Feature &amp; fix timeline</div>'
+      + '<div class="chronicle-feat"><span class="chronicle-feat-dot" style="background:var(--cyan)"></span>Subsystem activity heatmap</div>'
+      + '</div>'
+      + '<a href="/openclaw/index.html" class="chronicle-promo-cta">Open Chronicle ↗</a>'
+      + '</div>'
       + '</div>';
 
     // Reddit placeholder — filled async after fetch
