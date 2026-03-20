@@ -10,17 +10,7 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
-      "destination": "/openclaw/index.html"
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
-      "destination": "/openclaw/:path*"
-    },
-    { "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
+{ "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
   ],
   "redirects": [
     {
