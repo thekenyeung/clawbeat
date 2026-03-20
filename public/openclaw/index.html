@@ -204,7 +204,7 @@ a{color:inherit;text-decoration:none}
 
 /* ── DETAIL PANEL ── */
 .detail{flex:1;min-width:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
-.detail-tabs{display:flex;border-bottom:1px solid var(--border-2);background:var(--bg-2);position:sticky;top:0;z-index:5;flex-shrink:0}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border-2);background:var(--bg-2);position:sticky;top:0;z-index:46;flex-shrink:0}
 .detail-tab{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-4);padding:0.8rem 1.25rem;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;white-space:nowrap}
 .detail-tab:hover{color:var(--text-3)}
 .detail-tab.active{color:var(--orange);border-bottom-color:var(--orange)}
@@ -873,6 +873,12 @@ function switchDetailTab(tab, el) {
   document.querySelectorAll('.detail-pane').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('pane-' + tab).classList.add('active');
+  if (tab === 'contributors') {
+    const pending = document.getElementById('pane-contributors')._pendingRelease;
+    if (pending && releases[pending.idx]) {
+      renderContributors(pending.release, pending.idx);
+    }
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -1191,17 +1197,6 @@ function selectRelease(idx) {
   document.getElementById('pane-contributors')._pendingRelease = {release: releases[idx], idx};
 }
 
-// Override switchDetailTab to lazy-load contributors when switching
-const _origSwitchDetailTab = switchDetailTab;
-function switchDetailTab(tab, el) {
-  _origSwitchDetailTab(tab, el);
-  if (tab === 'contributors') {
-    const pending = document.getElementById('pane-contributors')._pendingRelease;
-    if (pending && releases[pending.idx]) {
-      renderContributors(pending.release, pending.idx);
-    }
-  }
-}
 
 /* ─────────────────────────────────────────────
    FEATURES TAB
