@@ -456,7 +456,8 @@ img { display: block; max-width: 100%; }
 .cf-repo-rank { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); min-width: 1.25rem; flex-shrink: 0; }
 .cf-repo-name { font-family: var(--mono); font-size: 0.75rem; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cf-top-repo:hover .cf-repo-name { color: var(--orange); }
-.cf-repo-family { font-family: var(--mono); font-size: 0.6rem; color: var(--orange); background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 0.2rem; padding: 0.1rem 0.375rem; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.08em; }
+.cf-repo-family { font-family: var(--mono); font-size: 0.6rem; color: var(--orange); background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 0.2rem; padding: 0.1rem 0.375rem; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.08em; min-width: 5.5rem; text-align: center; }
+.cf-repo-family:empty { background: none; border-color: transparent; }
 .cf-repo-stars { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); flex-shrink: 0; }
 
 /* Per-family panel */
@@ -1165,7 +1166,7 @@ img { display: block; max-width: 100%; }
           return '<a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer" class="cf-top-repo">'
             + '<span class="cf-repo-rank">' + (i + 1) + '</span>'
             + '<span class="cf-repo-name">' + esc(r.name || r.owner) + '</span>'
-            + (famLabel ? '<span class="cf-repo-family">' + esc(famLabel) + '</span>' : '')
+            + '<span class="cf-repo-family">' + esc(famLabel) + '</span>'
             + '<span class="cf-repo-stars">★ ' + stars + '</span>'
             + '</a>';
         }).join('');
