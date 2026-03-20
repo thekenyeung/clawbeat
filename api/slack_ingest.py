@@ -74,6 +74,36 @@ def extract_url(text: str) -> str | None:
     return m.group(0) if m else None
 
 
+_BOT_CHECK_PHRASES = frozenset({
+    "security checkpoint", "just a moment", "attention required",
+    "are you a human", "robot check", "access denied", "403 forbidden",
+    "enable javascript", "please verify", "ddos protection",
+})
+
+
+def _is_bot_check(title: str) -> bool:
+    t = title.lower()
+    return any(phrase in t for phrase in _BOT_CHECK_PHRASES)
+
+
+def fetch_jina_title(url: str) -> str:
+    """Extract the article title from Jina Reader's metadata header.
+    Used as a fallback when fetch_og() is blocked by bot protection.
+    """
+    try:
+        r = requests.get(
+            f"https://r.jina.ai/{url}",
+            timeout=5,
+            headers={"Accept": "text/plain", "User-Agent": "ClawBeat/1.0"},
+        )
+        for line in r.text.splitlines():
+            if line.startswith("Title:"):
+                return line[len("Title:"):].strip()[:500]
+    except Exception:
+        pass
+    return ""
+
+
 def fetch_og(url: str) -> dict:
     """Fetch OG/meta tags from the article page."""
     try:
@@ -382,6 +412,12 @@ class handler(BaseHTTPRequestHandler):
         og = fetch_og(url)
         title = og["title"] or url
         source = og["source"]
+
+        # If fetch_og hit a bot-protection page, fall back to Jina for the title
+        if not title or _is_bot_check(title):
+            jina_title = fetch_jina_title(url)
+            if jina_title:
+                title = jina_title
 
         # ── Duplicate / similar-story checks ─────────────────────────────
         articles_today = fetch_todays_articles()
