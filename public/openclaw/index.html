@@ -132,18 +132,22 @@ a{color:inherit;text-decoration:none}
 .vel-legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 
 /* ── HEATMAP ── */
-.heatmap-wrap{background:var(--bg);border-bottom:1px solid var(--border-2);padding:1.25rem 1.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#27272a var(--bg)}
-.heatmap-wrap::-webkit-scrollbar{height:4px}.heatmap-wrap::-webkit-scrollbar-track{background:var(--bg)}.heatmap-wrap::-webkit-scrollbar-thumb{background:#27272a;border-radius:2px}
-.heatmap-inner{width:max-content;min-width:100%}
-.heatmap-scroll-hint{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
-.heatmap-grid{display:grid;gap:0}
-.heatmap-header-row{display:flex;gap:0;margin-top:1rem;margin-bottom:0.5rem;padding-left:110px}
-.heatmap-ver-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);width:40px;flex-shrink:0;text-align:center;padding:0 2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:flex-end;justify-content:center}
-.heatmap-ver-label.has-breaking{color:var(--orange)}
-.heatmap-row{display:flex;align-items:center;gap:0;height:30px}
-.heatmap-row-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);width:110px;flex-shrink:0;display:flex;align-items:center;gap:0.5rem;padding-right:0.75rem;position:sticky;left:0;background:var(--bg);z-index:2}
+.heatmap-wrap{background:var(--bg);border-bottom:1px solid var(--border-2);padding:1.25rem 1.5rem}
+.heatmap-inner{max-width:72rem;margin:0 auto}
+/* Split layout: frozen Y-labels | scrollable grid */
+.heatmap-split{display:flex;align-items:flex-start;margin-top:1rem}
+.heatmap-labels-col{flex-shrink:0;width:110px}
+.heatmap-label-spacer{height:56px}/* matches header row height */
+.heatmap-row-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);height:30px;display:flex;align-items:center;gap:0.5rem;padding-right:0.75rem}
 .heatmap-row-label .intro-dot{width:5px;height:5px;border-radius:50%;background:var(--text-4);flex-shrink:0}
-.heatmap-cell{width:40px;flex-shrink:0;height:22px;margin:1px;border-radius:3px;cursor:default;transition:opacity 0.15s;position:relative}
+.heatmap-scroll-col{flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#27272a var(--bg)}
+.heatmap-scroll-col::-webkit-scrollbar{height:4px}.heatmap-scroll-col::-webkit-scrollbar-track{background:var(--bg)}.heatmap-scroll-col::-webkit-scrollbar-thumb{background:#27272a;border-radius:2px}
+.heatmap-scroll-inner{width:max-content;min-width:100%}
+.heatmap-header-row{display:flex;gap:0;margin-bottom:0.5rem;height:56px;align-items:flex-end}
+.heatmap-ver-label{font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);width:60px;flex-shrink:0;text-align:center;padding:0 4px;line-height:1.4;white-space:normal;word-break:break-all;display:flex;align-items:flex-end;justify-content:center}
+.heatmap-ver-label.has-breaking{color:var(--orange)}
+.heatmap-cells-row{display:flex;gap:0;height:30px}
+.heatmap-cell{width:60px;flex-shrink:0;height:22px;margin:2px;border-radius:3px;cursor:default;transition:opacity 0.15s;position:relative}
 .heatmap-cell:hover{opacity:0.75}
 .heatmap-cell[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg-3);border:1px solid var(--border-2);border-radius:4px;padding:0.25rem 0.5rem;font-family:var(--mono);font-size:var(--min-font);color:var(--text-2);white-space:nowrap;pointer-events:none;z-index:10}
 .heatmap-cell.c-breaking{background:rgba(249,115,22,0.55)}
@@ -456,6 +460,7 @@ a{color:inherit;text-decoration:none}
       <div class="section-rule-line"></div>
     </div>
     <div id="heatmap-container" style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-4);padding:0.5rem 0">Loading heatmap...</div>
+    <!-- legend is rendered outside #heatmap-container -->
     <div class="heatmap-legend">
       <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:rgba(249,115,22,0.55)"></div>breaking change</div>
       <div class="hm-legend-item"><div class="hm-legend-swatch" style="background:rgba(34,197,94,0.45)"></div>new feature</div>
@@ -912,14 +917,12 @@ function renderVelocity() {
 function renderHeatmap() {
   if (!releases.length) return;
   const container = document.getElementById('heatmap-container');
-  const displayReleases = releases.slice(0, 40); // newest→oldest left→right; scroll right for older
+  const displayReleases = releases.slice(0, 20);
 
   // Determine when each subsystem first appears
-  // Look at each subsystem's first mention in release bodies (newest-to-oldest = index 0 onward)
   const introAt = {};
   SUBSYSTEMS.forEach(sub => {
     if (sub.key === 'core' || !sub.keywords) { introAt[sub.key] = displayReleases.length - 1; return; }
-    // Find the oldest release that mentions this subsystem (last in our newest-first array)
     let lastMention = -1;
     for (let i = displayReleases.length - 1; i >= 0; i--) {
       const text = ((displayReleases[i].body||'') + ' ' + (displayReleases[i].name||'')).toLowerCase();
@@ -928,32 +931,41 @@ function renderHeatmap() {
     introAt[sub.key] = lastMention >= 0 ? lastMention : -1;
   });
 
-  let html = `<div class="heatmap-scroll-hint">← newest &nbsp;&nbsp; scroll for older &nbsp;&nbsp; oldest →</div>`;
-  html += `<div class="heatmap-header-row">`;
+  // Build frozen Y-label column
+  let labelsHtml = `<div class="heatmap-labels-col"><div class="heatmap-label-spacer"></div>`;
+  SUBSYSTEMS.forEach(sub => {
+    labelsHtml += `<div class="heatmap-row-label">${sub.label}</div>`;
+  });
+  labelsHtml += '</div>';
+
+  // Build scrollable grid column
+  let gridHtml = `<div class="heatmap-scroll-col"><div class="heatmap-scroll-inner">`;
+  gridHtml += `<div class="heatmap-header-row">`;
   displayReleases.forEach(r => {
     const hasBreak = r.breaking && r.breaking.length > 0;
     const ver = r.tag_name.replace('v','');
-    html += `<div class="heatmap-ver-label${hasBreak?' has-breaking':''}">${ver}</div>`;
+    gridHtml += `<div class="heatmap-ver-label${hasBreak?' has-breaking':''}">${ver}</div>`;
   });
-  html += '</div>';
+  gridHtml += '</div>';
 
   SUBSYSTEMS.forEach(sub => {
-    html += `<div class="heatmap-row">`;
-    html += `<div class="heatmap-row-label">${sub.label}</div>`;
+    gridHtml += `<div class="heatmap-cells-row">`;
     displayReleases.forEach((r, ri) => {
       const notYet = introAt[sub.key] >= 0 && ri > introAt[sub.key];
       if (notYet) {
-        html += `<div class="heatmap-cell c-new" title="${sub.label}: not yet introduced in ${r.tag_name}"></div>`;
+        gridHtml += `<div class="heatmap-cell c-new" title="${sub.label}: not yet introduced in ${r.tag_name}"></div>`;
       } else {
         const val = (r.subsystems && r.subsystems[sub.key]) || 'none';
         const cls = val==='breaking'?'c-breaking':val==='feature'?'c-feature':val==='fix'?'c-fix':'c-none';
         const tip = val==='none'?`${sub.label}: no changes in ${r.tag_name}`:`${sub.label}: ${val} in ${r.tag_name}`;
-        html += `<div class="heatmap-cell ${cls}" title="${tip}"></div>`;
+        gridHtml += `<div class="heatmap-cell ${cls}" title="${tip}"></div>`;
       }
     });
-    html += '</div>';
+    gridHtml += '</div>';
   });
-  container.innerHTML = html;
+  gridHtml += '</div></div>';
+
+  container.innerHTML = `<div class="heatmap-split">${labelsHtml}${gridHtml}</div>`;
 }
 
 /* ─────────────────────────────────────────────
