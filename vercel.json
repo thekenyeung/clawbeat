@@ -10,6 +10,11 @@
     }
   },
   "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
+      "destination": "/openclaw/$1"
+    },
     { "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
   ],
   "redirects": [
