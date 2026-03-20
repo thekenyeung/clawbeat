@@ -11,6 +11,11 @@
   },
   "rewrites": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
+      "destination": "/openclaw/index.html"
+    },
+    {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
       "destination": "/openclaw/$1"
