@@ -358,6 +358,44 @@ CREATE POLICY "Admin writes" ON spotlight_excluded
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- news_permalinks table — stores per-article landing page data
+-- Populated by POST /api/news_permalink (called by post_to_bsky.py and admin).
+-- Served by GET /news/:date/:slug via api/news_permalink.py.
+-- =============================================================
+CREATE TABLE IF NOT EXISTS news_permalinks (
+  date          TEXT NOT NULL,               -- YYYY-MM-DD
+  slug          TEXT NOT NULL,               -- slugified headline, max 60 chars
+  article_url   TEXT NOT NULL,               -- source article URL
+  headline      TEXT DEFAULT '',
+  pub_name      TEXT DEFAULT '',
+  pub_date      TEXT DEFAULT '',
+  og_image_url  TEXT DEFAULT '',
+  ai_summary    TEXT DEFAULT '',
+  more_coverage JSONB DEFAULT '[]'::jsonb,
+  created_at    TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (date, slug)
+);
+
+ALTER TABLE news_permalinks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public reads" ON news_permalinks
+  FOR SELECT TO anon, authenticated USING (true);
+
+-- =============================================================
+-- Bluesky publishing columns on news_items
+-- bsky_post_uri:      AT Protocol post URI; null = not yet posted
+-- bsky_short_code:    8-char MD5 hash of article URL → /n/:code redirect
+-- bsky_permalink_url: full ClawBeat permalink URL (with UTM params)
+-- =============================================================
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS bsky_post_uri     TEXT DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS bsky_short_code   TEXT DEFAULT NULL;
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS bsky_permalink_url TEXT DEFAULT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_news_items_bsky_short_code
+  ON news_items (bsky_short_code)
+  WHERE bsky_short_code IS NOT NULL;
+
+-- =============================================================
 -- blocked_urls table — permanently excludes articles from algo re-discovery
 -- When an admin deletes an article from the feed, its URL is written here.
 -- forge.py loads this list at startup and adds all URLs to existing_urls,

@@ -188,9 +188,20 @@ def strip_html(text):
         return ""
     return BeautifulSoup(text, "html.parser").get_text(separator=" ", strip=True)
 
+def _has_cjk(text):
+    """Return True if text contains any CJK (Chinese/Japanese/Korean) characters."""
+    return any('\u4e00' <= c <= '\u9fff' or '\u3000' <= c <= '\u303f'
+               or '\uac00' <= c <= '\ud7af' or '\u3040' <= c <= '\u30ff'
+               for c in text)
+
 def is_english(text):
     """Return True if text is predominantly English (or too short to detect)."""
-    if not _LANGDETECT_AVAILABLE or not text or len(text.strip()) < 30:
+    if not text or len(text.strip()) < 30:
+        return True
+    # CJK characters are unambiguous — skip langdetect for these
+    if _has_cjk(text):
+        return False
+    if not _LANGDETECT_AVAILABLE:
         return True
     try:
         return _langdetect(text[:500]) == 'en'

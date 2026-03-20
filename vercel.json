@@ -7,10 +7,18 @@
     },
     "api/news_permalink.py": {
       "maxDuration": 30
+    },
+    "api/n.py": {
+      "maxDuration": 10
+    },
+    "api/feed_skeleton.py": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
-{ "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
+    { "source": "/news/:date/:slug",                         "destination": "/api/news_permalink?date=:date&slug=:slug" },
+    { "source": "/n/:code",                                  "destination": "/api/n?code=:code" },
+    { "source": "/xrpc/app.bsky.feed.getFeedSkeleton",       "destination": "/api/feed_skeleton" }
   ],
   "redirects": [
     {
