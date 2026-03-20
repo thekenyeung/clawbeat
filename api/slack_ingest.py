@@ -291,6 +291,28 @@ def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bo
         return False, str(e)[:200]
 
 
+def log_feedback_signal(article_id: str, signal: str) -> None:
+    """Insert an approve or boost row into article_feedback (fire-and-forget).
+
+    signal='approve' — new standalone article submitted via Slackbot.
+    signal='boost'   — existing article confirmed by adding more_coverage.
+    reason is NULL for positive signals (only required for rejections).
+    """
+    try:
+        requests.post(
+            f"{SUPABASE_URL}/rest/v1/article_feedback",
+            json={"article_id": article_id, "signal": signal},
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+            },
+            timeout=4,
+        )
+    except Exception:
+        pass  # non-critical — don't block the ingest response
+
+
 def slack_reply(channel: str, text: str) -> None:
     """Post a message back to the DM channel."""
     try:
@@ -374,6 +396,7 @@ class handler(BaseHTTPRequestHandler):
         if similar:
             ok, err = add_more_coverage(similar["url"], url, source)
             if ok:
+                log_feedback_signal(similar["url"], "boost")
                 slack_reply(
                     channel,
                     f"📎 Added as more coverage on:\n*{similar['title']}*\n_{similar['source']}_",
@@ -390,6 +413,7 @@ class handler(BaseHTTPRequestHandler):
 
         ok, err = supabase_upsert(url, title, source, summary)
         if ok:
+            log_feedback_signal(url, "approve")
             slack_reply(channel, f"✓ Saved to ClawBeat\n*{title}*\n_{source}_")
         else:
             slack_reply(channel, f"✗ Supabase error: {err}")

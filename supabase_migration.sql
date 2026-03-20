@@ -406,6 +406,25 @@ CREATE POLICY "Admin writes" ON article_feedback
   WITH CHECK (auth.email() = 'ADMIN_EMAIL_HERE');
 
 -- =============================================================
+-- article_feedback — make reason nullable for approve/boost signals
+-- Run this block on an existing DB after the table was created above.
+-- approve/boost (e.g. Slackbot ingest) don't require a reason.
+-- The new check constraint ensures reject always includes a reason.
+-- Note: PostgreSQL CHECK passes NULL values (UNKNOWN ≠ FALSE),
+-- so dropping NOT NULL is sufficient to allow nulls past the existing
+-- reason IN (...) check. The explicit constraint below makes intent clear.
+-- =============================================================
+ALTER TABLE article_feedback ALTER COLUMN reason DROP NOT NULL;
+
+ALTER TABLE article_feedback
+  ADD CONSTRAINT article_feedback_reject_reason_required
+  CHECK (signal != 'reject' OR reason IS NOT NULL);
+
+-- Allow the Slackbot service key to insert feedback rows
+-- (slack_ingest.py uses SUPABASE_SERVICE_KEY which bypasses RLS,
+--  so no extra policy is needed — this comment is for documentation only.)
+
+-- =============================================================
 -- github_releases — nightly-scraped release announcements per repo/family
 -- Populated by scrape_github_meta.py via GitHub Releases API.
 -- Unique on (repo_full_name, tag_name) so upserts are idempotent.
