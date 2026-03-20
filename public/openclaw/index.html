@@ -243,6 +243,19 @@ a{color:inherit;text-decoration:none}
 .collapse-btn:hover{color:var(--text-3)}
 .raw-body{font-family:var(--mono);font-size:0.8125rem;color:var(--text-3);line-height:1.6;white-space:pre-wrap;word-break:break-word;padding:1rem;background:var(--bg-3);border:1px solid var(--border);border-radius:0.375rem;max-height:400px;overflow-y:auto}
 
+/* dev signal */
+.dev-signal{margin-top:2rem;border-top:1px solid var(--border-2);padding-top:1.5rem}
+.dev-signal-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.dev-signal-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-4);display:flex;align-items:center;gap:0.4rem}
+.dev-signal-label .sl{color:var(--orange)}
+.dev-signal-rule{flex:1;height:1px;background:linear-gradient(to right,var(--border-2),transparent)}
+.dev-signal-body{background:var(--bg-2);border:1px solid var(--border);border-left:2px solid var(--orange);border-radius:0.375rem;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:1rem}
+.dev-signal-narrative{font-size:0.9375rem;line-height:1.65;color:var(--text-2)}
+.dev-signal-traj-label{font-family:var(--mono);font-size:var(--min-font);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-3);margin-bottom:0.5rem}
+.dev-signal-traj-list{list-style:none;display:flex;flex-direction:column;gap:0.35rem}
+.dev-signal-traj-list li{font-size:0.875rem;line-height:1.55;color:var(--text-3);padding-left:1.25rem;position:relative}
+.dev-signal-traj-list li::before{content:'→';position:absolute;left:0;color:var(--orange);font-family:var(--mono);font-size:var(--min-font)}
+
 /* contributors pane */
 .contrib-intro{font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-bottom:1.5rem}
 .contrib-grid{display:flex;flex-wrap:wrap;gap:1rem}
@@ -1020,7 +1033,7 @@ function renderSidebar() {
 /* ─────────────────────────────────────────────
    RELEASE NOTES PANE
 ───────────────────────────────────────────── */
-function renderNotes(r, isLatest) {
+function renderNotes(r, isLatest, idx) {
   const collapseId = 'fix-' + r.tag_name.replace(/[\.\-]/g,'_');
   const COLLAPSE_AT = 4;
   const fixes = r.fixes || [];
@@ -1060,10 +1073,140 @@ function renderNotes(r, isLatest) {
       ${features.length ? `<div class="change-section"><div class="change-block feature"><div class="change-block-label">✦ New Features</div><ul class="change-list">${features.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul></div></div>` : ''}
       ${fixes.length ? `<div class="change-section"><div class="change-block fix"><div class="change-block-label">✓ Bug Fixes</div><ul class="change-list" id="${collapseId}">${fixes.slice(0, needsCollapse ? COLLAPSE_AT : fixes.length).map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>${needsCollapse ? `<button class="collapse-btn" onclick="toggleFixes('${collapseId}',this)">↓ Show ${fixes.length - COLLAPSE_AT} more</button>` : ''}</div></div>` : ''}
       ${rawSection}
+      ${buildDevSignal(r, idx)}
     </article>`;
 
   // Store fixes for collapse toggle
   document.getElementById(collapseId) && (document.getElementById(collapseId)._fixes = fixes);
+}
+
+/* ─────────────────────────────────────────────
+   DEVELOPER SIGNAL (heuristic, no API calls)
+───────────────────────────────────────────── */
+function buildDevSignal(r, idx) {
+  if (typeof idx !== 'number') idx = 0;
+
+  const breaking = r.breaking || [];
+  const features = r.features || [];
+  const fixes    = r.fixes    || [];
+  const subs     = r.subsystems || {};
+
+  // Parse semver
+  const m = r.tag_name.replace(/^v/,'').match(/^(\d+)\.(\d+)\.(\d+)/);
+  const sv = m ? {major:+m[1], minor:+m[2], patch:+m[3]} : {major:0, minor:0, patch:0};
+
+  // Subsystem activity
+  const activeSubs   = SUBSYSTEMS.filter(s => subs[s.key] && subs[s.key] !== 'none');
+  const breakingSubs = SUBSYSTEMS.filter(s => subs[s.key] === 'breaking');
+  const featureSubs  = SUBSYSTEMS.filter(s => subs[s.key] === 'feature');
+
+  // Release type
+  let releaseType = 'minor';
+  if (breaking.length)                             releaseType = 'breaking';
+  else if (features.length && !fixes.length)       releaseType = 'feature';
+  else if (!features.length && fixes.length)       releaseType = 'bugfix';
+  else if (features.length && fixes.length)        releaseType = 'mixed';
+
+  // Velocity — days since previous release (releases[] is newest-first, so prev = idx+1)
+  const prevR = releases[idx + 1] || null;
+  const nextR = releases[idx - 1] || null;
+  let daysSincePrev = null;
+  if (prevR && prevR.published_at && r.published_at) {
+    daysSincePrev = Math.round((new Date(r.published_at) - new Date(prevR.published_at)) / 86400000);
+  }
+
+  // Are surrounding releases also fix-heavy? (stabilization cluster signal)
+  const surroundingFixHeavy = [releases[idx-1], releases[idx+1], releases[idx+2]]
+    .filter(Boolean)
+    .filter(x => (x.fixes||[]).length >= 3 && !(x.features||[]).length).length >= 2;
+
+  // ── Narrative ───────────────────────────────
+  let narrative = '';
+  if (r.prerelease) {
+    narrative = `A pre-release build flagging work in progress on the ${sv.major}.${sv.minor} line. The beta designation invites early feedback while shielding production users from unstable API surface. Watch for a follow-up stable release that consolidates or revises what ships here.`;
+  } else if (releaseType === 'breaking' && breakingSubs.length >= 4) {
+    narrative = `An architectural inflection point. Breaking changes land across ${breakingSubs.map(s=>s.label).join(', ')}, signaling a deliberate cross-cutting redesign rather than isolated cleanup. Downstream integrations should treat this as a coordinated migration window — the breadth of subsystem impact means partial upgrades are unlikely to be safe.`;
+  } else if (releaseType === 'breaking' && breakingSubs.length >= 1) {
+    const subNames = breakingSubs.map(s=>s.label).join(' and ');
+    narrative = `A targeted breaking revision scoped to ${subNames}. The rest of the API surface is untouched, suggesting the team isolated a specific contract boundary for cleanup rather than doing broad restructuring. Integrators outside ${subNames} can upgrade with a standard review.`;
+  } else if (releaseType === 'breaking') {
+    narrative = `A breaking change release without a clear subsystem attribution in the structured changelog — check the raw notes or GitHub diff for the affected contract surface. Breaking releases without detailed notes typically indicate internal API changes or build-system restructuring that doesn't map cleanly to a single subsystem.`;
+  } else if (releaseType === 'feature' && features.length >= 4 && activeSubs.length >= 3) {
+    narrative = `An expansion release with meaningful surface-area growth across ${featureSubs.length ? featureSubs.map(s=>s.label).join(', ') : 'multiple subsystems'}. Simultaneous growth in ${activeSubs.length} subsystems suggests a planned multi-track push — these features likely landed together because they share infrastructure dependencies or were part of a coordinated milestone.`;
+  } else if (releaseType === 'feature' && featureSubs.length === 1) {
+    narrative = `A focused feature build concentrated in ${featureSubs[0].label}. The narrow scope suggests the team is deepening a specific capability before broadening — iterating within a subsystem until it reaches a quality threshold. The rest of the project is in maintenance mode while this area advances.`;
+  } else if (releaseType === 'feature') {
+    narrative = `A feature push with ${features.length} new addition${features.length===1?'':'s'} and no regressions patched — the team was in pure expansion mode for this cycle. ${activeSubs.length > 1 ? `Work spread across ${activeSubs.length} subsystems suggests parallel track development.` : 'The focused scope indicates deliberate scoping rather than broad exploration.'}`;
+  } else if (releaseType === 'bugfix' && surroundingFixHeavy) {
+    narrative = `Part of a stabilization cluster — several releases around this one share a similar fix-dominant, feature-sparse pattern. This cadence typically follows a major capability push, as the team works through real-world integration feedback. It's a healthy signal: new surface area is being actively hardened.`;
+  } else if (releaseType === 'bugfix') {
+    const quick = daysSincePrev !== null && daysSincePrev <= 7;
+    narrative = `A maintenance cadence release with ${fixes.length} targeted fix${fixes.length===1?'':'es'} and no new surface area. The absence of features is deliberate — this represents quality debt being serviced before forward momentum resumes. ${quick ? `The quick turnaround from the prior release (${daysSincePrev}d) suggests these were tracked as must-fix items.` : 'Stability over velocity.'}`;
+  } else if (releaseType === 'mixed') {
+    narrative = `A steady-state release advancing capability and managing quality simultaneously — ${features.length} feature${features.length===1?'':'s'} alongside ${fixes.length} fix${fixes.length===1?'':'es'}. This pattern is characteristic of a project operating in a mature shipping rhythm rather than a sprint-and-stabilize cycle. ${activeSubs.length > 0 ? `Subsystem activity spans ${activeSubs.length} area${activeSubs.length===1?'':'s'}.` : ''}`;
+  } else {
+    narrative = `${sv.patch === 0 ? `The .0 patch number on ${r.tag_name} marks this as an intentional milestone — a clean slate for the ${sv.major}.${sv.minor} minor series rather than an incremental update.` : `A minor version advance in the ${sv.major}.${sv.minor} series.`} Limited structured changelog data is available; the GitHub diff is the most reliable source for understanding what changed internally.`;
+  }
+
+  // ── Trajectory bullets ──────────────────────
+  const bullets = [];
+
+  // Semver next-step inference
+  if (sv.patch === 0 && sv.minor > 0 && !r.prerelease)
+    bullets.push(`Fresh minor releases typically draw rapid follow-on patches — expect ${sv.major}.${sv.minor}.1 and .2 as the new surface area gets exercised in production.`);
+  if (sv.patch === 0 && sv.minor === 0 && sv.major > 0)
+    bullets.push(`Major-zero releases historically bring follow-on patch cadences. Expect ${sv.major}.0.x fixes and a ${sv.major}.1.0 stabilization cycle as adoption expands.`);
+  if (sv.patch >= 4 && !features.length)
+    bullets.push(`At patch .${sv.patch} with no new features, the ${sv.major}.${sv.minor} minor series looks to be reaching closure — a minor version bump is likely the next meaningful step.`);
+
+  // Subsystem momentum
+  if (featureSubs.length >= 2)
+    bullets.push(`${featureSubs[0].label} and ${featureSubs[1].label} are in active expansion this cycle — additional depth in these areas is likely before attention shifts to other subsystems.`);
+  else if (featureSubs.length === 1)
+    bullets.push(`${featureSubs[0].label} is the active development focus; watch for follow-on polish or adjacent connector work in upcoming releases.`);
+
+  // Breaking change follow-through
+  if (breaking.length > 0)
+    bullets.push(`Breaking changes typically generate 1–2 follow-on fix releases as integrators surface edge cases — watch the next 2–3 versions for targeted patches in the same subsystems.`);
+
+  // Fix volume as expansion signal
+  if (fixes.length >= 4 && !features.length && nextR && (nextR.features||[]).length >= 3)
+    bullets.push(`The fix-heavy quiet period here precedes a feature-rich release in the list — this is the classic cleanup-before-push pattern, clearing the runway for the next expansion cycle.`);
+  else if (fixes.length >= 5 && !features.length)
+    bullets.push(`A concentrated fix sweep like this often signals the runway is being cleared — a feature push is likely in the next release or two.`);
+
+  // Velocity signals
+  if (daysSincePrev !== null && daysSincePrev <= 5)
+    bullets.push(`The ${daysSincePrev}-day gap from the prior release signals a high-cadence iteration loop — multiple releases per week means the team is converging on a specific problem space.`);
+  if (daysSincePrev !== null && daysSincePrev >= 60)
+    bullets.push(`The ${daysSincePrev}-day gap before this release is longer than typical — likely a significant engineering effort that accumulated before shipping, or deliberate batching of work.`);
+
+  // Pre-release graduation
+  if (r.prerelease && nextR && !nextR.prerelease)
+    bullets.push(`A stable release immediately follows in the changelog — this beta's contents have already graduated. Review the stable release for any revisions or items that were pulled.`);
+  else if (r.prerelease)
+    bullets.push(`No stable release has followed this beta yet — the ${sv.major}.${sv.minor} stable cut is still outstanding.`);
+
+  // Fallback if we have fewer than 2 bullets
+  if (bullets.length < 2)
+    bullets.push(`Semver placement at ${r.tag_name} suggests ${sv.patch === 0 ? `this is a planned milestone — iterative patches will follow` : `this is an incremental update in the ${sv.major}.${sv.minor} series; watch for continued work in the same area`}.`);
+
+  const topBullets = bullets.slice(0, 4);
+
+  return `
+    <div class="dev-signal">
+      <div class="dev-signal-header">
+        <div class="dev-signal-label"><span class="sl">//</span> Developer Signal</div>
+        <div class="dev-signal-rule"></div>
+      </div>
+      <div class="dev-signal-body">
+        <p class="dev-signal-narrative">${narrative}</p>
+        <div>
+          <div class="dev-signal-traj-label">Trajectory</div>
+          <ul class="dev-signal-traj-list">${topBullets.map(b=>`<li>${escapeHtml(b)}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>`;
 }
 
 function toggleFixes(id, btn) {
@@ -1188,7 +1331,7 @@ async function renderContributors(release, idx) {
 function selectRelease(idx) {
   selectedIdx = idx;
   document.querySelectorAll('.sidebar-item').forEach((el, i) => el.classList.toggle('active', i === idx));
-  renderNotes(releases[idx], idx === 0);
+  renderNotes(releases[idx], idx === 0, idx);
   // Only load contributors if that tab is active
   if (document.getElementById('pane-contributors').classList.contains('active')) {
     renderContributors(releases[idx], idx);
