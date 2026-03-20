@@ -16,9 +16,9 @@
       "destination": "/openclaw/index.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "openclaw.clawbeat.co" }],
-      "destination": "/openclaw/$1"
+      "destination": "/openclaw/:path*"
     },
     { "source": "/news/:date/:slug", "destination": "/api/news_permalink?date=:date&slug=:slug" }
   ],
