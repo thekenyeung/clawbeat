@@ -27,6 +27,7 @@ import {
   Globe,
   Layers,
   BookMarked,
+  IdCard,
   Link2,
   GitBranch
 } from 'lucide-react';
@@ -498,6 +499,10 @@ const App: React.FC = () => {
                   <BookMarked size={14} />
                   <div><div className="nav-dropdown-label">Guides</div><div className="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
                 </a>
+                <a href="/dossier.html" className="nav-dropdown-item">
+                  <IdCard size={14} />
+                  <div><div className="nav-dropdown-label">Dossier</div><div className="nav-dropdown-sub">Key players</div></div>
+                </a>
               </div>
             </div>
             <a href="/research.html" className="nav-item"><BookOpen size={16} />Research</a>
@@ -525,6 +530,7 @@ const App: React.FC = () => {
           </button>
           <a href="/trace/" className="mobile-subnav-item"><Layers size={14} />Trace Magazine</a>
           <a href="/guide/" className="mobile-subnav-item"><BookMarked size={14} />Guides</a>
+          <a href="/dossier.html" className="mobile-subnav-item"><IdCard size={14} />Dossier</a>
           <a href="/research.html" className="mobile-nav-item"><BookOpen size={16} />Research</a>
           <a href="/media.html" className="mobile-nav-item"><Video size={16} />Media Lab</a>
           <a href="/forge.html" className="mobile-nav-item"><Github size={16} />The Forge</a>
