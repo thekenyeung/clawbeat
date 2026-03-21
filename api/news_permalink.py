@@ -80,8 +80,81 @@ def fetch_og_image(url: str) -> str:
     return ""
 
 
+# Regex patterns to strip paywall/nav boilerplate — applied before sending to Gemini.
+# We strip the phrase and everything after it on the same line, since it's always a tail.
+_PAYWALL_STRIP_RES = [
+    re.compile(r'[Cc]ontinue\s+reading\s+on\s+\w[\w.]*\s*\.?', re.I),
+    re.compile(r'[Rr]ead\s+(the\s+)?(full|more|rest)(\s+(article|story|post))?\s+on\s+\w[\w.]*\s*\.?', re.I),
+    re.compile(r'[Ss]ign[\s\-]up(\s+for\s+free)?\s+to\s+(read|continue|unlock)\s*\.?', re.I),
+    re.compile(r'[Cc]reate\s+a(\s+free)?\s+account\s+to\s+(read|continue)\s*\.?', re.I),
+    re.compile(r'[Mm]ember[\s\-]only\s+(content|story|article)\s*\.?', re.I),
+    re.compile(r'[Ss]ubscribe\s+to\s+(read|continue|unlock)\s*\.?', re.I),
+    re.compile(r'[Ll]og\s+in\s+to\s+(read|continue)\s*\.?', re.I),
+]
+
+
+def _clean_text(text: str) -> str:
+    """Strip paywall phrases and normalize whitespace. Returns whatever real content remains."""
+    if not text:
+        return ""
+    for pat in _PAYWALL_STRIP_RES:
+        text = pat.sub("", text)
+    # Collapse runs of whitespace/blank lines
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = re.sub(r'[ \t]{2,}', ' ', text)
+    return text.strip()
+
+
+# Jina header fields that appear before the article body (in the top metadata block)
+_JINA_META_RE = re.compile(
+    r'^(Title|URL Source|Published Time|Author|Source|Byline|Date|By)\s*:', re.I | re.M
+)
+# Lines that are just the article headline repeated as an H1/H2, a byline, or a datestamp
+_ARTICLE_HEADER_RE = re.compile(
+    r'^\s*(#{1,3}\s.{0,200}|By\s+\S.{0,100}|\d{1,2}\s+\w+\s+\d{4}|[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|\w+\s+\d{1,2},\s+\d{4})\s*$',
+    re.M,
+)
+
+
+def _strip_article_header(text: str, headline: str) -> str:
+    """Remove the leading metadata block Jina prepends to article markdown.
+
+    Jina often starts with: the article title as H1, a byline (By Author · Date),
+    and the publish date — all before the actual body content begins. We skip lines
+    at the top that duplicate the headline or match byline/date patterns, stopping
+    once we hit a substantive paragraph.
+    """
+    lines = text.splitlines()
+    headline_lower = headline.lower().strip()
+    body_lines: list[str] = []
+    found_body = False
+
+    for line in lines:
+        stripped = line.strip()
+        if not found_body:
+            # Skip blank lines at the top
+            if not stripped:
+                continue
+            # Skip H1/H2/H3 that closely match the headline
+            clean_line = re.sub(r'^#+\s*', '', stripped).lower()
+            if clean_line and (clean_line in headline_lower or headline_lower in clean_line):
+                continue
+            # Skip short lines that look like bylines or dates (< 80 chars, no sentence structure)
+            if len(stripped) < 80 and _ARTICLE_HEADER_RE.match(stripped):
+                continue
+            # Skip "By Author Name" / "Author · Date" patterns
+            if re.match(r'^[Bb]y\s+\S', stripped) and len(stripped) < 100:
+                continue
+            # This looks like body content — start collecting
+            found_body = True
+
+        body_lines.append(line)
+
+    return "\n".join(body_lines).strip()
+
+
 def fetch_jina(url: str) -> str:
-    """Pull cleaned article text via Jina Reader."""
+    """Pull cleaned article body text via Jina Reader. Returns clean content or '' on error."""
     try:
         r = requests.get(
             f"https://r.jina.ai/{url}",
@@ -89,45 +162,79 @@ def fetch_jina(url: str) -> str:
             headers={"Accept": "text/plain", "User-Agent": "ClawBeat/1.0"},
         )
         text = r.text
+        # Jina wraps content after this marker
         marker = "Markdown Content:"
         idx = text.find(marker)
         if idx != -1:
             text = text[idx + len(marker):]
-        return text.strip()[:6000]
+        # Some responses include a second metadata header block before the body
+        # (Title:, URL Source:, Published Time:) — strip those lines too
+        text = _JINA_META_RE.sub("", text)
+        text = _clean_text(text)
+        return text[:8000]
     except Exception:
         return ""
 
 
 def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "") -> str:
-    """Generate a 3-4 sentence AI summary grounded in the article content.
-    Falls back to fallback_summary (existing DB summary) if Jina returns nothing."""
+    """Generate a deep multi-paragraph AI analysis.
+
+    Source priority: Jina article text > cleaned fallback_summary > headline-only.
+    Never returns paywall boilerplate.
+    """
     if not GEMINI_API_KEY:
-        return fallback_summary
-    source_text = article_text or fallback_summary
+        return _clean_text(fallback_summary)
+
+    # Build the best source text we can; strip any article header the caller didn't remove
+    source_text = _strip_article_header(article_text, headline) if article_text else ""
     if not source_text:
-        return ""
+        source_text = _clean_text(fallback_summary)
+    headline_only = len(source_text) < 120  # effectively nothing useful
+
+    if headline_only:
+        # We have no article content — generate based on headline + topic knowledge
+        content_section = (
+            "No article text is available (the source is paywalled or inaccessible). "
+            "Use your knowledge of this topic to write the analysis, but note at the end "
+            "of the final paragraph that this analysis is based on the headline and topic context, "
+            "not the full article text."
+        )
+    else:
+        content_section = f"Article excerpt:\n{source_text[:7000]}"
+
     try:
         prompt = (
-            "You are an AI analyst for ClawBeat, an agentic AI news feed. "
-            "Write a detailed 4-6 sentence summary of the following article. "
-            "Cover: what happened, who is involved, why it matters, and any key details or implications. "
-            "Be factual, specific, and grounded in the article content. "
-            "Do not start with 'This article'. Do not editorialize.\n\n"
+            "You are a senior analyst for ClawBeat, an agentic AI intelligence feed covering the OpenClaw "
+            "ecosystem, AI agents, and related tooling. Write a detailed, substantive signal analysis. "
+            "Structure your response as 3-4 distinct paragraphs:\n\n"
+            "1. **What happened**: The core event, announcement, or finding — be specific with names, "
+            "technical details, and context.\n"
+            "2. **Key details**: Notable technical specifics, architecture choices, benchmarks, or background "
+            "that a practitioner would care about.\n"
+            "3. **OpenClaw ecosystem implications**: How this connects to or affects agentic AI frameworks, "
+            "multi-agent systems, or the broader developer ecosystem.\n"
+            "4. **Signal strength**: Who should pay attention and why — developers, researchers, or operators.\n\n"
+            "Rules: Be factual. Do not repeat the headline, author name, publication name, or date — "
+            "those are already shown on the page. Do not start with 'This article'. Do not use bullet "
+            "points — write in flowing prose. Each paragraph should be 3-5 sentences. Separate paragraphs "
+            "with a blank line. Never include phrases like 'Continue reading on Medium' or similar paywall "
+            "text.\n\n"
             f"Headline: {headline}\n\n"
-            f"Article:\n{source_text[:5000]}"
+            f"{content_section}"
         )
         r = requests.post(
             "https://generativelanguage.googleapis.com/v1beta/models/"
             f"gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}",
             json={
                 "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"maxOutputTokens": 350, "temperature": 0.2},
+                "generationConfig": {"maxOutputTokens": 700, "temperature": 0.25},
             },
-            timeout=15,
+            timeout=20,
         )
-        return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+        result = _clean_text(r.json()["candidates"][0]["content"]["parts"][0]["text"])
+        return result or _clean_text(fallback_summary)
     except Exception:
-        return fallback_summary
+        return _clean_text(fallback_summary)
 
 
 def supabase_get(date: str, slug: str) -> dict | None:
@@ -217,10 +324,16 @@ def render_landing_page(row: dict) -> str:
 
     summary_block = ""
     if ai_summary:
+        # Split into paragraphs and render each as a <p>
+        raw_paras = [p.strip() for p in ai_summary.split("\n\n") if p.strip()]
+        # Strip leading markdown bold markers (e.g. "**What happened**: ...")
+        import re as _re
+        cleaned_paras = [_re.sub(r"^\*\*[^*]+\*\*:?\s*", "", p) for p in raw_paras]
+        paras_html = "".join(f"<p>{p}</p>" for p in cleaned_paras if p)
         summary_block = f"""
     <section class="analysis">
       <div class="section-hdr"><span class="hdr-slash">// </span><span class="hdr-label">signal_analysis</span></div>
-      <p class="summary-text">{ai_summary}</p>
+      <div class="summary-text">{paras_html}</div>
       <span class="ai-badge">AI-generated · Grounded in source article</span>
     </section>"""
 
@@ -378,9 +491,15 @@ def render_landing_page(row: dict) -> str:
     }}
     .summary-text {{
       font-size: 1rem;
-      line-height: 1.7;
+      line-height: 1.75;
       color: var(--text-1);
       margin-bottom: 0.85rem;
+    }}
+    .summary-text p {{
+      margin-bottom: 1rem;
+    }}
+    .summary-text p:last-child {{
+      margin-bottom: 0;
     }}
     .ai-badge {{
       font-family: var(--mono);
@@ -541,7 +660,7 @@ def render_404() -> str:
 class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        """Serve the permalink landing page."""
+        """Serve the permalink landing page. Auto-heals cached summaries containing paywall text."""
         parsed = urlparse(self.path)
         qs = parse_qs(parsed.query)
         date_str = (qs.get("date") or [""])[0]
@@ -555,6 +674,17 @@ class handler(BaseHTTPRequestHandler):
         if not row:
             self._html(404, render_404())
             return
+
+        # Heal rows where the cached ai_summary contains paywall boilerplate
+        cached_summary = row.get("ai_summary", "") or ""
+        if _clean_text(cached_summary) != cached_summary.strip() or (
+            cached_summary and len(_clean_text(cached_summary)) < 120
+        ):
+            article_text = fetch_jina(row.get("article_url", ""))
+            fresh = gemini_summarize(row.get("headline", ""), article_text, "")
+            if fresh:
+                row["ai_summary"] = fresh
+                supabase_upsert({**row, "ai_summary": fresh})
 
         self._html(200, render_landing_page(row))
 
@@ -589,9 +719,16 @@ class handler(BaseHTTPRequestHandler):
 
         slug = slugify(headline, fallback=date_str)
 
-        # ── Idempotency: return cached result only if fields are populated ────
+        # ── Idempotency: return cached result only if summary is clean and populated ────
         existing = supabase_get(date_str, slug)
-        if existing and existing.get("ai_summary") and existing.get("og_image_url"):
+        cached_ok = (
+            existing
+            and existing.get("og_image_url")
+            and existing.get("ai_summary")
+            and _clean_text(existing["ai_summary"]) == existing["ai_summary"].strip()
+            and len(_clean_text(existing["ai_summary"])) >= 120
+        )
+        if cached_ok:
             permalink_url = (
                 f"{SITE_HOST}/news/{date_str}/{slug}"
                 "?utm_source=clawbeat&utm_medium=share&utm_campaign=permalink"
