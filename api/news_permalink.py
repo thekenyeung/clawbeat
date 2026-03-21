@@ -224,7 +224,7 @@ def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "
         )
         r = requests.post(
             "https://generativelanguage.googleapis.com/v1beta/models/"
-            f"gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}",
+            f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}",
             json={
                 "contents": [{"parts": [{"text": prompt}]}],
                 "generationConfig": {"maxOutputTokens": 700, "temperature": 0.25},
