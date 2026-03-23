@@ -401,6 +401,9 @@ def render_landing_page(row: dict) -> str:
   <meta name="twitter:image"      content="{og_image}">
   <link rel="canonical"           href="{permalink}">
 
+  <link rel="icon" type="image/x-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
