@@ -1962,6 +1962,8 @@ if __name__ == "__main__":
         hn_hit = hn_by_url.get(item['url'])
         if not hn_hit:
             continue
+        if item['url'] in rejected_urls:
+            continue  # Admin rejection overrides HN engagement — never re-score
         new_pts = hn_hit.get('hn_points', 0) or 0
         new_cmt = hn_hit.get('hn_comments', 0) or 0
         if new_pts > (item.get('hn_points') or 0) or new_cmt > (item.get('hn_comments') or 0):
@@ -2006,6 +2008,9 @@ if __name__ == "__main__":
     for item in db['items']:
         # Re-score if: new article (no score yet) OR moreCoverage changed this run
         # We detect "changed this run" by checking if the item was in newly_discovered.
+        # Never re-score admin-rejected articles — human input overrides the algorithm.
+        if item['url'] in rejected_urls:
+            continue
         is_new = item.get('total_score') is None
         if is_new:
             scores = compute_scores(item)
