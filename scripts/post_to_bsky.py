@@ -72,6 +72,23 @@ def date_mdy_to_iso(date_mdy: str) -> str:
         return datetime.utcnow().strftime("%Y-%m-%d")
 
 
+_BOILERPLATE_RE = re.compile(
+    r"continue reading on medium|read the full story|read more on|"
+    r"subscribe to (read|continue)|sign (up|in) to read|this story is only available|"
+    r"member-only story|become a member|join medium|^introduction\.?\s*$",
+    re.I,
+)
+
+
+def strip_boilerplate(text: str) -> str:
+    """Remove paywall/boilerplate phrases. Returns '' if remainder < 60 chars."""
+    if not text:
+        return ""
+    cleaned = _BOILERPLATE_RE.sub("", text).strip()
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    return cleaned if len(cleaned) >= 60 else ""
+
+
 def trim_summary(text: str, max_chars: int = 200) -> str:
     """Trim to ≤max_chars at a word boundary, appending ellipsis if cut."""
     if not text:
@@ -83,8 +100,25 @@ def trim_summary(text: str, max_chars: int = 200) -> str:
     return trimmed.rstrip(".,;:") + "\u2026"
 
 
+def _absolutize(img: str, base_url: str) -> str:
+    """Make a potentially relative image URL absolute."""
+    if img.startswith("//"):
+        return "https:" + img
+    if img.startswith("/"):
+        p = urlparse(base_url)
+        return f"{p.scheme}://{p.netloc}{img}"
+    return img
+
+
 def fetch_og_image(url: str) -> str:
-    """Extract og:image URL from article HTML. Returns '' on failure."""
+    """Fetch the best available image from an article page.
+
+    Priority:
+      1. og:image meta tag
+      2. twitter:image meta tag
+      3. First <img> whose src looks like a real content image (skips icons/avatars)
+    Returns absolute URL string or empty string on failure.
+    """
     try:
         r = requests.get(
             url,
@@ -93,6 +127,9 @@ def fetch_og_image(url: str) -> str:
             allow_redirects=True,
         )
         html = r.text[:60_000]
+        base = r.url
+
+        # 1. og:image
         for pat in [
             r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']',
             r'<meta[^>]+content=["\'](.*?)["\'][^>]+property=["\']og:image["\']',
@@ -100,12 +137,37 @@ def fetch_og_image(url: str) -> str:
             m = re.search(pat, html, re.I)
             if m:
                 img = m.group(1).strip()
-                if img.startswith("//"):
-                    img = "https:" + img
-                elif img.startswith("/"):
-                    parsed = urlparse(r.url)
-                    img = f"{parsed.scheme}://{parsed.netloc}{img}"
-                return img
+                if img:
+                    return _absolutize(img, base)
+
+        # 2. twitter:image
+        for pat in [
+            r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\'](.*?)["\']',
+            r'<meta[^>]+content=["\'](.*?)["\'][^>]+name=["\']twitter:image["\']',
+        ]:
+            m = re.search(pat, html, re.I)
+            if m:
+                img = m.group(1).strip()
+                if img:
+                    return _absolutize(img, base)
+
+        # 3. First plausible content <img> — skip tiny icons, avatars, tracking pixels
+        for m in re.finditer(r'<img[^>]+src=["\']([^"\']+)["\']', html, re.I):
+            src = m.group(1).strip()
+            if not src or src.startswith("data:"):
+                continue
+            src_lower = src.lower()
+            # Skip known noise patterns
+            if any(x in src_lower for x in ("avatar", "icon", "logo", "pixel", "1x1", "badge", "emoji")):
+                continue
+            # Prefer known Medium CDN domains; also accept any https image > likely content
+            is_medium_cdn = any(d in src_lower for d in ("miro.medium.com", "cdn-images-1.medium.com"))
+            is_likely_content = src_lower.startswith("https://") and any(
+                src_lower.endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".webp")
+            )
+            if is_medium_cdn or is_likely_content:
+                return _absolutize(src, base)
+
     except Exception:
         pass
     return ""
@@ -233,7 +295,7 @@ def main() -> None:
             )
             short_url = f"{SITE_HOST}/n/{code}"
 
-            post_text = trim_summary(summary, 200)
+            post_text = trim_summary(strip_boilerplate(summary), 200)
             if not post_text:
                 post_text = headline[:200]
 

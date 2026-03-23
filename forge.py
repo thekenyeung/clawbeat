@@ -188,6 +188,26 @@ def strip_html(text):
         return ""
     return BeautifulSoup(text, "html.parser").get_text(separator=" ", strip=True)
 
+
+# Patterns that indicate a truncated/boilerplate summary with no real content.
+_BOILERPLATE_PATTERNS = re.compile(
+    r"continue reading on medium|read the full story|read more on|"
+    r"subscribe to (read|continue)|sign (up|in) to read|this story is only available|"
+    r"member-only story|become a member|join medium|^introduction\.?\s*$",
+    re.I,
+)
+
+def strip_boilerplate(text: str) -> str:
+    """Remove known paywall/boilerplate phrases and return cleaned text.
+    Returns '' if what remains is too short to be useful (< 60 chars)."""
+    if not text:
+        return ""
+    # Remove the boilerplate sentence(s) wherever they appear
+    cleaned = _BOILERPLATE_PATTERNS.sub("", text).strip()
+    # Collapse extra whitespace left behind
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    return cleaned if len(cleaned) >= 60 else ""
+
 def _has_cjk(text):
     """Return True if text contains any CJK (Chinese/Japanese/Korean) characters."""
     return any('\u4e00' <= c <= '\u9fff' or '\u3000' <= c <= '\u303f'
@@ -1914,9 +1934,16 @@ if __name__ == "__main__":
     existing_urls.update(rejected_urls)
     for art in raw_news:
         if art['url'] in existing_urls: continue
-        # Generate AI briefs for whitelist Publisher articles (authority=3) up to batch limit.
-        # This covers all outlets in whitelist.json, not just the old hardcoded PRIORITY_SITES.
-        if get_source_authority(art['url'], art['source']) >= 3 and new_summaries_count < MAX_BATCH_SIZE:
+        # Strip boilerplate (e.g. "Continue reading on Medium") from raw summary.
+        # If the cleaned text is too short to be useful, treat as absent.
+        art['summary'] = strip_boilerplate(art.get('summary') or '')
+        # Generate AI briefs for whitelist Publisher articles (authority=3) up to batch limit,
+        # OR for any article whose summary is empty/boilerplate after stripping.
+        needs_ai = (
+            (get_source_authority(art['url'], art['source']) >= 3 or not art['summary'])
+            and new_summaries_count < MAX_BATCH_SIZE
+        )
+        if needs_ai:
             print(f"✍️ Drafting brief: {art['title']}")
             art['summary'] = get_ai_summary(art['title'], art['summary'])
             new_summaries_count += 1; time.sleep(SLEEP_BETWEEN_REQUESTS)

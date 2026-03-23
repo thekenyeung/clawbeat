@@ -51,8 +51,25 @@ def slugify(text: str, fallback: str = "article") -> str:
     return text[:60] or fallback
 
 
+def _absolutize(img: str, base_url: str) -> str:
+    """Make a potentially relative image URL absolute."""
+    if img.startswith("//"):
+        return "https:" + img
+    if img.startswith("/"):
+        p = urlparse(base_url)
+        return f"{p.scheme}://{p.netloc}{img}"
+    return img
+
+
 def fetch_og_image(url: str) -> str:
-    """Fetch og:image from article HTML. Returns absolute URL string or empty string."""
+    """Fetch the best available image from an article page.
+
+    Priority:
+      1. og:image meta tag
+      2. twitter:image meta tag
+      3. First <img> whose src looks like a real content image (skips icons/avatars)
+    Returns absolute URL string or empty string on failure.
+    """
     try:
         r = requests.get(
             url,
@@ -61,6 +78,9 @@ def fetch_og_image(url: str) -> str:
             allow_redirects=True,
         )
         html = r.text[:60_000]
+        base = r.url
+
+        # 1. og:image
         for pat in [
             r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](.*?)["\']',
             r'<meta[^>]+content=["\'](.*?)["\'][^>]+property=["\']og:image["\']',
@@ -68,13 +88,37 @@ def fetch_og_image(url: str) -> str:
             m = re.search(pat, html, re.I)
             if m:
                 img = m.group(1).strip()
-                # Absolutize relative URLs
-                if img.startswith("//"):
-                    img = "https:" + img
-                elif img.startswith("/"):
-                    parsed = urlparse(r.url)
-                    img = f"{parsed.scheme}://{parsed.netloc}{img}"
-                return img
+                if img:
+                    return _absolutize(img, base)
+
+        # 2. twitter:image
+        for pat in [
+            r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\'](.*?)["\']',
+            r'<meta[^>]+content=["\'](.*?)["\'][^>]+name=["\']twitter:image["\']',
+        ]:
+            m = re.search(pat, html, re.I)
+            if m:
+                img = m.group(1).strip()
+                if img:
+                    return _absolutize(img, base)
+
+        # 3. First plausible content <img> — skip tiny icons, avatars, tracking pixels
+        for m in re.finditer(r'<img[^>]+src=["\']([^"\']+)["\']', html, re.I):
+            src = m.group(1).strip()
+            if not src or src.startswith("data:"):
+                continue
+            src_lower = src.lower()
+            # Skip known noise patterns
+            if any(x in src_lower for x in ("avatar", "icon", "logo", "pixel", "1x1", "badge", "emoji")):
+                continue
+            # Prefer known Medium CDN domains; also accept any https image > likely content
+            is_medium_cdn = any(d in src_lower for d in ("miro.medium.com", "cdn-images-1.medium.com"))
+            is_likely_content = src_lower.startswith("https://") and any(
+                src_lower.endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".webp")
+            )
+            if is_medium_cdn or is_likely_content:
+                return _absolutize(src, base)
+
     except Exception:
         pass
     return ""
