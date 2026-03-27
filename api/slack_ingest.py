@@ -27,12 +27,28 @@ import re
 import time
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from zoneinfo import ZoneInfo
 
 _PACIFIC = ZoneInfo("America/Los_Angeles")
 
 import requests
+
+_STRIP_PARAMS = {
+    "source", "utm_source", "utm_medium", "utm_campaign", "utm_term",
+    "utm_content", "utm_id", "ref", "_r", "fbclid", "gclid", "mc_cid",
+    "mc_eid", "igshid", "s", "gi",
+}
+
+def normalize_url(url: str) -> str:
+    """Strip tracking/referral query params for dedup."""
+    try:
+        p = urlparse(url)
+        qs = parse_qs(p.query, keep_blank_values=True)
+        clean_qs = {k: v for k, v in qs.items() if k.lower() not in _STRIP_PARAMS}
+        return urlunparse(p._replace(query=urlencode(clean_qs, doseq=True), fragment="")).rstrip("/")
+    except Exception:
+        return url
 
 # ── env ──────────────────────────────────────────────────────────────────────
 SUPABASE_URL = os.environ.get("ADMIN_SUPABASE_URL", "").strip()
@@ -408,6 +424,8 @@ class handler(BaseHTTPRequestHandler):
             slack_reply(channel, "No URL found in that message.")
             return
 
+        url = normalize_url(url)
+
         # Fetch OG tags (title + source needed for all paths below)
         og = fetch_og(url)
         title = og["title"] or url
@@ -422,8 +440,8 @@ class handler(BaseHTTPRequestHandler):
         # ── Duplicate / similar-story checks ─────────────────────────────
         articles_today = fetch_todays_articles()
 
-        # 1. Exact URL already in today's feed
-        if any(a["url"] == url for a in articles_today):
+        # 1. Exact URL already in today's feed (normalize both sides for param variants)
+        if any(normalize_url(a["url"]) == url for a in articles_today):
             slack_reply(channel, f"⚠️ Already in today's feed:\n*{title}*\n_{source}_")
             return
 

@@ -295,6 +295,25 @@ _TAG_BLOCKLIST = {
     "first", "second", "third", "one", "two", "three", "new", "latest",
 }
 
+_STRIP_PARAMS = {
+    "source", "utm_source", "utm_medium", "utm_campaign", "utm_term",
+    "utm_content", "utm_id", "ref", "_r", "fbclid", "gclid", "mc_cid",
+    "mc_eid", "igshid", "s", "gi",
+}
+
+def normalize_url(url: str) -> str:
+    """Strip tracking/referral query params and trailing slashes for dedup."""
+    try:
+        p = urllib.parse.urlparse(url)
+        qs = urllib.parse.parse_qs(p.query, keep_blank_values=True)
+        clean_qs = {k: v for k, v in qs.items() if k.lower() not in _STRIP_PARAMS}
+        new_query = urllib.parse.urlencode(clean_qs, doseq=True)
+        cleaned = p._replace(query=new_query, fragment="")
+        return urllib.parse.urlunparse(cleaned).rstrip("/")
+    except Exception:
+        return url
+
+
 def get_nlp_tags(title, summary):
     """Extract up to 4 named-entity tags using spaCy NER (local, no API calls).
 
@@ -1923,16 +1942,17 @@ if __name__ == "__main__":
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
     new_summaries_count = 0
-    existing_urls = {item['url'] for item in db.get('items', [])}
+    existing_urls = {normalize_url(item['url']) for item in db.get('items', [])}
     # Also exclude URLs already featured in moreCoverage — they're grouped under another headline
     for item in db.get('items', []):
         for mc in item.get('moreCoverage', []):
-            existing_urls.add(mc['url'])
+            existing_urls.add(normalize_url(mc['url']))
     # Permanently blocked URLs (admin-deleted) — never re-add via algo
-    existing_urls.update(db.get('blocked_urls', set()))
+    existing_urls.update(normalize_url(u) for u in db.get('blocked_urls', set()))
     # Rejected article URLs — prevent re-ingestion even if deleted from news_items
-    existing_urls.update(rejected_urls)
+    existing_urls.update(normalize_url(u) for u in rejected_urls)
     for art in raw_news:
+        art['url'] = normalize_url(art['url'])
         if art['url'] in existing_urls: continue
         # Strip boilerplate (e.g. "Continue reading on Medium") from raw summary.
         # If the cleaned text is too short to be useful, treat as absent.
@@ -1995,7 +2015,10 @@ if __name__ == "__main__":
     # untagged articles are processed in a single pass.
     tags_generated = 0
     for item in db['items']:
-        if not item.get('tags'):
+        existing = item.get('tags') or []
+        # Overwrite if: no tags, OR any tag is suspiciously long (old Gemini title bleed)
+        has_bad_tags = any(len(t) > 40 for t in existing)
+        if not existing or has_bad_tags:
             item['tags'] = get_nlp_tags(item['title'], item.get('summary', ''))
             tags_generated += 1
     if tags_generated:
