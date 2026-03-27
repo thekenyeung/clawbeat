@@ -815,7 +815,6 @@ def fetch_youtube_videos_ytdlp(channel_url):
                         formatted_date = (
                             _format_yt_date(entry.get('upload_date'))
                             or get_video_upload_date(entry['id'])
-                            or datetime.now().strftime("%m-%d-%Y")
                         )
                         videos.append({
                             "title": entry.get('title'),
@@ -859,7 +858,6 @@ def fetch_global_openclaw_videos(query="OpenClaw OR Moltbot OR Clawdbot OR NemoC
                     formatted_date = (
                         _format_yt_date(entry.get('upload_date'))
                         or get_video_upload_date(entry.get('id'))
-                        or datetime.now().strftime("%m-%d-%Y")
                     )
                     videos.append({
                         "title":       title,
@@ -1734,15 +1732,20 @@ def _save_to_supabase(db: dict) -> None:
 
     # --- videos ---
     try:
-        video_records = [{
-            'url':          v['url'],
-            'title':        v.get('title', ''),
-            'thumbnail':    v.get('thumbnail', ''),
-            'channel':      v.get('channel', ''),
-            'description':  v.get('description', ''),
-            'published_at': v.get('publishedAt', ''),
-        } for v in db.get('videos', [])]
-        if video_records:
+        raw_videos = db.get('videos', [])
+        if raw_videos:
+            existing = {
+                r['url']: r['published_at']
+                for r in _supabase.table('videos').select('url,published_at').execute().data
+            }
+            video_records = [{
+                'url':          v['url'],
+                'title':        v.get('title', ''),
+                'thumbnail':    v.get('thumbnail', ''),
+                'channel':      v.get('channel', ''),
+                'description':  v.get('description', ''),
+                'published_at': existing.get(v['url']) or v.get('publishedAt') or None,
+            } for v in raw_videos]
             _supabase.table('videos').upsert(video_records).execute()
             print(f"✅ Upserted {len(video_records)} videos.")
     except Exception as e:
