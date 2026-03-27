@@ -271,7 +271,7 @@ def gemini_summarize(headline: str, article_text: str, fallback_summary: str = "
             f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}",
             json={
                 "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"maxOutputTokens": 700, "temperature": 0.25},
+                "generationConfig": {"maxOutputTokens": 1500, "temperature": 0.25},
             },
             timeout=20,
         )
@@ -722,10 +722,10 @@ class handler(BaseHTTPRequestHandler):
             self._html(404, render_404())
             return
 
-        # Heal rows where the cached ai_summary contains paywall boilerplate
+        # Heal rows where the cached ai_summary contains paywall boilerplate or is too short
         cached_summary = row.get("ai_summary", "") or ""
         if _clean_text(cached_summary) != cached_summary.strip() or (
-            cached_summary and len(_clean_text(cached_summary)) < 120
+            cached_summary and len(_clean_text(cached_summary)) < 500
         ):
             article_text = fetch_jina(row.get("article_url", ""))
             fresh = gemini_summarize(row.get("headline", ""), article_text, "")
@@ -773,7 +773,7 @@ class handler(BaseHTTPRequestHandler):
             and existing.get("og_image_url")
             and existing.get("ai_summary")
             and _clean_text(existing["ai_summary"]) == existing["ai_summary"].strip()
-            and len(_clean_text(existing["ai_summary"])) >= 120
+            and len(_clean_text(existing["ai_summary"])) >= 500
         )
         if cached_ok:
             permalink_url = (
