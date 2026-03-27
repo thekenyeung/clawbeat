@@ -1863,13 +1863,22 @@
       }
     } catch { /* familyStats stays [] */ }
 
-    /* NemoClaw repos: try Supabase topic filter, fall back to filtering allRepos live */
+    /* NemoClaw repos: try Supabase topic filter, fall back to SAMPLE_NEMOCLAW hydrated with live data */
+    function hydratedNcFallback() {
+      return SAMPLE_NEMOCLAW.map(sample => {
+        const live = allRepos.find(r =>
+          (r.owner || '').toLowerCase() === (sample.owner || '').toLowerCase() &&
+          (r.name  || '').toLowerCase() === (sample.name  || '').toLowerCase()
+        );
+        return live ? live : sample;
+      });
+    }
     try {
       if (ncReposRes.status === 'fulfilled' && ncReposRes.value.ok) {
         const data = await ncReposRes.value.json();
-        allNcRepos = Array.isArray(data) && data.length ? data : getFamilyRepos('nemoclaw');
-      } else { allNcRepos = getFamilyRepos('nemoclaw'); }
-    } catch { allNcRepos = getFamilyRepos('nemoclaw'); }
+        allNcRepos = Array.isArray(data) && data.length ? data : hydratedNcFallback();
+      } else { allNcRepos = hydratedNcFallback(); }
+    } catch { allNcRepos = hydratedNcFallback(); }
 
     pinnedRepo = findPinned();
 
