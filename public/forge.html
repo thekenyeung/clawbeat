@@ -446,9 +446,46 @@
     @media (max-width: 640px) {
       .metrics-row-5 { grid-template-columns: repeat(2, 1fr); }
     }
+    .repo-search-wrap {
+      padding: 0.75rem 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .repo-search-input {
+      flex: 1;
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 0.85rem;
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 0;
+    }
+    .repo-search-input::placeholder { color: var(--text-3); }
+    .repo-search-input:focus { border-color: rgba(249,115,22,0.6); }
+    .repo-search-clear {
+      background: none;
+      border: 1px solid var(--border-2);
+      border-radius: 6px;
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      display: none;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .repo-search-clear:hover { color: var(--text); border-color: var(--border); }
     @media (max-width: 640px) {
       .header-inner, .main-container, .page-hero, .footer, .pinned-inner { padding-left: 1rem; padding-right: 1rem; }
       .filter-bar { padding-left: 1rem; padding-right: 1rem; }
+      .repo-search-wrap { padding-left: 1rem; padding-right: 1rem; }
       .hero-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
       .hero-stats { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
@@ -695,6 +732,20 @@
       <div class="sdl-count" id="index-count">— featured picks</div>
     </div>
 
+    <div class="repo-search-wrap">
+      <input
+        class="repo-search-input"
+        id="repo-search"
+        type="search"
+        placeholder="// search by account · repo name · description"
+        aria-label="Search repositories by account, name, or description"
+        oninput="setRepoSearch(this.value)"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button class="repo-search-clear" id="repo-search-clear" onclick="clearRepoSearch()" aria-label="Clear search">✕ clear</button>
+    </div>
+
     <div class="table-wrap">
       <div class="table-scroll" role="region" aria-label="Repository index" tabindex="0">
         <table class="rtable" id="repo-table" aria-describedby="index-count">
@@ -746,12 +797,9 @@
   <div id="panel-nemoclaw" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-nemoclaw" hidden>
 
     <!-- NemoClaw announcement banner -->
-    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:0.9rem 1.1rem;margin:1.5rem 0 0.75rem;display:flex;align-items:flex-start;gap:0.75rem;">
-      <span style="font-family:var(--mono);font-size:0.55rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);background:var(--orange-dim);border:1px solid rgba(249,115,22,0.3);border-radius:3px;padding:0.2rem 0.5rem;flex-shrink:0;margin-top:0.1rem">NEW · GTC 2026</span>
-      <div>
-        <div style="font-family:var(--sans);font-size:0.8rem;font-weight:700;color:var(--text);line-height:1.4">NVIDIA announced NemoClaw on March 16, 2026 at GTC 2026.</div>
-        <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.25rem;line-height:1.5">Enterprise-grade OpenClaw stack · OpenShell sandbox · Nemotron models · Apache 2.0 · <a href="/guide/nemoclaw.html" style="color:var(--orange);text-decoration:none">Full NemoClaw guide →</a></div>
-      </div>
+    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:0.9rem 1.1rem;margin:1.5rem 0 0.75rem;">
+      <div style="font-family:var(--sans);font-size:0.8rem;font-weight:700;color:var(--text);line-height:1.4">NVIDIA announced NemoClaw on March 16, 2026 at GTC 2026.</div>
+      <div style="font-family:var(--mono);font-size:var(--min-font);color:var(--text-3);margin-top:0.25rem;line-height:1.5">Enterprise-grade OpenClaw stack · OpenShell sandbox · Nemotron models · Apache 2.0 · <a href="/guide/nemoclaw.html" style="color:var(--orange);text-decoration:none">Full NemoClaw guide →</a></div>
     </div>
 
     <!-- NemoClaw repo index table -->
@@ -851,8 +899,9 @@
   let allNcRepos  = [];   /* NemoClaw repos (Supabase filtered or SAMPLE_NEMOCLAW) */
   let familyStats = [];   /* rows from ecosystem_family_stats Supabase table */
   let pinnedRepo  = null;
-  let currentLang = 'ALL';
-  let tablePage   = 1;
+  let currentLang      = 'ALL';
+  let repoSearchQuery  = '';
+  let tablePage        = 1;
   let tableSort   = { col: 'created', dir: 'desc' };
   let ncTablePage = 1;
   let ncTableSort = { col: 'created', dir: 'desc' };
@@ -1191,6 +1240,24 @@
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+    renderTable();
+  }
+
+  function setRepoSearch(val) {
+    repoSearchQuery = val.trim();
+    tablePage = 1;
+    const clearBtn = document.getElementById('repo-search-clear');
+    if (clearBtn) clearBtn.style.display = repoSearchQuery ? 'block' : 'none';
+    renderTable();
+  }
+
+  function clearRepoSearch() {
+    repoSearchQuery = '';
+    tablePage = 1;
+    const input = document.getElementById('repo-search');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('repo-search-clear');
+    if (clearBtn) clearBtn.style.display = 'none';
     renderTable();
   }
 
@@ -1586,6 +1653,14 @@
       repos = repos.filter(r => r.rubric_tier === 'featured' || r.rubric_tier === 'listed');
     }
     if (currentLang !== 'ALL') repos = repos.filter(r => r.language === currentLang);
+    if (repoSearchQuery) {
+      const q = repoSearchQuery.toLowerCase();
+      repos = repos.filter(r =>
+        (r.owner       || '').toLowerCase().includes(q) ||
+        (r.name        || '').toLowerCase().includes(q) ||
+        (r.description || '').toLowerCase().includes(q)
+      );
+    }
     repos.sort((a, b) => {
       let av, bv;
       const ta = getTopics(a)[0] || '';
@@ -1788,13 +1863,13 @@
       }
     } catch { /* familyStats stays [] */ }
 
-    /* NemoClaw repos: try Supabase filter, fall back to curated sample */
+    /* NemoClaw repos: try Supabase topic filter, fall back to filtering allRepos live */
     try {
       if (ncReposRes.status === 'fulfilled' && ncReposRes.value.ok) {
         const data = await ncReposRes.value.json();
-        allNcRepos = Array.isArray(data) && data.length ? data : SAMPLE_NEMOCLAW;
-      } else { allNcRepos = SAMPLE_NEMOCLAW; }
-    } catch { allNcRepos = SAMPLE_NEMOCLAW; }
+        allNcRepos = Array.isArray(data) && data.length ? data : getFamilyRepos('nemoclaw');
+      } else { allNcRepos = getFamilyRepos('nemoclaw'); }
+    } catch { allNcRepos = getFamilyRepos('nemoclaw'); }
 
     pinnedRepo = findPinned();
 
