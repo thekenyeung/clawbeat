@@ -365,8 +365,8 @@
     .col-rank { width: 44px; }
     .col-repo { width: auto; }      /* takes remaining space */
     .col-stars { width: 80px; }
-    .col-lang { width: 130px; }
-    .col-topics { width: 160px; }
+    .col-lang { width: 110px; }
+    .col-topics { width: 210px; }
     .col-date { width: 110px; }
     .col-link { width: 46px; }
 
@@ -384,7 +384,7 @@
     }
     .td-link a:hover { color: var(--orange); }
     .td-link svg { width: 13px; height: 13px; }
-    .td-topics { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .td-topics { display: flex; flex-wrap: wrap; gap: 0.25rem; overflow: hidden; max-width: 100%; }
     .lang-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .dot-python     { background: var(--blue); }
     .dot-typescript { background: var(--cyan); }
