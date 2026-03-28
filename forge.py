@@ -258,6 +258,8 @@ def get_source_authority(url, source_name=""):
 
 # Helper for robust date sorting
 def try_parse_date(date_str):
+    if not date_str:
+        return datetime(2000, 1, 1)
     for fmt in ("%m-%d-%Y", "%Y-%m-%d", "%Y%m%d"):
         try:
             return datetime.strptime(date_str, fmt)
