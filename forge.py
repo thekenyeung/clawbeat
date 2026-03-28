@@ -908,6 +908,14 @@ def _score_github_project(r: dict) -> tuple:
     days_created     = _days_since(created_at)
     last_commit_days = _days_since(pushed_at)
 
+    # ── PERMANENT DENYLIST ────────────────────────────────────────────
+    # Repos explicitly removed as irrelevant to the OpenClaw ecosystem.
+    _REPO_DENYLIST = {
+        'xpf0000/flyenv',   # FlyEnv — not relevant to OpenClaw ecosystem
+    }
+    if f'{owner}/{name}' in _REPO_DENYLIST:
+        return 0, 'skip'
+
     # ── AUTO-DISQUALIFIERS ────────────────────────────────────────────
     if lic in ('NOASSERTION', 'SSPL-1.0'):
         return 0, 'skip'
