@@ -789,7 +789,7 @@ def vet_channel(channel_id, channel_url, channel_name=""):
 def get_video_upload_date(video_id):
     """Fetch the actual upload date for a single YouTube video ID."""
     try:
-        with yt_dlp.YoutubeDL({'quiet': True, 'extract_flat': True}) as ydl:
+        with yt_dlp.YoutubeDL({'quiet': True, 'skip_download': True}) as ydl:
             info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
             return _format_yt_date(info.get('upload_date'))
     except Exception:
