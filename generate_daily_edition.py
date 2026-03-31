@@ -146,6 +146,7 @@ def get_spotlight_articles(sb: Client, dispatch_date_mdy: str) -> list[dict]:
         .eq("date", dispatch_date_mdy) \
         .execute()
     articles = articles_res.data or []
+    print(f"[daily-edition] Raw news_items count for {dispatch_date_mdy}: {len(articles)}")
 
     # Load overrides for this date
     overrides_res = sb.table("spotlight_overrides") \
