@@ -1240,6 +1240,31 @@ _TIER1_BRANDS = ['openclaw', 'moltbot', 'clawdbot', 'claudbot']
 _TIER2_BRANDS = ['moltbook']
 _COMPETITOR_SIGNALS = ['vs ', ' versus ', 'compared to', 'alternative to', 'competitor']
 
+# Off-topic signals: topic patterns that indicate generic AI content with no
+# OpenClaw ecosystem relevance. Applied only to Tier 3 articles (no brand mention).
+# When matched, d1 is forced to 0 and total_score is capped at 25 — preserving
+# D4 source credibility but preventing reputable publishers from surfacing
+# clearly off-topic content above on-topic articles.
+_OFF_TOPIC_SIGNALS = [
+    # AI + workforce / HR / org structure
+    'ai workers', 'ai workforce', 'ai and jobs', 'ai layoffs',
+    'ai replacing', 'org charts', 'organizational chart',
+    'worker-led', 'workers led',
+    # Generic AI in non-tech industry verticals
+    'ai in healthcare', 'ai in medicine', 'ai in education',
+    'ai in retail', 'ai in manufacturing', 'ai in government',
+    'ai in real estate', 'ai in agriculture', 'ai in energy',
+    # Generic AI economy / enterprise adoption trend pieces
+    'ai spending', 'ai roi', 'ai investment trend',
+    'ai adoption rate', 'ai adoption survey',
+    # Generic AI policy / regulation (not OpenClaw-specific)
+    'ai regulation', 'ai legislation', 'ai governance',
+    'ai safety act', 'ai compliance',
+    # Generic consumer / lifestyle AI
+    'best ai tools', 'top ai tools', 'ai apps for',
+    'ai for small business', 'ai for marketers',
+]
+
 def _get_centrality(density: int, is_brand_title: bool, has_brand_in_text: bool) -> int:
     """Map density and title signal to a 0–10 centrality score (D1 sub-dimension)."""
     if is_brand_title and density >= 10:
@@ -1406,6 +1431,13 @@ def compute_scores(item: dict) -> dict:
     if any(sig in title_lower for sig in _COMPETITOR_SIGNALS) and not is_brand_title:
         d1 = max(0.0, d1 - 10)
 
+    # Off-topic suppression: Tier 3 articles (no brand mention) that contain
+    # known off-topic patterns have zero ecosystem relevance. Force d1 to 0
+    # so source credibility alone cannot carry them into the visible feed.
+    _off_topic = tier == 3 and any(sig in text_lower for sig in _OFF_TOPIC_SIGNALS)
+    if _off_topic:
+        d1 = 0.0
+
     # ── D2: Content Depth & Actionability (0–25) ─────────────────────────────
     authority = get_source_authority(url, source)
     has_summary = bool(summary and len(summary.strip()) > 50)
@@ -1493,6 +1525,12 @@ def compute_scores(item: dict) -> dict:
     d5 = _compute_d5(item, tier, centrality, authority)
     total = round((d1/40*35) + (d2/25*20) + (d3/20*15) + (d4/15*10) + (d5/20*20), 2)
 
+    # Off-topic gate: cap total_score at 25 so that a reputable publisher's D4
+    # credibility cannot carry a zero-relevance article above on-topic content.
+    # D4 itself is untouched — this is an article-level penalty, not a source penalty.
+    if _off_topic:
+        total = min(total, 25.0)
+
     # ── Stage 3 Tags ─────────────────────────────────────────────────────────
     stage_tags = []
     if authority >= 3:
@@ -1514,6 +1552,8 @@ def compute_scores(item: dict) -> dict:
         stage_tags.append('legacy-name')
     if is_delist:
         stage_tags.append('promotional')
+    if _off_topic:
+        stage_tags.append('off-topic-suppressed')
 
     return {
         'd1_score':   round(d1, 2),
