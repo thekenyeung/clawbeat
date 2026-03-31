@@ -1723,6 +1723,17 @@ def _save_to_supabase(db: dict) -> None:
             # needs_reprocess BOOLEAN DEFAULT false). Until then, leaving it out keeps
             # the upsert working. Once the column exists, re-add it here.
         } for item in db.get('items', [])]
+        # Deduplicate by URL within the batch — PostgreSQL rejects ON CONFLICT DO UPDATE
+        # if the same PK appears more than once in a single upsert statement.
+        seen_urls = set()
+        deduped = []
+        for r in news_records:
+            if r['url'] not in seen_urls:
+                seen_urls.add(r['url'])
+                deduped.append(r)
+        if len(deduped) < len(news_records):
+            print(f"⚠️  Deduplicated {len(news_records) - len(deduped)} duplicate URL(s) before upsert.")
+        news_records = deduped
         if news_records:
             _supabase.table('news_items').upsert(news_records).execute()
             print(f"✅ Upserted {len(news_records)} news items.")
