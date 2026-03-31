@@ -463,10 +463,14 @@
           signal:     'reject',
           reason:     rejectReason,
         });
+        if (error) { setRejecting(false); showToast('Error: ' + error.message, 'error'); return; }
+        // Remove from news_items immediately so it's gone from the public feed right now.
+        // The article_feedback row is the permanent signal — forge will never re-ingest this URL.
+        const { error: delError } = await supabase.from('news_items').delete().eq('url', selected);
         setRejecting(false);
-        if (error) { showToast('Error: ' + error.message, 'error'); return; }
+        if (delError) { showToast('Rejection logged but feed removal failed: ' + delError.message, 'error'); return; }
         setRejectedUrls(prev => new Set([...prev, selected]));
-        showToast('Article rejected — hidden from feed');
+        showToast('Article rejected and removed from feed');
         resetForm();
       };
 

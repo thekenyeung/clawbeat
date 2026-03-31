@@ -979,5 +979,15 @@
     "Website RSS": "https://nvidianews.nvidia.com/rss",
     "YouTube Channel ID": null,
     "Priority": "1"
+  },
+  {
+    "ID": "110",
+    "Source Name": "ClawCon AI",
+    "Category": "YouTube",
+    "Website URL": "https://www.youtube.com/@clawconai",
+    "YouTube URL": "https://www.youtube.com/@clawconai",
+    "Website RSS": "",
+    "YouTube Channel ID": "",
+    "Priority": "1"
   }
 ]

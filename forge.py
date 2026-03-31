@@ -1632,49 +1632,26 @@ def _apply_feedback_signals(db: dict) -> set:
         feedback_by_url[row['article_id']] = row['reason']
 
     rejected_urls = set(feedback_by_url.keys())
-    items_by_url  = {item['url']: item for item in db.get('items', [])}
 
-    updates: list[tuple[str, dict]] = []
-    for url, reason in feedback_by_url.items():
-        item = items_by_url.get(url)
-        if not item or reason == 'duplicate':
-            continue  # duplicate: URL exclusion only; missing item: already deleted
+    # Evict all rejected articles from the in-memory db so _save_to_supabase never
+    # upserts them back. The article_feedback row is the permanent learning signal;
+    # the news_items row must not survive a forge run.
+    before = len(db.get('items', []))
+    db['items'] = [item for item in db.get('items', []) if item['url'] not in rejected_urls]
+    evicted = before - len(db['items'])
 
-        patch: dict = {}
-        if reason == 'off_topic':
-            patch['d1_score'] = 0.0
-        elif reason == 'too_elementary':
-            patch['d5_score'] = 0.0
-        elif reason == 'low_quality_source':
-            patch['source_type'] = 'delist'
-            patch['d4_score']    = 0.0
-        elif reason == 'clickbait':
-            patch['d2_score'] = 0.0
-
-        if not patch:
-            continue
-
-        # Recalculate total_score using adjusted dimension values
-        d1 = float(patch.get('d1_score', item.get('d1_score') or 0) or 0)
-        d2 = float(patch.get('d2_score', item.get('d2_score') or 0) or 0)
-        d3 = float(item.get('d3_score') or 0)
-        d4 = float(patch.get('d4_score', item.get('d4_score') or 0) or 0)
-        d5 = float(patch.get('d5_score', item.get('d5_score') or 0) or 0)
-        patch['total_score'] = round((d1/40*35) + (d2/25*20) + (d3/20*15) + (d4/15*10) + (d5/20*20), 2)
-
-        item.update(patch)
-        updates.append((url, patch))
-
-    write_errors = 0
-    for url, patch in updates:
+    # Delete any rejected rows still present in news_items (covers pre-fix rejections
+    # and the window between admin rejection and the next forge run).
+    delete_errors = 0
+    for url in rejected_urls:
         try:
-            _supabase.table('news_items').update(patch).eq('url', url).execute()
+            _supabase.table('news_items').delete().eq('url', url).execute()
         except Exception as e:
-            print(f"⚠️  Feedback write-back failed for {url[:60]}: {e}")
-            write_errors += 1
+            print(f"⚠️  Failed to delete rejected item from news_items {url[:60]}: {e}")
+            delete_errors += 1
 
-    err_str = f', {write_errors} write error(s)' if write_errors else ''
-    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s) excluded, {len(updates)} score(s) adjusted{err_str}.")
+    err_str = f', {delete_errors} delete error(s)' if delete_errors else ''
+    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s) permanently excluded, {evicted} evicted from feed{err_str}.")
     return rejected_urls
 
 
