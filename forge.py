@@ -1,3 +1,4 @@
+import html
 import urllib.parse
 import feedparser
 import requests
@@ -1697,7 +1698,7 @@ def _save_to_supabase(db: dict) -> None:
 
         news_records = [{
             'url':           item['url'],
-            'title':         item.get('title', ''),
+            'title':         html.unescape(item.get('title', '')),
             'source':        item.get('source', ''),
             'date':          manual_date_map.get(item['url'], item.get('date', '')),
             'summary':       item.get('summary', ''),
