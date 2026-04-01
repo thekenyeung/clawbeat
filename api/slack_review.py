@@ -127,9 +127,11 @@ def supabase_approve(article_url: str) -> tuple[bool, str]:
 
 
 def supabase_reject(article_url: str, reason: str) -> tuple[bool, str]:
-    """Log rejection signal then delete the article."""
+    """Log rejection signal then delete the article.
+    The feedback log MUST succeed before deletion — it's the permanent block signal
+    that prevents forge from re-ingesting the article on the next run."""
     try:
-        requests.post(
+        r = requests.post(
             f"{SUPABASE_URL}/rest/v1/article_feedback",
             json={"article_id": article_url, "signal": "reject", "reason": reason},
             headers={
@@ -139,8 +141,10 @@ def supabase_reject(article_url: str, reason: str) -> tuple[bool, str]:
             },
             timeout=4,
         )
-    except Exception:
-        pass  # non-critical — proceed to deletion
+        if r.status_code not in (200, 201):
+            return False, f"feedback log failed HTTP {r.status_code}: {r.text[:200]}"
+    except Exception as e:
+        return False, f"feedback log error: {str(e)[:200]}"
     try:
         r = requests.delete(
             f"{SUPABASE_URL}/rest/v1/news_items",
