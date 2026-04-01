@@ -984,7 +984,8 @@
       const m = monthKey(e);
       monthCounts[m] = (monthCounts[m] || 0) + 1;
     }
-    const firstMonth = Object.keys(monthCounts)[0];
+    const currentMonth = MONTHS[todayMidnight().getMonth()];
+    const firstMonth = monthCounts[currentMonth] ? currentMonth : Object.keys(monthCounts)[0];
     renderMonthTabs(monthCounts, firstMonth);
 
     // Featured card = nearest upcoming event

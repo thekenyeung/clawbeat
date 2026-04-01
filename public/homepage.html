@@ -1012,7 +1012,11 @@ img { display: block; max-width: 100%; }
         const end = parseEventDate(e.end_date) || parseEventDate(e.start_date);
         return end && end >= today;
       })
-      .sort((a, b) => (parseEventDate(a.start_date) || 0) - (parseEventDate(b.start_date) || 0))
+      .sort((a, b) => {
+        const da = Math.max(parseEventDate(a.start_date) || 0, today);
+        const db = Math.max(parseEventDate(b.start_date) || 0, today);
+        return da - db;
+      })
       .slice(0, 6);
 
     if (upcoming.length === 0) {
