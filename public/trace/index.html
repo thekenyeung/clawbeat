@@ -20,9 +20,6 @@
 <meta property="og:url" content="https://clawbeat.co/trace/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ClawBeat">
-<meta property="og:image" content="https://clawbeat.co/images/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://clawbeat.co/images/og-image.png">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://clawbeat.co/trace/">
 
@@ -87,7 +84,7 @@ img { display: block; }
 .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
 .hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }
 .hamburger-btn svg { width: 24px; height: 24px; }
-.mobile-menu { display: none; position: fixed; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
+.mobile-menu { display: none; position: absolute; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
 .mobile-menu.open { display: flex; }
 .mobile-nav-item { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
 .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
@@ -307,13 +304,12 @@ img { display: block; }
 .about-cell-body { font-size: 0.85rem; line-height: 1.6; color: var(--text-3); }
 
 /* ── FOOTER ── */
-.footer { border-top: 1px solid var(--border-2); background: var(--bg-2); padding: 1.25rem 1.5rem; margin-top: 4rem; }
-.footer-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.footer-brand { font-family: var(--sans); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff; }
+.trace-footer { max-width: 72rem; margin: 4rem auto 0; padding: 2.5rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.footer-brand { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.03em; color: var(--text-3); }
 .footer-brand span { color: var(--orange); }
-.clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
-.clawhub-badge:hover { color: var(--orange); } .sitemap-link { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; } .sitemap-link:hover { color: var(--orange); }
-@media (max-width: 640px) { .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; } }
+.footer-meta { font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.08em; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.footer-meta a { color: var(--text-4); }
+.footer-meta a:hover { color: var(--text-3); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) { .latest-card { grid-template-columns: 1fr; } .latest-card-img-wrap { aspect-ratio: 16 / 9; } .about-grid { grid-template-columns: 1fr; gap: 1px; } }
@@ -326,7 +322,7 @@ img { display: block; }
 <!-- ── HEADER ── -->
 <header class="header" id="header">
   <div class="header-inner">
-    <a href="/" class="brand">
+    <a href="/?tab=news" class="brand">
       <div class="brand-img">
         <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat">
       </div>
@@ -334,7 +330,7 @@ img { display: block; }
     </a>
     <nav class="header-nav">
       <div class="nav-dropdown">
-        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <a href="/?tab=news" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
         <div class="nav-dropdown-menu">
           <a href="/trace/" class="nav-dropdown-item active-item">
             <i data-lucide="layers"></i>
@@ -343,27 +339,11 @@ img { display: block; }
               <div class="nav-dropdown-sub">Monthly magazine</div>
             </div>
           </a>
-          <a href="/guide/" class="nav-dropdown-item">
-            <i data-lucide="book-marked"></i>
-            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
-          </a>
-          <a href="/dossier.html" class="nav-dropdown-item">
-            <i data-lucide="id-card"></i>
-            <div><div class="nav-dropdown-label">Dossier</div><div class="nav-dropdown-sub">Key players</div></div>
-          </a>
         </div>
       </div>
       <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
       <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
-      <div class="nav-dropdown">
-        <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
-          <div class="nav-dropdown-menu">
-            <a href="/openclaw/index.html" class="nav-dropdown-item">
-              <i data-lucide="git-branch"></i>
-              <div><div class="nav-dropdown-label">Chronicle</div><div class="nav-dropdown-sub">OpenClaw release history</div></div>
-            </a>
-          </div>
-      </div>
+      <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
       <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
       <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
     </nav>
@@ -374,14 +354,11 @@ img { display: block; }
   </div>
 </header>
 <div class="mobile-menu" id="mobile-menu">
-  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/?tab=news" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
   <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
-  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
-  <a href="/dossier.html" class="mobile-subnav-item"><i data-lucide="id-card"></i>Dossier</a>
   <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
   <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
   <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
-  <a href="/openclaw/index.html" class="mobile-subnav-item"><i data-lucide="git-branch"></i>OpenClaw Chronicle</a>
   <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
   <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
 </div>
@@ -396,12 +373,12 @@ img { display: block; }
     </p>
     <div class="catalog-stats">
       <div class="stat-item">
-        <span class="stat-num">1</span>
+        <span class="stat-num">2</span>
         <span class="stat-label">Issues</span>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num">20</span>
+        <span class="stat-num">40</span>
         <span class="stat-label">Signals</span>
       </div>
       <div class="stat-divider"></div>
@@ -419,19 +396,19 @@ img { display: block; }
     <div class="section-rule-label"><span class="sl">//</span> Latest Issue <span class="badge">New</span></div>
     <div class="section-rule-line"></div>
   </div>
-  <a href="/trace/2026-02/" class="latest-card">
+  <a href="/trace/2026-03/" class="latest-card">
       <div class="latest-card-content">
         <div class="latest-kicker">Latest Issue</div>
-        <div class="latest-issue-num">Trace No. 001 · February 2026</div>
-        <div class="latest-headline">OpenClaw creator's advice to AI builders is to be more playful and allow yourself time to improve</div>
-        <div class="latest-editorial">The past month cast a stark light on OpenClaw's dual nature: immensely powerful, yet undeniably volatile. On one hand, the creator's call for playfulness resonated with the innovative spirit, exemplified by agents automating jobs and replacing SaaS subscriptions, signaling a push towards practical, production-ready applications, notably with Kilo's KiloClaw. Yet, this same autonomy manifested in chaotic ways, from a Meta AI researcher's inbox overrun to an agent nuking its own mail client in a misguided attempt to delete an email. These incidents, alongside findings of six deep-seated flaws in OpenClaw's plumbing and the potential for agents to take orders from malicious sites or even launch DoS attacks, underscore a critical tension. While efforts like Perplexity's Computer aim for safer execution, the core question remains: can the ecosystem mature responsibly without sacrificing the very agentic freedom that defines OpenClaw? The next phase will hinge on whether builders prioritize robust guardrails as aggressively as they pursue capability.</div>
+        <div class="latest-issue-num">Trace No. 002 · March 2026</div>
+        <div class="latest-headline">Nvidia bets on OpenClaw, but adds a security layer - how NemoClaw works</div>
+        <div class="latest-editorial">This month, the OpenClaw ecosystem felt Nvidia's gravitational pull like never before. Jensen Huang’s emphatic endorsement at GTC 2026, proclaiming OpenClaw &quot;the next ChatGPT,&quot; was a clear signal of market validation. Yet, Nvidia's strategy isn't solely about embracing the existing framework; their introduction of NemoClaw, an OpenClaw iteration with added security layers and guardrails, points to a clear move towards productizing and potentially controlling its deployment. This raises immediate questions about the balance between an open ecosystem and the desire for commercial control, especially with rumors of Nvidia reportedly planning its own OpenClaw competitor. Meanwhile, the hardware landscape continued to diversify, with GMKTec, leveraging Intel technology, demonstrating an OpenClaw-capable mini PC boasting 180 TOPS and innovative pseudo-memory. This signals a growing push for powerful, localized agent deployments outside of major data centers, offering a compelling alternative to cloud-centric models. The tension between centralized control and decentralized capability will largely define OpenClaw’s trajectory in the coming months.</div>
         <span class="latest-cta">Read Issue <i data-lucide="arrow-right"></i></span>
       </div>
       <div class="latest-card-img-wrap">
-        <img class="latest-card-img" src="https://techcrunch.com/wp-content/uploads/2026/02/openclaw-creator-Peter-Steinberger.jpg?resize=1200,564" alt="OpenClaw creator's advice to AI builders is to be more playful and allow yourself time to improve" onerror="this.style.display='none'">
+        <img class="latest-card-img" src="https://www.zdnet.com/a/img/resize/6cbf5ba90d09a829d1f7d32682c5f576c6eccf72/2026/03/16/b9601c17-6753-40ec-b8d0-8ba6753c785d/nvidia11gettyimages-2262651938.jpg?auto=webp&amp;fit=crop&amp;height=675&amp;width=1200" alt="Nvidia bets on OpenClaw, but adds a security layer - how NemoClaw works" onerror="this.style.display='none'">
         <div class="latest-img-placeholder"></div>
         <div class="latest-img-overlay"></div>
-        <div class="latest-img-issue-num">001</div>
+        <div class="latest-img-issue-num">002</div>
       </div>
     </a>
 </section>
@@ -443,7 +420,27 @@ img { display: block; }
     <div class="section-rule-line"></div>
   </div>
   <div class="archive-grid">
-    <div style="grid-column:1/-1"><p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4);padding:1rem 0;letter-spacing:0.1em;text-transform:uppercase;">No past issues yet — archive builds month by month.</p></div>
+    <a href="/trace/2026-02/" class="issue-card">
+      <div class="issue-card-img-wrap">
+        <img class="issue-card-img" src="https://techcrunch.com/wp-content/uploads/2026/02/openclaw-creator-Peter-Steinberger.jpg?resize=1200,564" alt="OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve" loading="lazy" onerror="this.style.display='none'">
+        <div class="issue-card-img-placeholder"></div>
+        <div class="issue-card-img-overlay"></div>
+        <span class="issue-card-tag">No. 001</span>
+        <span class="issue-card-num-ghost">001</span>
+      </div>
+      <div class="issue-card-body">
+        <div class="issue-card-meta-row">
+          <span class="issue-card-number">Trace No. 001</span>
+          <span class="issue-card-month">February 2026</span>
+        </div>
+        <div class="issue-card-headline">OpenClaw creator’s advice to AI builders is to be more playful and allow yourself time to improve</div>
+        <div class="issue-card-editorial">The past month cast a stark light on OpenClaw's dual nature: immensely powerful, yet undeniably volatile. On one hand, the creator's call for playfulness resonated with the innovative spirit, exemplified by agents automating jobs and replacing SaaS subscriptions, signaling a push towards practical, production-ready applications, notably with Kilo's KiloClaw. Yet, this same autonomy manifested in chaotic ways, from a Meta AI researcher's inbox overrun to an agent nuking its own mail client in a misguided attempt to delete an email. These incidents, alongside findings of six deep-seated flaws in OpenClaw’s plumbing and the potential for agents to take orders from malicious sites or even launch DoS attacks, underscore a critical tension. While efforts like Perplexity's Computer aim for safer execution, the core question remains: can the ecosystem mature responsibly without sacrificing the very agentic freedom that defines OpenClaw? The next phase will hinge on whether builders prioritize robust guardrails as aggressively as they pursue capability.</div>
+        <div class="issue-card-footer">
+          <span class="issue-card-story-count">20 Signals</span>
+          <span class="issue-card-cta">Read Issue <i data-lucide="arrow-right"></i></span>
+        </div>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -473,11 +470,16 @@ img { display: block; }
 </section>
 
 <!-- ── FOOTER ── -->
-<!-- ── FOOTER ── -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">ClawBeat<span>.co</span></div>
-    <div style="display:flex;align-items:center;gap:1.25rem;"><a class="sitemap-link" href="/sitemap.html">sitemap</a><a class="sitemap-link" href="/rss.html">rss</a><a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a></div>
+<footer class="trace-footer">
+  <div class="footer-brand">ClawBeat<span>.co</span></div>
+  <div class="footer-meta">
+    <a href="/">Intel Feed</a>
+    <span>·</span>
+    <a href="/events-calendar.html">Events</a>
+    <span>·</span>
+    <a href="/forge.html">Forge</a>
+    <span>·</span>
+    <a href="/">ClawBeat.co</a>
   </div>
 </footer>
 
