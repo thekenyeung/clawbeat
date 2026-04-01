@@ -1604,6 +1604,7 @@ def _load_from_supabase() -> dict:
                 'd5_score':      row.get('d5_score'),
                 'needs_reprocess': row.get('needs_reprocess', False),
                 'cluster_locked': row.get('cluster_locked', False),
+                'pending_review': row.get('pending_review', False),
                 'vec':           None,
             })
 
@@ -2142,6 +2143,7 @@ if __name__ == "__main__":
         # Never re-score admin-rejected articles — human input overrides the algorithm.
         if item['url'] in rejected_urls:
             continue
+        already_queued = item.get('pending_review', False)
         is_new = item.get('total_score') is None
         if is_new:
             scores = compute_scores(item)
@@ -2150,7 +2152,7 @@ if __name__ == "__main__":
             ts = item.get('total_score') or 0.0
             needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
             item['pending_review'] = needs_review
-            if needs_review:
+            if needs_review and not already_queued:
                 pending_review_items.append(item)
     if scores_computed:
         print(f"📊 Scored {scores_computed} articles.")
