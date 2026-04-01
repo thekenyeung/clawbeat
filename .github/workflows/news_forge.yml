@@ -30,6 +30,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_REVIEW_CHANNEL_ID: ${{ secrets.SLACK_REVIEW_CHANNEL_ID }}
         run: python forge.py
 
       - name: Post new headlines to Bluesky

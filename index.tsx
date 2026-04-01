@@ -45,6 +45,7 @@ interface NewsItem {
   date: string;
   inserted_at?: string;
   source_type?: 'priority' | 'standard' | 'delist';
+  pending_review?: boolean;
   moreCoverage?: Array<{ source: string; url: string }>;
   tags?: string[];
   // OpenClaw Feed Scoring Methodology v1.3
@@ -377,6 +378,7 @@ const App: React.FC = () => {
         d4_score: item.d4_score ?? null,
         d5_score: item.d5_score ?? null,
         d1_tier: item.d1_tier ?? null,
+        pending_review: item.pending_review ?? false,
       })));
 
       setVideos((videosRes.data || [])
@@ -927,11 +929,12 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
         const alsoTodaySlots = spotlightSlots.slice(1).filter(Boolean) as NewsItem[];
 
         // Below-spotlight: current-page items for this day, in full-day sort order.
-        // Suppressed items (Stage 2: total_score < 10) are hidden from display.
+        // Suppressed items (Stage 2: total_score < 10) and pending-review items are hidden.
         const currentPageUrls = new Set(dayItems.map(i => i.url));
         const allArticles = (fullDayArticles[day] || [])
           .filter(a => currentPageUrls.has(a.url))
-          .filter(a => !(a.total_score != null && a.total_score < 10));
+          .filter(a => !(a.total_score != null && a.total_score < 10))
+          .filter(a => !a.pending_review);
 
         return (
           <React.Fragment key={day}>
@@ -948,7 +951,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
             {leadSlot && spotlightDays.has(day) && (() => {
               const isVerified = checkIfVerified(leadSlot);
               const isPriority = leadSlot.source_type === 'priority';
-              const moreCov = (leadSlot.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              const moreCov = (leadSlot.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook') && !l.url?.toLowerCase().includes('github.com'));
               const dateParts = leadSlot.date.split('-'); // MM-DD-YYYY
               const isoDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}` : leadSlot.date;
               const isPlinking = permalinkLoading === leadSlot.url;
@@ -1044,7 +1047,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
             {allArticles.map((item) => {
               const isVerified = checkIfVerified(item);
               const isPriority = item.source_type === 'priority';
-              const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook'));
+              const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook') && !l.url?.toLowerCase().includes('github.com'));
               const storyParts = item.date.split('-');
               const storyIsoDate = storyParts.length === 3 ? `${storyParts[2]}-${storyParts[0]}-${storyParts[1]}` : item.date;
               return (

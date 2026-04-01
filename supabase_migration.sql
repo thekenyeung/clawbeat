@@ -519,3 +519,7 @@ CREATE POLICY "Public reads" ON repo_contributors
 -- Uploaded images are stored at: {edition_date}/slot-{N}-{timestamp}.{ext}
 -- Public URL format: {SUPABASE_URL}/storage/v1/object/public/daily-edition-images/{path}
 -- =============================================================
+
+-- Add pending_review column for Slack approval gate.
+-- Items scoring 10–45 are held here until manually accepted or auto-expired after 24h.
+ALTER TABLE news_items ADD COLUMN IF NOT EXISTS pending_review BOOLEAN DEFAULT false;

@@ -146,12 +146,18 @@ DELIST_SITES = [
     'issuewire.com', 'openpr.com', 'releasewire.com', 'send2press.com',
     'marketwired.com', 'webwire.com', 'pressrelease.com',
     'youtube.com', 'youtu.be',
+    'github.com',
 ]
 BANNED_SOURCES = [
     "access newswire", "globenewswire", "prnewswire", "business wire",
     "pr newswire", "einpresswire", "prweb", "newswire", "press release",
     "marketwired", "webwire",
 ]
+
+# Medium-confidence review gate: items whose total_score falls in [MIN, MAX) are held
+# as pending_review=True and sent to Slack for manual approve/deny before appearing on site.
+REVIEW_SCORE_MIN = 10.0   # items below this are outright suppressed (no Slack ping)
+REVIEW_SCORE_MAX = 45.0   # items at or above this auto-include without review
 
 # --- Dynamically load whitelist domain authority sets ---
 def _load_whitelist_domains():
@@ -538,6 +544,9 @@ def scan_hackernews(hours_back: int = 48) -> list:
                 story_url = hit.get('url')
                 # Skip self-posts (Ask/Show HN without an external URL) and dupes
                 if not story_url or story_url in seen_urls:
+                    continue
+                # Skip Show HN posts — self-promotional project submissions, not news coverage
+                if 'show_hn' in (hit.get('_tags') or []):
                     continue
                 if get_source_type(story_url) == 'delist':
                     continue
@@ -1682,6 +1691,60 @@ def _apply_feedback_signals(db: dict) -> set:
     return rejected_urls
 
 
+def _notify_slack_review(items: list) -> None:
+    """Post one Block Kit message per medium-confidence article to #clawbeat-review."""
+    token   = os.environ.get('SLACK_BOT_TOKEN', '')
+    channel = os.environ.get('SLACK_REVIEW_CHANNEL_ID', '')
+    if not token or not channel:
+        print("⚠️ Slack review: SLACK_BOT_TOKEN or SLACK_REVIEW_CHANNEL_ID not set — skipping.")
+        return
+    for item in items:
+        score  = item.get('total_score', 0)
+        title  = item.get('title', '(no title)')[:200]
+        url    = item.get('url', '')
+        source = item.get('source', '')
+        blocks = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*<{url}|{title}>*\n_{source}_ · score `{score}`",
+                },
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Accept"},
+                        "style": "primary",
+                        "action_id": "accept_article",
+                        "value": url,
+                    },
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Reject"},
+                        "style": "danger",
+                        "action_id": "reject_article",
+                        "value": url,
+                    },
+                ],
+            },
+        ]
+        try:
+            resp   = requests.post(
+                "https://slack.com/api/chat.postMessage",
+                json={"channel": channel, "text": f"Review: {title}", "blocks": blocks},
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                timeout=5,
+            )
+            result = resp.json()
+            if not result.get('ok'):
+                print(f"⚠️ Slack review send failed: {result.get('error')} — {title[:60]}")
+        except Exception as e:
+            print(f"⚠️ Slack review error: {e}")
+
+
 def _save_to_supabase(db: dict) -> None:
     """Upsert all data to Supabase. Only prunes stale items from the current dispatch date;
     articles from past dispatches are never deleted.
@@ -1723,6 +1786,7 @@ def _save_to_supabase(db: dict) -> None:
             'hn_comments':   item.get('hn_comments'),
             'd5_score':      item.get('d5_score'),
             'cluster_locked': item.get('cluster_locked', False),
+            'pending_review': item.get('pending_review', False),
             # needs_reprocess is omitted here; it is written only after the column
             # migration has been applied (ALTER TABLE news_items ADD COLUMN IF NOT EXISTS
             # needs_reprocess BOOLEAN DEFAULT false). Until then, leaving it out keeps
@@ -1746,6 +1810,19 @@ def _save_to_supabase(db: dict) -> None:
             # Guarded separately so a missing column doesn't abort the upsert above.
             try:
                 _supabase.table('news_items').delete().eq('needs_reprocess', True).execute()
+            except Exception:
+                pass  # Column not yet migrated — skip cleanup
+            # Expire stale pending-review items older than 24 hours. If no Slack action
+            # was taken within the window the item is silently removed; the rejection
+            # is NOT logged as a feedback signal since no human decision was made.
+            try:
+                from datetime import timezone
+                cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).isoformat()
+                _supabase.table('news_items') \
+                    .delete() \
+                    .eq('pending_review', True) \
+                    .lt('inserted_at', cutoff) \
+                    .execute()
             except Exception:
                 pass  # Column not yet migrated — skip cleanup
 
@@ -2037,6 +2114,7 @@ if __name__ == "__main__":
             item['moreCoverage'] = [
                 mc for mc in item['moreCoverage']
                 if mc['url'] not in headline_urls
+                and 'github.com' not in mc['url'].lower()
             ]
 
     # Tag backfill: extract named-entity tags for articles that don't have tags yet.
@@ -2057,6 +2135,7 @@ if __name__ == "__main__":
     # total_score, or whose moreCoverage changed this run (anchor selection can
     # change D3 engagement score).  Runs fully locally — no API calls.
     scores_computed = 0
+    pending_review_items = []
     for item in db['items']:
         # Re-score if: new article (no score yet) OR moreCoverage changed this run
         # We detect "changed this run" by checking if the item was in newly_discovered.
@@ -2068,8 +2147,16 @@ if __name__ == "__main__":
             scores = compute_scores(item)
             item.update(scores)
             scores_computed += 1
+            ts = item.get('total_score') or 0.0
+            needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
+            item['pending_review'] = needs_review
+            if needs_review:
+                pending_review_items.append(item)
     if scores_computed:
         print(f"📊 Scored {scores_computed} articles.")
+    if pending_review_items:
+        print(f"📬 {len(pending_review_items)} article(s) queued for Slack review.")
+        _notify_slack_review(pending_review_items)
 
     # Retry pass: articles whose Gemini call previously failed and were stored with the
     # fallback string will never be retried by the main loop (URL is already in existing_urls).
