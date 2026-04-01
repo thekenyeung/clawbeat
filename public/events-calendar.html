@@ -735,12 +735,18 @@
     return new Date(y, m - 1, d);
   }
 
-  function countdown(startDateStr) {
+  function countdown(startDateStr, endDateStr) {
     const d = parseDate(startDateStr);
     if (!d) return { text: 'TBD', cls: '' };
-    const diff = Math.round((d - todayMidnight()) / 86400000);
+    const today = todayMidnight();
+    const diff = Math.round((d - today) / 86400000);
     if (diff === 0) return { text: 'TODAY', cls: 'today' };
-    if (diff < 0)   return { text: 'ENDED', cls: '' };
+    if (diff < 0) {
+      // Event started before today — check if still ongoing
+      const dEnd = parseDate(endDateStr);
+      if (dEnd && dEnd >= today) return { text: 'ONGOING', cls: 'today' };
+      return { text: 'ENDED', cls: '' };
+    }
     const n = String(diff).padStart(2, '0');
     return { text: `T-${n} DAYS`, cls: diff <= 7 ? 'soon' : '' };
   }
@@ -801,7 +807,7 @@
   }
 
   function renderFeaturedCard(e) {
-    const cd  = countdown(e.start_date);
+    const cd  = countdown(e.start_date, e.end_date);
     const loc = locationStr(e);
     const dateLabel = formatDateLabel(e.start_date, e.end_date);
     return `
@@ -829,7 +835,7 @@
   }
 
   function renderEventCard(e) {
-    const cd       = countdown(e.start_date);
+    const cd       = countdown(e.start_date, e.end_date);
     const loc      = locationStr(e);
     const mKey     = monthKey(e);
     const isCyan   = e.event_type === 'virtual';
@@ -945,7 +951,12 @@
         const d = parseDate(e.end_date || e.start_date);
         return d && d >= cutoff;
       })
-      .sort((a, b) => (parseDate(a.start_date) || 0) - (parseDate(b.start_date) || 0));
+      .sort((a, b) => {
+        const today = todayMidnight();
+        const da = Math.max(parseDate(a.start_date) || 0, today);
+        const db = Math.max(parseDate(b.start_date) || 0, today);
+        return da - db;
+      });
   }
 
   async function init() {
