@@ -311,8 +311,17 @@ _STRIP_PARAMS = {
 }
 
 def normalize_url(url: str) -> str:
-    """Strip tracking/referral query params and trailing slashes for dedup."""
+    """Strip tracking/referral query params and trailing slashes for dedup.
+    Also unwraps RSS redirect wrappers (e.g. go.theregister.com/feed/<real-url>)
+    so the same article stored under a redirect URL is recognised as a duplicate
+    of the canonical URL on subsequent runs."""
     try:
+        # Unwrap common RSS feed redirect wrappers before any other normalisation.
+        # Pattern: https://<redirect-host>/feed/<real-url>
+        _FEED_REDIRECT_RE = re.compile(r'^https?://[^/]+/feed/(https?://.+)$', re.I)
+        m = _FEED_REDIRECT_RE.match(url)
+        if m:
+            url = m.group(1)
         p = urllib.parse.urlparse(url)
         qs = urllib.parse.parse_qs(p.query, keep_blank_values=True)
         clean_qs = {k: v for k, v in qs.items() if k.lower() not in _STRIP_PARAMS}
