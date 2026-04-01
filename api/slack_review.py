@@ -142,7 +142,21 @@ def supabase_reject(article_url: str, reason: str) -> tuple[bool, str]:
             timeout=4,
         )
         if r.status_code not in (200, 201):
-            return False, f"feedback log failed HTTP {r.status_code}: {r.text[:200]}"
+            # 409 with code 23503 = FK violation: article already deleted from news_items.
+            # The article is gone from the feed, but we still need the feedback row for
+            # the permanent block signal. This happens when the FK constraint exists on
+            # article_feedback.article_id — drop it in Supabase to fix permanently:
+            #   ALTER TABLE article_feedback DROP CONSTRAINT article_feedback_article_id_fkey;
+            try:
+                body = r.json()
+            except Exception:
+                body = {}
+            if r.status_code == 409 and body.get("code") == "23503":
+                # Article already gone — skip feedback log, proceed to ensure deletion.
+                # WARNING: without the feedback row, forge may re-ingest this URL.
+                pass
+            else:
+                return False, f"feedback log failed HTTP {r.status_code}: {r.text[:200]}"
     except Exception as e:
         return False, f"feedback log error: {str(e)[:200]}"
     try:
