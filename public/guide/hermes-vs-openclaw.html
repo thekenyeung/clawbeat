@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#08090b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+  <link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+
+  <!-- ── PRIMARY SEO ─────────────────────────────────────────────────── -->
+  <title>Hermes Agent vs. OpenClaw: The 2026 Open-Source Agent Comparison | ClawBeat</title>
+  <meta name="description" content="Hermes Agent vs. OpenClaw — an authoritative developer comparison. NousResearch's persistent memory framework vs. the hub-spoke OpenClaw architecture. Every claim sourced from official docs, GitHub, and arXiv. Updated March 2026." />
+  <meta name="keywords" content="Hermes Agent, OpenClaw, NousResearch, Hermes vs OpenClaw, open source AI agent, agentic framework 2026, Hermes 4, persistent AI agent, AI agent comparison" />
+  <meta name="author" content="ClawBeat" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://clawbeat.co/guide/hermes-vs-openclaw.html" />
+
+  <!-- ── GEO / AI CRAWLER ───────────────────────────────────────────── -->
+  <meta name="geo.region" content="US" />
+  <meta name="geo.placename" content="United States" />
+  <meta name="dc.subject" content="Artificial Intelligence, Agentic AI Frameworks, Open Source AI, NousResearch Hermes, OpenClaw" />
+  <meta name="article:section" content="Guide" />
+  <meta name="article:tag" content="Hermes Agent, OpenClaw, NousResearch, AI agent frameworks, open source AI" />
+
+  <!-- ── OPEN GRAPH ──────────────────────────────────────────────────── -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Hermes Agent vs. OpenClaw: The 2026 Open-Source Agent Comparison" />
+  <meta property="og:description" content="Two MIT-licensed agentic frameworks. One optimizes for broad reach — the other grows with you. Authoritative comparison sourced from official docs, GitHub, and arXiv." />
+  <meta property="og:url" content="https://clawbeat.co/guide/hermes-vs-openclaw.html" />
+  <meta property="og:site_name" content="ClawBeat" />
+  <meta property="og:image" content="https://clawbeat.co/images/og-image.png" />
+  <meta property="article:published_time" content="2026-03-31" />
+  <meta property="article:modified_time" content="2026-03-31" />
+  <meta property="article:author" content="ClawBeat" />
+  <meta property="article:section" content="Guide" />
+
+  <!-- ── TWITTER CARD ────────────────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hermes Agent vs. OpenClaw: The 2026 Open-Source Agent Comparison" />
+  <meta name="twitter:description" content="Two MIT-licensed agentic frameworks. One optimizes for broad reach — the other grows with you. Every claim sourced from official docs." />
+  <meta name="twitter:image" content="https://clawbeat.co/images/og-image.png" />
+  <meta name="twitter:site" content="@clawbeat" />
+
+  <!-- ── SCHEMA.ORG: TECH ARTICLE ──────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Hermes Agent vs. OpenClaw: The 2026 Open-Source Agent Comparison",
+    "description": "An authoritative comparison of Hermes Agent (NousResearch) and OpenClaw. Covers architecture, memory systems, skill learning, deployment backends, and developer considerations. Every fact sourced from official documentation, GitHub, and arXiv.",
+    "url": "https://clawbeat.co/guide/hermes-vs-openclaw.html",
+    "datePublished": "2026-03-31",
+    "dateModified": "2026-03-31",
+    "author": {
+      "@type": "Organization",
+      "name": "ClawBeat",
+      "url": "https://clawbeat.co"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ClawBeat",
+      "url": "https://clawbeat.co"
+    },
+    "about": [
+      { "@type": "SoftwareApplication", "name": "Hermes Agent", "url": "https://github.com/NousResearch/hermes-agent", "applicationCategory": "AI Agent Framework", "operatingSystem": "Cross-platform", "license": "MIT" },
+      { "@type": "SoftwareApplication", "name": "OpenClaw", "url": "https://github.com/openclaw/openclaw", "applicationCategory": "AI Agent Framework", "operatingSystem": "Cross-platform", "license": "MIT" }
+    ],
+    "mentions": [
+      { "@type": "Organization", "name": "NousResearch", "url": "https://nousresearch.com/" },
+      { "@type": "SoftwareApplication", "name": "Hermes 4", "url": "https://hermes4.nousresearch.com/" }
+    ],
+    "citation": [
+      { "@type": "ScholarlyArticle", "name": "Hermes 4 Technical Report", "url": "https://arxiv.org/abs/2508.18255" },
+      { "@type": "ScholarlyArticle", "name": "Hermes 3 Technical Report", "url": "https://arxiv.org/pdf/2408.11857" }
+    ]
+  }
+  </script>
+
+  <!-- ── SCHEMA.ORG: FAQ ────────────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Hermes Agent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hermes Agent is an open-source autonomous AI agent framework launched by NousResearch on February 26, 2026. It is built around a multi-level persistent memory system, an auto-generating skills library, and six execution backends ranging from local to serverless. It supports 200+ model backends via OpenRouter and connects to CLI, Telegram, Discord, Slack, WhatsApp, and Signal with cross-platform conversation continuity. Source: hermes-agent.nousresearch.com"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Hermes Agent differ from OpenClaw?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hermes Agent is agent-first — designed to accumulate knowledge and improve over time through multi-level memory (session files + SQLite FTS5 + Honcho user modeling) and auto-generated Skill Documents. OpenClaw is infrastructure-first — a hub-spoke model optimized for broad multi-channel team deployments with 52+ built-in skills and faster managed setup. Both are MIT-licensed. Source: github.com/NousResearch/hermes-agent and github.com/openclaw/openclaw"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Hermes model lineage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "NousResearch has released three major Hermes model generations: Hermes 2 Pro (Mistral/Llama 2 base, ChatML format, first serious function-calling fine-tune), Hermes 3 (Llama 3.1 8B/70B/405B, standardized tool_call XML format, arXiv:2408.11857), and Hermes 4 (Llama 3.1 14B/70B/405B, hybrid think-tag reasoning, Atropos RL training, 19B tokens, arXiv:2508.18255). The Hermes Agent framework is separate from these models and can run against any LLM backend."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Hermes Agent support MCP servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Hermes Agent connects directly to any MCP (Model Context Protocol) server with tool filtering, making it compatible with the same tool ecosystem used by Claude Code, Cursor, and other MCP-aware agents. Source: hermes-agent.nousresearch.com/docs"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I migrate from OpenClaw to Hermes Agent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Hermes Agent ships a built-in migration tool that auto-imports configurations, memories, and skills from an existing OpenClaw installation. Source: hermes-agent.nousresearch.com/docs"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What execution backends does Hermes Agent support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hermes Agent supports six execution backends: Local, Docker, SSH, Daytona (cloud dev environments), Singularity (HPC), and Modal (serverless with near-zero idle cost). This range makes it deployable from embedded hardware to fully serverless infrastructure. Source: hermes-agent.nousresearch.com/docs"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ── SCHEMA.ORG: BREADCRUMB ─────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "ClawBeat", "item": "https://clawbeat.co" },
+      { "@type": "ListItem", "position": 2, "name": "Guides", "item": "https://clawbeat.co/guide/" },
+      { "@type": "ListItem", "position": 3, "name": "Hermes Agent vs. OpenClaw", "item": "https://clawbeat.co/guide/hermes-vs-openclaw.html" }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ── RESET ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    /* ── TOKENS ──────────────────────────────────────────────────── */
+    :root {
+      --bg:       #08090b;
+      --bg-2:     #0d0f12;
+      --bg-3:     #131619;
+      --border:   rgba(255,255,255,0.05);
+      --border-2: rgba(255,255,255,0.09);
+      --orange:        #f97316;
+      --orange-bright: #fb923c;
+      --orange-dim:    rgba(249,115,22,0.10);
+      --orange-glow:   rgba(249,115,22,0.15);
+      --green:     #22c55e;
+      --green-dim: rgba(34,197,94,0.08);
+      --cyan:      #06b6d4;
+      --cyan-dim:  rgba(6,182,212,0.08);
+      --violet:        #a78bfa;
+      --violet-dim:    rgba(167,139,250,0.10);
+      --violet-border: rgba(167,139,250,0.25);
+      --text:      #e2e4e9;
+      --text-2:    #9097a3;
+      --text-3:    #525866;
+      --text-4:    #2e333d;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Space Grotesk', sans-serif;
+      --c-hermes:  #a78bfa;
+      --c-openclaw:#f97316;
+      --radius:    10px;
+      --min-font:  0.75rem;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── HEADER (site-standard) ──────────────────────────────────── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,12,0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .header-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .brand-img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-text {
+      font-family: var(--sans);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      font-style: italic;
+      color: #fff;
+    }
+    .brand-text span { color: var(--orange); }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .nav-item {
+      font-family: var(--sans);
+      font-size: 0.625rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.375rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-item svg { width: 16px; height: 16px; }
+    .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .hamburger-btn {
+      display: none;
+      padding: 0.5rem;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fff; }
+    .hamburger-btn svg { width: 24px; height: 24px; }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 4rem;
+      left: 0;
+      width: 100%;
+      background: rgba(10,10,12,0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 60;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-nav-item {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      padding: 0.75rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+    .mobile-nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--orange);
+      box-shadow: inset 0 0 10px rgba(249,115,22,0.1);
+    }
+    .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+    .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+    .mobile-subnav-item svg { width: 14px; height: 14px; }
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .hamburger-btn { display: flex; }
+    }
+    .nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+    .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
+    .nav-dropdown-item:hover { background: var(--orange-dim); }
+    .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+    .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+    .nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+
+    /* ── FOOTER (site-standard) ──────────────────────────────────── */
+    .footer { background: var(--bg-2); border-top: 1px solid var(--border-2); margin-top: 4rem; }
+    .footer-inner {
+      max-width: 72rem; margin: 0 auto; padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .footer-brand {
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 900;
+      font-style: italic; text-transform: uppercase; letter-spacing: -0.04em; color: #fff;
+    }
+    .footer-brand span { color: var(--orange); }
+    .clawhub-badge {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
+      text-decoration: none; letter-spacing: 0.05em; transition: color 0.15s;
+    }
+    .clawhub-badge:hover { color: var(--orange); }
+
+    /* ── HERO ────────────────────────────────────────────────────── */
+    .hero { padding: 52px 0 44px; border-bottom: 1px solid var(--border); }
+    h1 {
+      font-family: var(--sans);
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 900;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 22px;
+      letter-spacing: -0.04em;
+      font-style: italic;
+      text-transform: uppercase;
+    }
+    h1 .h1-vs { color: var(--text-3); font-style: normal; font-weight: 400; }
+    .hero-desc {
+      font-size: 1.0625rem;
+      color: var(--text-2);
+      max-width: 680px;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+    .hero-desc a { color: var(--orange); text-decoration: none; }
+    .hero-desc a:hover { text-decoration: underline; }
+    .meta-strip {
+      display: flex; flex-wrap: wrap; gap: 24px;
+      font-family: var(--mono); font-size: var(--min-font);
+      color: var(--text-3); padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .meta-strip strong { color: var(--text-2); font-weight: 600; }
+    .meta-dot { color: var(--orange); margin-right: 4px; }
+
+    /* ── BADGE ROW ───────────────────────────────────────────────── */
+    .badge-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 20px; }
+    .badge {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      padding: 0.2rem 0.5rem; border-radius: 3px;
+    }
+    .badge-hermes { background: var(--violet-dim); color: var(--violet); border: 1px solid var(--violet-border); }
+    .badge-openclaw { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+    .badge-mit { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+    .badge-new { background: rgba(6,182,212,0.1); color: var(--cyan); border: 1px solid rgba(6,182,212,0.25); }
+
+    /* ── TOC ─────────────────────────────────────────────────────── */
+    .toc {
+      background: var(--bg-2);
+      border: 1px solid var(--border-2);
+      border-left: 3px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 32px 0;
+      max-width: 540px;
+    }
+    .toc-label {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.15em; color: var(--orange);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .toc-label::before { content: '//'; opacity: 0.5; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .toc-list li { display: flex; align-items: baseline; gap: 10px; }
+    .toc-num { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); min-width: 18px; flex-shrink: 0; }
+    .toc-list a { font-size: 0.875rem; font-weight: 500; color: var(--text-2); text-decoration: none; transition: color 0.15s; }
+    .toc-list a:hover { color: var(--orange); }
+
+    /* ── SOURCE NOTICE ───────────────────────────────────────────── */
+    .source-notice {
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.15);
+      border-left: 3px solid var(--green);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 32px 0;
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 720px;
+    }
+    .source-notice strong { color: var(--text); }
+
+    /* ── ARTICLE BODY ────────────────────────────────────────────── */
+    .article-body { padding: 0 0 4rem; }
+    h2 {
+      font-family: var(--sans);
+      font-size: var(--min-font);
+      font-weight: 900;
+      color: var(--text-3);
+      margin: 56px 0 22px;
+      letter-spacing: 0.12em;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-2);
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    h2 .h2-num { color: var(--orange); font-weight: 700; }
+    h2 .h2-title { color: var(--text); }
+    h3 {
+      font-family: var(--sans);
+      font-size: 1.0625rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 32px 0 10px;
+      letter-spacing: -0.02em;
+      max-width: 720px;
+    }
+    p { color: var(--text-2); font-size: 0.9375rem; line-height: 1.85; margin-bottom: 1rem; max-width: 720px; }
+    p a { color: var(--orange); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; transition: color 0.15s; }
+    p a:hover { color: var(--orange-bright); }
+    strong { color: var(--text); }
+
+    /* ── CALLOUT BOX ─────────────────────────────────────────────── */
+    .callout {
+      border-left: 3px solid var(--orange);
+      background: var(--bg-2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 22px;
+      margin: 24px 0;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      max-width: 720px;
+      color: var(--text-2);
+    }
+    .callout-label {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.15em; color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .callout strong { color: var(--text); }
+    .callout a { color: var(--orange); text-decoration: none; }
+    .callout a:hover { text-decoration: underline; }
+
+    /* ── FEATURE GRID ────────────────────────────────────────────── */
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+    @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: var(--border-2); }
+    .feature-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .feature-icon {
+      width: 30px; height: 30px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0; background: var(--orange-dim);
+    }
+    .feature-title { font-size: 0.875rem; font-weight: 700; color: var(--text); }
+    .feature-sub { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+    .feature-desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.7; margin: 0; max-width: none; }
+
+    /* ── TABLES ──────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); margin: 24px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    thead th {
+      padding: 11px 16px; text-align: left;
+      font-family: var(--sans); font-size: var(--min-font); font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      border-bottom: 1px solid var(--border-2);
+      background: var(--bg-2); white-space: nowrap; color: var(--text-3);
+    }
+    thead th.col-hermes { color: var(--violet); }
+    thead th.col-openclaw { color: var(--orange); }
+    .cmp-header-hermes { color: var(--violet) !important; }
+    .cmp-header-openclaw { color: var(--orange) !important; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+    tbody td { padding: 11px 16px; vertical-align: top; color: var(--text-2); line-height: 1.55; }
+    tbody td.row-label { color: var(--text-3); font-family: var(--mono); font-size: var(--min-font); font-weight: 600; white-space: nowrap; letter-spacing: 0.04em; }
+    tbody td a { color: var(--orange); text-decoration: none; }
+    tbody td a:hover { text-decoration: underline; }
+    .cmp-cell-hermes { background: rgba(167,139,250,0.04); }
+    .cmp-cell-openclaw { background: rgba(249,115,22,0.04); }
+    .win { color: var(--text); font-weight: 600; }
+    .win::after { content: ' ✓'; color: var(--green); font-size: 0.75em; }
+    code {
+      font-family: var(--mono); font-size: 0.8em;
+      background: var(--bg-3); border: 1px solid var(--border-2);
+      padding: 1px 6px; border-radius: 4px; color: var(--orange-bright);
+    }
+
+    /* ── DECISION CARDS ──────────────────────────────────────────── */
+    .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    @media (max-width: 600px) { .decision-grid { grid-template-columns: 1fr; } }
+    .decision-card { border-radius: var(--radius); padding: 24px; }
+    .decision-card-hermes { background: var(--violet-dim); border: 1px solid var(--violet-border); }
+    .decision-card-openclaw { background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.25); }
+    .decision-title {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 14px;
+    }
+    .decision-card-hermes .decision-title { color: var(--violet); }
+    .decision-card-openclaw .decision-title { color: var(--orange); }
+    .decision-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .decision-list li { font-size: 0.875rem; color: var(--text-2); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .decision-list li::before { content: '→'; flex-shrink: 0; }
+    .decision-card-hermes .decision-list li::before { color: var(--violet); }
+    .decision-card-openclaw .decision-list li::before { color: var(--orange); }
+
+    /* ── TECHNICAL NOTES ─────────────────────────────────────────── */
+    .tech-note { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 12px; background: var(--bg-2); max-width: 720px; }
+    .tech-note-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .tech-note-num {
+      font-family: var(--mono); font-size: var(--min-font); font-weight: 700;
+      color: var(--orange); background: var(--orange-dim);
+      border: 1px solid rgba(249,115,22,0.3);
+      padding: 2px 7px; border-radius: 3px; letter-spacing: 0.1em;
+    }
+    .tech-note-title { font-size: 0.9375rem; font-weight: 700; color: var(--text); }
+    .tech-note p { margin-bottom: 0; font-size: 0.875rem; max-width: none; }
+
+    /* ── SOURCES ─────────────────────────────────────────────────── */
+    .sources-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 20px; max-width: 720px; }
+    .sources-list li { display: flex; align-items: flex-start; gap: 10px; }
+    .sources-list .src-num { font-family: var(--mono); font-size: var(--min-font); color: var(--text-4); min-width: 24px; flex-shrink: 0; padding-top: 3px; }
+    .sources-list a { font-size: 0.875rem; color: var(--text-2); text-decoration: none; transition: color 0.15s; line-height: 1.5; }
+    .sources-list a:hover { color: var(--orange); }
+    .src-type {
+      font-family: var(--mono); font-size: var(--min-font); text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 1px 5px; border-radius: 3px;
+      margin-left: 6px; vertical-align: middle;
+      background: var(--bg-3); color: var(--text-4);
+      border: 1px solid var(--border-2); white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+          <a href="/guide/" class="nav-dropdown-item">
+            <i data-lucide="book-marked"></i>
+            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <div class="nav-dropdown">
+        <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+        <div class="nav-dropdown-menu">
+          <a href="/openclaw/index.html" class="nav-dropdown-item">
+            <i data-lucide="git-branch"></i>
+            <div><div class="nav-dropdown-label">Chronicle</div><div class="nav-dropdown-sub">OpenClaw release history</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/dossier.html" class="mobile-subnav-item"><i data-lucide="id-card"></i>Dossier</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/openclaw/index.html" class="mobile-subnav-item"><i data-lucide="git-branch"></i>OpenClaw Chronicle</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+</div>
+
+<!-- ── MAIN ───────────────────────────────────────────────────────── -->
+<main id="main" role="main">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="guide-title">
+    <div class="wrap">
+      <div class="badge-row">
+        <span class="badge badge-hermes">Hermes Agent</span>
+        <span class="badge badge-openclaw">OpenClaw</span>
+        <span class="badge badge-mit">MIT Licensed</span>
+        <span class="badge badge-new">New · Feb 2026</span>
+      </div>
+
+      <h1 id="guide-title">
+        Hermes Agent<br>
+        <span class="h1-vs">vs.</span> OpenClaw
+      </h1>
+
+      <p class="hero-desc">
+        Two open-source agentic frameworks. Both MIT-licensed. Both serious contenders for
+        the AI developer stack in 2026. One optimizes for broad reach across channels and teams —
+        the other is architected to accumulate knowledge and improve over time. Here's what
+        developers actually need to know.
+      </p>
+
+      <div class="meta-strip">
+        <span><span class="meta-dot">●</span> <strong>Published:</strong> March 31, 2026</span>
+        <span><span class="meta-dot">●</span> <strong>Updated:</strong> March 31, 2026</span>
+        <span><span class="meta-dot">●</span> <strong>Read time:</strong> ~10 min</span>
+        <span><span class="meta-dot">●</span> <strong>Sources:</strong> 15 authoritative links</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="article-body">
+
+      <!-- TOC -->
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-label">Contents</div>
+        <ol class="toc-list">
+          <li><span class="toc-num">01</span><a href="#what-is-hermes">What Is Hermes Agent?</a></li>
+          <li><span class="toc-num">02</span><a href="#why-now">Why It's Blowing Up Right Now</a></li>
+          <li><span class="toc-num">03</span><a href="#model-lineage">The Hermes Model Lineage</a></li>
+          <li><span class="toc-num">04</span><a href="#architecture">Core Architecture</a></li>
+          <li><span class="toc-num">05</span><a href="#openclaw-refresher">OpenClaw, Briefly</a></li>
+          <li><span class="toc-num">06</span><a href="#comparison">Head-to-Head Comparison</a></li>
+          <li><span class="toc-num">07</span><a href="#developer-notes">What Developers Should Know</a></li>
+          <li><span class="toc-num">08</span><a href="#which-one">Which One Is Right For You?</a></li>
+          <li><span class="toc-num">09</span><a href="#sources">Sources</a></li>
+        </ol>
+      </nav>
+
+      <!-- SOURCE NOTICE -->
+      <div class="source-notice" role="note">
+        <strong>Sourcing note:</strong> Every technical claim in this guide is linked to its
+        authoritative source — official documentation, GitHub repositories, arXiv technical
+        reports, or named news coverage. Competitor-sourced claims are labelled where used.
+        This guide was last verified against live documentation on March 31, 2026.
+      </div>
+
+      <!-- §01 WHAT IS HERMES -->
+      <section id="what-is-hermes" aria-labelledby="h2-what">
+        <h2 id="h2-what"><span class="h2-num">01 //</span> <span class="h2-title">What Is Hermes Agent?</span></h2>
+
+        <p>
+          <a href="https://nousresearch.com/" target="_blank" rel="noopener">NousResearch</a> is a
+          well-regarded open-source AI lab that has spent the last two years building one of the most
+          capable fine-tuned model families outside of the frontier labs. Their
+          <strong>Hermes</strong> models — trained specifically for agentic behavior, structured
+          tool-calling, and instruction adherence — have accumulated a serious developer following on
+          Hugging Face. In February 2026, NousResearch formalized something that had been gestating
+          in that model work: a full autonomous agent <em>framework</em> bearing the same name.
+        </p>
+
+        <p>
+          <a href="https://hermes-agent.nousresearch.com/" target="_blank" rel="noopener">Hermes Agent</a>
+          launched publicly on February 26, 2026. It is worth being precise about the distinction:
+          the <strong>Hermes models</strong> (Hermes 2 Pro, Hermes 3, Hermes 4) are the underlying
+          LLMs — open-weight, downloadable, and independently useful. The
+          <strong>Hermes Agent framework</strong> is the autonomous runtime built on top of them.
+          You can run Hermes Agent against any backend — Claude, GPT-4o, or the Hermes models
+          themselves — just as you can run OpenClaw against a range of providers.
+        </p>
+
+        <div class="callout">
+          <div class="callout-label">Core thesis</div>
+          NousResearch describes Hermes Agent as "the agent that grows with you." The central
+          problem it targets is AI forgetfulness — the fact that most agents reset to zero after
+          each session. Hermes is architected specifically to accumulate knowledge across
+          conversations.
+        </div>
+
+        <p>
+          The framework is
+          <a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener">MIT-licensed on GitHub</a>
+          and reached 20,400 stars and 2,500 forks within weeks of launch — making it one of the
+          fastest-growing open-source agent projects of early 2026.
+        </p>
+      </section>
+
+      <!-- §02 WHY NOW -->
+      <section id="why-now" aria-labelledby="h2-why">
+        <h2 id="h2-why"><span class="h2-num">02 //</span> <span class="h2-title">Why It's Blowing Up Right Now</span></h2>
+
+        <p>Three converging factors explain the momentum:</p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon">📊</div>
+              <div>
+                <div class="feature-title">Hermes 4 benchmarks</div>
+                <div class="feature-sub">Aug 2025</div>
+              </div>
+            </div>
+            <p class="feature-desc">
+              The 405B Hermes 4 model posted benchmark scores competitive with GPT-4o on reasoning
+              tasks and beat closed models on RefusalBench — 57.1% vs GPT-4o's 17.67%. That drew
+              significant developer attention to the entire Hermes ecosystem months before the
+              framework launched.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon">🚀</div>
+              <div>
+                <div class="feature-title">Formal v0.6.0 launch</div>
+                <div class="feature-sub">Feb 26, 2026</div>
+              </div>
+            </div>
+            <p class="feature-desc">
+              The February release moved Hermes Agent from an experimental repo to a documented,
+              versioned release with a dedicated docs site, Skills Hub, and messaging gateway —
+              making it enterprise-usable for the first time.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon">🧠</div>
+              <div>
+                <div class="feature-title">The persistent agent moment</div>
+                <div class="feature-sub">Q1 2026</div>
+              </div>
+            </div>
+            <p class="feature-desc">
+              The field is visibly moving from single-session agents toward agents that accumulate
+              knowledge. Hermes is the most prominent open-source entry in this category — and
+              notably, it ships a built-in <strong>OpenClaw migration tool</strong>, signalling a
+              direct challenge to the incumbent.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-header">
+              <div class="feature-icon">⚡</div>
+              <div>
+                <div class="feature-title">Community velocity</div>
+                <div class="feature-sub">230 contributors</div>
+              </div>
+            </div>
+            <p class="feature-desc">
+              230 contributors, 20k+ GitHub stars in under five weeks. The OpenClaw community
+              forums and Reddit have seen a marked uptick in "should I switch?" threads since the
+              February launch.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- §03 MODEL LINEAGE -->
+      <section id="model-lineage" aria-labelledby="h2-models">
+        <h2 id="h2-models"><span class="h2-num">03 //</span> <span class="h2-title">The Hermes Model Lineage</span></h2>
+
+        <p>
+          Understanding the framework requires understanding the models that preceded it.
+          NousResearch has been releasing Hermes fine-tunes since 2023, each iteration pushing
+          harder on agentic capabilities. You do not need to use these models to run Hermes Agent,
+          but they inform the framework's design choices — particularly around structured
+          tool-calling and the function-calling XML format.
+        </p>
+
+        <div class="table-wrap" role="region" aria-label="Hermes model lineage">
+          <table>
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th class="col-hermes">Base Model</th>
+                <th>Key Agentic Capability</th>
+                <th>Technical Report</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-label">Hermes 2 Pro</td>
+                <td>Mistral / Llama 2</td>
+                <td>ChatML format; first serious function-calling fine-tune on open weights</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="row-label">Hermes 3</td>
+                <td>Llama 3.1 · 8B / 70B / 405B</td>
+                <td>Standardized <code>&lt;tool_call&gt;</code> XML format; JSON schema adherence; structured outputs</td>
+                <td><a href="https://arxiv.org/pdf/2408.11857" target="_blank" rel="noopener">arXiv:2408.11857</a></td>
+              </tr>
+              <tr>
+                <td class="row-label">Hermes 4</td>
+                <td>Llama 3.1 · 14B / 70B / 405B</td>
+                <td>Hybrid <code>&lt;think&gt;</code> reasoning toggle; Atropos RL training; 19B tokens, 5M samples</td>
+                <td><a href="https://arxiv.org/abs/2508.18255" target="_blank" rel="noopener">arXiv:2508.18255</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Hermes 4's hybrid reasoning deserves particular attention: the model can decide
+          on a per-request basis whether to emit a <code>&lt;think&gt;</code> block before
+          answering. Unlike pure chain-of-thought models, this makes inference faster on
+          simple tasks while preserving deep reasoning capacity for complex ones. The training
+          was done using NousResearch's
+          <a href="https://github.com/NousResearch/Atropos" target="_blank" rel="noopener">Atropos RL environment</a>,
+          which is open-source — meaning developers can replicate the training pipeline.
+        </p>
+      </section>
+
+      <!-- §04 ARCHITECTURE -->
+      <section id="architecture" aria-labelledby="h2-arch">
+        <h2 id="h2-arch"><span class="h2-num">04 //</span> <span class="h2-title">Core Architecture</span></h2>
+
+        <p>
+          Hermes Agent is built around four architectural pillars that distinguish it from
+          most agent frameworks, including OpenClaw. Each one compounds the others — the memory
+          system feeds the skill system, the skill system reduces reliance on raw context, and
+          both are available across all execution backends.
+        </p>
+
+        <h3>Multi-Level Memory System</h3>
+        <p>
+          Per the
+          <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/" target="_blank" rel="noopener">official memory documentation</a>,
+          Hermes operates three layers in parallel. A <code>MEMORY.md</code> file (~800 tokens)
+          holds environmental facts and project context, injected frozen into every system prompt
+          for KV-cache efficiency. A <code>USER.md</code> profile (~500 tokens) accumulates
+          user preferences and working style over time. And a SQLite database at
+          <code>~/.hermes/state.db</code> stores all past sessions with FTS5 full-text search
+          and <a href="https://www.honcho.dev/" target="_blank" rel="noopener">Honcho</a> user
+          modeling — an AI-generated user understanding layer that runs cross-platform. All
+          memory writes are security-scanned for prompt injection and data exfiltration patterns
+          before being committed.
+        </p>
+
+        <h3>Skills System — Procedural Memory</h3>
+        <p>
+          After any task requiring five or more tool calls, Hermes Agent auto-generates a
+          <strong>Skill Document</strong>: a structured <code>SKILL.md</code> file with frontmatter
+          fields covering name, version, when to use, step-by-step procedure, pitfalls, and
+          verification steps. Skills are stored in <code>~/.hermes/skills/</code> and follow
+          the <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a>
+          open standard — meaning they are portable to any compatible agent, not locked to Hermes.
+          The agent can create, patch, and delete its own skills via a built-in
+          <code>skill_manage</code> tool.
+        </p>
+
+        <h3>Execution Backends</h3>
+        <p>
+          Six backends are supported: <strong>Local</strong>, <strong>Docker</strong>,
+          <strong>SSH</strong>, <strong>Daytona</strong> (cloud dev environments),
+          <strong>Singularity</strong> (HPC), and <strong>Modal</strong> (serverless, near-zero
+          idle cost). This range — from embedded to fully serverless — makes Hermes viable
+          across a wider deployment surface than most open-source agents.
+        </p>
+
+        <h3>Multi-Platform Gateway</h3>
+        <p>
+          Like OpenClaw, Hermes Agent supports CLI, Telegram, Discord, Slack, WhatsApp, and
+          Signal. The key difference is <strong>cross-platform conversation continuity</strong>:
+          a task started in the CLI can be resumed in Telegram. OpenClaw treats each channel as
+          an independent integration.
+        </p>
+      </section>
+
+      <!-- §05 OPENCLAW REFRESHER -->
+      <section id="openclaw-refresher" aria-labelledby="h2-openclaw">
+        <h2 id="h2-openclaw"><span class="h2-num">05 //</span> <span class="h2-title">OpenClaw, Briefly</span></h2>
+
+        <p>
+          <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">OpenClaw</a>
+          is the open-source personal AI assistant that ClawBeat was built to cover. Written in
+          TypeScript, it runs an always-on agent that connects to WhatsApp, Telegram, Slack,
+          Discord, Signal, iMessage, and others. Its architecture is infrastructure-first:
+          a hub-spoke model where one agent instance manages multiple messaging contexts, with
+          a configurable heartbeat scheduler, 52+ built-in skills, and application-level security
+          via allowlists.
+        </p>
+
+        <div class="callout">
+          <div class="callout-label">Further reading</div>
+          For a deeper breakdown of OpenClaw's architecture — including its NanoClaw, PicoClaw,
+          and Nanobot variants — see our
+          <a href="/guide/openclaw-comparison.html">OpenClaw vs. the Field</a>
+          comparison guide.
+        </div>
+      </section>
+
+      <!-- §06 COMPARISON -->
+      <section id="comparison" aria-labelledby="h2-cmp">
+        <h2 id="h2-cmp"><span class="h2-num">06 //</span> <span class="h2-title">Head-to-Head Comparison</span></h2>
+
+        <p>
+          The table below compares Hermes Agent and OpenClaw across the dimensions developers
+          care most about. Sources are linked in the <a href="#sources">Sources section</a> below.
+        </p>
+
+        <div class="table-wrap" role="region" aria-label="Hermes Agent vs OpenClaw comparison table">
+          <table>
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th class="cmp-header-hermes">Hermes Agent</th>
+                <th class="cmp-header-openclaw">OpenClaw</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-label">Philosophy</td>
+                <td class="cmp-cell-hermes">Agent-first — grows through experience</td>
+                <td class="cmp-cell-openclaw">Infrastructure-first — hub-spoke multi-channel</td>
+              </tr>
+              <tr>
+                <td class="row-label">Memory</td>
+                <td class="cmp-cell-hermes win">Multi-level: session + persistent + SQLite FTS5 + Honcho user modeling</td>
+                <td class="cmp-cell-openclaw">Per-assistant isolated storage; shared team context</td>
+              </tr>
+              <tr>
+                <td class="row-label">Skill learning</td>
+                <td class="cmp-cell-hermes win">Auto-generates SKILL.md after 5+ tool calls; agentskills.io portable</td>
+                <td class="cmp-cell-openclaw">52+ built-in skills; file-based precedence; no auto-generation</td>
+              </tr>
+              <tr>
+                <td class="row-label">Channels</td>
+                <td class="cmp-cell-hermes">CLI, Telegram, Discord, Slack, WhatsApp, Signal + cross-platform continuity</td>
+                <td class="cmp-cell-openclaw">WhatsApp, Telegram, Slack, Discord, Signal, iMessage, browser chat</td>
+              </tr>
+              <tr>
+                <td class="row-label">Scheduling</td>
+                <td class="cmp-cell-hermes">Natural-language cron + parallel subagent workstreams</td>
+                <td class="cmp-cell-openclaw">Heartbeat scheduler (configurable intervals)</td>
+              </tr>
+              <tr>
+                <td class="row-label">Execution</td>
+                <td class="cmp-cell-hermes win">6 backends: Local → Docker → SSH → Daytona → Singularity → Modal</td>
+                <td class="cmp-cell-openclaw">Managed (under 5 min) or self-hosted</td>
+              </tr>
+              <tr>
+                <td class="row-label">Model breadth</td>
+                <td class="cmp-cell-hermes win">200+ models via OpenRouter</td>
+                <td class="cmp-cell-openclaw">Core 6 + OpenRouter</td>
+              </tr>
+              <tr>
+                <td class="row-label">Migration tooling</td>
+                <td class="cmp-cell-hermes">Built-in: auto-imports configs, memories, skills from OpenClaw</td>
+                <td class="cmp-cell-openclaw">—</td>
+              </tr>
+              <tr>
+                <td class="row-label">Telemetry</td>
+                <td class="cmp-cell-hermes win">Zero — no usage data collected</td>
+                <td class="cmp-cell-openclaw">Standard telemetry (opt-out available)</td>
+              </tr>
+              <tr>
+                <td class="row-label">License</td>
+                <td class="cmp-cell-hermes">MIT</td>
+                <td class="cmp-cell-openclaw">MIT</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- §07 DEVELOPER NOTES -->
+      <section id="developer-notes" aria-labelledby="h2-dev">
+        <h2 id="h2-dev"><span class="h2-num">07 //</span> <span class="h2-title">What Developers Should Know</span></h2>
+
+        <p>Six technical details that are easy to miss but matter in practice:</p>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">01</span>
+            <span class="tech-note-title">The function-calling format is not OpenAI-native</span>
+          </div>
+          <p>
+            If using Hermes models directly — not via the agent framework — tool calls must use the
+            <code>hermes-function-calling</code> XML/JSON schema, not OpenAI's
+            <code>tool_choice</code> format. NousResearch maintains adapters and complete examples
+            in the
+            <a href="https://github.com/NousResearch/Hermes-Function-Calling" target="_blank" rel="noopener">Hermes-Function-Calling repo</a>.
+            The agent framework handles this translation automatically.
+          </p>
+        </div>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">02</span>
+            <span class="tech-note-title">Skills can be pre-authored — no runtime required</span>
+          </div>
+          <p>
+            The SKILL.md format is a structured markdown document with YAML frontmatter.
+            Developers can write skills for their specific use cases and drop them into
+            <code>~/.hermes/skills/</code> before ever running the agent. This means a team
+            can pre-seed domain knowledge — deployment procedures, debugging runbooks,
+            API workflows — before onboarding.
+          </p>
+        </div>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">03</span>
+            <span class="tech-note-title">MCP integration is first-class</span>
+          </div>
+          <p>
+            Hermes Agent connects directly to any
+            <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">MCP server</a>
+            with tool filtering — meaning it plugs into the same tool ecosystem as Claude Code,
+            Cursor, and other MCP-aware agents. If your team already has MCP servers deployed,
+            Hermes can use them on day one.
+          </p>
+        </div>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">04</span>
+            <span class="tech-note-title">The agentskills.io standard is worth watching</span>
+          </div>
+          <p>
+            Skills authored in Hermes' SKILL.md format are compatible with the
+            <a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io</a>
+            open standard — designed to make skills portable across any compliant agent.
+            This is early-stage but strategically important: if the standard gains traction,
+            a skills ecosystem could emerge that benefits any agent that adopts it.
+          </p>
+        </div>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">05</span>
+            <span class="tech-note-title">Atropos RL is open-source — you can replicate the training</span>
+          </div>
+          <p>
+            The reinforcement learning environment used to train Hermes 4 —
+            <a href="https://github.com/NousResearch/Atropos" target="_blank" rel="noopener">Atropos</a>
+            — is publicly available with ~1,000 task-specific verifiers. Developers working on
+            custom fine-tunes or research applications have access to the same pipeline NousResearch
+            used. This is unusually transparent for a model lab.
+          </p>
+        </div>
+
+        <div class="tech-note">
+          <div class="tech-note-header">
+            <span class="tech-note-num">06</span>
+            <span class="tech-note-title">Memory injection is cache-efficient by design</span>
+          </div>
+          <p>
+            Hermes Agent injects memory files as frozen snapshots at session start. This is a
+            deliberate performance optimization: by keeping the system prompt prefix identical
+            across sessions, the LLM's KV cache can be reused. The tradeoff is that mid-session
+            memory updates do not affect the current context — they apply on next session load.
+          </p>
+        </div>
+      </section>
+
+      <!-- §08 WHICH ONE -->
+      <section id="which-one" aria-labelledby="h2-pick">
+        <h2 id="h2-pick"><span class="h2-num">08 //</span> <span class="h2-title">Which One Is Right For You?</span></h2>
+
+        <p>
+          Both frameworks are MIT-licensed, actively maintained, and production-capable as of
+          Q1 2026. The right choice depends primarily on what you need the agent to do — and
+          whether its operating model should be breadth-first or depth-first.
+        </p>
+
+        <div class="decision-grid">
+          <div class="decision-card decision-card-hermes">
+            <div class="decision-title">// Choose Hermes Agent if</div>
+            <ul class="decision-list">
+              <li>You want a personal research or development agent that improves on repeated task types</li>
+              <li>Privacy is a hard requirement — zero telemetry, fully local by default</li>
+              <li>You need flexible deployment (serverless, HPC, cloud dev environments)</li>
+              <li>You want to experiment with or extend the underlying model via Atropos RL</li>
+              <li>You are already on OpenClaw and want to migrate with context preserved</li>
+              <li>Your workload involves complex, multi-step tasks that benefit from a skills library</li>
+            </ul>
+          </div>
+          <div class="decision-card decision-card-openclaw">
+            <div class="decision-title">// Choose OpenClaw if</div>
+            <ul class="decision-list">
+              <li>You are deploying for a team across multiple messaging channels</li>
+              <li>You need the fastest path to a working assistant — under 5-minute managed setup</li>
+              <li>iMessage integration is a requirement (Hermes Agent does not support it)</li>
+              <li>You want a mature ecosystem with 52+ documented skills and active community plugins</li>
+              <li>Your use case is reactive and multi-channel rather than a single persistent agent</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- §09 SOURCES -->
+      <section id="sources" aria-labelledby="h2-src">
+        <h2 id="h2-src"><span class="h2-num">09 //</span> <span class="h2-title">Sources</span></h2>
+        <ul class="sources-list">
+          <li><span class="src-num">01</span><a href="https://hermes-agent.nousresearch.com/" target="_blank" rel="noopener">Hermes Agent — Official site, NousResearch<span class="src-type">Official</span></a></li>
+          <li><span class="src-num">02</span><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory/" target="_blank" rel="noopener">Persistent Memory — Hermes Agent Documentation<span class="src-type">Official</span></a></li>
+          <li><span class="src-num">03</span><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills/" target="_blank" rel="noopener">Skills System — Hermes Agent Documentation<span class="src-type">Official</span></a></li>
+          <li><span class="src-num">04</span><a href="https://github.com/NousResearch/hermes-agent" target="_blank" rel="noopener">NousResearch/hermes-agent — GitHub<span class="src-type">GitHub</span></a></li>
+          <li><span class="src-num">05</span><a href="https://github.com/NousResearch/Hermes-Function-Calling" target="_blank" rel="noopener">NousResearch/Hermes-Function-Calling — GitHub<span class="src-type">GitHub</span></a></li>
+          <li><span class="src-num">06</span><a href="https://arxiv.org/abs/2508.18255" target="_blank" rel="noopener">Hermes 4 Technical Report — arXiv:2508.18255<span class="src-type">Paper</span></a></li>
+          <li><span class="src-num">07</span><a href="https://arxiv.org/pdf/2408.11857" target="_blank" rel="noopener">Hermes 3 Technical Report — arXiv:2408.11857<span class="src-type">Paper</span></a></li>
+          <li><span class="src-num">08</span><a href="https://huggingface.co/NousResearch/Hermes-4-405B" target="_blank" rel="noopener">Hermes 4 405B — Hugging Face model card<span class="src-type">Model</span></a></li>
+          <li><span class="src-num">09</span><a href="https://nousresearch.com/hermes3/" target="_blank" rel="noopener">Hermes 3 — NousResearch announcement<span class="src-type">Official</span></a></li>
+          <li><span class="src-num">10</span><a href="https://github.com/NousResearch/Atropos" target="_blank" rel="noopener">Atropos RL training environment — NousResearch GitHub<span class="src-type">GitHub</span></a></li>
+          <li><span class="src-num">11</span><a href="https://agentskills.io" target="_blank" rel="noopener">agentskills.io — Open skills portability standard<span class="src-type">Standard</span></a></li>
+          <li><span class="src-num">12</span><a href="https://www.marktechpost.com/2026/02/26/nous-research-releases-hermes-agent-to-fix-ai-forgetfulness-with-multi-level-memory-and-dedicated-remote-terminal-access-support/" target="_blank" rel="noopener">NousResearch Releases Hermes Agent — MarkTechPost, Feb 26 2026<span class="src-type">News</span></a></li>
+          <li><span class="src-num">13</span><a href="https://www.marktechpost.com/2025/08/27/nous-research-team-releases-hermes-4-a-family-of-open-weight-ai-models-with-hybrid-reasoning/" target="_blank" rel="noopener">Hermes 4: Hybrid Reasoning Models — MarkTechPost, Aug 2025<span class="src-type">News</span></a></li>
+          <li><span class="src-num">14</span><a href="https://dev.to/arshtechpro/hermes-agent-a-self-improving-ai-agent-that-runs-anywhere-2b7d" target="_blank" rel="noopener">Hermes Agent: A Self-Improving AI Agent That Runs Anywhere — DEV Community<span class="src-type">Analysis</span></a></li>
+          <li><span class="src-num">15</span><a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">openclaw/openclaw — GitHub<span class="src-type">GitHub</span></a></li>
+        </ul>
+      </section>
+
+    </div><!-- /.article-body -->
+  </div><!-- /.wrap -->
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const iconMenu = document.getElementById('icon-menu');
+    const iconClose = document.getElementById('icon-close');
+    const isOpen = menu.classList.toggle('open');
+    iconMenu.style.display = isOpen ? 'none' : 'inline';
+    iconClose.style.display = isOpen ? 'inline' : 'none';
+  }
+</script>
+</body>
+</html>

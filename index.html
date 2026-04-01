@@ -359,11 +359,13 @@ img { display: block; max-width: 100%; }
 .promo-card.promo-trace::before { background: linear-gradient(to right, var(--orange), rgba(249,115,22,0.15), transparent); }
 .promo-card.promo-guide::before { background: linear-gradient(to right, var(--cyan), rgba(6,182,212,0.15), transparent); }
 .promo-card.promo-nemoclaw::before { background: linear-gradient(to right, var(--green), rgba(34,197,94,0.15), transparent); }
+.promo-card.promo-hermes::before { background: linear-gradient(to right, #a78bfa, rgba(167,139,250,0.15), transparent); }
 .promo-card-eyebrow { display: flex; align-items: center; gap: 0.625rem; }
 .promo-card-label { font-family: var(--mono); font-size: var(--min-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 0.2rem 0.5rem; border-radius: 2px; }
 .promo-card.promo-trace .promo-card-label { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.25); }
 .promo-card.promo-guide .promo-card-label { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(6,182,212,0.2); }
 .promo-card.promo-nemoclaw .promo-card-label { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+.promo-card.promo-hermes .promo-card-label { background: rgba(167,139,250,0.10); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
 .promo-card-issue { font-family: var(--mono); font-size: var(--min-font); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
 .promo-card-title { font-family: var(--sans); font-size: 1.375rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; color: #fff; }
 .promo-card-desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; }
@@ -373,6 +375,7 @@ img { display: block; max-width: 100%; }
 .promo-card.promo-trace .promo-card-go { color: var(--orange); }
 .promo-card.promo-guide .promo-card-go { color: var(--cyan); }
 .promo-card.promo-nemoclaw .promo-card-go { color: var(--green); }
+.promo-card.promo-hermes .promo-card-go { color: #a78bfa; }
 .promo-card-go svg { width: 11px; height: 11px; }
 .promo-card:hover .promo-card-go { text-decoration: underline; }
 
@@ -758,7 +761,8 @@ img { display: block; max-width: 100%; }
     <span class="section-divider-label" aria-hidden="true">deep_intel</span>
     <div class="section-divider-line" aria-hidden="true"></div>
   </div>
-  <div class="promo-strip" role="list" aria-label="Featured publications">
+  <!-- Trace: full-width row -->
+  <div class="promo-strip" role="list" aria-label="Featured publications" style="grid-template-columns: 1fr; margin-bottom: 1.5rem;">
 
     <a href="/trace/" class="promo-card promo-trace" role="listitem" aria-label="Trace — Signal Intelligence Monthly">
       <div class="promo-card-eyebrow">
@@ -772,6 +776,11 @@ img { display: block; max-width: 100%; }
         <span class="promo-card-go">Read Trace <i data-lucide="arrow-right" aria-hidden="true"></i></span>
       </div>
     </a>
+
+  </div>
+
+  <!-- Guides: 2×2 grid -->
+  <div class="promo-strip" role="list" aria-label="Featured guides">
 
     <a href="/guide/openclaw-comparison.html" class="promo-card promo-guide" role="listitem" aria-label="Guide — OpenClaw vs the Field">
       <div class="promo-card-eyebrow">
@@ -806,6 +815,19 @@ img { display: block; max-width: 100%; }
       </div>
       <div class="promo-card-title">Claude Dispatch</div>
       <p class="promo-card-desc">Is Anthropic's always-on desktop agent a viable OpenClaw alternative? Pricing, sandbox limits, platform constraints, and independent test results — sourced and compared.</p>
+      <div class="promo-card-footer">
+        <span class="promo-card-stat">New · Mar 2026</span>
+        <span class="promo-card-go">Read Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+      </div>
+    </a>
+
+    <a href="/guide/hermes-vs-openclaw.html" class="promo-card promo-hermes" role="listitem" aria-label="Guide — Hermes Agent vs OpenClaw">
+      <div class="promo-card-eyebrow">
+        <span class="promo-card-label">Guide</span>
+        <span class="promo-card-issue">// Comparison · Mar 2026</span>
+      </div>
+      <div class="promo-card-title">Hermes Agent vs. OpenClaw</div>
+      <p class="promo-card-desc">NousResearch's Hermes series meets OpenClaw's agentic runtime — model lineage, tool-call architecture, benchmark results, and a clear framework selection guide.</p>
       <div class="promo-card-footer">
         <span class="promo-card-stat">New · Mar 2026</span>
         <span class="promo-card-go">Read Guide <i data-lucide="arrow-right" aria-hidden="true"></i></span>
