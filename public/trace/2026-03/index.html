@@ -131,30 +131,26 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .editorial-label::before { content: '// '; opacity: 0.6; }
 .editorial-text { font-size: 1rem; line-height: 1.75; color: var(--text-2); font-style: italic; border-left: 2px solid rgba(249,115,22,0.3); padding-left: 1.5rem; }
 
-/* ── COVER STORY ── */
-.cover-section { position: relative; width: 100%; }
-.cover-hero { position: relative; min-height: 72vh; max-height: 860px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; background: #0d1320; }
-.cover-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.55; transition: opacity 0.5s, transform 0.5s; }
-.cover-hero:hover .cover-bg { opacity: 0.65; transform: scale(1.01); }
-.cover-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(8,9,11,0.05) 0%, rgba(8,9,11,0.15) 30%, rgba(8,9,11,0.6) 60%, rgba(8,9,11,0.97) 100%); }
-.cover-top-badges { position: absolute; top: 1.75rem; left: 1.75rem; z-index: 10; display: flex; align-items: center; gap: 0.625rem; }
+/* ── LEAD STORY (Signal 01) ── */
+.lead-card { display: block; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; transition: border-color 0.2s; margin-top: 1.5rem; cursor: pointer; }
+.lead-card:hover { border-color: var(--border-2); }
+.lead-img-wrap { position: relative; overflow: hidden; background: var(--bg-3); aspect-ratio: 21/9; }
+.lead-img-wrap img { opacity: 0.78; transition: opacity 0.3s, transform 0.3s; }
+.lead-card:hover .lead-img-wrap img { opacity: 0.9; transform: scale(1.02); }
+.lead-badges { position: absolute; top: 1.25rem; left: 1.25rem; z-index: 10; display: flex; align-items: center; gap: 0.625rem; }
 .cover-story-badge { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; background: var(--orange); color: #000; padding: 0.3rem 0.75rem; border-radius: 3px; }
 .cover-category-badge { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; background: rgba(8,9,11,0.75); color: var(--text-2); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px); padding: 0.3rem 0.75rem; border-radius: 3px; }
-.cover-credit { position: absolute; bottom: 6.5rem; right: 1.5rem; z-index: 10; font-family: var(--mono); font-size: 8.5px; color: rgba(255,255,255,0.4); background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 0.2rem 0.5rem; border-radius: 2px; }
-.cover-credit a { color: rgba(249,115,22,0.6); }
-.cover-credit a:hover { color: var(--orange); }
-.cover-content { position: relative; z-index: 10; max-width: var(--col-w); margin: 0 auto; width: 100%; padding: 0 var(--gutter) 3rem; }
-.cover-source-line { font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+.lead-body { padding: 2rem 2.25rem 2.5rem; }
+.cover-source-line { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
 .cover-source-line a { color: rgba(249,115,22,0.7); }
 .cover-source-line a:hover { color: var(--orange); }
-.cover-headline { font-family: var(--sans); font-size: clamp(2rem, 5.5vw, 4.5rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.92; color: #fff; max-width: 20ch; margin-bottom: 1.25rem; text-shadow: 0 2px 40px rgba(0,0,0,0.5); }
-.cover-headline a:hover { color: var(--orange); }
-.cover-deck { font-size: clamp(0.9rem, 1.5vw, 1.05rem); line-height: 1.65; color: rgba(255,255,255,0.7); max-width: 60ch; margin-bottom: 1.5rem; }
+.cover-headline { font-family: var(--sans); font-size: clamp(1.6rem, 3.5vw, 2.75rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.95; color: var(--text); max-width: 32ch; margin-bottom: 1rem; }
+.lead-card:hover .cover-headline { color: #fff; }
+.cover-deck { font-size: clamp(0.85rem, 1.3vw, 0.95rem); line-height: 1.65; color: var(--text-3); max-width: 64ch; margin-bottom: 1.25rem; }
 .cover-footer { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
 .cover-read-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; transition: gap 0.15s, border-color 0.15s; }
 .cover-read-link:hover { gap: 0.75rem; border-color: var(--orange); }
 .cover-read-link svg { width: 14px; height: 14px; }
-.cover-byline { font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
 
 /* ── WRAP / SECTION SCAFFOLD ── */
 .wrap { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); }
@@ -274,7 +270,6 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .repo-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .cover-hero { min-height: 60vh; }
   .masthead { padding: 3rem 1rem 3rem; }
   .editorial { grid-template-columns: 1fr; gap: 0.75rem; }
   .editorial-text { border-left: none; padding-left: 0; border-top: 2px solid rgba(249,115,22,0.3); padding-top: 0.875rem; }
@@ -380,25 +375,25 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 </section>
 
 <!-- ── COVER STORY: Signal 01 ── -->
-<section class="cover-section">
-  <a href="/trace/2026-03/nvidia-bets-on-openclaw-but-adds-a-security-layer-how-nemocl/" class="cover-hero" style="display:flex">
-    <div class="cover-bg" style="background-image:url('https://www.zdnet.com/a/img/resize/6cbf5ba90d09a829d1f7d32682c5f576c6eccf72/2026/03/16/b9601c17-6753-40ec-b8d0-8ba6753c785d/nvidia11gettyimages-2262651938.jpg?auto=webp&amp;fit=crop&amp;height=675&amp;width=1200')"></div>
-    <div class="cover-gradient"></div>
-    <div class="cover-top-badges">
-      <span class="cover-story-badge">Cover Story · Signal 01</span>
-      <span class="cover-category-badge">Nvidia</span>
+<div class="wrap">
+  <div class="lead-card" onclick="window.location='/trace/2026-03/nvidia-bets-on-openclaw-but-adds-a-security-layer-how-nemocl/'">
+    <div class="lead-img-wrap" id="lead01-wrap">
+      <img src="https://www.zdnet.com/a/img/resize/6cbf5ba90d09a829d1f7d32682c5f576c6eccf72/2026/03/16/b9601c17-6753-40ec-b8d0-8ba6753c785d/nvidia11gettyimages-2262651938.jpg?auto=webp&amp;fit=crop&amp;height=675&amp;width=1200" alt="Nvidia bets on OpenClaw, but adds a security layer - how NemoClaw works" onerror="document.getElementById('lead01-wrap').style.display='none'">
+      <div class="lead-badges">
+        <span class="cover-story-badge">Cover Story · Signal 01</span>
+        <span class="cover-category-badge">Nvidia</span>
+      </div>
     </div>
-    <div class="cover-content">
-      <div class="cover-source-line">ZDNet · <a href="https://www.zdnet.com" target="_blank" rel="noopener">www.zdnet.com</a></div>
+    <div class="lead-body">
+      <div class="cover-source-line"><a href="https://www.zdnet.com" target="_blank" rel="noopener" onclick="event.stopPropagation()">ZDNet</a></div>
       <h2 class="cover-headline">Nvidia bets on OpenClaw, but adds a security layer - how NemoClaw works</h2>
       <p class="cover-deck">Nvidia has announced its engagement with the OpenClaw agentic AI ecosystem, introducing a security layer branded NemoClaw. This development signals a strategic commitment from Nvidia towards enhancing</p>
       <div class="cover-footer">
-        <span class="cover-read-link">Read Full Analysis <i data-lucide="arrow-right"></i></span>
-        <span class="cover-byline"></span>
+        <a class="cover-read-link" href="/trace/2026-03/nvidia-bets-on-openclaw-but-adds-a-security-layer-how-nemocl/" onclick="event.stopPropagation()">Read Full Analysis <i data-lucide="arrow-right"></i></a>
       </div>
     </div>
-  </a>
-</section>
+  </div>
+</div>
 <div class="wrap">
 <div class="section-rule">
     <div class="section-rule-label"><span class="sl">//</span> Top Signals <span class="badge">2–3</span></div>

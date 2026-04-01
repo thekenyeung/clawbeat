@@ -428,38 +428,40 @@ def card_image_html(image_url: str, rank: str, credit: str = "") -> str:
       </div>"""
 
 def build_cover_hero(story: dict, ym: str) -> str:
-    url = story_page_url(ym, story["slug"])
+    url       = story_page_url(ym, story["slug"])
     image_url = story.get("image_url", "")
-    bg_style = f"background-image:url('{esc(image_url)}')" if image_url else ""
-    category = esc(story.get("category", ""))
+    category  = esc(story.get("category", ""))
     pub_name  = esc(story.get("pub_name", ""))
     pub_url   = esc(story.get("pub_url", ""))
     headline  = esc(story.get("headline", ""))
     deck      = esc(story.get("deck", ""))
-    author    = esc(story.get("author", ""))
-    pub_date  = esc(story.get("pub_date", ""))
-    byline = f"By {author} · {pub_date}" if author else pub_date
+
+    img_tag = (
+        f'<img src="{esc(image_url)}" alt="{headline}" '
+        f'onerror="document.getElementById(\'lead01-wrap\').style.display=\'none\'">'
+        if image_url else ""
+    )
 
     return f"""<!-- ── COVER STORY: Signal 01 ── -->
-<section class="cover-section">
-  <a href="{esc(url)}" class="cover-hero" style="display:flex">
-    <div class="cover-bg" style="{bg_style}"></div>
-    <div class="cover-gradient"></div>
-    <div class="cover-top-badges">
-      <span class="cover-story-badge">Cover Story · Signal 01</span>
-      <span class="cover-category-badge">{category}</span>
+<div class="wrap">
+  <div class="lead-card" onclick="window.location='{esc(url)}'">
+    <div class="lead-img-wrap" id="lead01-wrap">
+      {img_tag}
+      <div class="lead-badges">
+        <span class="cover-story-badge">Cover Story · Signal 01</span>
+        <span class="cover-category-badge">{category}</span>
+      </div>
     </div>
-    <div class="cover-content">
-      <div class="cover-source-line">{pub_name} · <a href="{pub_url}" target="_blank" rel="noopener">{pub_url.replace("https://","").replace("http://","")}</a></div>
+    <div class="lead-body">
+      <div class="cover-source-line"><a href="{pub_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">{pub_name}</a></div>
       <h2 class="cover-headline">{headline}</h2>
       <p class="cover-deck">{deck}</p>
       <div class="cover-footer">
-        <span class="cover-read-link">Read Full Analysis <i data-lucide="arrow-right"></i></span>
-        <span class="cover-byline">{byline}</span>
+        <a class="cover-read-link" href="{esc(url)}" onclick="event.stopPropagation()">Read Full Analysis <i data-lucide="arrow-right"></i></a>
       </div>
     </div>
-  </a>
-</section>"""
+  </div>
+</div>"""
 
 def build_card(story: dict, ym: str, rank: int, show_summary: bool = True) -> str:
     url      = story_page_url(ym, story["slug"])
@@ -481,7 +483,7 @@ def build_card(story: dict, ym: str, rank: int, show_summary: bool = True) -> st
       <div class="card-body">
         <div class="card-meta"><span class="card-rank">Signal {rank_str}</span><span class="card-cat">{cat}</span></div>
         <div class="card-headline">{headline}</div>
-        <div class="card-source">{pub_name} · <a href="{esc(pub_url)}" target="_blank" rel="noopener">{pub_url.replace("https://","").replace("http://","")}</a></div>
+        <div class="card-source">{pub_name}</div>
         {summary_html}
         <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
       </div>
@@ -541,66 +543,61 @@ def section_rule(label: str, badge: str = "") -> str:
   </div>"""
 
 def build_story_sections(stories: list[dict], ym: str) -> str:
-    """Build all story grid sections + daily/repo sections for the cover page."""
+    """Build all story grid sections for the cover page — February layout:
+    Signal 01 lead card, then grid-two pairs for 2–3, 4–5, 6–7, 8–9,
+    then grid-compact for signals 10–20.  No section-rule headers.
+    """
     parts = []
 
-    # Story 1: cover hero (full-bleed)
+    # Story 1: lead card
     if len(stories) >= 1:
         parts.append(build_cover_hero(stories[0], ym))
 
-    parts.append('<div class="wrap">')
-
-    # Stories 2–3: grid-two
-    if len(stories) >= 3:
-        parts.append(section_rule("Top Signals", "2–3"))
+    # Signals 2–3
+    if len(stories) >= 2:
+        parts.append('<div class="wrap">')
         parts.append('<div class="grid-two">')
-        for i in range(1, 3):
-            if i < len(stories):
-                parts.append(build_card(stories[i], ym, i + 1))
+        for i in range(1, min(3, len(stories))):
+            parts.append(build_card(stories[i], ym, i + 1))
+        parts.append('</div>')
         parts.append('</div>')
 
-    # Stories 4–5: asymmetric
-    if len(stories) >= 5:
-        parts.append(section_rule("Signal Spotlight", "4–5"))
-        parts.append('<div class="grid-asym-inner">')
-        # Story 4 — wide card
-        parts.append(build_card(stories[3], ym, 4))
-        # Story 5 — narrow card
-        s5 = stories[4]
-        s5_html = build_card(s5, ym, 5)
-        # Swap class to card-small
-        s5_html = s5_html.replace('class="card"', 'class="card card-small"', 1)
-        parts.append(s5_html)
+    # Signals 4–5
+    if len(stories) >= 4:
+        parts.append('<div class="wrap" style="margin-top:2.5rem">')
+        parts.append('<div class="grid-two">')
+        for i in range(3, min(5, len(stories))):
+            parts.append(build_card(stories[i], ym, i + 1))
+        parts.append('</div>')
         parts.append('</div>')
 
-    # Stories 6–8: grid-three
+    # Signals 6–7
+    if len(stories) >= 6:
+        parts.append('<div class="wrap" style="margin-top:2.5rem">')
+        parts.append('<div class="grid-two">')
+        for i in range(5, min(7, len(stories))):
+            parts.append(build_card(stories[i], ym, i + 1))
+        parts.append('</div>')
+        parts.append('</div>')
+
+    # Signals 8–9
     if len(stories) >= 8:
-        parts.append(section_rule("Signals", "6–8"))
-        parts.append('<div class="grid-three">')
-        for i in range(5, 8):
-            if i < len(stories):
-                parts.append(build_card(stories[i], ym, i + 1))
+        parts.append('<div class="wrap" style="margin-top:2.5rem">')
+        parts.append('<div class="grid-two">')
+        for i in range(7, min(9, len(stories))):
+            parts.append(build_card(stories[i], ym, i + 1))
+        parts.append('</div>')
         parts.append('</div>')
 
-    # Story 9: wide feature break (no section header)
-    if len(stories) >= 9:
-        parts.append(build_wide_feature(stories[8], ym, 9))
-
-    # Stories 10–13: 2x2 with summaries (no section header)
+    # Signals 10–20: compact digest, no images
     if len(stories) >= 10:
-        parts.append('<div class="grid-two-two">')
-        for i in range(9, min(13, len(stories))):
-            parts.append(build_card(stories[i], ym, i + 1, show_summary=True))
-        parts.append('</div>')
-
-    # Stories 14–20: compact digest, no images, no section headers
-    if len(stories) >= 14:
+        parts.append('<div class="wrap" style="margin-top:2.5rem">')
         parts.append('<div class="grid-compact">')
-        for i in range(13, min(20, len(stories))):
+        for i in range(9, min(20, len(stories))):
             parts.append(build_compact_card(stories[i], ym, i + 1))
         parts.append('</div>')
+        parts.append('</div>')
 
-    parts.append('</div><!-- /wrap -->')
     return "\n".join(parts)
 
 def build_daily_section(daily_editions: list[dict], ym: str) -> str:
@@ -632,7 +629,7 @@ def build_daily_section(daily_editions: list[dict], ym: str) -> str:
     return f"""
   <div class="wrap">
     <div class="section-rule" style="margin-top:3.5rem">
-      <div class="section-rule-label"><span class="sl">//</span> Daily Transmissions</div>
+      <div class="section-rule-label"><span class="sl">//</span> Daily Edition Transmissions</div>
       <div class="section-rule-line"></div>
     </div>
     <div class="daily-grid">
