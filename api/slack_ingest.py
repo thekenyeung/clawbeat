@@ -121,9 +121,23 @@ def fetch_jina_title(url: str) -> str:
     return ""
 
 
+def _resolve_tco(tco_url: str) -> str:
+    """Follow a t.co redirect to the real URL."""
+    try:
+        r = requests.head(tco_url, allow_redirects=True, timeout=5,
+                          headers={"User-Agent": "ClawBeat/1.0"})
+        return r.url
+    except Exception:
+        return tco_url
+
+
 def fetch_tweet_oembed(url: str) -> dict:
     """Fetch tweet author name and text via Twitter's public oEmbed API.
-    Returns {author_name, tweet_text}; both empty strings on failure."""
+    Returns {author_name, tweet_text}; both empty strings on failure.
+
+    For link-only tweets (body is just a t.co URL), resolves the link
+    and uses the linked article's title as context.
+    """
     try:
         r = requests.get(
             "https://publish.twitter.com/oembed",
@@ -139,11 +153,24 @@ def fetch_tweet_oembed(url: str) -> dict:
         m = re.search(r"<p[^>]*>(.*?)</p>", oembed_html, re.S)
         if m:
             p = m.group(1)
-            # Drop bare t.co short-links (noise); keep other anchor text
+            # Collect t.co URLs before stripping (needed for link-only tweets)
+            tco_urls = re.findall(r'href="(https://t\.co/[^"]+)"', p)
+            # Replace <br> with newline so multi-line tweets read naturally
+            p = re.sub(r"<br\s*/?>", "\n", p, flags=re.I)
+            # Drop bare t.co short-link anchors (noise)
             p = re.sub(r'<a href="https://t\.co/[^"]*"[^>]*>https://t\.co/\S*</a>', "", p)
+            # Unwrap other <a> tags (mentions, hashtags) — keep their text
             p = re.sub(r"<a[^>]*>(.*?)</a>", r"\1", p, flags=re.S)
             p = re.sub(r"<[^>]+>", "", p)
             tweet_text = html_lib.unescape(p).strip()
+
+            # Link-only tweet: resolve t.co → real URL → fetch article title
+            if not tweet_text and tco_urls:
+                real_url = _resolve_tco(tco_urls[0])
+                og = fetch_og(real_url)
+                if og.get("title"):
+                    tweet_text = f"→ {og['title']}"
+
         return {"author_name": author_name, "tweet_text": tweet_text}
     except Exception:
         return {"author_name": "", "tweet_text": ""}
