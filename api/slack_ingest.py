@@ -426,16 +426,24 @@ class handler(BaseHTTPRequestHandler):
 
         url = normalize_url(url)
 
-        # Fetch OG tags (title + source needed for all paths below)
-        og = fetch_og(url)
-        title = og["title"] or url
-        source = og["source"]
+        # ── X/Twitter: skip fetch_og (returns viewport garbage), use Jina ──
+        parsed_host = urlparse(url).netloc.lower().lstrip("www.")
+        if parsed_host in ("x.com", "twitter.com"):
+            m_user = re.search(r"(?:x|twitter)\.com/([^/]+)/status/", url)
+            source = f"X (@{m_user.group(1)})" if m_user else "X"
+            title = fetch_jina_title(url) or url
+            og = {"description": ""}
+        else:
+            # Fetch OG tags (title + source needed for all paths below)
+            og = fetch_og(url)
+            title = og["title"] or url
+            source = og["source"]
 
-        # If fetch_og hit a bot-protection page, fall back to Jina for the title
-        if not title or _is_bot_check(title):
-            jina_title = fetch_jina_title(url)
-            if jina_title:
-                title = jina_title
+            # If fetch_og hit a bot-protection page, fall back to Jina for the title
+            if not title or _is_bot_check(title):
+                jina_title = fetch_jina_title(url)
+                if jina_title:
+                    title = jina_title
 
         # ── Duplicate / similar-story checks ─────────────────────────────
         articles_today = fetch_todays_articles()
