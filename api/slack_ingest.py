@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import html as html_lib
 import json
 import os
 import re
@@ -118,6 +119,34 @@ def fetch_jina_title(url: str) -> str:
     except Exception:
         pass
     return ""
+
+
+def fetch_tweet_oembed(url: str) -> dict:
+    """Fetch tweet author name and text via Twitter's public oEmbed API.
+    Returns {author_name, tweet_text}; both empty strings on failure."""
+    try:
+        r = requests.get(
+            "https://publish.twitter.com/oembed",
+            params={"url": url, "omit_script": "true"},
+            timeout=6,
+        )
+        if r.status_code != 200:
+            return {"author_name": "", "tweet_text": ""}
+        data = r.json()
+        author_name = data.get("author_name", "")
+        oembed_html = data.get("html", "")
+        tweet_text = ""
+        m = re.search(r"<p[^>]*>(.*?)</p>", oembed_html, re.S)
+        if m:
+            p = m.group(1)
+            # Drop bare t.co short-links (noise); keep other anchor text
+            p = re.sub(r'<a href="https://t\.co/[^"]*"[^>]*>https://t\.co/\S*</a>', "", p)
+            p = re.sub(r"<a[^>]*>(.*?)</a>", r"\1", p, flags=re.S)
+            p = re.sub(r"<[^>]+>", "", p)
+            tweet_text = html_lib.unescape(p).strip()
+        return {"author_name": author_name, "tweet_text": tweet_text}
+    except Exception:
+        return {"author_name": "", "tweet_text": ""}
 
 
 def fetch_og(url: str) -> dict:
@@ -307,21 +336,24 @@ def add_more_coverage(existing_url: str, new_url: str, new_source: str) -> tuple
         return False, str(e)[:200]
 
 
-def supabase_upsert(url: str, title: str, source: str, summary: str) -> tuple[bool, str]:
+def supabase_upsert(url: str, title: str, source: str, summary: str, source_type: str | None = None) -> tuple[bool, str]:
     """Upsert article into news_items (merge on duplicate URL).
     Returns (success, error_detail)."""
     today = datetime.now(_PACIFIC).strftime("%m-%d-%Y")
+    payload: dict = {
+        "url": url,
+        "title": title,
+        "source": source,
+        "date": today,
+        "summary": summary,
+        "date_is_manual": True,
+    }
+    if source_type:
+        payload["source_type"] = source_type
     try:
         r = requests.post(
             f"{SUPABASE_URL}/rest/v1/news_items",
-            json={
-                "url": url,
-                "title": title,
-                "source": source,
-                "date": today,
-                "summary": summary,
-                "date_is_manual": True,
-            },
+            json=payload,
             headers={
                 "apikey": SUPABASE_KEY,
                 "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -426,13 +458,16 @@ class handler(BaseHTTPRequestHandler):
 
         url = normalize_url(url)
 
-        # ── X/Twitter: skip fetch_og (returns viewport garbage), use Jina ──
+        # ── X/Twitter: skip fetch_og (returns viewport garbage), use oEmbed ──
         parsed_host = urlparse(url).netloc.lower().lstrip("www.")
-        if parsed_host in ("x.com", "twitter.com"):
+        is_tweet = parsed_host in ("x.com", "twitter.com")
+        if is_tweet:
             m_user = re.search(r"(?:x|twitter)\.com/([^/]+)/status/", url)
             source = f"X (@{m_user.group(1)})" if m_user else "X"
-            title = fetch_jina_title(url) or url
-            og = {"description": ""}
+            tweet_data = fetch_tweet_oembed(url)
+            # title = display name (shown as card header); summary = tweet body
+            title = tweet_data["author_name"] or (f"@{m_user.group(1)}" if m_user else "X post")
+            og = {"description": tweet_data["tweet_text"]}
         else:
             # Fetch OG tags (title + source needed for all paths below)
             og = fetch_og(url)
@@ -470,10 +505,14 @@ class handler(BaseHTTPRequestHandler):
             return
 
         # 3. New story — fetch full content and summarize
-        article_text = fetch_jina(url)
-        summary = gemini_summarize(article_text) or og["description"]
+        if is_tweet:
+            # oEmbed already gave us the tweet text; skip Jina/Gemini
+            summary = og["description"]
+        else:
+            article_text = fetch_jina(url)
+            summary = gemini_summarize(article_text) or og["description"]
 
-        ok, err = supabase_upsert(url, title, source, summary)
+        ok, err = supabase_upsert(url, title, source, summary, source_type="tweet" if is_tweet else None)
         if ok:
             log_feedback_signal(url, "approve")
             slack_reply(channel, f"✓ Saved to ClawBeat\n*{title}*\n_{source}_")

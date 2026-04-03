@@ -547,6 +547,57 @@
             margin: 0;
         }
 
+        /* Tweet embed cards */
+        .story-item.is-tweet { border-left: 2px solid rgba(255,255,255,0.08); }
+        .tweet-embed {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-2);
+            border-radius: 6px;
+            padding: 0.875rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+        .tweet-header { display: flex; align-items: flex-start; gap: 0.625rem; }
+        .tweet-x-logo {
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--text-3);
+            line-height: 1.2;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+        .tweet-byline { display: flex; flex-direction: column; gap: 0.1rem; }
+        .tweet-author {
+            font-family: var(--sans);
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .tweet-handle {
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            color: var(--text-3);
+            letter-spacing: 0.02em;
+        }
+        .tweet-text {
+            font-size: 0.9375rem;
+            color: var(--text-2);
+            line-height: 1.65;
+            margin: 0;
+        }
+        .tweet-cta {
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            color: var(--text-3);
+            text-decoration: none;
+            transition: color 0.15s;
+            align-self: flex-start;
+            letter-spacing: 0.05em;
+        }
+        .tweet-cta:hover { color: var(--orange); }
+
         /* More coverage */
         .coverage-strip {
             display: flex;

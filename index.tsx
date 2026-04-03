@@ -44,7 +44,7 @@ interface NewsItem {
   source: string;
   date: string;
   inserted_at?: string;
-  source_type?: 'priority' | 'standard' | 'delist';
+  source_type?: 'priority' | 'standard' | 'delist' | 'tweet';
   pending_review?: boolean;
   moreCoverage?: Array<{ source: string; url: string }>;
   tags?: string[];
@@ -1050,8 +1050,10 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
               const moreCov = (item.moreCoverage || []).filter(l => !l.source.toLowerCase().includes('facebook') && !l.url?.toLowerCase().includes('github.com'));
               const storyParts = item.date.split('-');
               const storyIsoDate = storyParts.length === 3 ? `${storyParts[2]}-${storyParts[0]}-${storyParts[1]}` : item.date;
+              const isTweet = item.source_type === 'tweet';
+              const tweetHandle = isTweet ? (item.source.match(/@(\w+)/)?.[1] ?? null) : null;
               return (
-                <div key={item.url} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}`}>
+                <div key={item.url} className={`story-item${isVerified || isPriority ? ' is-priority' : ''}${isTweet ? ' is-tweet' : ''}`}>
                   <div className="story-body">
                     <div className="story-meta">
                       <span className="meta-source">{formatSourceName(item.source)}</span>
@@ -1060,21 +1062,39 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                       {isVerified && <span className="badge-verified">✓ verified</span>}
                       {isPriority && !isVerified && <span className="badge-priority">priority</span>}
                     </div>
-                    <div className="story-headline">
-                      <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
-                        {item.title}
-                      </a>
-                      <button
-                        className={`permalink-btn${permalinkLoading === item.url ? ' loading' : ''}${permalinkCopied === item.url ? ' copied' : ''}`}
-                        onClick={() => onPermalinkCopy(item, storyIsoDate)}
-                        title="Copy permalink"
-                        disabled={!!permalinkLoading}
-                        aria-label="Copy permalink"
-                      >
-                        {permalinkCopied === item.url ? 'Copied!' : permalinkLoading === item.url ? '···' : <Link2 size={11} />}
-                      </button>
-                    </div>
-                    {item.summary && <p className="story-summary">{item.summary}</p>}
+                    {isTweet ? (
+                      <div className="tweet-embed">
+                        <div className="tweet-header">
+                          <span className="tweet-x-logo">𝕏</span>
+                          <div className="tweet-byline">
+                            <span className="tweet-author">{item.title}</span>
+                            {tweetHandle && <span className="tweet-handle">@{tweetHandle}</span>}
+                          </div>
+                        </div>
+                        {item.summary && <p className="tweet-text">{item.summary}</p>}
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="tweet-cta" onClick={() => onTrackClick(item.title, item.source)}>
+                          View on X →
+                        </a>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="story-headline">
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => onTrackClick(item.title, item.source)}>
+                            {item.title}
+                          </a>
+                          <button
+                            className={`permalink-btn${permalinkLoading === item.url ? ' loading' : ''}${permalinkCopied === item.url ? ' copied' : ''}`}
+                            onClick={() => onPermalinkCopy(item, storyIsoDate)}
+                            title="Copy permalink"
+                            disabled={!!permalinkLoading}
+                            aria-label="Copy permalink"
+                          >
+                            {permalinkCopied === item.url ? 'Copied!' : permalinkLoading === item.url ? '···' : <Link2 size={11} />}
+                          </button>
+                        </div>
+                        {item.summary && <p className="story-summary">{item.summary}</p>}
+                      </>
+                    )}
                     {item.tags && item.tags.length > 0 && (
                       <div className="tags-strip">
                         {item.tags.map((tag, i) => <span key={i} className="tag">{tag}</span>)}
