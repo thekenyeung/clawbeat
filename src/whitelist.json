@@ -941,8 +941,8 @@
     "Category": "Publisher",
     "Website URL": "https://restofworld.org/",
     "Website RSS": "https://restofworld.org/feed/latest",
-    "YouTube Channel ID": null,
-    "Priority": ""
+    "YouTube Channel ID": "",
+    "Priority": "1"
   },
   {
     "ID": "106",
@@ -950,10 +950,10 @@
     "Category": "Publisher",
     "Website URL": "https://futurism.com/",
     "Website RSS": "https://futurism.com/feed",
-    "YouTube Channel ID": null,
-    "Priority": ""
+    "YouTube Channel ID": "",
+    "Priority": "1"
   },
-{
+  {
     "ID": "107",
     "Source Name": "This Week in Startups",
     "Category": "YouTube",
@@ -968,7 +968,7 @@
     "Category": "Publisher",
     "Website URL": "https://every.to",
     "Website RSS": "https://every.to/feeds/global.xml",
-    "YouTube Channel ID": null,
+    "YouTube Channel ID": "",
     "Priority": "1"
   },
   {
@@ -977,7 +977,7 @@
     "Category": "Publisher",
     "Website URL": "https://nvidianews.nvidia.com",
     "Website RSS": "https://nvidianews.nvidia.com/rss",
-    "YouTube Channel ID": null,
+    "YouTube Channel ID": "",
     "Priority": "1"
   },
   {
@@ -985,9 +985,17 @@
     "Source Name": "ClawCon AI",
     "Category": "YouTube",
     "Website URL": "https://www.youtube.com/@clawconai",
-    "YouTube URL": "https://www.youtube.com/@clawconai",
     "Website RSS": "",
     "YouTube Channel ID": "",
+    "Priority": "1"
+  },
+  {
+    "ID": "111",
+    "Source Name": "Newcomer",
+    "Category": "Publisher",
+    "Website URL": "https://www.newcomer.co/",
+    "Website RSS": "https://www.newcomer.co/feed",
+    "YouTube Channel ID": "https://www.youtube.com/@newcomerpod",
     "Priority": "1"
   }
 ]
