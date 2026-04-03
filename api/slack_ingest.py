@@ -167,9 +167,15 @@ def fetch_tweet_oembed(url: str) -> dict:
             # Link-only tweet: resolve t.co → real URL → fetch article title
             if not tweet_text and tco_urls:
                 real_url = _resolve_tco(tco_urls[0])
-                og = fetch_og(real_url)
-                if og.get("title"):
-                    tweet_text = f"→ {og['title']}"
+                real_host = urlparse(real_url).netloc.lower().lstrip("www.")
+                if real_host in ("x.com", "twitter.com"):
+                    # Native X Article or X URL — use Jina (OG tags blocked)
+                    jina_title = fetch_jina_title(real_url)
+                    tweet_text = f"→ {jina_title}" if jina_title else "→ X Article"
+                else:
+                    og = fetch_og(real_url)
+                    if og.get("title"):
+                        tweet_text = f"→ {og['title']}"
 
         return {"author_name": author_name, "tweet_text": tweet_text}
     except Exception:
