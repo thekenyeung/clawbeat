@@ -58,6 +58,7 @@
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
 
   <!-- ── Daily Editions ── -->
+  <url><loc>https://clawbeat.co/daily/2026-04-02/is-openclaws-api-too-expensive-try-openclaw-ollama.html</loc><lastmod>2026-04-02</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-04-01/10-wild-things-people-are-building-with-openclaw.html</loc><lastmod>2026-04-01</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-31/openclaw-the-complete-guide-to-building-training-and-living-.html</loc><lastmod>2026-03-31</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-30/run-a-powerful-ai-agent-on-esp32-the-complete-openclaw-guide.html</loc><lastmod>2026-03-30</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
