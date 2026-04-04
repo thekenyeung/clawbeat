@@ -2169,10 +2169,15 @@ if __name__ == "__main__":
             item.update(scores)
             scores_computed += 1
             ts = item.get('total_score') or 0.0
-            needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
-            item['pending_review'] = needs_review
-            if needs_review and not already_queued:
-                pending_review_items.append(item)
+            # Manually-added articles (Slackbot DM or admin panel) are already
+            # curator-approved — skip the review gate entirely.
+            if item.get('date_is_manual'):
+                item['pending_review'] = False
+            else:
+                needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
+                item['pending_review'] = needs_review
+                if needs_review and not already_queued:
+                    pending_review_items.append(item)
     if scores_computed:
         print(f"📊 Scored {scores_computed} articles.")
     if pending_review_items:
