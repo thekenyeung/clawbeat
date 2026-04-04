@@ -369,6 +369,27 @@ def add_more_coverage(existing_url: str, new_url: str, new_source: str) -> tuple
         return False, str(e)[:200]
 
 
+def is_rejected(url: str) -> bool:
+    """Return True if this URL or its domain has been rejected via article_feedback."""
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/article_feedback",
+            params={"signal": "eq.reject", "select": "article_id"},
+            headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
+            timeout=4,
+        )
+        if r.status_code != 200:
+            return False
+        rejected = {row["article_id"] for row in r.json()}
+        if url in rejected:
+            return True
+        domain = urlparse(url).netloc.lstrip("www.")
+        rejected_domains = {urlparse(u).netloc.lstrip("www.") for u in rejected}
+        return domain in rejected_domains
+    except Exception:
+        return False
+
+
 def supabase_upsert(url: str, title: str, source: str, summary: str, source_type: str | None = None) -> tuple[bool, str]:
     """Upsert article into news_items (merge on duplicate URL).
     Returns (success, error_detail)."""
@@ -537,7 +558,11 @@ class handler(BaseHTTPRequestHandler):
                 slack_reply(channel, f"✗ Failed to add more coverage: {err}")
             return
 
-        # 3. New story — fetch full content and summarize
+        # 3. New story — check rejections, then fetch full content and summarize
+        if is_rejected(url):
+            slack_reply(channel, f"✗ Blocked — this article or source was previously rejected.")
+            return
+
         if is_tweet:
             # oEmbed already gave us the tweet text; skip Jina/Gemini
             summary = og["description"]

@@ -1646,48 +1646,54 @@ def _load_from_supabase() -> dict:
         return empty
 
 
-def _apply_feedback_signals(db: dict) -> set:
-    """Apply admin rejection signals to article scores and write back to Supabase.
+def _apply_feedback_signals(db: dict) -> tuple[set, set]:
+    """Block all rejected articles and their source domains from the feed.
 
-    Returns the set of rejected article URLs so they can be added to existing_urls
-    and never re-ingested, even if their news_items row was later deleted.
-
-    Reason → score adjustment:
-      off_topic          → d1_score = 0   (product relevance zeroed)
-      too_elementary     → d5_score = 0   (reader value zeroed)
-      low_quality_source → source_type='delist', d4_score = 0 (credibility zeroed)
-      clickbait          → d2_score = 0   (depth/actionability zeroed)
-      duplicate          → URL excluded from re-ingestion, no score change
+    Returns (rejected_urls, rejected_domains). Both are added to existing_urls
+    so neither the exact URL nor any other article from that domain can be
+    re-ingested until manually cleared via the admin panel.
     """
     rejected_urls: set = set()
+    rejected_domains: set = set()
     if not _supabase:
-        return rejected_urls
+        return rejected_urls, rejected_domains
     try:
-        resp = _supabase.table('article_feedback').select('article_id,reason').eq('signal', 'reject').execute()
+        resp = _supabase.table('article_feedback').select('article_id').eq('signal', 'reject').execute()
         rows = resp.data or []
     except Exception as e:
         print(f"⚠️  Could not load article_feedback: {e}")
-        return rejected_urls
+        return rejected_urls, rejected_domains
 
     if not rows:
-        return rejected_urls
+        return rejected_urls, rejected_domains
 
-    # Latest rejection per URL wins if the admin rejected the same article twice
-    feedback_by_url: dict[str, str] = {}
-    for row in rows:
-        feedback_by_url[row['article_id']] = row['reason']
+    rejected_urls = {row['article_id'] for row in rows}
 
-    rejected_urls = set(feedback_by_url.keys())
+    # Extract domains so every article from a rejected source is blocked, not just
+    # the one URL that was originally rejected.
+    for url in rejected_urls:
+        try:
+            netloc = urlparse(url).netloc.lstrip('www.')
+            if netloc:
+                rejected_domains.add(netloc)
+        except Exception:
+            pass
 
-    # Evict all rejected articles from the in-memory db so _save_to_supabase never
-    # upserts them back. The article_feedback row is the permanent learning signal;
-    # the news_items row must not survive a forge run.
+    # Evict all rejected articles (by URL or domain) from the in-memory db so
+    # _save_to_supabase never upserts them back.
+    def _is_blocked(item_url: str) -> bool:
+        if item_url in rejected_urls:
+            return True
+        try:
+            return urlparse(item_url).netloc.lstrip('www.') in rejected_domains
+        except Exception:
+            return False
+
     before = len(db.get('items', []))
-    db['items'] = [item for item in db.get('items', []) if item['url'] not in rejected_urls]
+    db['items'] = [item for item in db.get('items', []) if not _is_blocked(item['url'])]
     evicted = before - len(db['items'])
 
-    # Delete any rejected rows still present in news_items (covers pre-fix rejections
-    # and the window between admin rejection and the next forge run).
+    # Delete any blocked rows still present in news_items.
     delete_errors = 0
     for url in rejected_urls:
         try:
@@ -1697,8 +1703,8 @@ def _apply_feedback_signals(db: dict) -> set:
             delete_errors += 1
 
     err_str = f', {delete_errors} delete error(s)' if delete_errors else ''
-    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s) permanently excluded, {evicted} evicted from feed{err_str}.")
-    return rejected_urls
+    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s), {len(rejected_domains)} blocked domain(s), {evicted} evicted from feed{err_str}.")
+    return rejected_urls, rejected_domains
 
 
 def _notify_slack_review(items: list) -> None:
@@ -2052,8 +2058,8 @@ if __name__ == "__main__":
         db['items'] = [item for item in db['items'] if not item.get('needs_reprocess')]
         print(f"♻️  {orphan_count} orphaned sublink(s) released for reclustering.")
 
-    # Apply admin rejection feedback — adjust scores in DB and collect excluded URLs
-    rejected_urls = _apply_feedback_signals(db)
+    # Apply admin rejection feedback — block rejected URLs and their source domains
+    rejected_urls, rejected_domains = _apply_feedback_signals(db)
 
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
@@ -2070,6 +2076,10 @@ if __name__ == "__main__":
     for art in raw_news:
         art['url'] = normalize_url(art['url'])
         if art['url'] in existing_urls: continue
+        try:
+            if urlparse(art['url']).netloc.lstrip('www.') in rejected_domains: continue
+        except Exception:
+            pass
         # Strip boilerplate (e.g. "Continue reading on Medium") from raw summary.
         # If the cleaned text is too short to be useful, treat as absent.
         art['summary'] = strip_boilerplate(art.get('summary') or '')
