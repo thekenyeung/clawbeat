@@ -377,28 +377,42 @@
         setRejectReason('');
       };
 
-      // ── Fetch metadata from URL via Microlink API ────────────────────────────
+      // ── Fetch metadata from URL via Microlink API (Jina fallback) ───────────
       const fetchMetadata = async () => {
         if (!form.url) { showToast('Paste a URL first', 'error'); return; }
         setFetching(true);
         try {
           const res  = await fetch(`https://api.microlink.io?url=${encodeURIComponent(form.url)}`);
           const json = await res.json();
-          if (json.status !== 'success') throw new Error('Could not fetch metadata for this URL');
-          const d = json.data;
-          setForm(f => ({
-            ...f,
-            title:   d.title       || f.title,
-            source:  d.publisher   || f.source,
-            summary: d.description || f.summary,
-            date:    d.date ? formatMicrolinkDate(d.date) : f.date,
-          }));
-          // Auto-populate tags from meta keywords or extract from title+description
-          const tags = Array.isArray(d.keywords) && d.keywords.length
-            ? d.keywords.slice(0, 6)
-            : extractTagsFromText(d.title, d.description);
-          if (tags.length) setTagStr(tags.join(', '));
-          showToast('Metadata fetched — review and save');
+          if (json.status === 'success') {
+            const d = json.data;
+            setForm(f => ({
+              ...f,
+              title:   d.title       || f.title,
+              source:  d.publisher   || f.source,
+              summary: d.description || f.summary,
+              date:    d.date ? formatMicrolinkDate(d.date) : f.date,
+            }));
+            const tags = Array.isArray(d.keywords) && d.keywords.length
+              ? d.keywords.slice(0, 6)
+              : extractTagsFromText(d.title, d.description);
+            if (tags.length) setTagStr(tags.join(', '));
+            showToast('Metadata fetched — review and save');
+          } else {
+            // Microlink blocked (bot protection) — fall back to Jina Reader
+            const jinaRes = await fetch(`https://r.jina.ai/${form.url}`, {
+              headers: { 'Accept': 'text/plain', 'X-Return-Format': 'text' },
+            });
+            const text = await jinaRes.text();
+            // Jina prepends "Title: ..." and "URL Source: ..." header lines
+            const titleMatch = text.match(/^Title:\s*(.+)$/m);
+            const jinaTitle = titleMatch ? titleMatch[1].trim() : '';
+            if (!jinaTitle) throw new Error('Could not fetch metadata for this URL');
+            setForm(f => ({ ...f, title: jinaTitle }));
+            const tags = extractTagsFromText(jinaTitle, '');
+            if (tags.length) setTagStr(tags.join(', '));
+            showToast('Fetched via fallback — title only, fill in the rest');
+          }
         } catch (e) {
           showToast('Fetch failed: ' + e.message, 'error');
         } finally {
