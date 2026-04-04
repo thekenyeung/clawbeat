@@ -903,9 +903,36 @@
       return p.length === 3 ? `${p[2]}-${p[0]}-${p[1]}` : mdy;
     }
 
-    function scoreArticle(item) {
+    // Must stay in sync with scoreArticle() in index.tsx.
+    // whitelist param = array from whitelist.json (Source Name / Website URL entries).
+    function scoreArticle(item, whitelist = []) {
       let score = (item.more_coverage?.length || 0) * 3;
       if (item.source_type === 'priority') score += 2;
+
+      // Verified/whitelist source boost (mirrors index.tsx checkIfVerified logic)
+      const itemSource = String(item.source || '').toLowerCase().trim();
+      const isVerified = whitelist.some(w => {
+        const wName = String(w['Source Name'] || '').toLowerCase().trim();
+        if (wName && wName === itemSource) return true;
+        const wUrl = String(w['Website URL'] || '').toLowerCase()
+          .replace('https://', '').replace('http://', '').replace('www.', '');
+        return wUrl && item.url?.toLowerCase().includes(wUrl);
+      });
+      if (isVerified) {
+        score += item.url?.toLowerCase().includes('medium.com') ? 1 : 3;
+      }
+
+      // D1 tier boost (mirrors index.tsx d1_tier logic)
+      const isNewsArticle =
+        !item.url?.toLowerCase().includes('github.com') &&
+        !item.url?.toLowerCase().includes('youtube.com') &&
+        !item.url?.toLowerCase().includes('youtu.be') &&
+        !item.title?.toLowerCase().startsWith('show hn:');
+      if (isNewsArticle) {
+        if (item.d1_tier === 1) score += 5;       // Direct OpenClaw/Moltbot/Clawdbot
+        else if (item.d1_tier === 2) score += 3;  // Moltbook
+      }
+
       return score;
     }
 
@@ -925,6 +952,7 @@
       const [fetching,       setFetching]       = useState(false);
       const [saving,         setSaving]         = useState(false);
       const [excludedUrls,   setExcludedUrls]   = useState(new Set()); // URLs excluded from all algo spotlight slots for selectedDate
+      const [whitelist,      setWhitelist]      = useState([]);       // whitelist.json entries for scoreArticle parity
       // Daily Edition panel state
       const [dailyEdSlot,    setDailyEdSlot]    = useState(null);  // slot number or null
       const [dailyEdForm,    setDailyEdForm]    = useState({});    // {image_url,image_alt,credit_name,credit_url,summary_html,why_it_matters}
@@ -933,7 +961,7 @@
       const [dailyEdUploading, setDailyEdUploading] = useState(false);
       const [dailyEdFileName,  setDailyEdFileName]  = useState('');
 
-      // Load distinct dispatch dates from news_items + which dates have overrides
+      // Load distinct dispatch dates from news_items + which dates have overrides + whitelist
       useEffect(() => {
         const load = async () => {
           setLoadingDates(true);
@@ -951,6 +979,12 @@
           setDates(distinct);
           setOverrideDates(new Set((overridesRes.data || []).map(d => d.dispatch_date)));
           setLoadingDates(false);
+          // Load whitelist.json so scoreArticle matches index.tsx exactly
+          try {
+            const wlUrl = `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_WHITELIST_PATH}?_=${Date.now()}`;
+            const wlRes = await fetch(wlUrl);
+            if (wlRes.ok) setWhitelist(await wlRes.json());
+          } catch (_) { /* non-fatal — scoring degrades gracefully without whitelist */ }
         };
         load();
       }, []);
@@ -979,10 +1013,10 @@
       const algoItems = useMemo(() => {
         const overriddenUrls = new Set(Object.values(overrides).map(ov => ov.url));
         const queue = [...dateArticles]
-          .sort((a, b) => scoreArticle(b) - scoreArticle(a))
+          .sort((a, b) => scoreArticle(b, whitelist) - scoreArticle(a, whitelist))
           .filter(a => !overriddenUrls.has(a.url) && !excludedUrls.has(a.url));
         return [1, 2, 3, 4].map(slot => overrides[slot] ? null : (queue.shift() || null));
-      }, [dateArticles, overrides, excludedUrls]);
+      }, [dateArticles, overrides, excludedUrls, whitelist]);
 
       const getSlotData = (slot) => {
         if (overrides[slot]) return { ...overrides[slot], isOverride: true };
