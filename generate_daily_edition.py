@@ -674,6 +674,56 @@ def main():
     print(f"[daily-edition] Written to {output_path}")
     print(f"[daily-edition] Done. Stories: {len(final_stories)}")
 
+    # --- Update sitemaps ---
+    update_sitemaps(edition_iso, edition_slug, s1.get("headline", "Daily Edition"))
+
+
+def update_sitemaps(edition_iso: str, edition_slug: str, headline: str) -> None:
+    """Prepend the new daily edition to public/sitemap.xml and public/sitemap.html."""
+    import re as _re
+    public_dir = Path(__file__).parent / "public"
+    page_url = f"https://clawbeat.co/daily/{edition_iso}/{edition_slug}.html"
+    page_path = f"/daily/{edition_iso}/{edition_slug}.html"
+
+    # ── sitemap.xml ──
+    xml_path = public_dir / "sitemap.xml"
+    xml = xml_path.read_text(encoding="utf-8")
+    if page_url not in xml:
+        xml_entry = (
+            f'  <url><loc>{page_url}</loc>'
+            f'<lastmod>{edition_iso}</lastmod>'
+            f'<changefreq>never</changefreq>'
+            f'<priority>0.7</priority></url>\n'
+        )
+        marker = "  <!-- ── Daily Editions ── -->\n"
+        xml = xml.replace(marker, marker + xml_entry)
+        xml_path.write_text(xml, encoding="utf-8")
+        print(f"[sitemap.xml] Added {edition_iso}")
+    else:
+        print(f"[sitemap.xml] {edition_iso} already present, skipping")
+
+    # ── sitemap.html ──
+    html_path = public_dir / "sitemap.html"
+    html = html_path.read_text(encoding="utf-8")
+    if page_path not in html:
+        html_entry = (
+            f'      <a class="daily-row" href="{page_path}">\n'
+            f'        <span class="daily-date">{edition_iso}</span>\n'
+            f'        <span class="daily-title">{headline}</span>\n'
+            f'      </a>\n'
+        )
+        grid_marker = '    <div class="daily-grid">\n'
+        html = _re.sub(
+            r'<span class="section-count">(\d+) editions</span>',
+            lambda m: f'<span class="section-count">{int(m.group(1)) + 1} editions</span>',
+            html,
+        )
+        html = html.replace(grid_marker, grid_marker + html_entry)
+        html_path.write_text(html, encoding="utf-8")
+        print(f"[sitemap.html] Added {edition_iso}")
+    else:
+        print(f"[sitemap.html] {edition_iso} already present, skipping")
+
 
 if __name__ == "__main__":
     main()
