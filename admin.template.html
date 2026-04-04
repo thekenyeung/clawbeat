@@ -205,6 +205,8 @@
     const GH_REPO           = '__GH_REPO__';
     const GH_BRANCH         = '__GH_BRANCH__';
     const GH_WHITELIST_PATH = '__GH_WHITELIST_PATH__';
+    // Whitelist inlined at build time by generate-admin.js (mirrors index.tsx static import)
+    const INLINED_WHITELIST = __WHITELIST_DATA__;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -952,7 +954,7 @@
       const [fetching,       setFetching]       = useState(false);
       const [saving,         setSaving]         = useState(false);
       const [excludedUrls,   setExcludedUrls]   = useState(new Set()); // URLs excluded from all algo spotlight slots for selectedDate
-      const [whitelist,      setWhitelist]      = useState([]);       // whitelist.json entries for scoreArticle parity
+      const [whitelist]      = useState(INLINED_WHITELIST);          // whitelist.json inlined at build time
       // Daily Edition panel state
       const [dailyEdSlot,    setDailyEdSlot]    = useState(null);  // slot number or null
       const [dailyEdForm,    setDailyEdForm]    = useState({});    // {image_url,image_alt,credit_name,credit_url,summary_html,why_it_matters}
@@ -979,12 +981,6 @@
           setDates(distinct);
           setOverrideDates(new Set((overridesRes.data || []).map(d => d.dispatch_date)));
           setLoadingDates(false);
-          // Load whitelist.json so scoreArticle matches index.tsx exactly
-          try {
-            const wlUrl = `https://raw.githubusercontent.com/${GH_REPO}/${GH_BRANCH}/${GH_WHITELIST_PATH}?_=${Date.now()}`;
-            const wlRes = await fetch(wlUrl);
-            if (wlRes.ok) setWhitelist(await wlRes.json());
-          } catch (_) { /* non-fatal — scoring degrades gracefully without whitelist */ }
         };
         load();
       }, []);

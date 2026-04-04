@@ -66,6 +66,12 @@ if (missing.length) {
   process.exit(0);
 }
 
+// ── Inline whitelist.json (mirrors how index.tsx imports it at build time) ────
+const whitelistPath = resolve(ROOT, 'src', 'whitelist.json');
+const whitelistData = existsSync(whitelistPath)
+  ? readFileSync(whitelistPath, 'utf8').trim()
+  : '[]';
+
 // ── Replace placeholders ──────────────────────────────────────────────────────
 const REPLACEMENTS = {
   '__SUPABASE_URL__':      process.env.ADMIN_SUPABASE_URL,
@@ -74,6 +80,7 @@ const REPLACEMENTS = {
   '__GH_REPO__':           process.env.ADMIN_GH_REPO,
   '__GH_BRANCH__':         process.env.ADMIN_GH_BRANCH,
   '__GH_WHITELIST_PATH__': process.env.ADMIN_GH_WHITELIST_PATH,
+  '__WHITELIST_DATA__':    whitelistData,
 };
 
 const templatePath = resolve(ROOT, 'admin.template.html');
