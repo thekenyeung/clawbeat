@@ -993,7 +993,7 @@
         setExcludedUrls(new Set());
         setLoadingDate(true);
         const [articlesRes, overridesRes, excludedRes] = await Promise.all([
-          supabase.from('news_items').select('*').eq('date', date),
+          supabase.from('news_items').select('*').eq('date', date).order('inserted_at', { ascending: false }),
           supabase.from('spotlight_overrides').select('*').eq('dispatch_date', date),
           supabase.from('spotlight_excluded').select('url').eq('dispatch_date', date),
         ]);
