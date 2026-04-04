@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<title>Signal Pulse — OpenClaw Sentiment · ClawBeat</title>
+<meta name="description" content="Live sentiment tracking for the OpenClaw ecosystem — developer discussions, trending topics, ecosystem health signals.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clawbeat.co/sentiment.html">
+<meta property="og:site_name" content="ClawBeat">
+<meta property="og:title" content="Signal Pulse — OpenClaw Sentiment · ClawBeat">
+<meta property="og:description" content="Live sentiment tracking for the OpenClaw ecosystem.">
+<meta property="og:image" content="https://clawbeat.co/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-32x32.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  :root {
+    --bg: #08090b;
+    --bg-2: #0d0f12;
+    --bg-3: #131619;
+    --border: rgba(255,255,255,0.05);
+    --border-2: rgba(255,255,255,0.09);
+    --orange: #f97316;
+    --orange-bright: #fb923c;
+    --orange-dim: rgba(249,115,22,0.10);
+    --orange-glow: rgba(249,115,22,0.15);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.08);
+    --cyan: #06b6d4;
+    --cyan-dim: rgba(6,182,212,0.08);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.08);
+    --yellow: #eab308;
+    --yellow-dim: rgba(234,179,8,0.08);
+    --text: #e2e4e9;
+    --text-2: #9097a3;
+    --text-3: #525866;
+    --text-4: #2e333d;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+  /* ── HEADER ── */
+  .header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,12,0.8); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+  .header-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+  .brand-img { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+  .brand-img img { width: 100%; height: 100%; object-fit: cover; }
+  .brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
+  .brand-text span { color: var(--orange); }
+  .header-nav { display: flex; align-items: center; gap: 0.25rem; }
+  .nav-item { font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
+  .nav-item svg { width: 16px; height: 16px; }
+  .nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+  .nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
+  .nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+  .nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; text-decoration: none; }
+  .nav-dropdown-item:hover { background: var(--orange-dim); }
+  .nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+  .nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+  .nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+  .hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }
+  .hamburger-btn:hover { color: #fff; }
+  .hamburger-btn svg { width: 24px; height: 24px; }
+  .mobile-menu { display: none; position: fixed; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
+  .mobile-menu.open { display: flex; }
+  .mobile-nav-item { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+  .mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+  .mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); }
+  .mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+  .mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+  .mobile-subnav-item svg { width: 14px; height: 14px; }
+  @media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+
+  /* ── PAGE HERO ── */
+  .page-hero { max-width: 72rem; margin: 0 auto; padding: 2rem 1.5rem 1.5rem; }
+  .hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .hero-title { font-family: var(--sans); font-size: 2.25rem; font-weight: 900; letter-spacing: -0.05em; line-height: 1.1; color: #fff; text-transform: uppercase; font-style: italic; }
+  .hero-title em { color: var(--orange); font-style: italic; }
+  .hero-meta { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .hero-meta .dot { color: var(--orange); }
+  .last-updated { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); }
+  .last-updated strong { color: var(--orange); }
+
+  /* ── VIEW TABS ── */
+  .view-bar-wrap { border-top: 1px solid var(--border-2); border-bottom: 1px solid var(--border-2); background: var(--bg-2); }
+  .view-bar { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: stretch; }
+  .view-tab { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.65rem 1.25rem; background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .view-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .view-tab.active { color: var(--orange); border-bottom-color: var(--orange); background: var(--orange-dim); }
+
+  /* ── MAIN LAYOUT ── */
+  .main-container { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem 6rem; }
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
+  /* ── SECTION HEADERS (// style) ── */
+  .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 2rem 0 1rem; }
+  .section-slash { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; color: var(--text-4); }
+  .section-label { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+
+  /* ── PULSE VIEW — overall scores ── */
+  .scores-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .score-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.25rem; position: relative; overflow: hidden; }
+  .score-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .score-card.momentum::before { background: linear-gradient(to right, var(--cyan), transparent); }
+  .score-card.sentiment::before { background: linear-gradient(to right, var(--orange), transparent); }
+  .score-card.trust::before     { background: linear-gradient(to right, var(--green), transparent); }
+  .score-card.buzz::before      { background: linear-gradient(to right, var(--yellow), transparent); }
+  .score-label { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.5rem; }
+  .score-value { font-family: var(--sans); font-size: 2.5rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; margin-bottom: 0.3rem; }
+  .score-card.momentum .score-value { color: var(--cyan); }
+  .score-card.sentiment .score-value { color: var(--orange); }
+  .score-card.trust .score-value     { color: var(--green); }
+  .score-card.buzz .score-value      { color: var(--yellow); }
+  .score-bar-wrap { height: 4px; background: var(--border-2); border-radius: 2px; margin-bottom: 0.5rem; }
+  .score-bar { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+  .score-card.momentum .score-bar { background: var(--cyan); }
+  .score-card.sentiment .score-bar { background: var(--orange); }
+  .score-card.trust .score-bar     { background: var(--green); }
+  .score-card.buzz .score-bar      { background: var(--yellow); }
+  .score-desc { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); line-height: 1.5; }
+
+  /* ── SENTIMENT BREAKDOWN BAR ── */
+  .sentiment-breakdown { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+  .breakdown-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+  .breakdown-label { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; width: 4.5rem; flex-shrink: 0; }
+  .breakdown-label.pos { color: var(--green); }
+  .breakdown-label.neg { color: var(--red); }
+  .breakdown-label.neu { color: var(--text-3); }
+  .breakdown-bar-track { flex: 1; height: 6px; background: var(--border-2); border-radius: 3px; overflow: hidden; }
+  .breakdown-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .breakdown-bar-fill.pos { background: var(--green); }
+  .breakdown-bar-fill.neg { background: var(--red); }
+  .breakdown-bar-fill.neu { background: var(--text-3); }
+  .breakdown-pct { font-family: var(--mono); font-size: 0.7rem; color: var(--text-2); width: 3rem; text-align: right; flex-shrink: 0; }
+  .breakdown-count { font-family: var(--mono); font-size: 0.6rem; color: var(--text-4); width: 4rem; text-align: right; flex-shrink: 0; }
+  .breakdown-footer { display: flex; align-items: center; gap: 1.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .breakdown-stat { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); }
+  .breakdown-stat strong { color: var(--text-2); }
+
+  /* ── AI DISPATCH (narrative) ── */
+  .dispatch-card { background: var(--bg-2); border: 1px solid var(--border-2); border-left: 3px solid var(--orange); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+  .dispatch-header { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .dispatch-header::before { content: '▶'; font-size: 0.45rem; opacity: 0.7; }
+  .dispatch-narrative { font-size: 0.9375rem; line-height: 1.75; color: var(--text); margin-bottom: 0.875rem; }
+  .dispatch-emerging { font-family: var(--mono); font-size: 0.75rem; color: var(--text-2); background: var(--bg-3); border: 1px solid var(--border-2); border-radius: 6px; padding: 0.6rem 0.875rem; margin-bottom: 0.5rem; }
+  .dispatch-emerging strong { color: var(--orange); font-weight: 700; }
+  .dispatch-competitive { font-family: var(--mono); font-size: 0.75rem; color: var(--text-2); background: var(--bg-3); border: 1px solid var(--border-2); border-radius: 6px; padding: 0.6rem 0.875rem; }
+  .dispatch-competitive strong { color: var(--cyan); font-weight: 700; }
+  .dispatch-empty { font-family: var(--mono); font-size: 0.75rem; color: var(--text-4); font-style: italic; }
+
+  /* ── SOURCE BREAKDOWN ── */
+  .source-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .source-chip { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.6rem 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .source-icon { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+  .source-count { font-family: var(--sans); font-size: 1rem; font-weight: 800; color: var(--text); }
+  .source-dots { display: flex; gap: 2px; align-items: center; }
+  .source-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-4); }
+  .source-dot.filled { background: var(--orange); }
+
+  /* ── SIGNALS VIEW — topic signal cards ── */
+  .signals-grid { display: flex; flex-direction: column; gap: 1rem; padding-top: 1.5rem; }
+  .signal-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; overflow: hidden; transition: border-color 0.15s; }
+  .signal-card:hover { border-color: rgba(255,255,255,0.12); }
+  .signal-card-top { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); gap: 1rem; flex-wrap: wrap; }
+  .signal-name { font-family: var(--sans); font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .signal-badges { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .signal-score-big { font-family: var(--sans); font-size: 1.75rem; font-weight: 900; letter-spacing: -0.04em; color: var(--orange); flex-shrink: 0; }
+  .signal-body { padding: 1rem 1.25rem; }
+  .signal-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+  .signal-metric { display: flex; flex-direction: column; gap: 0.2rem; }
+  .signal-metric-label { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-4); }
+  .signal-metric-val { font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: var(--text-2); }
+  .signal-metric-bar { height: 3px; border-radius: 2px; background: var(--border-2); margin-top: 0.2rem; }
+  .signal-metric-bar-fill { height: 100%; border-radius: 2px; background: var(--orange); }
+  .signal-tension { font-family: var(--mono); font-size: 0.75rem; color: var(--text-2); background: var(--bg-3); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem 0.875rem; line-height: 1.6; }
+  .signal-tension strong { color: var(--text); font-weight: 600; }
+
+  /* badges */
+  .badge { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 3px; padding: 0.2rem 0.5rem; }
+  .badge-pos  { color: var(--green); background: var(--green-dim); border: 1px solid rgba(34,197,94,0.2); }
+  .badge-neg  { color: var(--red); background: var(--red-dim); border: 1px solid rgba(239,68,68,0.2); }
+  .badge-neu  { color: var(--text-3); background: rgba(255,255,255,0.04); border: 1px solid var(--border-2); }
+  .badge-new  { color: var(--cyan); background: var(--cyan-dim); border: 1px solid rgba(6,182,212,0.2); }
+  .badge-accel { color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.2); }
+  .badge-fading { color: var(--text-3); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+  .badge-stable { color: var(--text-3); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+
+  /* ── TOP ARTICLES ── */
+  .articles-list { display: flex; flex-direction: column; gap: 0.625rem; padding-top: 1.5rem; }
+  .article-row { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.875rem 1.1rem; display: flex; align-items: flex-start; gap: 1rem; transition: border-color 0.15s; }
+  .article-row:hover { border-color: rgba(255,255,255,0.12); }
+  .article-rank { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--text-4); width: 1.5rem; flex-shrink: 0; padding-top: 0.1rem; }
+  .article-body { flex: 1; min-width: 0; }
+  .article-title { font-size: 0.9375rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 0.35rem; }
+  .article-title a { color: inherit; text-decoration: none; transition: color 0.15s; }
+  .article-title a:hover { color: var(--orange); }
+  .article-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .article-sources { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
+  .source-tag { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; padding: 0.15rem 0.4rem; }
+  .article-sentiment { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+  .article-sentiment.pos { color: var(--green); }
+  .article-sentiment.neg { color: var(--red); }
+  .article-sentiment.neu { color: var(--text-3); }
+
+  /* ── ECOSYSTEM VIEW ── */
+  .eco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding-top: 1.5rem; }
+  .eco-card { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 10px; padding: 1.25rem; }
+  .eco-card-name { font-family: var(--sans); font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+  .eco-card-tag { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 1rem; }
+  .eco-stats { display: flex; flex-direction: column; gap: 0.5rem; }
+  .eco-stat { display: flex; align-items: center; justify-content: space-between; }
+  .eco-stat-key { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); }
+  .eco-stat-val { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: var(--text-2); }
+  .eco-stat-val.up { color: var(--green); }
+  .eco-stat-val.down { color: var(--red); }
+  .eco-stat-val.orange { color: var(--orange); }
+  .eco-divider { height: 1px; background: var(--border); margin: 0.75rem 0; }
+
+  /* ── FEED VIEW — raw mention feed ── */
+  .feed-list { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 1.5rem; }
+  .feed-item { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 0.75rem 1rem; display: flex; gap: 0.875rem; align-items: flex-start; }
+  .feed-source-badge { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 4px; padding: 0.2rem 0.5rem; flex-shrink: 0; margin-top: 0.15rem; white-space: nowrap; }
+  .feed-source-badge.hackernews { color: #f97316; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); }
+  .feed-source-badge.bluesky    { color: #38bdf8; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2); }
+  .feed-source-badge.reddit     { color: #fb923c; background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.2); }
+  .feed-source-badge.github     { color: #94a3b8; background: rgba(148,163,184,0.1); border: 1px solid rgba(148,163,184,0.2); }
+  .feed-source-badge.youtube    { color: #ef4444; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+  .feed-source-badge.mastodon   { color: #818cf8; background: rgba(129,140,248,0.1); border: 1px solid rgba(129,140,248,0.2); }
+  .feed-source-badge.news       { color: #22c55e; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .feed-body { flex: 1; min-width: 0; }
+  .feed-text { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; margin-bottom: 0.3rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .feed-footer { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .feed-score { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; }
+  .feed-score.pos { color: var(--green); }
+  .feed-score.neg { color: var(--red); }
+  .feed-score.neu { color: var(--text-4); }
+  .feed-link { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .feed-link:hover { color: var(--orange); }
+  .feed-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+  .feed-tag { font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 3px; padding: 0.1rem 0.3rem; }
+  .feed-load-more { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(249,115,22,0.25); border-radius: 6px; padding: 0.65rem 1.25rem; cursor: pointer; transition: all 0.15s; display: block; width: 100%; margin-top: 1rem; text-align: center; }
+  .feed-load-more:hover { background: var(--orange-glow); }
+
+  /* ── EMPTY / LOADING STATES ── */
+  .loading-state { text-align: center; padding: 4rem 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--text-4); }
+  .empty-state { text-align: center; padding: 3rem 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--text-4); }
+
+  /* ── FOOTER ── */
+  .footer { border-top: 1px solid var(--border-2); background: var(--bg-2); padding: 1.25rem 1.5rem; }
+  .footer-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .footer-brand { font-family: var(--sans); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em; font-style: italic; color: #fff; }
+  .footer-brand span { color: var(--orange); }
+  .clawhub-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .clawhub-badge:hover { color: var(--orange); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .scores-grid { grid-template-columns: repeat(2, 1fr); }
+    .signal-metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .header-inner, .main-container, .page-hero, .footer { padding-left: 1rem; padding-right: 1rem; }
+    .view-bar { padding-left: 1rem; }
+    .hero-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .scores-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .eco-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+  }
+  @media (max-width: 480px) {
+    .scores-grid { grid-template-columns: 1fr; }
+    .signal-metrics { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img">
+        <img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'">
+      </div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/news.html" class="nav-item"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+          <a href="/guide/" class="nav-dropdown-item">
+            <i data-lucide="book-marked"></i>
+            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
+          </a>
+          <a href="/dossier.html" class="nav-dropdown-item">
+            <i data-lucide="id-card"></i>
+            <div><div class="nav-dropdown-label">Dossier</div><div class="nav-dropdown-sub">Key players</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <div class="nav-dropdown">
+        <a href="/forge.html" class="nav-item"><i data-lucide="github"></i>Forge</a>
+        <div class="nav-dropdown-menu">
+          <a href="/openclaw/index.html" class="nav-dropdown-item">
+            <i data-lucide="git-branch"></i>
+            <div><div class="nav-dropdown-label">Chronicle</div><div class="nav-dropdown-sub">OpenClaw release history</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a href="/sentiment.html" class="nav-item active"><i data-lucide="activity"></i>Pulse</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/dossier.html" class="mobile-subnav-item"><i data-lucide="id-card"></i>Dossier</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><i data-lucide="github"></i>The Forge</a>
+  <a href="/openclaw/index.html" class="mobile-subnav-item"><i data-lucide="git-branch"></i>OpenClaw Chronicle</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a href="/sentiment.html" class="mobile-nav-item active"><i data-lucide="activity"></i>Signal Pulse</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// skill</a>
+</div>
+
+<!-- ── PAGE HERO ── -->
+<div class="page-hero">
+  <div class="hero-row">
+    <div>
+      <h1 class="hero-title">Signal <em>Pulse</em></h1>
+      <div class="hero-meta">
+        <span>OpenClaw Ecosystem Sentiment</span>
+        <span class="dot">·</span>
+        <span id="last-updated" class="last-updated">loading...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── VIEW TABS ── -->
+<div class="view-bar-wrap">
+  <div class="view-bar">
+    <button class="view-tab active" onclick="switchView('pulse', this)">// Pulse</button>
+    <button class="view-tab" onclick="switchView('signals', this)">// Signals</button>
+    <button class="view-tab" onclick="switchView('articles', this)">// Articles</button>
+    <button class="view-tab" onclick="switchView('ecosystem', this)">// Ecosystem</button>
+    <button class="view-tab" onclick="switchView('feed', this)">// Feed</button>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main-container">
+
+  <!-- PULSE VIEW -->
+  <div class="view-panel active" id="view-pulse">
+
+    <!-- Scores -->
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">overall_scores</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="scores-grid">
+      <div class="score-card momentum">
+        <div class="score-label">Momentum</div>
+        <div class="score-value" id="score-momentum">—</div>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-momentum" style="width:0%"></div></div>
+        <div class="score-desc">Mention velocity vs prior baseline</div>
+      </div>
+      <div class="score-card sentiment">
+        <div class="score-label">Sentiment</div>
+        <div class="score-value" id="score-sentiment">—</div>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-sentiment" style="width:0%"></div></div>
+        <div class="score-desc">VADER compound average across all sources</div>
+      </div>
+      <div class="score-card trust">
+        <div class="score-label">Trust</div>
+        <div class="score-value" id="score-trust">—</div>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-trust" style="width:0%"></div></div>
+        <div class="score-desc">DX, docs &amp; community health signals</div>
+      </div>
+      <div class="score-card buzz">
+        <div class="score-label">Buzz</div>
+        <div class="score-value" id="score-buzz">—</div>
+        <div class="score-bar-wrap"><div class="score-bar" id="bar-buzz" style="width:0%"></div></div>
+        <div class="score-desc">Cross-platform echo + thread depth</div>
+      </div>
+    </div>
+
+    <!-- Sentiment Breakdown -->
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">sentiment_breakdown</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="sentiment-breakdown">
+      <div class="breakdown-row">
+        <span class="breakdown-label pos">Positive</span>
+        <div class="breakdown-bar-track"><div class="breakdown-bar-fill pos" id="bar-pos" style="width:0%"></div></div>
+        <span class="breakdown-pct" id="pct-pos">—</span>
+        <span class="breakdown-count" id="cnt-pos">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label neg">Negative</span>
+        <div class="breakdown-bar-track"><div class="breakdown-bar-fill neg" id="bar-neg" style="width:0%"></div></div>
+        <span class="breakdown-pct" id="pct-neg">—</span>
+        <span class="breakdown-count" id="cnt-neg">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label neu">Neutral</span>
+        <div class="breakdown-bar-track"><div class="breakdown-bar-fill neu" id="bar-neu" style="width:0%"></div></div>
+        <span class="breakdown-pct" id="pct-neu">—</span>
+        <span class="breakdown-count" id="cnt-neu">—</span>
+      </div>
+      <div class="breakdown-footer" id="breakdown-footer">
+        <span class="breakdown-stat">loading...</span>
+      </div>
+    </div>
+
+    <!-- AI Dispatch -->
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">ai_dispatch</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="dispatch-card">
+      <div class="dispatch-header">Gemini Analysis</div>
+      <div class="dispatch-narrative" id="dispatch-narrative"><span class="dispatch-empty">// loading analysis...</span></div>
+      <div id="dispatch-emerging" style="display:none" class="dispatch-emerging"><strong>emerging ↗</strong> <span id="dispatch-emerging-text"></span></div>
+      <div id="dispatch-competitive" style="display:none" class="dispatch-competitive"><strong>vs competitors</strong> <span id="dispatch-competitive-text"></span></div>
+    </div>
+
+    <!-- Source breakdown -->
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">source_breakdown</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="source-grid" id="source-grid">
+      <div class="loading-state">// loading sources...</div>
+    </div>
+
+  </div><!-- /view-pulse -->
+
+  <!-- SIGNALS VIEW -->
+  <div class="view-panel" id="view-signals">
+    <div class="signals-grid" id="signals-grid">
+      <div class="loading-state">// loading signals...</div>
+    </div>
+  </div>
+
+  <!-- ARTICLES VIEW -->
+  <div class="view-panel" id="view-articles">
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">top_articles_shared</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="articles-list" id="articles-list">
+      <div class="loading-state">// loading articles...</div>
+    </div>
+  </div>
+
+  <!-- ECOSYSTEM VIEW -->
+  <div class="view-panel" id="view-ecosystem">
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">ecosystem_health</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="eco-grid" id="eco-grid">
+      <div class="loading-state">// loading ecosystem data...</div>
+    </div>
+  </div>
+
+  <!-- FEED VIEW -->
+  <div class="view-panel" id="view-feed">
+    <div class="section-header">
+      <span class="section-slash">//</span>
+      <span class="section-label">signal_feed</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="feed-list" id="feed-list">
+      <div class="loading-state">// loading feed...</div>
+    </div>
+    <button class="feed-load-more" id="load-more-btn" style="display:none" onclick="loadMoreFeed()">// load_more ↓</button>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">ClawBeat<span>.co</span></div>
+    <a class="clawhub-badge" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener">// openclaw_skill ↗</a>
+  </div>
+</footer>
+
+<script>
+  const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
+
+  // ── State
+  let _snapshot = null;
+  let _feedOffset = 0;
+  const FEED_PAGE = 30;
+
+  // ── Utils
+  function esc(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtScore(val) {
+    return val != null ? Math.round(val) : '—';
+  }
+  function sentimentClass(score) {
+    if (score == null) return 'neu';
+    if (score >= 0.05) return 'pos';
+    if (score <= -0.05) return 'neg';
+    return 'neu';
+  }
+  function sentimentLabel(score) {
+    if (score == null) return 'NEUTRAL';
+    if (score >= 0.05) return `+${score.toFixed(2)}`;
+    if (score <= -0.05) return `${score.toFixed(2)}`;
+    return '~0.00';
+  }
+  function fmtRelTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const diff = Date.now() - d.getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h/24)}d ago`;
+  }
+  function sourceLabel(src) {
+    const map = { hackernews:'HN', bluesky:'BSky', reddit:'Reddit', github:'GitHub', youtube:'YT', mastodon:'Fedi', news:'News' };
+    return map[src] || src;
+  }
+
+  // ── Supabase fetch
+  async function sbFetch(table, params = '') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
+      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
+    });
+    if (!r.ok) throw new Error(`${table} fetch failed: ${r.status}`);
+    return r.json();
+  }
+
+  // ── View switcher
+  function switchView(name, btn) {
+    document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+    btn.classList.add('active');
+    gtag('event', 'pulse_view', { event_category: 'sentiment', event_label: name });
+  }
+
+  // ── Mobile menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = menu.classList.toggle('open');
+    document.getElementById('icon-menu').style.display = open ? 'none' : '';
+    document.getElementById('icon-close').style.display = open ? '' : 'none';
+  }
+
+  // ── Render Pulse
+  function renderPulse(snap) {
+    if (!snap) {
+      document.getElementById('dispatch-narrative').innerHTML = '<span class="dispatch-empty">// no data yet — first scraper run pending</span>';
+      return;
+    }
+
+    // Last updated
+    const updEl = document.getElementById('last-updated');
+    if (snap.snapshot_at) {
+      const d = new Date(snap.snapshot_at);
+      const pt = d.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+      updEl.innerHTML = `Updated <strong>${pt} PT</strong> · ${esc(snap.period || '')}`;
+    }
+
+    // Scores
+    function setScore(id, barId, val) {
+      document.getElementById(id).textContent = fmtScore(val);
+      document.getElementById(barId).style.width = Math.min(val || 0, 100) + '%';
+    }
+    setScore('score-momentum', 'bar-momentum', snap.score_momentum);
+    setScore('score-sentiment', 'bar-sentiment', snap.score_sentiment);
+    setScore('score-trust',    'bar-trust',    snap.score_trust);
+    setScore('score-buzz',     'bar-buzz',     snap.score_buzz);
+
+    // Sentiment breakdown
+    const pos = snap.positive_pct || 0, neg = snap.negative_pct || 0, neu = snap.neutral_pct || 0;
+    document.getElementById('bar-pos').style.width = pos + '%';
+    document.getElementById('bar-neg').style.width = neg + '%';
+    document.getElementById('bar-neu').style.width = neu + '%';
+    document.getElementById('pct-pos').textContent = pos.toFixed(1) + '%';
+    document.getElementById('pct-neg').textContent = neg.toFixed(1) + '%';
+    document.getElementById('pct-neu').textContent = neu.toFixed(1) + '%';
+    document.getElementById('cnt-pos').textContent = snap.positive_count + ' mentions';
+    document.getElementById('cnt-neg').textContent = snap.negative_count + ' mentions';
+    document.getElementById('cnt-neu').textContent = snap.neutral_count + ' mentions';
+    document.getElementById('breakdown-footer').innerHTML = `
+      <span class="breakdown-stat">Total <strong>${snap.total_mentions}</strong> mentions</span>
+      <span class="breakdown-stat">Period <strong>${esc(snap.period || '—')}</strong></span>
+      <span class="breakdown-stat">Date <strong>${esc(snap.snapshot_date || '—')}</strong></span>
+    `;
+
+    // AI Dispatch
+    if (snap.gemini_narrative) {
+      document.getElementById('dispatch-narrative').textContent = snap.gemini_narrative;
+    } else {
+      document.getElementById('dispatch-narrative').innerHTML = '<span class="dispatch-empty">// no analysis available for this snapshot</span>';
+    }
+    if (snap.emerging_story) {
+      document.getElementById('dispatch-emerging').style.display = '';
+      document.getElementById('dispatch-emerging-text').textContent = snap.emerging_story;
+    }
+    if (snap.competitive_framing) {
+      document.getElementById('dispatch-competitive').style.display = '';
+      document.getElementById('dispatch-competitive-text').textContent = snap.competitive_framing;
+    }
+
+    // Source breakdown
+    const srcBreakdown = snap.source_breakdown || {};
+    const srcGrid = document.getElementById('source-grid');
+    if (Object.keys(srcBreakdown).length === 0) {
+      srcGrid.innerHTML = '<div class="empty-state">// no source data</div>';
+      return;
+    }
+    srcGrid.innerHTML = Object.entries(srcBreakdown)
+      .sort((a, b) => b[1] - a[1])
+      .map(([src, count]) => `
+        <div class="source-chip">
+          <span class="source-icon">${esc(sourceLabel(src))}</span>
+          <span class="source-count">${count}</span>
+        </div>
+      `).join('');
+  }
+
+  // ── Render Signals (topic cards)
+  function renderSignals(topics) {
+    const grid = document.getElementById('signals-grid');
+    if (!topics || topics.length === 0) {
+      grid.innerHTML = '<div class="empty-state">// no topic signals yet — waiting for first scraper run</div>';
+      return;
+    }
+
+    function noveltyBadge(n) {
+      if (n === 'new') return '<span class="badge badge-new">new</span>';
+      if (n === 'fading') return '<span class="badge badge-fading">fading</span>';
+      return '<span class="badge badge-stable">recurring</span>';
+    }
+    function momentumBadge(m) {
+      if (m === 'accelerating') return '<span class="badge badge-accel">↑ accel</span>';
+      if (m === 'declining') return '<span class="badge badge-fading">↓ declining</span>';
+      return '<span class="badge badge-stable">→ stable</span>';
+    }
+    function sentBadge(score) {
+      const cls = sentimentClass(score);
+      const lbl = score != null ? (score >= 0.05 ? 'positive' : score <= -0.05 ? 'negative' : 'neutral') : 'neutral';
+      return `<span class="badge badge-${cls}">${lbl}</span>`;
+    }
+
+    // Simple score per topic: sentiment 40% + momentum 35% + novelty 25%
+    function topicScore(t) {
+      const sentVal = ((t.sentiment || 0) + 1) * 50;
+      const momVal  = t.momentum === 'accelerating' ? 80 : t.momentum === 'stable' ? 50 : 20;
+      const novVal  = t.novelty  === 'new'          ? 80 : t.novelty  === 'recurring' ? 50 : 20;
+      return Math.round(sentVal * 0.40 + momVal * 0.35 + novVal * 0.25);
+    }
+
+    grid.innerHTML = topics.map(topic => {
+      const score = topicScore(topic);
+      const sentVal = Math.round(((topic.sentiment || 0) + 1) * 50);
+      return `
+        <div class="signal-card">
+          <div class="signal-card-top">
+            <div>
+              <div class="signal-name">${esc(topic.name)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <div class="signal-badges">
+                ${sentBadge(topic.sentiment)}
+                ${noveltyBadge(topic.novelty)}
+                ${momentumBadge(topic.momentum)}
+              </div>
+              <div class="signal-score-big">${score}</div>
+            </div>
+          </div>
+          <div class="signal-body">
+            <div class="signal-metrics">
+              <div class="signal-metric">
+                <span class="signal-metric-label">Sentiment</span>
+                <span class="signal-metric-val">${sentVal}/100</span>
+                <div class="signal-metric-bar"><div class="signal-metric-bar-fill" style="width:${sentVal}%"></div></div>
+              </div>
+              <div class="signal-metric">
+                <span class="signal-metric-label">Momentum</span>
+                <span class="signal-metric-val">${topic.momentum || '—'}</span>
+              </div>
+              <div class="signal-metric">
+                <span class="signal-metric-label">Novelty</span>
+                <span class="signal-metric-val">${topic.novelty || '—'}</span>
+              </div>
+              <div class="signal-metric">
+                <span class="signal-metric-label">Score</span>
+                <span class="signal-metric-val" style="color:var(--orange)">${score}</span>
+                <div class="signal-metric-bar"><div class="signal-metric-bar-fill" style="width:${score}%"></div></div>
+              </div>
+            </div>
+            ${topic.tension ? `
+              <div class="signal-tension">
+                <strong>tension ⟶</strong> ${esc(topic.tension)}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── Render Articles
+  function renderArticles(articles) {
+    const list = document.getElementById('articles-list');
+    if (!articles || articles.length === 0) {
+      list.innerHTML = '<div class="empty-state">// no cross-platform articles tracked yet</div>';
+      return;
+    }
+    list.innerHTML = articles.map((art, i) => {
+      const sentCls = sentimentClass(art.avg_sentiment);
+      const sources = (art.sources || []).map(s => `<span class="source-tag">${esc(sourceLabel(s))}</span>`).join('');
+      return `
+        <div class="article-row">
+          <div class="article-rank">${String(i + 1).padStart(2, '0')}</div>
+          <div class="article-body">
+            <div class="article-title">
+              ${art.url ? `<a href="${esc(art.url)}" target="_blank" rel="noopener">${esc(art.title || art.url)}</a>` : esc(art.title || '—')}
+            </div>
+            <div class="article-meta">
+              <div class="article-sources">${sources}</div>
+              <span style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4)">seen ${art.share_count}×</span>
+            </div>
+          </div>
+          <div class="article-sentiment ${sentCls}">${sentimentLabel(art.avg_sentiment)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── Render Ecosystem
+  function renderEcosystem(rows) {
+    const grid = document.getElementById('eco-grid');
+    if (!rows || rows.length === 0) {
+      grid.innerHTML = '<div class="empty-state">// ecosystem data not yet collected</div>';
+      return;
+    }
+    grid.innerHTML = rows.map(row => {
+      const delta = row.github_stars_delta || 0;
+      const deltaStr = delta > 0 ? `+${delta}` : String(delta);
+      const deltaCls = delta > 0 ? 'up' : delta < 0 ? 'down' : '';
+      const closeRatio = row.issue_close_ratio != null ? Math.round(row.issue_close_ratio * 100) + '%' : '—';
+      return `
+        <div class="eco-card">
+          <div class="eco-card-name">${esc(row.display_name || row.family)}</div>
+          <div class="eco-card-tag">ecosystem_family</div>
+          <div class="eco-stats">
+            <div class="eco-stat">
+              <span class="eco-stat-key">GitHub Stars</span>
+              <span class="eco-stat-val orange">${(row.github_stars || 0).toLocaleString()}</span>
+            </div>
+            <div class="eco-stat">
+              <span class="eco-stat-key">Star Delta</span>
+              <span class="eco-stat-val ${deltaCls}">${deltaStr}</span>
+            </div>
+            <div class="eco-stat">
+              <span class="eco-stat-key">Forks</span>
+              <span class="eco-stat-val">${(row.github_forks || 0).toLocaleString()}</span>
+            </div>
+            <div class="eco-divider"></div>
+            <div class="eco-stat">
+              <span class="eco-stat-key">Open Issues</span>
+              <span class="eco-stat-val">${row.open_issues || 0}</span>
+            </div>
+            <div class="eco-stat">
+              <span class="eco-stat-key">Issue Close Rate</span>
+              <span class="eco-stat-val">${closeRatio}</span>
+            </div>
+            ${row.pypi_downloads_week ? `
+            <div class="eco-divider"></div>
+            <div class="eco-stat">
+              <span class="eco-stat-key">PyPI (7d)</span>
+              <span class="eco-stat-val">${(row.pypi_downloads_week || 0).toLocaleString()}</span>
+            </div>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── Render Feed
+  function renderFeed(mentions, append = false) {
+    const list = document.getElementById('feed-list');
+    if (!append && (!mentions || mentions.length === 0)) {
+      list.innerHTML = '<div class="empty-state">// no mentions in feed yet</div>';
+      return;
+    }
+    const html = mentions.map(m => {
+      const sentCls = sentimentClass(m.sentiment_score);
+      const tags = (m.topic_tags || []).map(t => `<span class="feed-tag">${esc(t)}</span>`).join('');
+      return `
+        <div class="feed-item">
+          <span class="feed-source-badge ${esc(m.source)}">${esc(sourceLabel(m.source))}</span>
+          <div class="feed-body">
+            <div class="feed-text">${esc(m.content_text)}</div>
+            <div class="feed-footer">
+              <span class="feed-score ${sentCls}">${sentimentLabel(m.sentiment_score)}</span>
+              ${m.url ? `<a class="feed-link" href="${esc(m.url)}" target="_blank" rel="noopener">↗ source</a>` : ''}
+              <span style="font-family:var(--mono);font-size:0.6rem;color:var(--text-4)">${fmtRelTime(m.published_at || m.collected_at)}</span>
+              <div class="feed-tags">${tags}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    if (append) {
+      list.insertAdjacentHTML('beforeend', html);
+    } else {
+      list.innerHTML = html;
+    }
+  }
+
+  // ── Load more feed
+  async function loadMoreFeed() {
+    _feedOffset += FEED_PAGE;
+    try {
+      const mentions = await sbFetch('sentiment_mentions',
+        `?select=source,content_text,url,sentiment_score,sentiment_label,published_at,collected_at,topic_tags&order=collected_at.desc&limit=${FEED_PAGE}&offset=${_feedOffset}`
+      );
+      renderFeed(mentions, true);
+      if (mentions.length < FEED_PAGE) {
+        document.getElementById('load-more-btn').style.display = 'none';
+      }
+    } catch (e) {
+      console.error('load more failed', e);
+    }
+  }
+
+  // ── Bootstrap
+  async function init() {
+    try {
+      // Latest snapshot
+      const snapshots = await sbFetch('sentiment_snapshots',
+        '?select=*&order=snapshot_at.desc&limit=1'
+      );
+      _snapshot = snapshots[0] || null;
+      renderPulse(_snapshot);
+
+      if (_snapshot) {
+        renderSignals(_snapshot.topics || []);
+        renderArticles(_snapshot.top_articles || []);
+      }
+    } catch (e) {
+      console.error('snapshot fetch failed', e);
+      document.getElementById('dispatch-narrative').innerHTML =
+        '<span class="dispatch-empty">// error loading snapshot data</span>';
+    }
+
+    try {
+      // Top articles from dedicated table (richer than snapshot's snapshot)
+      const articles = await sbFetch('sentiment_articles',
+        '?select=url,title,share_count,sources,avg_sentiment&order=share_count.desc&limit=20'
+      );
+      if (articles && articles.length > 0) renderArticles(articles);
+    } catch (e) { /* non-fatal */ }
+
+    try {
+      // Ecosystem metrics
+      const eco = await sbFetch('sentiment_ecosystem', '?select=*');
+      renderEcosystem(eco);
+    } catch (e) { /* non-fatal */ }
+
+    try {
+      // Feed (first page)
+      const mentions = await sbFetch('sentiment_mentions',
+        `?select=source,content_text,url,sentiment_score,sentiment_label,published_at,collected_at,topic_tags&order=collected_at.desc&limit=${FEED_PAGE}`
+      );
+      renderFeed(mentions);
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      if (mentions.length >= FEED_PAGE) loadMoreBtn.style.display = '';
+    } catch (e) { /* non-fatal */ }
+  }
+
+  // ── Init
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    init();
+  });
+</script>
+</body>
+</html>
