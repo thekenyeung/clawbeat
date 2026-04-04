@@ -8,15 +8,7 @@
   <url><loc>https://clawbeat.co/forge.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://clawbeat.co/research.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://clawbeat.co/media.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://clawbeat.co/dossier.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/rss.html</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://clawbeat.co/openclaw/index.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/index.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/nemoclaw.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/claude-dispatch.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/hermes-vs-openclaw.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/guide/openclaw-comparison.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://clawbeat.co/guide/clawbot.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/sitemap.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
@@ -63,8 +55,10 @@
   <url><loc>https://clawbeat.co/trace/2026-03/openclaw-the-complete-guide-to-building-training-and-living-/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
   <url><loc>https://clawbeat.co/trace/2026-03/this-android-brand-is-launching-the-first-true-openclaw-powe/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
   <url><loc>https://clawbeat.co/trace/2026-03/this-is-definitely-the-next-chatgpt-why-nvidias-ceo-is-betti/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
+  <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
 
   <!-- ── Daily Editions ── -->
+  <url><loc>https://clawbeat.co/daily/2026-04-03/anthropic-essentially-bans-openclaw-from-claude-by-making-su.html</loc><lastmod>2026-04-03</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-04-02/is-openclaws-api-too-expensive-try-openclaw-ollama.html</loc><lastmod>2026-04-02</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-04-01/10-wild-things-people-are-building-with-openclaw.html</loc><lastmod>2026-04-01</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-03-31/openclaw-the-complete-guide-to-building-training-and-living-.html</loc><lastmod>2026-03-31</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
