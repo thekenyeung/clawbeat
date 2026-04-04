@@ -897,15 +897,15 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
         const overriddenUrls = new Set(
           Object.values(dayOverrides).map(ov => ov.url)
         );
-        // Score-sorted queue for algorithm, excluding manually placed or excluded URLs
+        // Score-sorted queue for algorithm, excluding manually placed, excluded, or pending-review URLs
         const dayExcluded = excludedLookup[day];
         const algoQueue = [...dayItems]
           .sort((a, b) => scoreArticle(b) - scoreArticle(a))
-          .filter(item => !overriddenUrls.has(item.url) && !(dayExcluded?.has(item.url)));
+          .filter(item => !item.pending_review && !overriddenUrls.has(item.url) && !(dayExcluded?.has(item.url)));
         let queueIdx = 0;
 
-        // Best item for the day ignoring exclusions — fallback for slot 1
-        const dayBest = [...dayItems].sort((a, b) => scoreArticle(b) - scoreArticle(a))[0] ?? null;
+        // Best item for the day ignoring exclusions — fallback for slot 1 (also exclude pending-review)
+        const dayBest = [...dayItems].filter(item => !item.pending_review).sort((a, b) => scoreArticle(b) - scoreArticle(a))[0] ?? null;
 
         const spotlightSlots: (NewsItem | null)[] = [1, 2, 3, 4].map(slot => {
           if (dayOverrides[slot]) {
