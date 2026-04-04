@@ -252,6 +252,30 @@ def fetch_jina(url: str) -> str:
         return ""
 
 
+def gemini_tweet_title(tweet_text: str) -> str:
+    """Generate a short news-style headline for a tweet. Returns '' on failure."""
+    if not GEMINI_API_KEY or not tweet_text:
+        return ""
+    try:
+        prompt = (
+            "Write a short, punchy news headline (8 words or fewer) that captures "
+            "the key point of this tweet. No quotes, no punctuation at the end.\n\n"
+            + tweet_text[:500]
+        )
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+            json={
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"maxOutputTokens": 30, "temperature": 0.3},
+            },
+            timeout=10,
+        )
+        return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    except Exception:
+        return ""
+
+
 def gemini_summarize(text: str) -> str:
     """Summarize article text with Gemini Flash. Returns 2-3 sentence summary."""
     if not GEMINI_API_KEY or not text:
@@ -519,9 +543,12 @@ class handler(BaseHTTPRequestHandler):
             m_user = re.search(r"(?:x|twitter)\.com/([^/]+)/status/", url)
             source = f"X (@{m_user.group(1)})" if m_user else "X"
             tweet_data = fetch_tweet_oembed(url)
-            # title = display name (shown as card header); summary = tweet body
-            title = tweet_data["author_name"] or (f"@{m_user.group(1)}" if m_user else "X post")
-            og = {"description": tweet_data["tweet_text"]}
+            tweet_text = tweet_data["tweet_text"]
+            # title = AI-generated headline; summary = raw tweet body
+            ai_title = gemini_tweet_title(tweet_text)
+            handle = m_user.group(1) if m_user else None
+            title = ai_title or tweet_data["author_name"] or (f"@{handle}" if handle else "X post")
+            og = {"description": tweet_text}
         else:
             # Fetch OG tags (title + source needed for all paths below)
             og = fetch_og(url)

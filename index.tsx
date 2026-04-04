@@ -1067,10 +1067,12 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                         <div className="tweet-header">
                           <span className="tweet-x-logo">𝕏</span>
                           <div className="tweet-byline">
-                            <span className="tweet-author">{item.title}</span>
                             {tweetHandle && <span className="tweet-handle">@{tweetHandle}</span>}
                           </div>
                         </div>
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="tweet-headline" onClick={() => onTrackClick(item.title, item.source)}>
+                          {item.title}
+                        </a>
                         {item.summary && <p className="tweet-text">{item.summary}</p>}
                         <a href={item.url} target="_blank" rel="noopener noreferrer" className="tweet-cta" onClick={() => onTrackClick(item.title, item.source)}>
                           View on X →
