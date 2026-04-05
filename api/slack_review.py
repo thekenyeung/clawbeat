@@ -48,6 +48,7 @@ REJECT_REASONS = [
     ("low_quality_source", "Low Quality Source"),
     ("clickbait",          "Clickbait"),
     ("duplicate",          "Duplicate"),
+    ("marketing_pr",       "Marketing/PR"),
 ]
 
 
