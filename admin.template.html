@@ -399,23 +399,30 @@
             if (tags.length) setTagStr(tags.join(', '));
             showToast('Metadata fetched — review and save');
           } else {
-            // Microlink blocked (bot protection) — fall back to Jina Reader
-            // Jina prepends metadata headers: Title, URL Source, Published Time, Description
+            // Microlink blocked (bot protection) — fall back to Jina Reader (HTML mode)
+            // HTML mode returns the full page HTML via Jina's proxy, so OG tags are accessible
             const jinaRes = await fetch(`https://r.jina.ai/${form.url}`, {
-              headers: { 'Accept': 'text/plain', 'X-Return-Format': 'text' },
+              headers: { 'Accept': 'text/html', 'X-Return-Format': 'html' },
             });
-            const text = await jinaRes.text();
-            const jinaTitle       = (text.match(/^Title:\s*(.+)$/m)       || [])[1]?.trim() || '';
-            const jinaDescription = (text.match(/^Description:\s*(.+)$/m) || [])[1]?.trim() || '';
-            const jinaDate        = (text.match(/^Published Time:\s*(.+)$/m) || [])[1]?.trim() || '';
+            const html = await jinaRes.text();
+            const ogMeta = (prop) => {
+              const m = html.match(new RegExp(`<meta[^>]+property=["']og:${prop}["'][^>]+content=["']([^"']+)["']`, 'i'))
+                     || html.match(new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:${prop}["']`, 'i'));
+              return m ? m[1].trim() : '';
+            };
+            const jinaTitle       = ogMeta('title') || (html.match(/<title[^>]*>([^<]+)<\/title>/i) || [])[1]?.trim() || '';
+            const jinaDescription = ogMeta('description');
+            const jinaImage       = ogMeta('image');
+            const jinaDate        = (html.match(/"datePublished"\s*:\s*"([^"]+)"/) || [])[1]?.trim() || '';
             if (!jinaTitle) throw new Error('Could not fetch metadata for this URL');
             const jinaDomain = (() => { try { return new URL(form.url).hostname.replace(/^www\./, ''); } catch { return ''; } })();
             setForm(f => ({
               ...f,
-              title:   jinaTitle,
-              source:  f.source || jinaDomain,
-              summary: jinaDescription || f.summary,
-              date:    jinaDate ? formatMicrolinkDate(jinaDate) : f.date,
+              title:     jinaTitle,
+              source:    f.source || jinaDomain,
+              summary:   jinaDescription || f.summary,
+              image_url: jinaImage || f.image_url,
+              date:      jinaDate ? formatMicrolinkDate(jinaDate) : f.date,
             }));
             const tags = extractTagsFromText(jinaTitle, jinaDescription);
             if (tags.length) setTagStr(tags.join(', '));
