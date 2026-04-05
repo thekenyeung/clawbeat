@@ -422,7 +422,7 @@ CREATE POLICY "Admin writes" ON blocked_urls
 -- Data collection only. Does NOT modify scoring pipeline.
 -- article_id references news_items(url) (text PK).
 -- signal: 'reject' | 'approve' | 'boost' — only 'reject' has UI currently.
--- reason: one of five predefined enum values.
+-- reason: one of six predefined enum values.
 -- =============================================================
 CREATE TABLE IF NOT EXISTS article_feedback (
   id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -430,7 +430,7 @@ CREATE TABLE IF NOT EXISTS article_feedback (
   signal      TEXT NOT NULL CHECK (signal IN ('reject', 'approve', 'boost')),
   reason      TEXT NOT NULL CHECK (reason IN (
                  'too_elementary', 'off_topic',
-                 'low_quality_source', 'clickbait', 'duplicate'
+                 'low_quality_source', 'clickbait', 'duplicate', 'marketing_pr'
                )),
   created_at  TIMESTAMPTZ DEFAULT NOW()
 );
@@ -461,6 +461,19 @@ ALTER TABLE article_feedback
 -- Allow the Slackbot service key to insert feedback rows
 -- (slack_ingest.py uses SUPABASE_SERVICE_KEY which bypasses RLS,
 --  so no extra policy is needed — this comment is for documentation only.)
+
+-- =============================================================
+-- article_feedback — add marketing_pr to reason check constraint
+-- The inline CHECK on CREATE TABLE only covers new installs.
+-- For an existing DB, drop the auto-generated constraint and recreate it.
+-- =============================================================
+ALTER TABLE article_feedback DROP CONSTRAINT IF EXISTS article_feedback_reason_check;
+ALTER TABLE article_feedback
+  ADD CONSTRAINT article_feedback_reason_check
+  CHECK (reason IN (
+    'too_elementary', 'off_topic',
+    'low_quality_source', 'clickbait', 'duplicate', 'marketing_pr'
+  ));
 
 -- =============================================================
 -- github_releases — nightly-scraped release announcements per repo/family
