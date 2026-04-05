@@ -418,11 +418,10 @@
             const jinaDomain = (() => { try { return new URL(form.url).hostname.replace(/^www\./, ''); } catch { return ''; } })();
             setForm(f => ({
               ...f,
-              title:     jinaTitle,
-              source:    f.source || jinaDomain,
-              summary:   jinaDescription || f.summary,
-              image_url: jinaImage || f.image_url,
-              date:      jinaDate ? formatMicrolinkDate(jinaDate) : f.date,
+              title:   jinaTitle,
+              source:  f.source || jinaDomain,
+              summary: jinaDescription || f.summary,
+              date:    jinaDate ? formatMicrolinkDate(jinaDate) : f.date,
             }));
             const tags = extractTagsFromText(jinaTitle, jinaDescription);
             if (tags.length) setTagStr(tags.join(', '));
