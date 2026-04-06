@@ -424,9 +424,11 @@ CREATE POLICY "Admin writes" ON blocked_urls
 -- signal: 'reject' | 'approve' | 'boost' — only 'reject' has UI currently.
 -- reason: one of six predefined enum values.
 -- =============================================================
+-- article_id is intentionally NOT a FK — the feedback row must outlive the
+-- news_items row so rejection signals persist after the article is deleted.
 CREATE TABLE IF NOT EXISTS article_feedback (
   id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  article_id  TEXT NOT NULL REFERENCES news_items(url) ON DELETE CASCADE,
+  article_id  TEXT NOT NULL,
   signal      TEXT NOT NULL CHECK (signal IN ('reject', 'approve', 'boost')),
   reason      TEXT NOT NULL CHECK (reason IN (
                  'too_elementary', 'off_topic',
@@ -474,6 +476,14 @@ ALTER TABLE article_feedback
     'too_elementary', 'off_topic',
     'low_quality_source', 'clickbait', 'duplicate', 'marketing_pr'
   ));
+
+-- =============================================================
+-- article_feedback — drop FK to news_items (ON DELETE CASCADE was silently
+-- deleting rejection signals whenever the article was removed, allowing
+-- rejected URLs to be re-ingested and re-sent to Slack on the next run).
+-- Feedback rows must outlive news_items rows — no FK needed.
+-- =============================================================
+ALTER TABLE article_feedback DROP CONSTRAINT IF EXISTS article_feedback_article_id_fkey;
 
 -- =============================================================
 -- github_releases — nightly-scraped release announcements per repo/family

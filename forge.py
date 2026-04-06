@@ -323,6 +323,9 @@ def normalize_url(url: str) -> str:
         if m:
             url = m.group(1)
         p = urllib.parse.urlparse(url)
+        # Canonicalize twitter.com → x.com (same content, different host alias)
+        if p.netloc.lower().lstrip("www.") == "twitter.com":
+            p = p._replace(netloc="x.com")
         qs = urllib.parse.parse_qs(p.query, keep_blank_values=True)
         clean_qs = {k: v for k, v in qs.items() if k.lower() not in _STRIP_PARAMS}
         new_query = urllib.parse.urlencode(clean_qs, doseq=True)
@@ -1646,28 +1649,33 @@ def _load_from_supabase() -> dict:
         return empty
 
 
-def _apply_feedback_signals(db: dict) -> tuple[set, set]:
+def _apply_feedback_signals(db: dict) -> tuple[set, set, set]:
     """Block all rejected articles and their source domains from the feed.
 
-    Returns (rejected_urls, rejected_domains). Both are added to existing_urls
-    so neither the exact URL nor any other article from that domain can be
-    re-ingested until manually cleared via the admin panel.
+    Returns (rejected_urls, rejected_domains, reviewed_urls).
+    - rejected_urls / rejected_domains: added to existing_urls so neither the
+      exact URL nor any other article from that domain can be re-ingested.
+    - reviewed_urls: ALL article_ids that have any feedback signal (approve,
+      reject, boost). Used by the scoring loop to skip re-queueing any URL
+      the reviewer has already acted on.
     """
     rejected_urls: set = set()
     rejected_domains: set = set()
+    reviewed_urls: set = set()
     if not _supabase:
-        return rejected_urls, rejected_domains
+        return rejected_urls, rejected_domains, reviewed_urls
     try:
-        resp = _supabase.table('article_feedback').select('article_id').eq('signal', 'reject').execute()
+        resp = _supabase.table('article_feedback').select('article_id,signal').execute()
         rows = resp.data or []
     except Exception as e:
         print(f"⚠️  Could not load article_feedback: {e}")
-        return rejected_urls, rejected_domains
+        return rejected_urls, rejected_domains, reviewed_urls
 
     if not rows:
-        return rejected_urls, rejected_domains
+        return rejected_urls, rejected_domains, reviewed_urls
 
-    rejected_urls = {row['article_id'] for row in rows}
+    reviewed_urls = {normalize_url(row['article_id']) for row in rows}
+    rejected_urls = {row['article_id'] for row in rows if row.get('signal') == 'reject'}
 
     # Extract domains so every article from a rejected source is blocked, not just
     # the one URL that was originally rejected.
@@ -1703,8 +1711,8 @@ def _apply_feedback_signals(db: dict) -> tuple[set, set]:
             delete_errors += 1
 
     err_str = f', {delete_errors} delete error(s)' if delete_errors else ''
-    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s), {len(rejected_domains)} blocked domain(s), {evicted} evicted from feed{err_str}.")
-    return rejected_urls, rejected_domains
+    print(f"🔁 Feedback signals: {len(rejected_urls)} rejected URL(s), {len(rejected_domains)} blocked domain(s), {len(reviewed_urls)} reviewed URL(s), {evicted} evicted from feed{err_str}.")
+    return rejected_urls, rejected_domains, reviewed_urls
 
 
 def _notify_slack_review(items: list) -> None:
@@ -2059,7 +2067,7 @@ if __name__ == "__main__":
         print(f"♻️  {orphan_count} orphaned sublink(s) released for reclustering.")
 
     # Apply admin rejection feedback — block rejected URLs and their source domains
-    rejected_urls, rejected_domains = _apply_feedback_signals(db)
+    rejected_urls, rejected_domains, reviewed_urls = _apply_feedback_signals(db)
 
     raw_news = scan_rss() + scan_google_news() + scan_hackernews()
     newly_discovered = []
@@ -2162,6 +2170,10 @@ if __name__ == "__main__":
         # Never re-score admin-rejected articles — human input overrides the algorithm.
         if item['url'] in rejected_urls:
             continue
+        # Defense-in-depth: treat any URL the reviewer has already acted on
+        # (approve/reject/boost) the same as date_is_manual — never re-queue for Slack,
+        # even if the score was lost due to a save failure or FK cascade delete.
+        already_reviewed = normalize_url(item['url']) in reviewed_urls
         already_queued = item.get('pending_review', False)
         is_new = item.get('total_score') is None
         if is_new:
@@ -2169,9 +2181,8 @@ if __name__ == "__main__":
             item.update(scores)
             scores_computed += 1
             ts = item.get('total_score') or 0.0
-            # Manually-added articles (Slackbot DM or admin panel) are already
-            # curator-approved — skip the review gate entirely.
-            if item.get('date_is_manual'):
+            # Manually-added or already-reviewed articles skip the review gate.
+            if item.get('date_is_manual') or already_reviewed:
                 item['pending_review'] = False
             else:
                 needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
