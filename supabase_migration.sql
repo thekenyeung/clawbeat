@@ -486,6 +486,21 @@ ALTER TABLE article_feedback
 ALTER TABLE article_feedback DROP CONSTRAINT IF EXISTS article_feedback_article_id_fkey;
 
 -- =============================================================
+-- article_feedback — allow reason=NULL for approve/boost signals.
+-- The reason_check added above requires a non-null enum value, but
+-- approve/boost actions have no rejection reason. Relax the check so
+-- NULL is valid, while reject still requires a reason (enforced by
+-- article_feedback_reject_reason_required).
+-- =============================================================
+ALTER TABLE article_feedback DROP CONSTRAINT IF EXISTS article_feedback_reason_check;
+ALTER TABLE article_feedback
+  ADD CONSTRAINT article_feedback_reason_check
+  CHECK (reason IS NULL OR reason IN (
+    'too_elementary', 'off_topic',
+    'low_quality_source', 'clickbait', 'duplicate', 'marketing_pr'
+  ));
+
+-- =============================================================
 -- github_releases — nightly-scraped release announcements per repo/family
 -- Populated by scrape_github_meta.py via GitHub Releases API.
 -- Unique on (repo_full_name, tag_name) so upserts are idempotent.

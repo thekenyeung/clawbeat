@@ -109,7 +109,9 @@ def is_expired(inserted_at: datetime | None) -> bool:
 
 
 def supabase_approve(article_url: str) -> tuple[bool, str]:
-    """Set pending_review=False so the item becomes visible on its publish date."""
+    """Set pending_review=False so the item becomes visible on its publish date.
+    Also logs an article_feedback row so forge never re-queues this URL for review,
+    even if the news_items row is later deleted."""
     try:
         r = requests.patch(
             f"{SUPABASE_URL}/rest/v1/news_items",
@@ -122,9 +124,26 @@ def supabase_approve(article_url: str) -> tuple[bool, str]:
             },
             timeout=5,
         )
-        return r.status_code in (200, 204), f"HTTP {r.status_code}"
+        if r.status_code not in (200, 204):
+            return False, f"HTTP {r.status_code}"
     except Exception as e:
         return False, str(e)[:200]
+    # Log the approve signal so reviewed_urls in forge.py permanently blocks re-queueing.
+    try:
+        requests.post(
+            f"{SUPABASE_URL}/rest/v1/article_feedback",
+            json={"article_id": article_url, "signal": "approve", "reason": None},
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "resolution=ignore-duplicates",
+            },
+            timeout=4,
+        )
+    except Exception:
+        pass  # Non-fatal: article is already approved in the feed
+    return True, "OK"
 
 
 def supabase_reject(article_url: str, reason: str) -> tuple[bool, str]:
