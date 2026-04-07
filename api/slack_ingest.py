@@ -425,6 +425,7 @@ def supabase_upsert(url: str, title: str, source: str, summary: str, source_type
         "date": today,
         "summary": summary,
         "date_is_manual": True,
+        "pending_review": False,
     }
     if source_type:
         payload["source_type"] = source_type
