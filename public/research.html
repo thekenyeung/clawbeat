@@ -166,6 +166,49 @@
     .paper-summary { margin-top: 0.875rem; font-size: 0.825rem; color: var(--text-2); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 0.875rem; }
     .intel-label { font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(249,115,22,0.5); margin-right: 0.5rem; }
 
+    /* ── SEARCH ── */
+    .search-wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem 1.25rem; }
+    .search-bar {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: var(--bg-2); border: 1px solid var(--border-2);
+      border-radius: 0.5rem; padding: 0 1rem; transition: border-color 0.15s;
+    }
+    .search-bar:focus-within { border-color: rgba(249,115,22,0.4); }
+    .search-bar svg { color: var(--text-3); flex-shrink: 0; width: 15px; height: 15px; }
+    .search-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text);
+      padding: 0.75rem 0; letter-spacing: 0.02em;
+    }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-clear {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--text-3); padding: 0.25rem; display: none; align-items: center;
+      border-radius: 3px; transition: color 0.15s;
+    }
+    .search-clear:hover { color: var(--text); }
+    .search-clear.visible { display: flex; }
+    .search-meta { margin-top: 0.6rem; font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); min-height: 1rem; }
+    .search-meta .match-count { color: var(--orange); }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 1.5rem 0 0; margin-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .page-btn {
+      font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.4rem 0.85rem; border-radius: 0.35rem;
+      border: 1px solid var(--border-2); background: var(--bg-2); color: var(--text-2);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .page-btn:hover:not(:disabled) { border-color: rgba(249,115,22,0.4); color: var(--orange); background: var(--orange-dim); }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+    .page-btn.active { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+    .page-info { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); letter-spacing: 0.08em; padding: 0 0.5rem; }
+    .page-ellipsis { font-family: var(--mono); font-size: 0.65rem; color: var(--text-4); padding: 0 0.25rem; }
+
     /* ── EMPTY ── */
     .empty-state { text-align: center; padding: 3rem 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--text-4); }
 
@@ -182,7 +225,7 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
-      .header-inner, .main-container, .page-hero, .footer { padding-left: 1rem; padding-right: 1rem; }
+      .header-inner, .main-container, .page-hero, .footer, .search-wrap { padding-left: 1rem; padding-right: 1rem; }
       .hero-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
       .hero-stats { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 0.6rem; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
@@ -268,10 +311,25 @@
   <div class="hero-subtitle">ArXiv Intelligence &amp; Semantic Scholar</div>
 </div>
 
+<!-- ── SEARCH ── -->
+<div class="search-wrap">
+  <div class="search-bar">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search-input" class="search-input" placeholder="Search by title, author, or keyword…" autocomplete="off" spellcheck="false">
+    <button class="search-clear" id="search-clear" aria-label="Clear search" onclick="clearSearch()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="search-meta" id="search-meta"></div>
+</div>
+
 <!-- ── MAIN CONTENT ── -->
 <main class="main-container" id="research-root">
   <div class="empty-state">// loading papers...</div>
 </main>
+<div class="main-container" style="padding-top:0;padding-bottom:4rem;">
+  <div class="pagination" id="pagination" style="display:none;"></div>
+</div>
 
 <!-- ── FOOTER ── -->
 <footer class="footer">
@@ -284,6 +342,12 @@
 <script>
   const SUPABASE_URL  = 'https://twouuiapzrkezwbtylij.supabase.co';
   const SUPABASE_ANON = 'sb_publishable_j-AmOSIuQPEeKIyYAOA2Gg_8ekguDsG';
+  const PAGE_SIZE = 15;
+
+  let allPapers = [];
+  let filteredPapers = [];
+  let currentPage = 1;
+  let searchDebounce = null;
 
   function esc(s) {
     return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -317,31 +381,129 @@
     </div>`;
   }
 
+  function renderPage() {
+    const root = document.getElementById('research-root');
+    const paginationEl = document.getElementById('pagination');
+    const totalPages = Math.ceil(filteredPapers.length / PAGE_SIZE);
+
+    if (!filteredPapers.length) {
+      root.innerHTML = '<div class="empty-state">// no papers match your search</div>';
+      paginationEl.style.display = 'none';
+      return;
+    }
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const slice = filteredPapers.slice(start, start + PAGE_SIZE);
+    root.innerHTML = slice.map(renderPaper).join('');
+
+    // Pagination controls
+    if (totalPages <= 1) {
+      paginationEl.style.display = 'none';
+      return;
+    }
+    paginationEl.style.display = 'flex';
+
+    let html = '';
+    html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>`;
+
+    const pages = buildPageRange(currentPage, totalPages);
+    for (const p of pages) {
+      if (p === '…') {
+        html += `<span class="page-ellipsis">…</span>`;
+      } else {
+        html += `<button class="page-btn${p === currentPage ? ' active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+      }
+    }
+
+    html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>`;
+    paginationEl.innerHTML = html;
+  }
+
+  function buildPageRange(cur, total) {
+    if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+    const pages = [];
+    pages.push(1);
+    if (cur > 3) pages.push('…');
+    for (let p = Math.max(2, cur - 1); p <= Math.min(total - 1, cur + 1); p++) pages.push(p);
+    if (cur < total - 2) pages.push('…');
+    pages.push(total);
+    return pages;
+  }
+
+  function goToPage(page) {
+    const totalPages = Math.ceil(filteredPapers.length / PAGE_SIZE);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function applySearch(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      filteredPapers = allPapers;
+    } else {
+      filteredPapers = allPapers.filter(p => {
+        const title   = (p.title || '').toLowerCase();
+        const authors = (Array.isArray(p.authors) ? p.authors.join(' ') : (p.authors || '')).toLowerCase();
+        const summary = (p.summary || '').toLowerCase();
+        return title.includes(q) || authors.includes(q) || summary.includes(q);
+      });
+    }
+    currentPage = 1;
+
+    const meta = document.getElementById('search-meta');
+    if (q) {
+      meta.innerHTML = `<span class="match-count">${filteredPapers.length}</span> of ${allPapers.length} papers match`;
+    } else {
+      meta.innerHTML = '';
+    }
+
+    renderPage();
+  }
+
+  function clearSearch() {
+    const input = document.getElementById('search-input');
+    input.value = '';
+    document.getElementById('search-clear').classList.remove('visible');
+    applySearch('');
+    input.focus();
+  }
+
   async function init() {
     const root = document.getElementById('research-root');
-    let papers;
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/research_papers?select=*&order=date.desc&limit=200`,
+        `${SUPABASE_URL}/rest/v1/research_papers?select=*&order=date.desc&limit=500`,
         { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      papers = await res.json();
+      allPapers = await res.json();
     } catch (err) {
       root.innerHTML = `<div class="empty-state">// failed to load papers — ${esc(String(err))}</div>`;
       return;
     }
 
     document.getElementById('hero-stats').innerHTML = `
-      <div class="hero-stat"><span>papers</span><strong class="val-orange">${papers.length}</strong></div>
+      <div class="hero-stat"><span>papers</span><strong class="val-orange">${allPapers.length}</strong></div>
     `;
 
-    if (!papers.length) {
+    if (!allPapers.length) {
       root.innerHTML = '<div class="empty-state">// no research papers found — check back after the next sync</div>';
       return;
     }
 
-    root.innerHTML = papers.map(renderPaper).join('');
+    filteredPapers = allPapers;
+    renderPage();
+
+    // Wire up search
+    const input = document.getElementById('search-input');
+    const clearBtn = document.getElementById('search-clear');
+    input.addEventListener('input', () => {
+      clearBtn.classList.toggle('visible', input.value.length > 0);
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => applySearch(input.value), 200);
+    });
   }
 
   function toggleMenu() {
