@@ -351,11 +351,37 @@ def render_landing_page(row: dict) -> str:
       <img src="{og_image}" alt="{headline}" class="hero-img" onerror="this.parentElement.style.display='none'">
     </a>"""
 
+    def _coverage_label(source: str, url: str) -> str:
+        """Return display label for a more_coverage entry, appending @username for social posts."""
+        from urllib.parse import urlparse
+        try:
+            path_parts = [p for p in urlparse(url).path.split("/") if p]
+        except Exception:
+            path_parts = []
+        hostname = urlparse(url).hostname or ""
+        # Twitter / X: x.com/<username>/status/... or twitter.com/<username>/...
+        if hostname in ("x.com", "twitter.com", "www.x.com", "www.twitter.com"):
+            if path_parts and path_parts[0].lower() not in ("i", "search", "hashtag"):
+                return f"X (@{path_parts[0]})"
+        # Threads: threads.net/@username/post/...
+        if "threads.net" in hostname:
+            if path_parts and path_parts[0].startswith("@"):
+                return f"Threads ({path_parts[0]})"
+            elif path_parts:
+                return f"Threads (@{path_parts[0]})"
+        # LinkedIn: linkedin.com/posts/<username>-... (best-effort)
+        if "linkedin.com" in hostname and path_parts and path_parts[0] == "posts":
+            slug = path_parts[1] if len(path_parts) > 1 else ""
+            handle = slug.rsplit("-", 1)[0] if "-" in slug else slug
+            if handle:
+                return f"LinkedIn ({handle})"
+        return source
+
     more_cov_block = ""
     if more_cov:
         links = "".join(
             f'<a href="{html_mod.escape(m.get("url","#"))}" target="_blank" rel="noopener noreferrer" class="more-link">'
-            f'{html_mod.escape(m.get("source",""))} ↗</a>'
+            f'{html_mod.escape(_coverage_label(m.get("source",""), m.get("url","")))} ↗</a>'
             for m in more_cov
             if not m.get("source", "").lower().startswith("facebook")
         )
