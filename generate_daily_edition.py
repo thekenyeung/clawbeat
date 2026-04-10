@@ -118,10 +118,11 @@ def score_article(item: dict) -> int:
     if item.get("source_type") == "priority":
         score += 2
 
-    # Whitelist source boost — medium.com gets partial credit over other whitelisted sources
+    # Whitelist source boost — open-access publishers rank higher for Daily Edition fetchability.
+    # medium.com excluded (paywall/fetch failures); other whitelisted sources get a strong boost.
     url = (item.get("url") or "").lower()
-    if _is_whitelisted(item.get("url", ""), item.get("source", "")):
-        score += 1 if "medium.com" in url else 3
+    if _is_whitelisted(item.get("url", ""), item.get("source", "")) and "medium.com" not in url:
+        score += 6
 
     # OpenClaw-specific boost — news_items are already news articles; only exclude "Show HN" posts
     title = (item.get("title") or "").lower()

@@ -784,9 +784,10 @@ const scoreArticle = (item: NewsItem): number => {
   // Priority publisher boost (Substack, Beehiiv newsletters)
   if (item.source_type === 'priority') score += 2;
 
-  // Whitelist source boost — medium.com gets partial credit over other whitelisted sources
-  if (checkIfVerified(item)) {
-    score += item.url?.toLowerCase().includes('medium.com') ? 1 : 3;
+  // Whitelist source boost — open-access publishers rank higher for Daily Edition fetchability.
+  // medium.com excluded (paywall/fetch failures); other whitelisted sources get a strong boost.
+  if (checkIfVerified(item) && !item.url?.toLowerCase().includes('medium.com')) {
+    score += 6;
   }
 
   // OpenClaw-specific boost — news articles only (not GitHub repos, YouTube, or "Show HN" posts)
