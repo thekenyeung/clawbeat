@@ -149,6 +149,22 @@ const formatSourceName = (name: string) => {
   return cleanName;
 };
 
+const coverageLabel = (link: { source: string; url: string }) => {
+  try {
+    const { hostname, pathname } = new URL(link.url);
+    const parts = pathname.split("/").filter(Boolean);
+    if (/^(www\.)?(x|twitter)\.com$/.test(hostname)) {
+      if (parts[0] && !["i", "search", "hashtag"].includes(parts[0].toLowerCase()))
+        return `X (@${parts[0]})`;
+    }
+    if (hostname.includes("threads.net") && parts[0]) {
+      const handle = parts[0].startsWith("@") ? parts[0] : `@${parts[0]}`;
+      return `Threads (${handle})`;
+    }
+  } catch {}
+  return formatSourceName(link.source);
+};
+
 const checkIfVerified = (item: NewsItem) => {
   return (whitelist as any[]).some(w => {
     const whitelistName = String(w["Source Name"] || "").toLowerCase().trim();
@@ -995,7 +1011,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                         <span className="coverage-label">// more coverage</span>
                         {moreCov.map((link, i) => (
                           <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="coverage-link" onClick={() => onTrackClick(leadSlot.title, link.source)}>
-                            {formatSourceName(link.source)}
+                            {coverageLabel(link)}
                           </a>
                         ))}
                       </div>
@@ -1108,7 +1124,7 @@ const NewsList = ({ items, allNews, onTrackClick, spotlightOverrides, spotlightE
                         <span className="coverage-label">// also covering</span>
                         {moreCov.map((link, i) => (
                           <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="coverage-link" onClick={() => onTrackClick(item.title, link.source)}>
-                            {formatSourceName(link.source)}
+                            {coverageLabel(link)}
                           </a>
                         ))}
                       </div>
