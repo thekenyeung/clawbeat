@@ -141,12 +141,17 @@ def get_spotlight_articles(sb: Client, dispatch_date_mdy: str) -> list[dict]:
     (same logic as the React frontend).
     Each dict has keys: url, title, source, summary, date
     """
-    # Load all articles for this date
+    # Load all articles for this date — exclude items pending review or suppressed
     articles_res = sb.table("news_items") \
-        .select("url,title,source,summary,date,more_coverage,tags,d1_tier,source_type") \
+        .select("url,title,source,summary,date,more_coverage,tags,d1_tier,source_type,total_score") \
         .eq("date", dispatch_date_mdy) \
+        .eq("pending_review", False) \
         .execute()
-    articles = articles_res.data or []
+    # Also exclude suppressed items (total_score < 10), matching frontend behaviour
+    articles = [
+        a for a in (articles_res.data or [])
+        if a.get("total_score") is None or (a.get("total_score") or 0) >= 10
+    ]
     print(f"[daily-edition] Raw news_items count for {dispatch_date_mdy}: {len(articles)}")
 
     # Load overrides for this date
@@ -517,12 +522,15 @@ def main():
 
     # Check for existing daily_editions row (may have admin overrides)
     existing_res = sb.table("daily_editions") \
-        .select("stories") \
+        .select("stories,permalink") \
         .eq("edition_date", edition_iso) \
         .execute()
     existing_stories: list[dict] = []
+    existing_permalink: str = ""
     if existing_res.data:
-        existing_stories = existing_res.data[0].get("stories") or []
+        existing_stories  = existing_res.data[0].get("stories") or []
+        existing_permalink = existing_res.data[0].get("permalink") or ""
+    # Key by slot AND url so saved data is never applied to a different story
     existing_by_slot = {s["slot"]: s for s in existing_stories if "slot" in s}
 
     # Get spotlight articles for this dispatch
@@ -544,8 +552,10 @@ def main():
         url   = article["url"]
         print(f"[daily-edition] Processing slot {slot}: {url}")
 
-        # Start with any existing admin-saved data for this slot
-        saved = existing_by_slot.get(slot, {})
+        # Use admin-saved data only when it belongs to the same URL (re-runs may
+        # produce a different story order; applying saved data across URLs corrupts content)
+        _saved_candidate = existing_by_slot.get(slot, {})
+        saved = _saved_candidate if _saved_candidate.get("url") == url else {}
 
         # --- Article metadata & image ---
         if saved.get("image_url"):
@@ -670,6 +680,14 @@ def main():
 
     edition_dir = OUTPUT_DIR / edition_iso
     edition_dir.mkdir(parents=True, exist_ok=True)
+
+    # Remove stale HTML file if the slug changed on re-run
+    if existing_permalink and existing_permalink != edition_slug:
+        stale_path = edition_dir / f"{existing_permalink}.html"
+        if stale_path.exists():
+            stale_path.unlink()
+            print(f"[daily-edition] Removed stale file: {stale_path.name}")
+
     output_path = edition_dir / f"{edition_slug}.html"
     output_path.write_text(output_html, encoding="utf-8")
     print(f"[daily-edition] Written to {output_path}")

@@ -363,7 +363,7 @@ const App: React.FC = () => {
     setLoading(true);
     try {
       const [newsRes, videosRes, projectsRes, researchRes, eventsRes, metaRes, spotlightRes, dailyEdRes, excludedRes] = await Promise.all([
-        supabase.from('news_items').select('*').order('inserted_at', { ascending: false }).limit(1000),
+        supabase.from('news_items').select('*').eq('pending_review', false).order('inserted_at', { ascending: false }).limit(1000),
         supabase.from('videos').select('*').limit(300),
         supabase.from('github_projects').select('*').limit(100),
         supabase.from('research_papers').select('*').limit(100),
