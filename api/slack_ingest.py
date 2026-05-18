@@ -394,22 +394,19 @@ def add_more_coverage(existing_url: str, new_url: str, new_source: str) -> tuple
 
 
 def is_rejected(url: str) -> bool:
-    """Return True if this URL or its domain has been rejected via article_feedback."""
+    """Return True if this exact URL has been rejected via article_feedback.
+
+    Rejection reasons (off_topic, clickbait, etc.) inform recalibrate_scores.py;
+    they are NOT a publisher blocklist. Only the exact URL is blocked here.
+    """
     try:
         r = requests.get(
             f"{SUPABASE_URL}/rest/v1/article_feedback",
-            params={"signal": "eq.reject", "select": "article_id"},
+            params={"signal": "eq.reject", "article_id": f"eq.{url}", "select": "article_id"},
             headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
             timeout=4,
         )
-        if r.status_code != 200:
-            return False
-        rejected = {row["article_id"] for row in r.json()}
-        if url in rejected:
-            return True
-        domain = urlparse(url).netloc.lstrip("www.")
-        rejected_domains = {urlparse(u).netloc.lstrip("www.") for u in rejected}
-        return domain in rejected_domains
+        return r.status_code == 200 and bool(r.json())
     except Exception:
         return False
 
