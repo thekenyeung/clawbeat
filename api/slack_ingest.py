@@ -106,16 +106,23 @@ def _is_bot_check(title: str) -> bool:
 def fetch_jina_title(url: str) -> str:
     """Extract the article title from Jina Reader's metadata header.
     Used as a fallback when fetch_og() is blocked by bot protection.
+
+    Timeout is generous (15s): for sources like Medium that 403 our UA,
+    this is the ONLY path to a real title, so a flaky timeout means
+    "Just a moment..." silently leaks into the feed.
     """
     try:
         r = requests.get(
             f"https://r.jina.ai/{url}",
-            timeout=5,
+            timeout=15,
             headers={"Accept": "text/plain", "User-Agent": "ClawBeat/1.0"},
         )
         for line in r.text.splitlines():
             if line.startswith("Title:"):
-                return line[len("Title:"):].strip()[:500]
+                candidate = html_lib.unescape(line[len("Title:"):].strip())[:500]
+                # Jina sometimes returns the upstream bot-check page's title
+                # verbatim — don't propagate it as if it were real.
+                return "" if _is_bot_check(candidate) else candidate
     except Exception:
         pass
     return ""
@@ -222,10 +229,12 @@ def fetch_og(url: str) -> dict:
             )
             description = m.group(1).strip() if m else ""
 
+        # Decode HTML entities (e.g. &#039; → ', &amp; → &) so headlines
+        # read cleanly on the site instead of leaking raw entity codes.
         return {
-            "title": title[:500],
-            "source": site_name[:200],
-            "description": description[:1000],
+            "title": html_lib.unescape(title)[:500],
+            "source": html_lib.unescape(site_name)[:200],
+            "description": html_lib.unescape(description)[:1000],
         }
     except Exception:
         domain = urlparse(url).netloc.lstrip("www.")
@@ -558,6 +567,16 @@ class handler(BaseHTTPRequestHandler):
                 jina_title = fetch_jina_title(url)
                 if jina_title:
                     title = jina_title
+
+            # If we still have a bot-check title after the Jina fallback, abort —
+            # don't write "Just a moment..." into the feed as if it were a headline.
+            if _is_bot_check(title):
+                slack_reply(
+                    channel,
+                    "✗ Could not fetch a real title — source blocks scrapers and "
+                    "Jina fallback failed. Try again, or add via the admin panel.",
+                )
+                return
 
         # ── Duplicate / similar-story checks ─────────────────────────────
         articles_today = fetch_todays_articles()
