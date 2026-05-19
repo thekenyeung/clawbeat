@@ -158,6 +158,11 @@ BANNED_SOURCES = [
 # as pending_review=True and sent to Slack for manual approve/deny before appearing on site.
 REVIEW_SCORE_MIN = 10.0   # items below this are outright suppressed (no Slack ping)
 REVIEW_SCORE_MAX = 45.0   # items at or above this auto-include without review
+# Articles older than this are suppressed instead of queued for Slack review —
+# stale items (weeks/months old) aren't worth a reviewer's attention. The 48h
+# cutoff matches the day-granularity of item['date']: an article dated
+# "yesterday" can be 0–48h old in wall-clock terms.
+REVIEW_MAX_AGE_HOURS = 48
 
 # --- Dynamically load whitelist domain authority sets ---
 def _load_whitelist_domains():
@@ -2165,6 +2170,13 @@ if __name__ == "__main__":
                 item['pending_review'] = False
             else:
                 needs_review = REVIEW_SCORE_MIN <= ts < REVIEW_SCORE_MAX
+                # Age gate: don't bother the reviewer with stale articles. An RSS
+                # item that was dropped from feeds and only now scored (e.g. a
+                # backfill or score-cache miss) can be months old — suppress it.
+                if needs_review:
+                    age = datetime.now() - try_parse_date(item.get('date', ''))
+                    if age > timedelta(hours=REVIEW_MAX_AGE_HOURS):
+                        needs_review = False
                 item['pending_review'] = needs_review
                 if needs_review and not already_queued:
                     pending_review_items.append(item)
