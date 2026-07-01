@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  CLAWBEAT · TRACE — MONTHLY ISSUE COVER TEMPLATE               ║
+  ║  All [VARIABLE] blocks below are replaced at generation time    ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║  TEMPLATE VARIABLES                                             ║
+  ║    [ISSUE_NUMBER]       Zero-padded issue number "001"          ║
+  ║    [MONTH_LABEL]        "February 2026"                         ║
+  ║    [MONTH_YM]           "2026-02"                               ║
+  ║    [OG_IMAGE]           Story 1 image URL for og:image          ║
+  ║    [META_DESCRIPTION]   Plain-text editorial (≤155 chars)       ║
+  ║    [COMPILED_TIME]      "17:00 PT"                              ║
+  ║    [EDITORIAL_TEXT]     AI-generated editorial paragraph        ║
+  ║    [STORY_SECTIONS_HTML] All story+daily+repo sections HTML     ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WHLSLX6VL3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-WHLSLX6VL3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<link rel="icon" type="image/jpeg" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<link rel="apple-touch-icon" href="/images/clawbeat-icon-claw-logo-512x512.jpg">
+<title>Trace No. 005 · June 2026 — ClawBeat</title>
+<meta name="description" content="This month revealed the inherent tensions in OpenClaw's journey towards broader adoption. Microsoft's launch of Scout and its broader initiatives signal a ">
+<meta property="og:title" content="Trace No. 005 · June 2026 | ClawBeat">
+<meta property="og:description" content="This month revealed the inherent tensions in OpenClaw's journey towards broader adoption. Microsoft's launch of Scout and its broader initiatives signal a ">
+<meta property="og:image" content="https://techcrunch.com/wp-content/uploads/2025/05/russell-e1755718978143.jpg?w=150">
+<meta property="og:url" content="https://clawbeat.co/trace/2026-06/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ClawBeat">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trace No. 005 · June 2026 | ClawBeat">
+<meta name="twitter:description" content="This month revealed the inherent tensions in OpenClaw's journey towards broader adoption. Microsoft's launch of Scout and its broader initiatives signal a ">
+<meta name="twitter:image" content="https://techcrunch.com/wp-content/uploads/2025/05/russell-e1755718978143.jpg?w=150">
+<link rel="canonical" href="https://clawbeat.co/trace/2026-06/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; font-size: 16px; }
+
+/* ── TOKENS ── */
+:root {
+  --bg:          #08090b;
+  --bg-2:        #0d0f12;
+  --bg-3:        #131619;
+  --border:      rgba(255,255,255,0.05);
+  --border-2:    rgba(255,255,255,0.09);
+  --orange:      #f97316;
+  --orange-dim:  rgba(249,115,22,0.10);
+  --text:        #e2e4e9;
+  --text-2:      #9097a3;
+  --text-3:      #525866;
+  --text-4:      #2e333d;
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'Space Grotesk', sans-serif;
+  --col-w:       1152px;
+  --gutter:      1.5rem;
+}
+
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+a { color: inherit; text-decoration: none; }
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ── HEADER ── */
+.header { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border); background: rgba(8,9,11,0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.header-inner { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+.brand-img { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0; }
+.brand-img img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text { font-family: var(--sans); font-size: 1.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; font-style: italic; color: #fff; }
+.brand-text span { color: var(--orange); }
+.header-nav { display: flex; align-items: center; gap: 0.25rem; }
+.nav-item { font-family: var(--sans); font-size: 0.625rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.375rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; }
+.nav-item svg { width: 16px; height: 16px; }
+.nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+.nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu { position: absolute; top: calc(100% + 6px); left: 0; background: rgba(10,10,12,0.97); border: 1px solid var(--border-2); border-radius: 0.5rem; min-width: 200px; padding: 0.4rem; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.15s, transform 0.15s, visibility 0.15s; z-index: 100; backdrop-filter: blur(16px); }
+.nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: 0.35rem; transition: background 0.12s; }
+.nav-dropdown-item:hover, .nav-dropdown-item.here { background: var(--orange-dim); }
+.nav-dropdown-item svg { width: 14px; height: 14px; color: var(--orange); flex-shrink: 0; }
+.nav-dropdown-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); line-height: 1; }
+.nav-dropdown-sub { font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+.nav-skill-chip { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid rgba(249,115,22,0.3); border-radius: 0.25rem; background: rgba(249,115,22,0.06); transition: all 0.15s; margin-left: 0.5rem; white-space: nowrap; }
+.nav-skill-chip:hover { background: rgba(249,115,22,0.12); border-color: rgba(249,115,22,0.5); }
+.hamburger-btn { display: none; padding: 0.5rem; color: #94a3b8; background: transparent; border: none; cursor: pointer; align-items: center; justify-content: center; }
+.hamburger-btn svg { width: 24px; height: 24px; }
+.mobile-menu { display: none; position: fixed; top: 4rem; left: 0; width: 100%; background: rgba(10,10,12,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem; flex-direction: column; gap: 0.5rem; z-index: 60; }
+.mobile-menu.open { display: flex; }
+.mobile-nav-item { font-family: var(--sans); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; padding: 0.75rem 1rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+.mobile-nav-item:hover { color: #cbd5e1; background: rgba(255,255,255,0.05); }
+.mobile-nav-item.active { background: rgba(255,255,255,0.1); color: var(--orange); box-shadow: inset 0 0 10px rgba(249,115,22,0.1); }
+.mobile-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.mobile-subnav-item { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 0.5rem 1rem 0.5rem 2.75rem; border-radius: 0.375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+.mobile-subnav-item:hover { color: var(--orange); background: var(--orange-dim); }
+@media (max-width: 768px) { .header-nav { display: none; } .hamburger-btn { display: flex; } }
+
+/* ── MAGAZINE MASTHEAD ── */
+.masthead { position: relative; overflow: hidden; background: var(--bg); border-bottom: 1px solid var(--border-2); padding: 4rem var(--gutter) 3.5rem; }
+.masthead::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px), repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.007) 79px, rgba(255,255,255,0.007) 80px); }
+.masthead-ghost { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--sans); font-size: clamp(8rem, 24vw, 22rem); font-weight: 900; font-style: italic; letter-spacing: -0.05em; line-height: 1; color: rgba(255,255,255,0.016); pointer-events: none; user-select: none; white-space: nowrap; }
+.masthead-inner { max-width: var(--col-w); margin: 0 auto; position: relative; }
+.masthead-info-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.75rem; }
+.masthead-info-left { display: flex; align-items: center; gap: 1.25rem; font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); letter-spacing: 0.12em; text-transform: uppercase; }
+.masthead-info-left .accent { color: var(--orange); font-weight: 700; }
+.masthead-info-left .pipe { color: var(--text-4); }
+.masthead-info-right { font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.1em; text-transform: uppercase; }
+.masthead-wordmark { font-family: var(--sans); font-size: clamp(5rem, 14vw, 11rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.85; color: #fff; text-transform: uppercase; font-style: italic; margin-bottom: 1rem; }
+.masthead-wordmark em { color: var(--orange); font-style: inherit; }
+.masthead-tagline { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); letter-spacing: 0.25em; text-transform: uppercase; padding-bottom: 2rem; border-bottom: 1px solid var(--border-2); margin-bottom: 2rem; }
+.editorial { display: grid; grid-template-columns: 140px 1fr; gap: 2rem; align-items: start; max-width: 800px; }
+.editorial-label { font-family: var(--mono); font-size: 0.55rem; color: var(--orange); letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.4; padding-top: 0.25rem; }
+.editorial-label::before { content: '// '; opacity: 0.6; }
+.editorial-text { font-size: 1rem; line-height: 1.75; color: var(--text-2); font-style: italic; border-left: 2px solid rgba(249,115,22,0.3); padding-left: 1.5rem; }
+
+/* ── LEAD STORY (Signal 01) ── */
+.lead-card { display: block; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.75rem; overflow: hidden; transition: border-color 0.2s; margin-top: 1.5rem; cursor: pointer; }
+.lead-card:hover { border-color: var(--border-2); }
+.lead-img-wrap { position: relative; overflow: hidden; background: var(--bg-3); aspect-ratio: 21/9; }
+.lead-img-wrap img { opacity: 0.78; transition: opacity 0.3s, transform 0.3s; }
+.lead-card:hover .lead-img-wrap img { opacity: 0.9; transform: scale(1.02); }
+.lead-badges { position: absolute; top: 1.25rem; left: 1.25rem; z-index: 10; display: flex; align-items: center; gap: 0.625rem; }
+.cover-story-badge { font-family: var(--mono); font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; background: var(--orange); color: #000; padding: 0.3rem 0.75rem; border-radius: 3px; }
+.cover-category-badge { font-family: var(--mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; background: rgba(8,9,11,0.75); color: var(--text-2); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px); padding: 0.3rem 0.75rem; border-radius: 3px; }
+.lead-body { padding: 2rem 2.25rem 2.5rem; }
+.cover-source-line { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+.cover-source-line a { color: rgba(249,115,22,0.7); }
+.cover-source-line a:hover { color: var(--orange); }
+.cover-headline { font-family: var(--sans); font-size: clamp(1.6rem, 3.5vw, 2.75rem); font-weight: 900; letter-spacing: -0.05em; line-height: 0.95; color: var(--text); max-width: 32ch; margin-bottom: 1rem; }
+.lead-card:hover .cover-headline { color: #fff; }
+.cover-deck { font-size: clamp(0.85rem, 1.3vw, 0.95rem); line-height: 1.65; color: var(--text-3); max-width: 64ch; margin-bottom: 1.25rem; }
+.cover-footer { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.cover-read-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; transition: gap 0.15s, border-color 0.15s; }
+.cover-read-link:hover { gap: 0.75rem; border-color: var(--orange); }
+.cover-read-link svg { width: 14px; height: 14px; }
+
+/* ── WRAP / SECTION SCAFFOLD ── */
+.wrap { max-width: var(--col-w); margin: 0 auto; padding: 0 var(--gutter); }
+.section-rule { display: flex; align-items: center; gap: 1rem; margin: 3rem 0 1.5rem; }
+.section-rule-label { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 0.5rem; }
+.section-rule-label .sl { color: var(--orange); }
+.section-rule-label .badge { font-size: 0.5rem; background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,0.2); border-radius: 2px; padding: 0.15rem 0.5rem; letter-spacing: 0.12em; }
+.section-rule-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border-2), transparent); }
+
+/* ── STORY CARDS ── */
+.card-img-wrap { position: relative; overflow: hidden; background: var(--bg-3); flex-shrink: 0; }
+.card-img-wrap img { opacity: 0.78; transition: opacity 0.3s, transform 0.3s; }
+.card-img-wrap .card-rank-ghost { position: absolute; bottom: 0.5rem; left: 0.75rem; font-family: var(--mono); font-weight: 700; font-style: italic; color: rgba(255,255,255,0.07); line-height: 1; pointer-events: none; user-select: none; }
+.card-img-wrap .card-credit-pill { position: absolute; bottom: 0.4rem; right: 0.5rem; font-family: var(--mono); font-size: 8px; color: rgba(255,255,255,0.4); background: rgba(0,0,0,0.55); padding: 0.15rem 0.4rem; border-radius: 2px; }
+.card-img-wrap .card-credit-pill a { color: rgba(249,115,22,0.6); }
+.card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
+.card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+.card:hover .card-img-wrap img { opacity: 0.92; transform: scale(1.03); }
+.card-body { padding: 1rem 1.125rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.55rem; }
+.card-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.card-rank { font-family: var(--mono); font-size: 0.5rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
+.card-cat { font-family: var(--mono); font-size: 0.5rem; color: var(--text-3); background: var(--bg-3); border: 1px solid var(--border); padding: 0.12rem 0.4rem; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; }
+.card-headline { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; }
+.card:hover .card-headline { color: #fff; }
+.card-source { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); letter-spacing: 0.07em; }
+.card-source a { color: inherit; }
+.card-source a:hover { color: var(--text-2); }
+.card-summary { font-size: 0.8rem; line-height: 1.55; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: auto; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); transition: gap 0.15s, opacity 0.15s; border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; }
+.card-link:hover { opacity: 0.8; gap: 0.6rem; }
+.card-link svg { width: 11px; height: 11px; }
+
+/* GRID layouts */
+.grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.grid-two .card-img-wrap { aspect-ratio: 3 / 2; }
+.grid-two .card-rank-ghost { font-size: clamp(2.5rem, 5vw, 4rem); }
+.grid-compact { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.compact-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.125rem 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.625rem; transition: border-color 0.2s, transform 0.15s; }
+.compact-card:hover { border-color: rgba(249,115,22,0.2); transform: translateY(-1px); }
+.compact-rank { font-family: var(--mono); font-size: 0.69rem; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; }
+.compact-headline { font-family: var(--sans); font-size: 0.9rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.compact-card:hover .compact-headline { color: #fff; }
+.compact-summary { font-size: 0.8rem; line-height: 1.5; color: var(--text-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.compact-footer { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+.compact-source { font-family: var(--mono); font-size: 0.69rem; color: var(--text-2); letter-spacing: 0.07em; }
+.compact-cta { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); white-space: nowrap; transition: gap 0.15s; border-bottom: 1px solid rgba(249,115,22,0.4); padding-bottom: 0.1rem; }
+.compact-cta:hover { gap: 0.55rem; }
+.compact-cta svg { width: 12px; height: 12px; }
+
+/* ── DAILY TRANSMISSIONS ── */
+.daily-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 0.75rem; }
+.daily-card { display: flex; align-items: stretch; gap: 0; background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; transition: border-color 0.15s; }
+.daily-card:hover { border-color: var(--border-2); }
+.daily-date-col { flex-shrink: 0; width: 64px; background: var(--bg-3); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.875rem 0; gap: 0.1rem; }
+.daily-mon { font-family: var(--mono); font-size: 0.5rem; color: var(--orange); letter-spacing: 0.15em; text-transform: uppercase; }
+.daily-day { font-family: var(--mono); font-size: 1.35rem; font-weight: 700; color: var(--text); line-height: 1; }
+.daily-text { padding: 0.875rem 1rem; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 0.3rem; min-width: 0; }
+.daily-label { font-family: var(--mono); font-size: 0.5rem; color: var(--text-4); letter-spacing: 0.1em; text-transform: uppercase; }
+.daily-headline { font-size: 0.78rem; font-weight: 600; line-height: 1.35; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.daily-card:hover .daily-headline { color: var(--text); }
+
+/* ── REPO SIGNALS ── */
+.repo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.repo-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.625rem; transition: border-color 0.2s; }
+.repo-card:hover { border-color: var(--border-2); }
+.repo-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.repo-name { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: var(--orange); }
+.repo-name a { color: inherit; }
+.repo-name a:hover { opacity: 0.8; }
+.repo-stars { display: flex; align-items: center; gap: 0.3rem; font-family: var(--mono); font-size: 0.55rem; color: var(--text-3); flex-shrink: 0; }
+.repo-stars svg { width: 11px; height: 11px; }
+.repo-desc { font-size: 0.78rem; line-height: 1.55; color: var(--text-3); flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.repo-lang { display: inline-block; font-family: var(--mono); font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-4); background: var(--bg-3); border: 1px solid var(--border); padding: 0.15rem 0.45rem; border-radius: 2px; margin-top: auto; }
+
+/* ── FOOTER ── */
+.page-footer { max-width: var(--col-w); margin: 4rem auto 0; padding: 2.5rem var(--gutter); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.footer-brand { font-family: var(--sans); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.03em; color: var(--text-3); }
+.footer-brand span { color: var(--orange); }
+.footer-links { font-family: var(--mono); font-size: 0.55rem; color: var(--text-4); letter-spacing: 0.08em; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.footer-links a { color: var(--text-4); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text-3); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .grid-compact { grid-template-columns: repeat(2, 1fr); }
+  .repo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .masthead { padding: 3rem 1rem 3rem; }
+  .editorial { grid-template-columns: 1fr; gap: 0.75rem; }
+  .editorial-text { border-left: none; padding-left: 0; border-top: 2px solid rgba(249,115,22,0.3); padding-top: 0.875rem; }
+}
+@media (max-width: 640px) {
+  :root { --gutter: 1rem; }
+  .masthead-wordmark { font-size: clamp(3.5rem, 18vw, 5rem); }
+  .grid-two { grid-template-columns: 1fr; }
+  .grid-compact { grid-template-columns: 1fr 1fr; }
+  .repo-grid { grid-template-columns: 1fr; }
+  .cover-headline { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-img"><img src="/images/clawbeat-icon-claw-logo-512x512.jpg" alt="ClawBeat" onerror="this.style.background='#131619'"></div>
+      <span class="brand-text">ClawBeat<span>.co</span></span>
+    </a>
+    <nav class="header-nav">
+      <div class="nav-dropdown">
+        <a href="/news.html" class="nav-item active"><i data-lucide="newspaper"></i>Intel</a>
+        <div class="nav-dropdown-menu">
+          <a href="/trace/" class="nav-dropdown-item here">
+            <i data-lucide="layers"></i>
+            <div><div class="nav-dropdown-label">Trace</div><div class="nav-dropdown-sub">Monthly magazine</div></div>
+          </a>
+          <a href="/guide/" class="nav-dropdown-item">
+            <i data-lucide="book-marked"></i>
+            <div><div class="nav-dropdown-label">Guides</div><div class="nav-dropdown-sub">Deep dives &amp; comparisons</div></div>
+          </a>
+          <a href="/dossier.html" class="nav-dropdown-item">
+            <i data-lucide="id-card"></i>
+            <div><div class="nav-dropdown-label">Dossier</div><div class="nav-dropdown-sub">Key players</div></div>
+          </a>
+        </div>
+      </div>
+      <a href="/research.html" class="nav-item"><i data-lucide="book-open"></i>Research</a>
+      <a href="/media.html" class="nav-item"><i data-lucide="video"></i>Media</a>
+      <div class="nav-dropdown">
+        <a href="/forge.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Forge</a>
+          <div class="nav-dropdown-menu">
+            <a href="/openclaw/index.html" class="nav-dropdown-item">
+              <i data-lucide="git-branch"></i>
+              <div><div class="nav-dropdown-label">Chronicle</div><div class="nav-dropdown-sub">OpenClaw release history</div></div>
+            </a>
+          </div>
+      </div>
+      <a href="/events-calendar.html" class="nav-item"><i data-lucide="calendar"></i>Events</a>
+      <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+    </nav>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span id="icon-menu"><i data-lucide="menu"></i></span>
+      <span id="icon-close" style="display:none"><i data-lucide="x"></i></span>
+    </button>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/news.html" class="mobile-nav-item active"><i data-lucide="newspaper"></i>Intel Feed</a>
+  <a href="/trace/" class="mobile-subnav-item"><i data-lucide="layers"></i>Trace Magazine</a>
+  <a href="/guide/" class="mobile-subnav-item"><i data-lucide="book-marked"></i>Guides</a>
+  <a href="/dossier.html" class="mobile-subnav-item"><i data-lucide="id-card"></i>Dossier</a>
+  <a href="/research.html" class="mobile-nav-item"><i data-lucide="book-open"></i>Research</a>
+  <a href="/media.html" class="mobile-nav-item"><i data-lucide="video"></i>Media Lab</a>
+  <a href="/forge.html" class="mobile-nav-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>The Forge</a>
+  <a href="/openclaw/index.html" class="mobile-subnav-item"><i data-lucide="git-branch"></i>OpenClaw Chronicle</a>
+  <a href="/events-calendar.html" class="mobile-nav-item"><i data-lucide="calendar"></i>Events</a>
+  <a class="nav-skill-chip" href="https://clawhub.ai/thekenyeung/clawbeat" target="_blank" rel="noopener" onclick="gtag('event','click',{event_category:'outbound',event_label:'clawhub_skill'})">// skill</a>
+</div>
+
+<!-- ── MAGAZINE MASTHEAD ── -->
+<section class="masthead">
+  <div class="masthead-ghost" aria-hidden="true">TRACE</div>
+  <div class="masthead-inner">
+    <div class="masthead-info-bar">
+      <div class="masthead-info-left">
+        <span class="accent">No. 005</span>
+        <span class="pipe">·</span>
+        <span>June 2026</span>
+        <span class="pipe">·</span>
+        <span>20 Signals</span>
+      </div>
+      <div class="masthead-info-right">Compiled 17:00 PT · ClawBeat.co</div>
+    </div>
+    <h1 class="masthead-wordmark">TR<em>A</em>CE</h1>
+    <p class="masthead-tagline">Signal Intelligence · Monthly Review · OpenClaw Ecosystem</p>
+    <div class="editorial">
+      <div class="editorial-label">Editor's Brief</div>
+      <p class="editorial-text">This month revealed the inherent tensions in OpenClaw's journey towards broader adoption. Microsoft's launch of Scout and its broader initiatives signal a clear push to bring agentic AI to the mainstream, mirroring OpenClaw's own long-awaited, if poorly received, official mobile apps. The gap between these ambitious visions for mass accessibility and the current user experience, evidenced by tough initial reviews, remains a significant hurdle. Simultaneously, a counter-current strengthens: as labs narrow model access, the community doubled down on decentralization, with OpenClaw running reliably on Raspberry Pi and local models handling repository triage. Yet, this distributed future brings its own challenges, most notably the escalating threat of malicious OpenClaw skills infiltrating the AI supply chain, prompting fundamental questions about control, highlighted by the architectural disagreement with Hermes. These developments underscore an ecosystem grappling with its own maturity, balancing ambitious growth with the practicalities of security and user experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── COVER STORY: Signal 01 ── -->
+<div class="wrap">
+  <div class="lead-card" onclick="window.location='/trace/2026-06/microsoft-launches-scout-an-openclaw-inspired-personal-assis/'">
+    <div class="lead-img-wrap" id="lead01-wrap">
+      <img src="https://techcrunch.com/wp-content/uploads/2025/05/russell-e1755718978143.jpg?w=150" alt="Microsoft launches Scout, an OpenClaw-inspired personal assistant" onerror="document.getElementById('lead01-wrap').style.display='none'">
+      <div class="lead-badges">
+        <span class="cover-story-badge">Cover Story · Signal 01</span>
+        <span class="cover-category-badge">Microsoft · Scout</span>
+      </div>
+    </div>
+    <div class="lead-body">
+      <div class="cover-source-line"><a href="https://techcrunch.com" target="_blank" rel="noopener" onclick="event.stopPropagation()">TechCrunch</a></div>
+      <h2 class="cover-headline">Microsoft launches Scout, an OpenClaw-inspired personal assistant</h2>
+      <p class="cover-deck">Microsoft has launched Scout, a new AI assistant built on the OpenClaw framework, designed to bring agentic AI capabilities into the Microsoft 365 ecosystem. This marks a significant move to integrate</p>
+      <div class="cover-footer">
+        <a class="cover-read-link" href="/trace/2026-06/microsoft-launches-scout-an-openclaw-inspired-personal-assis/" onclick="event.stopPropagation()">Read Full Analysis <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+<div class="grid-two">
+<a href="/trace/2026-06/more-malicious-openclaw-skills-threaten-ai-supply-chain/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://eu-images.contentstack.com/v3/assets/blt6d90778a997de1cd/bltae6f59d8c10d8c7c/6a3bc8af154dd32d453f2e72/openclaw_Koshiro_K_shutterstock.png?disable=upscale&amp;width=1200&amp;height=630&amp;fit=crop" alt="More Malicious OpenClaw Skills Threaten AI Supply Chain" loading="lazy">
+        <span class="card-rank-ghost">02</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 02</span><span class="card-cat">Dark Reading</span></div>
+        <div class="card-headline">More Malicious OpenClaw Skills Threaten AI Supply Chain</div>
+        <div class="card-source">Dark Reading</div>
+        <p class="card-summary">Security researchers have uncovered multiple malicious skills circulating on ClawHub, the official marketplace for the OpenClaw agentic AI ecosystem. These skills demonstrate novel methods for stealin</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/how-peter-steinberger-built-openclaw/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://images.fastcompany.com/image/upload/f_webp,q_auto,c_fit/wp-cms-2/2026/05/p-1-91550800-ai-20-peter-steinberger.jpg" alt="How Peter Steinberger built OpenClaw" loading="lazy">
+        <span class="card-rank-ghost">03</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 03</span><span class="card-cat">Fast Company</span></div>
+        <div class="card-headline">How Peter Steinberger built OpenClaw</div>
+        <div class="card-source">Fast Company</div>
+        <p class="card-summary">Peter Steinberger launched OpenClaw in November 2025, an open-source platform for creating and managing personal AI agents, which rapidly gained significant traction. The platform enables users to int</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+</div>
+</div>
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
+<a href="/trace/2026-06/how-microsoft-is-bringing-openclaw-to-the-masses/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://images.fastcompany.com/image/upload/f_webp,q_auto,c_fit/wp-cms-2/2026/06/p-1-91554066-plugged-in-microsoft.jpg" alt="How Microsoft is bringing OpenClaw to the masses" loading="lazy">
+        <span class="card-rank-ghost">04</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 04</span><span class="card-cat">Microsoft</span></div>
+        <div class="card-headline">How Microsoft is bringing OpenClaw to the masses</div>
+        <div class="card-source">Fast Company</div>
+        <p class="card-summary">Microsoft has significantly advanced the accessibility and safety of the OpenClaw agentic AI platform through new integrations and product announcements at its Build developer conference. A key develo</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/we-got-local-models-to-triage-the-openclaw-repo-for-free/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://huggingface.co/blog/assets/local-models-pr-triage/thumbnail.png" alt="We got local models to triage the OpenClaw repo for FREE!*" loading="lazy">
+        <span class="card-rank-ghost">05</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 05</span><span class="card-cat">Free</span></div>
+        <div class="card-headline">We got local models to triage the OpenClaw repo for FREE!*</div>
+        <div class="card-source">Hugging Face</div>
+        <p class="card-summary">The OpenClaw ecosystem has demonstrated the successful application of local models specifically for repository triage. This development centers on managing code analysis and issue prioritization withi</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+</div>
+</div>
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
+<a href="/trace/2026-06/openclaw-finally-has-an-official-app-but-first-impressions-a/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://www.androidauthority.com/wp-content/uploads/2026/06/OpenClaw-Android-App-scaled.jpg" alt="OpenClaw finally has an official app, but first impressions aren’t exactly glowing" loading="lazy">
+        <span class="card-rank-ghost">06</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 06</span><span class="card-cat">Android Authority</span></div>
+        <div class="card-headline">OpenClaw finally has an official app, but first impressions aren’t exactly glowing</div>
+        <div class="card-source">Android Authority</div>
+        <p class="card-summary">OpenClaw has released official companion applications for Android and iOS, providing users with a native mobile interface to interact with their AI assistants. This launch, however, has been met with </p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/openclaw-reveals-ios-and-android-mobile-apps-at-last-but-ini/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://cdn.mos.cms.futurecdn.net/DTZvZXmPaA8zMJoW733ZVa-1920-80.png" alt="OpenClaw reveals iOS and Android mobile apps at last — but initial reviews make for tough reading" loading="lazy">
+        <span class="card-rank-ghost">07</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 07</span><span class="card-cat">Android</span></div>
+        <div class="card-headline">OpenClaw reveals iOS and Android mobile apps at last — but initial reviews make for tough reading</div>
+        <div class="card-source">TechRadar</div>
+        <p class="card-summary">The provided text does not contain the anticipated article content detailing OpenClaw's iOS and Android mobile app release or their initial reviews. Instead, the document consists entirely of standard</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+</div>
+</div>
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-two">
+<a href="/trace/2026-06/a-raspberry-pi-is-the-durable-way-to-run-openclaw-as-labs-na/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://www.implicator.ai/content/images/size/w1200/2026/05/2026-05-29-16.32.22-openclaw_raspberry_pi@2x.webp" alt="A Raspberry Pi Is the Durable Way to Run OpenClaw as Labs Narrow Model Access" loading="lazy">
+        <span class="card-rank-ghost">08</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 08</span><span class="card-cat">Raspberry Pi · Labs Narrow Model Access</span></div>
+        <div class="card-headline">A Raspberry Pi Is the Durable Way to Run OpenClaw as Labs Narrow Model Access</div>
+        <div class="card-source">Implicator</div>
+        <p class="card-summary">OpenClaw, the open-source framework for running a personal AI assistant, has released version 2026.5.27, now boasting over 375,000 GitHub stars, and can be self-hosted on a Raspberry Pi 5 for $85-$125</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/openclaw-and-hermes-agree-on-what-an-agent-is-they-disagree-/" class="card">
+      <div class="card-img-wrap">
+        <img src="https://cdn.thenewstack.io/media/2026/06/9228c0d6-logan-voss-v0sixwyivly-unsplash-scaled.jpg" alt="OpenClaw and Hermes agree on what an agent is. They disagree on what controls it." loading="lazy">
+        <span class="card-rank-ghost">09</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-rank">Signal 09</span><span class="card-cat">Hermes</span></div>
+        <div class="card-headline">OpenClaw and Hermes agree on what an agent is. They disagree on what controls it.</div>
+        <div class="card-source">The New Stack</div>
+        <p class="card-summary">The provided content outlines a website's comprehensive cookie consent mechanism, detailing the various categories and specific instances of cookies employed to manage user browsing experience, delive</p>
+        <span class="card-link">Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+</div>
+</div>
+<div class="wrap" style="margin-top:2.5rem">
+<div class="grid-compact">
+<a href="/trace/2026-06/take-your-openclaw-box-back-to-the-future-with-retro-mac-min/" class="compact-card">
+      <div class="compact-rank">Signal 10 · Mac Mini · Mac Studio</div>
+      <div class="compact-headline">Take your OpenClaw box back to the future with retro Mac Mini, Mac Studio docks — Wokyis tempts Nintendo and Apple lawyers, while adding a screen, ports, and style to your modern Mac</div>
+      <div class="compact-summary">Tom's Hardware has initiated a comprehensive promotional campaign for its Premium membership, positioning the service as a key resource for individuals and professionals seeking in-depth insights into</div>
+      <div class="compact-footer">
+        <span class="compact-source">Tom's Hardware</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le/" class="compact-card">
+      <div class="compact-rank">Signal 11 · The Hacker News</div>
+      <div class="compact-headline">New Attacks Trick OpenClaw AI Agent Into Running Code and Leaking Secrets</div>
+      <div class="compact-summary">Two separate security research efforts have demonstrated critical vulnerabilities in OpenClaw, the self-hosted AI agent, showing it can be manipulated to execute arbitrary code or exfiltrate sensitive</div>
+      <div class="compact-footer">
+        <span class="compact-source">The Hacker News</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/openclaw-powers-99-mini-pc-but-its-an-ai-agentic-trap-wrappe/" class="compact-card">
+      <div class="compact-rank">Signal 12 · Cpu</div>
+      <div class="compact-headline">OpenClaw powers $99 mini PC but it's an AI agentic trap wrapped in Windows 11, delivered with a CPU from 2011 - choose a refurbished PC instead</div>
+      <div class="compact-summary">OpenClaw, a participant in the agentic AI ecosystem, is associated with a new $99 mini PC, which the article's title explicitly labels as an &quot;AI agentic trap.&quot; Key details from the title indicate the </div>
+      <div class="compact-footer">
+        <span class="compact-source">TechRadar</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/lenovo-thinkstation-pgx-review-i-may-have-just-found-the-bes/" class="compact-card">
+      <div class="compact-rank">Signal 13 · Lenovo Thinkstation · Mac</div>
+      <div class="compact-headline">Lenovo ThinkStation PGX review: I may have just found the best mini workstation for OpenClaw, and it’s not a Mac mini</div>
+      <div class="compact-summary">The Lenovo ThinkStation PGX has been introduced as a dedicated mini workstation for local AI model development, specifically targeting users building with agentic AI ecosystems like OpenClaw and Claud</div>
+      <div class="compact-footer">
+        <span class="compact-source">TechRadar</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/multiple-malicious-openclaw-skills-found-online-including-tw/" class="compact-card">
+      <div class="compact-rank">Signal 14 · TechRadar</div>
+      <div class="compact-headline">Multiple malicious OpenClaw skills found online - including two macOS infostealers</div>
+      <div class="compact-summary">The provided text, despite being published under the headline &quot;Multiple malicious OpenClaw skills found online - including two macOS infostealers,&quot; does not contain any information detailing security </div>
+      <div class="compact-footer">
+        <span class="compact-source">TechRadar</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/what-the-openclaw-vulnerability-reveals-about-the-future-of-/" class="compact-card">
+      <div class="compact-rank">Signal 15 · Security · Openclaw</div>
+      <div class="compact-headline">What the OpenClaw vulnerability reveals about the future of agentic AI security</div>
+      <div class="compact-summary">The core information presented in the provided content is the identification of a 1x1 image, described as &quot;likely a tracker probe.&quot; The article offers no further details regarding the context of this </div>
+      <div class="compact-footer">
+        <span class="compact-source">TechRadar</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/an-agent-is-an-llm-and-a-harness-what-nvidia-really-thinks-a/" class="compact-card">
+      <div class="compact-rank">Signal 16 · Llm · Nvidia</div>
+      <div class="compact-headline">“An agent is an LLM and a harness”: What Nvidia really thinks about OpenClaw</div>
+      <div class="compact-summary">The provided article content is a cookie consent form, not an article about &quot;An agent is an LLM and a harness”: What Nvidia really thinks about OpenClaw or the OpenClaw agentic AI ecosystem.
+
+As per t</div>
+      <div class="compact-footer">
+        <span class="compact-source">The New Stack</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/claude-code-is-the-openclaw-alternative-you-already-have/" class="compact-card">
+      <div class="compact-rank">Signal 17 · Claude Code</div>
+      <div class="compact-headline">Claude Code Is the OpenClaw Alternative You Already Have</div>
+      <div class="compact-summary">Anthropic's Claude Code, released over a year ago, is presented as a functional and more reliable alternative to the OpenClaw agentic AI framework, despite being primarily marketed as a coding tool. T</div>
+      <div class="compact-footer">
+        <span class="compact-source">Every</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/openclaw-used-gavriel-cohens-code-and-exposed-the-ai-agent-a/" class="compact-card">
+      <div class="compact-rank">Signal 18 · Gavriel Cohen’S</div>
+      <div class="compact-headline">OpenClaw used Gavriel Cohen’s code and exposed the AI Agent accountability problem</div>
+      <div class="compact-summary">The provided &quot;Article&quot; content is a cookie consent form and a detailed list of cookies. It does not contain any information related to &quot;OpenClaw,&quot; &quot;Gavriel Cohen's code,&quot; the &quot;AI Agent accountability </div>
+      <div class="compact-footer">
+        <span class="compact-source">The New Stack</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/migrate-from-openclaw/" class="compact-card">
+      <div class="compact-rank">Signal 19 · hermes-agent.nousresearch.com</div>
+      <div class="compact-headline">Migrate from OpenClaw</div>
+      <div class="compact-summary">Nous Research has introduced the hermes claw migrate utility, enabling OpenClaw users to transition their agentic AI configurations, skills, and data to the Hermes platform. This tool is designed to i</div>
+      <div class="compact-footer">
+        <span class="compact-source">hermes-agent.nousresearch.com</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+<a href="/trace/2026-06/microsoft-embraces-openclaw/" class="compact-card">
+      <div class="compact-rank">Signal 20 · Microsoft</div>
+      <div class="compact-headline">Microsoft embraces OpenClaw</div>
+      <div class="compact-summary">Microsoft has significantly embraced the OpenClaw agentic AI ecosystem, a development highlighted by 28 mentions of OpenClaw at its recent Build conference, starkly contrasting with 5 for OpenAI. This</div>
+      <div class="compact-footer">
+        <span class="compact-source">Sources</span>
+        <span class="compact-cta">Read Analysis <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+</div>
+</div>
+  <div class="wrap">
+    <div class="section-rule" style="margin-top:3.5rem">
+      <div class="section-rule-label"><span class="sl">//</span> Daily Edition Transmissions</div>
+      <div class="section-rule-line"></div>
+    </div>
+    <div class="daily-grid">
+      <a href="/daily/2026-06-01/a-raspberry-pi-is-the-durable-way-to-run-openclaw-as-labs-na.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">01</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">A Raspberry Pi Is the Durable Way to Run OpenClaw as Labs Narrow Model Access</div></div>
+    </a><a href="/daily/2026-06-02/microsoft-launches-scout-an-openclaw-inspired-personal-assis.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">02</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Microsoft launches Scout, an OpenClaw-inspired personal assistant</div></div>
+    </a><a href="/daily/2026-06-03/the-future-microsoft-showed-at-build-2026-barely-looks-like-.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">03</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">The Future Microsoft Showed at Build 2026 Barely Looks Like Windows</div></div>
+    </a><a href="/daily/2026-06-04/the-small-business-owners-managing-whole-armies-of-ai-employ.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">04</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">The Small-Business Owners Managing Whole Armies of A.I. Employees</div></div>
+    </a><a href="/daily/2026-06-05/how-microsoft-is-bringing-openclaw-to-the-masses.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">05</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">How Microsoft is bringing OpenClaw to the masses</div></div>
+    </a><a href="/daily/2026-06-06/i-saw-the-future-of-windows-at-microsoft-build-and-its-unrec.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">06</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">I Saw the Future of Windows at Microsoft Build, and It's Unrecognizable</div></div>
+    </a><a href="/daily/2026-06-07/microsoft-just-made-the-agent-runtime-free-and-kept-everythi.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">07</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Microsoft just made the agent runtime free — and kept everything around it</div></div>
+    </a><a href="/daily/2026-06-08/what-the-openclaw-vulnerability-reveals-about-the-future-of-.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">08</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">What the OpenClaw vulnerability reveals about the future of agentic AI security</div></div>
+    </a><a href="/daily/2026-06-09/lenovo-thinkstation-pgx-review-i-may-have-just-found-the-bes.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">09</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Lenovo ThinkStation PGX review: I may have just found the best mini workstation for OpenClaw, and it’s not a Mac mini</div></div>
+    </a><a href="/daily/2026-06-10/ai-agents-are-about-to-get-their-own-internet-meet-the-agent.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">10</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">AI Agents Are About to Get Their Own Internet — Meet the Agent Network for OpenClaw and Hermes</div></div>
+    </a><a href="/daily/2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">11</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">New Attacks Trick OpenClaw AI Agent Into Running Code and Leaking Secrets</div></div>
+    </a><a href="/daily/2026-06-12/nanoclaw-and-jfrog-launch-immune-system-to-block-ai-agents-f.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">12</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">NanoClaw and JFrog launch 'immune system' to block AI agents from downloading malicious code</div></div>
+    </a><a href="/daily/2026-06-14/openclaw-and-virtualisation-infrastructure-talking-to-harves.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">14</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">OpenClaw and Virtualisation Infrastructure — Talking to Harvester HCI Like a Human</div></div>
+    </a><a href="/daily/2026-06-16/openclaw-for-cybersecurity-powerful-if-you-use-it-correctly.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">16</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">OpenClaw for Cybersecurity: Powerful… If You Use It Correctly</div></div>
+    </a><a href="/daily/2026-06-17/openclaw-deep-dive-coding-agent-code.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">17</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">OpenClaw Deep Dive: เมื่อ Coding Agent อยากเป็นมากกว่าแค่คนเขียน Code</div></div>
+    </a><a href="/daily/2026-06-18/how-peter-steinberger-built-openclaw.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">18</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">How Peter Steinberger built OpenClaw</div></div>
+    </a><a href="/daily/2026-06-19/como-usar-o-openclaw-com-o-whatsapp-em-uma-vps.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">19</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Como Usar o OpenClaw com o WhatsApp em uma VPS</div></div>
+    </a><a href="/daily/2026-06-21/an-agent-is-an-llm-and-a-harness-what-nvidia-really-thinks-a.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">21</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">“An agent is an LLM and a harness”: What Nvidia really thinks about OpenClaw</div></div>
+    </a><a href="/daily/2026-06-22/a-deep-dive-security-assessment-featuring-openclaw.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">22</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">A Deep-dive Security Assessment Featuring OpenClaw</div></div>
+    </a><a href="/daily/2026-06-23/openclaw-and-hermes-agree-on-what-an-agent-is-they-disagree-.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">23</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">OpenClaw and Hermes agree on what an agent is. They disagree on what controls it.</div></div>
+    </a><a href="/daily/2026-06-24/more-malicious-openclaw-skills-threaten-ai-supply-chain.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">24</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">More Malicious OpenClaw Skills Threaten AI Supply Chain</div></div>
+    </a><a href="/daily/2026-06-25/multiple-malicious-openclaw-skills-found-online-including-tw.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">25</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Multiple malicious OpenClaw skills found online - including two macOS infostealers</div></div>
+    </a><a href="/daily/2026-06-26/parallel-free-search-lands-in-openclaw-a-zero-key-web-search.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">26</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Parallel Free Search Lands in OpenClaw: A Zero-Key Web Search MCP, Tested Against Tavily</div></div>
+    </a><a href="/daily/2026-06-27/hireflow-multi-agent-hiring-pipeline-with-openclaw.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">27</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">HireFlow — Multi-Agent Hiring Pipeline With OpenClaw</div></div>
+    </a><a href="/daily/2026-06-28/your-personal-ai-assistant-automating-gmail-insights-with-op.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">28</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">Your Personal AI Assistant: Automating Gmail Insights with OpenClaw</div></div>
+    </a><a href="/daily/2026-06-29/there.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">29</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">There</div></div>
+    </a><a href="/daily/2026-06-30/openclaw-reveals-ios-and-android-mobile-apps-at-last-but-ini.html" class="daily-card">
+      <div class="daily-date-col"><div class="daily-mon">Jun</div><div class="daily-day">30</div></div>
+      <div class="daily-text"><div class="daily-label">Daily Edition</div><div class="daily-headline">OpenClaw reveals iOS and Android mobile apps at last — but initial reviews make for tough reading</div></div>
+    </a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="section-rule" style="margin-top:2.5rem">
+      <div class="section-rule-label"><span class="sl">//</span> Repo Signals</div>
+      <div class="section-rule-line"></div>
+    </div>
+    <div class="repo-grid">
+      <div class="repo-card">
+      <div class="repo-header">
+        <div class="repo-name"><a href="https://github.com/openclaw/crabline" target="_blank" rel="noopener">openclaw/crabline</a></div>
+        <div class="repo-stars"><i data-lucide="star" style="width:11px;height:11px"></i> 28</div>
+      </div>
+      <div class="repo-desc">Mock channel server CLI for OpenClaw testing</div>
+      <span class="repo-lang">TypeScript</span>
+    </div><div class="repo-card">
+      <div class="repo-header">
+        <div class="repo-name"><a href="https://github.com/kshidenko/openclaw-mem0-v2" target="_blank" rel="noopener">kshidenko/openclaw-mem0-v2</a></div>
+        <div class="repo-stars"><i data-lucide="star" style="width:11px;height:11px"></i> 19</div>
+      </div>
+      <div class="repo-desc">Enhanced Mem0 memory plugin for OpenClaw — identity mapping, raw storage, graph memory, sleep mode</div>
+      <span class="repo-lang">TypeScript</span>
+    </div><div class="repo-card">
+      <div class="repo-header">
+        <div class="repo-name"><a href="https://github.com/netease-youdao/LobsterAI" target="_blank" rel="noopener">netease-youdao/LobsterAI</a></div>
+        <div class="repo-stars"><i data-lucide="star" style="width:11px;height:11px"></i> 5,388</div>
+      </div>
+      <div class="repo-desc">Open-source, desktop-grade AI agent that gets real work done — data analysis, slides, docs, video &amp; web research. Built on OpenClaw; runs tools on your real desktop and takes commands from your phone via WeChat, Feishu, DingTalk &amp; Telegram.</div>
+      <span class="repo-lang">TypeScript</span>
+    </div>
+    </div>
+  </div>
+
+<!-- ── FOOTER ── -->
+<footer class="page-footer">
+  <div class="footer-brand">ClawBeat<span>.co</span></div>
+  <div class="footer-links">
+    <span>Trace No. 005 · June 2026</span>
+    <span>·</span>
+    <a href="/trace/">All Issues</a>
+    <span>·</span>
+    <a href="/">ClawBeat.co</a>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+function toggleMenu() {
+  const menu      = document.getElementById('mobile-menu');
+  const iconMenu  = document.getElementById('icon-menu');
+  const iconClose = document.getElementById('icon-close');
+  const isOpen    = menu.classList.contains('open');
+  menu.classList.toggle('open', !isOpen);
+  iconMenu.style.display  = isOpen ? '' : 'none';
+  iconClose.style.display = isOpen ? 'none' : '';
+}
+</script>
+</body>
+</html>
