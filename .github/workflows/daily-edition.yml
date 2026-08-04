@@ -14,6 +14,10 @@ on:
 jobs:
   generate:
     name: Generate Daily Edition HTML
+    # Publishing job — only ever runs against main. Guards against a
+    # workflow_dispatch on staging writing to prod Supabase or pushing
+    # generated HTML onto an experiment branch.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
