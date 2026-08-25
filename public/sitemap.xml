@@ -142,6 +142,7 @@
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
 
   <!-- ── Daily Editions ── -->
+  <url><loc>https://clawbeat.co/daily/2026-08-24/separating-openclaws-compute-from-state-with-redis-agent-fil.html</loc><lastmod>2026-08-24</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-08-23/grok-bot-vs-openclaw-i-spent-40-hours-on-this-openclaw-is-be.html</loc><lastmod>2026-08-23</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-08-22/build-a-local-code-review-refactoring-assistant-with-opencla.html</loc><lastmod>2026-08-22</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-08-21/nanoclaw-comes-to-slack-letting-you-create-persistent-ai-age.html</loc><lastmod>2026-08-21</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
