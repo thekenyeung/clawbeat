@@ -163,6 +163,7 @@
   <url><loc>https://clawbeat.co/trace/index.html</loc><changefreq>never</changefreq><priority>0.6</priority></url>
 
   <!-- ── Daily Editions ── -->
+  <url><loc>https://clawbeat.co/daily/2026-09-04/openclaw-improves-user-onboarding.html</loc><lastmod>2026-09-04</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-09-02/grok-bot-vs-openclaw-how-i-replaced-my-entire-agent-stack.html</loc><lastmod>2026-09-02</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-09-01/openclaw-20-is-here-what-it-means-for-enterprises.html</loc><lastmod>2026-09-01</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
   <url><loc>https://clawbeat.co/daily/2026-08-31/openclaw-20-is-here-a-crowdsourced-update-to-the-ai-agent-is.html</loc><lastmod>2026-08-31</lastmod><changefreq>never</changefreq><priority>0.7</priority></url>
